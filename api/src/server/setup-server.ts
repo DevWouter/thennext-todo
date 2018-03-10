@@ -28,6 +28,7 @@ async function optionsFunc(req?: express.Request, res?: express.Response): Promi
 }
 
 export function startServer(connection: Connection, port: number) {
+    console.log('Creating the server, please standby...')
     const app = express();
     app.use('/graphql', bodyParser.json(), graphqlExpress(optionsFunc));
     app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));

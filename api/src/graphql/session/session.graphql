@@ -4,7 +4,7 @@ You need to create a single session so that the API knows who you are and what y
 """
 type Session {
     # The uuid of the owner 
-    owner_uuid: Uuid!
+    ownerUuid: Uuid!
 
     # The owner of the token
     owner: Account!
@@ -13,7 +13,7 @@ type Session {
     token: String
 
     # When the token will expire
-    expire_at: Date
+    expireAt: Date
 }
 
 type Query {
