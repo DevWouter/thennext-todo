@@ -11,6 +11,16 @@ services:
       MYSQL_USER: "test"
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "test"
+  api:
+    build:
+      context: api
+    image: pa_api
+    volumes:
+      - ./api:/server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
 
   # TODO:
   # - Add compose support for api

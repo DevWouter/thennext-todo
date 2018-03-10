@@ -7,7 +7,13 @@
     "start": "node index.js",
     "start:watch": "nodemon",
     "prestart:prod": "tsc",
-    "start:prod": "node dist/main.js"
+    "start:prod": "node dist/main.js",
+    "orm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm",
+    "orm:run-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:run",
+    "orm:revert-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:revert",
+    "orm:changes": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm schema:log",
+    "orm:create-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:create",
+    "orm:generate-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:generate"
   },
   "author": "Wouter Lindenhof",
   "license": "ISC",
@@ -23,12 +29,12 @@
     "mysql": "^2.15.0",
     "reflect-metadata": "^0.1.12",
     "typeorm": "^0.1.16",
-    "typescript": "^2.7.2"
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2",
+    "nodemon": "^1.17.1"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
-    "@types/graphql": "^0.12.4",
-    "nodemon": "^1.17.1",
-    "ts-node": "^5.0.1"
+    "@types/graphql": "^0.12.4"
   }
 }

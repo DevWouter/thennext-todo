@@ -3,16 +3,26 @@ FROM node:9-alpine
 WORKDIR /server
 
 COPY \
+    ./package.json \
+    ./package-lock.json \
+    /server/
+
+RUN npm install
+
+COPY \
     ./index.js \
     ./nodemon.json \
     ./ormconfig.json \
-    ./package-lock.json \
-    ./package.json \
     ./tsconfig.json \
-    ./src/ \
-    /server
+    /server/
 
-RUN npm install
+COPY \
+    ./tools \
+    /server/tools/
+
+COPY \
+    ./src \
+    /server/src/
 
 EXPOSE 3000
 CMD [ "npm", "start" ]
