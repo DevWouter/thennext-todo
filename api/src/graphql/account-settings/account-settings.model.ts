@@ -1,17 +1,8 @@
-import { EntityManager } from "typeorm";
-
-export interface Account {
-    uuid: string;
-    email: string;
-}
-
-
-export interface CreateAccountInput {
-    email: string;
-    password: string;
-}
+import { TagScore } from "./tag-score.model";
+import { DecaySpeed } from "./decay-speed.model";
 
 export interface AccountSettings {
+    _id: number,
     scrollToNewTasks: boolean;
     hideScoreInTaskList: boolean;
 
@@ -22,8 +13,7 @@ export interface AccountSettings {
     urgencyWhenDescription: number;
     urgencyWhenBlocking: number;
     urgencyWhenBlocked: number;
-}
 
-export interface GraphContext { 
-    entityManager: EntityManager;
+    tagScores: TagScore[];
+    decaySpeeds: DecaySpeed[];
 }

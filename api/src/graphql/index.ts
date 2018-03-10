@@ -1,18 +1,21 @@
-import * as glob from 'glob';
-import * as fs from 'fs';
-import { mergeTypes } from 'merge-graphql-schemas';
+import { AccountMutation, AccountQuery, AccountResolvers } from "./account";
+import { AccountSettingsResolvers, AccountSettingsMutation } from "./account-settings";
 
-function loadFiles(pattern: string): any[] {
-    const paths = glob.sync(pattern);
-    return paths.map(path => fs.readFileSync(path, 'utf8'));
+
+const Mutation = {
+    ...AccountMutation,
+    ...AccountSettingsMutation,
+};
+
+const Query = {
+    ...AccountQuery,
 }
 
-function mergeTypesByPaths(...pathsToTypes: string[]): string {
-    return mergeTypes(
-        ...pathsToTypes.map(pattern => loadFiles(pattern)),
-    );
-}
+export const resolvers = {
+    Query,
+    Mutation,
 
-export function getTypes(): string {
-    return mergeTypesByPaths("./**/*.graphql");
+    // Below are the type resolvers
+    Account: AccountResolvers,
+    AccountSettings: AccountSettingsResolvers,
 }

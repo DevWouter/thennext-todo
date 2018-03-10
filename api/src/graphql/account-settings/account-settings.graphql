@@ -50,5 +50,5 @@ input AccountSettingsInput {
 }
 
 type Mutation {
-    updateAccountSetting(input: AccountSettingsInput!): AccountSettings
+    updateAccountSettings(input: AccountSettingsInput!): AccountSettings
 }

@@ -10,6 +10,13 @@ type Query {
     accounts: [Account]
 }
 
+type Mutation {
+    createAccount(input: CreateAccountInput!): Account
+    changePassword(input: ChangePasswordInput!): Boolean
+    changeEmail(input: ChangeEmailInput!): Boolean
+}
+
+
 input CreateAccountInput {
     email: String!
     password: String!
@@ -22,10 +29,4 @@ input ChangePasswordInput {
 
 input ChangeEmailInput {
     newEmail: String!
-}
-
-type Mutation {
-    createAccount(input: CreateAccountInput!): Account
-    changePassword(input: ChangePasswordInput!): Boolean
-    changeEmail(input: ChangeEmailInput!): Boolean
 }

@@ -1,0 +1,8 @@
+import { AccountSettings } from "../account-settings.model";
+import { GraphContext } from "../../helpers";
+import { DecaySpeed } from "../decay-speed.model";
+
+export function getDecaySpeeds(obj: AccountSettings, args, context: GraphContext, info): Promise<DecaySpeed[]> {
+    console.log(obj);
+    throw new Error('Not implemented');
+}
