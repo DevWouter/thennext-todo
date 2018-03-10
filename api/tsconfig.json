@@ -4,6 +4,10 @@
         "declaration": false,
         "noImplicitAny": false,
         "removeComments": true,
+        "lib": [
+            "es6",
+            "esnext"
+        ],
         "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
