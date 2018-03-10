@@ -18,25 +18,25 @@ Some rules:
 
 # Run instructions
 
-You need to a running database instance.
-
 ```sh
-cd api
-npm install
-npm run start:watch
+docker-compose up -d --build
 ```
 
 # Database
 ## Running the migrations
 
+The migrations are run every time the container is started.
+
 ```sh
-./tools/orm.sh migrations:run 
+docker-compose exec api npm run orm:run-migrations
 ```
 
 ## Creating a new migration
 
-Make sure the database is synced.
-
 ```sh
-./tools/orm.sh migrations:generate --name InitialMigration
+# Check if there are any changes
+docker-compose exec api npm run orm:changes
+
+# Generate a migration
+docker-compose exec api npm run orm:generate-migration -- --name MyMigration
 ```
