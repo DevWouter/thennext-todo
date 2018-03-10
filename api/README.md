@@ -11,10 +11,12 @@ The api uses the following frameworks:
 
 Some rules:
 - Resolvers are written as a function (since they are not class based to begin with).
+- Resolvers are grouped by their type (so: `/account/account.graphql`, `/account/account.resolver.ts`)
+- The models are stored inside a `models` folder (since we are using them)
 - We use directive resolvers to handle right management
-- We use interfaces as return values, the implementation will always be POD.
+- We use interfaces as return values, the implementation will always return an object.
 - All database entities are postfixed with "Entity"
-- The graphql will be in files which are merged and shared
+- All services are passed using the context
 
 # Run instructions
 
