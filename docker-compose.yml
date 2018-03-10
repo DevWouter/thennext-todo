@@ -21,7 +21,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
-
+    command: npm run start:watch
   # TODO:
   # - Add compose support for api
   # - Add compose support for web
