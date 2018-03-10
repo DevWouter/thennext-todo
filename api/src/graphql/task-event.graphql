@@ -1,0 +1,20 @@
+enum TaskEventType {
+    delay
+}
+
+type TaskEvent {
+    uuid: Uuid
+    task: Task
+    eventType: TaskEventType
+    stamp: Date
+}
+
+input TaskEventInput {
+    eventType: TaskEventType!
+    stamp: Date!
+}
+
+type mutation {
+    addTaskEvent(taskUuid: Uuid!, input: TaskEventInput!): TaskEvent
+    destroyTaskEvent(uuid: Uuid!): Boolean
+}

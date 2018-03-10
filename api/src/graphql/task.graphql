@@ -1,0 +1,46 @@
+type Task {
+    uuid: Uuid
+    contextUuid: Uuid
+    
+    context: Context
+
+    title: String
+    description: String
+    
+    createdOn: Date
+    updatedOn: Date
+    completedOn: Date
+
+    status: TaskStatus
+
+    tags: [String]
+
+    relations: [TaskRelation]
+    events: [TaskEvent]
+    checklistItems: [ChecklistItem]
+}
+
+enum TaskStatus {
+    Todo
+    Active
+    Done
+}
+
+input TaskInput {
+    title: String
+    description: String
+
+    status: TaskStatus
+    tags: [String!]
+}
+
+type Query {
+    tasks: [Task]
+    task(uuid: Uuid!): Task
+}
+
+type Mutation {
+    createTask(contextUuid: Uuid!, input: TaskInput!): Task
+    updateTask(uuid: Uuid!, input: TaskInput!): Task
+    destroyTask(uuid: Uuid!): Boolean
+}

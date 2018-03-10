@@ -1,0 +1,54 @@
+type AccountSettings {
+    scrollToNewTasks: Boolean
+    hideScoreInTaskList: Boolean
+
+    defaultWaitUntil: String
+
+    urgencyPerDay: Float
+    urgencyWhenActive: Float
+    urgencyWhenDescription: Float
+    urgencyWhenBlocking: Float
+    urgencyWhenBlocked: Float
+
+    tagScores: [TagScore]
+    decaySpeeds: [DecaySpeed]
+}
+
+type TagScore {
+    name: String!
+    value: Float!
+}
+
+type DecaySpeed {
+  from: Float!
+  coefficient: Float!
+}
+
+
+input TagScoreInput {
+    name: String!
+    value: Float!
+}
+
+input DecaySpeedInput {
+  from: Float!
+  coefficient: Float!
+}
+
+input AccountSettingsInput {
+    scrollToNewTasks: Boolean
+    hideScoreInTaskList: Boolean
+    defaultWaitUntil: String
+    urgencyPerDay: Float
+    urgencyWhenActive: Float
+    urgencyWhenDescription: Float
+    urgencyWhenBlocking: Float
+    urgencyWhenBlocked: Float
+
+    tagScores: [TagScoreInput!]
+    decaySpeeds: [DecaySpeedInput!]
+}
+
+type Mutation {
+    updateAccountSetting(input: AccountSettingsInput!): AccountSettings
+}

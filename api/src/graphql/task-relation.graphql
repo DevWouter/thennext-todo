@@ -1,0 +1,22 @@
+type TaskRelation {
+    sourceTaskUuid: Uuid!
+    sourceTask: Task!
+    targetTaskUuid: Uuid!
+    targetTask: Task!
+    relationType: RelationType!
+}
+
+enum RelationType{
+    Blocks
+}
+
+input TaskRelationInput {
+    sourceTaskUuid: Uuid!
+    targetTaskUuid: Uuid!
+    relationType: RelationType!
+}
+
+type Mutation {
+    createTaskRelation(input: TaskRelationInput!): TaskRelation
+    destroyTaskRelation(input: TaskRelationInput!): Boolean
+}

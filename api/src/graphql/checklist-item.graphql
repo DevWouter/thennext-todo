@@ -1,0 +1,18 @@
+type ChecklistItem{
+    uuid: Uuid!
+    checked: Boolean!
+    title: String!
+    taskUuid: Uuid!
+    task: Task!
+}
+
+input ChecklistItemInput {
+    checked: Boolean
+    title: String
+}
+
+type Mutation {
+    createChecklistItem(taskUuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
+    updateChecklistItem(checklistItemUuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
+    destroyChecklistItem(checklistItemUuid: Uuid!): Boolean
+}

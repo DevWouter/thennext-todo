@@ -1,0 +1,31 @@
+type Account {
+    uuid: Uuid!
+    email: String
+    settings: AccountSettings!
+}
+
+type Query {
+    me: Account
+    account(uuid: Uuid!): Account
+    accounts: [Account]
+}
+
+input CreateAccountInput {
+    email: String!
+    password: String!
+}
+
+input ChangePasswordInput {
+    oldPassword: String!
+    newPassword: String!
+}
+
+input ChangeEmailInput {
+    newEmail: String!
+}
+
+type Mutation {
+    createAccount(input: CreateAccountInput!): Account
+    changePassword(input: ChangePasswordInput!): Boolean
+    changeEmail(input: ChangeEmailInput!): Boolean
+}
