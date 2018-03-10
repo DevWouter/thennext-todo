@@ -4,7 +4,10 @@
   "description": "The API for a personal assistant",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "start:watch": "nodemon",
+    "prestart:prod": "tsc",
+    "start:prod": "node dist/main.js"
   },
   "author": "Wouter Lindenhof",
   "license": "ISC",
@@ -16,12 +19,12 @@
     "graphql-tools": "^2.21.0",
     "inversify": "^4.11.1",
     "reflect-metadata": "^0.1.12",
-    "ts-node": "^5.0.1",
     "typescript": "^2.7.2"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
     "@types/graphql": "^0.12.4",
-    "nodemon": "^1.17.1"
+    "nodemon": "^1.17.1",
+    "ts-node": "^5.0.1"
   }
 }
