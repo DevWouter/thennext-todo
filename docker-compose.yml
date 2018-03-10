@@ -1,0 +1,17 @@
+version: '3'
+services:
+
+  db:
+    image: "mysql:5.7.21"
+    ports:
+      # Only allow this port to be public in development mode
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
+
+  # TODO:
+  # - Add compose support for api
+  # - Add compose support for web

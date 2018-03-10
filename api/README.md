@@ -18,8 +18,25 @@ Some rules:
 
 # Run instructions
 
-```
+You need to a running database instance.
+
+```sh
 cd api
 npm install
 npm run start:watch
+```
+
+# Database
+## Running the migrations
+
+```sh
+./tools/orm.sh migrations:run 
+```
+
+## Creating a new migration
+
+Make sure the database is synced.
+
+```sh
+./tools/orm.sh migrations:generate --name InitialMigration
 ```
