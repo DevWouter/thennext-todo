@@ -1,4 +1,4 @@
-import { TaskList } from "../task-list";
+import { TaskList } from "../task-list.model";
 import { TaskListInput } from "./task-list.input";
 import { GraphContext } from "../../helpers";
 

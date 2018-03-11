@@ -2,7 +2,7 @@ type TaskList {
     uuid: Uuid!
     name: String!
     primary: Boolean!
-    owner_uuid: Uuid!
+    ownerUuid: Uuid!
     owner: Account!
 
     tasks: [Task]

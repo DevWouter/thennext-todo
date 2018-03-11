@@ -3,5 +3,5 @@ export interface TaskList {
     uuid: string;
     name: string;
     primary: boolean;
-    owner_uuid: string;
+    ownerUuid: string;
 };
