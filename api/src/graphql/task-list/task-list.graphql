@@ -1,0 +1,24 @@
+type TaskList {
+    uuid: Uuid!
+    name: String!
+    primary: Boolean!
+    owner_uuid: Uuid!
+    owner: Account!
+
+    tasks: [Task]
+}
+
+input TaskListInput {
+    name: String
+}
+
+type Query {
+    taskLists: [TaskList]
+    taskList(uuid: Uuid): TaskList
+}
+
+type Mutation {
+    createTaskList(name: String!): TaskList
+    destroyTaskList(uuid: Uuid!): Boolean
+    updateTaskList(uuid: Uuid!, input: TaskListInput!): TaskList
+}

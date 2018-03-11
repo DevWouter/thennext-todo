@@ -1,12 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from 'typeorm';
-import { AccountSettingsEntity } from './account-settings.entity';
-import { DecaySpeedEntity } from './decay-speed.entity';
-import { TagScoreEntity } from './tag-score.entity';
-import { ContextEntity } from './context.entity';
-import { SessionEntity } from './session.entity';
-import { ChecklistItemEntity } from './checklist-item.entity';
-import { TaskTagEntity } from './task-tag.entity';
-import { TaskRelationEntity } from './task-relation.entity';
+import { TaskListEntity } from './task-list.entity';
+import { ChecklistItemEntity } from './checklist-item.entity'
+import { TaskTagEntity } from './task-tag.entity'
+import { TaskRelationEntity } from './task-relation.entity'
 
 export enum TaskStatus {
     todo = 'todo',
@@ -23,13 +19,13 @@ export class TaskEntity {
     @Generated('uuid')
     uuid: string;
 
-    @ManyToOne(type => ContextEntity, context => context.tasks)
-    context: ContextEntity;
+    @ManyToOne(type => TaskListEntity, taskList => taskList.tasks)
+    taskList: TaskListEntity;
 
     @Column({ nullable: false })
     title: string;
 
-    @Column('text', {nullable: false})
+    @Column('text', { nullable: false })
     description: string;
 
     @Column()

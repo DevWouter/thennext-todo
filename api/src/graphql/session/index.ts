@@ -1,3 +1,3 @@
-export { SessionMutation } from './mutations';
+export { SessionMutations } from './mutations';
 export { SessionResolvers } from './resolvers';
-export { SessionQuery } from './queries';
+export { SessionQueries } from './queries';

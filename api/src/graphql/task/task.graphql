@@ -1,8 +1,8 @@
 type Task {
     uuid: Uuid
-    contextUuid: Uuid
+    taskListUuid: Uuid
     
-    context: Context
+    taskList: TaskList
 
     title: String
     description: String
@@ -21,9 +21,9 @@ type Task {
 }
 
 enum TaskStatus {
-    Todo
-    Active
-    Done
+    todo
+    active
+    done
 }
 
 input TaskInput {
@@ -40,7 +40,7 @@ type Query {
 }
 
 type Mutation {
-    createTask(contextUuid: Uuid!, input: TaskInput!): Task
+    createTask(taskListUuid: Uuid!, input: TaskInput!): Task
     updateTask(uuid: Uuid!, input: TaskInput!): Task
     destroyTask(uuid: Uuid!): Boolean
 }

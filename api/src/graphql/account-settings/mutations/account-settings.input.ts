@@ -1,13 +1,5 @@
-
-export interface TagScoreInput {
-    readonly name: string;
-    readonly value: number;
-}
-
-export interface DecaySpeedInput {
-    readonly from: number;
-    readonly coefficient: number;
-}
+import { TagScoreInput } from "./tag-score.input";
+import { DecaySpeedInput } from "./decay-speed.input";
 
 export interface AccountSettingsInput {
     readonly scrollToNewTasks?: boolean;

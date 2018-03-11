@@ -13,6 +13,6 @@ input ChecklistItemInput {
 
 type Mutation {
     createChecklistItem(taskUuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
-    updateChecklistItem(checklistItemUuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
-    destroyChecklistItem(checklistItemUuid: Uuid!): Boolean
+    updateChecklistItem(uuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
+    destroyChecklistItem(uuid: Uuid!): Boolean
 }

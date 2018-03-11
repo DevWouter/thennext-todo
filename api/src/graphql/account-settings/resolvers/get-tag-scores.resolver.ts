@@ -2,6 +2,6 @@ import { AccountSettings } from "../account-settings.model";
 import { GraphContext } from "../../helpers";
 import { TagScore } from "../tag-score.model";
 
-export function getTagScores(obj: AccountSettings, args, context: GraphContext, info): Promise<TagScore[]> {
+export async function getTagScores(obj: AccountSettings, args, context: GraphContext, info): Promise<TagScore[]> {
     throw new Error('Not implemented');
 }

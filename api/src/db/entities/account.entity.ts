@@ -2,8 +2,9 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne
 import { AccountSettingsEntity } from './account-settings.entity';
 import { DecaySpeedEntity } from './decay-speed.entity';
 import { TagScoreEntity } from './tag-score.entity';
-import { ContextEntity } from './context.entity';
 import { SessionEntity } from './session.entity';
+import { TaskList } from '../../graphql/task-list/task-list';
+import { TaskListEntity } from './task-list.entity';
 
 @Entity('Account')
 export class AccountEntity {
@@ -29,8 +30,8 @@ export class AccountEntity {
     @OneToMany(type => TagScoreEntity, tagScore => tagScore.account)
     tagScores: TagScoreEntity[];
 
-    @OneToMany(type => ContextEntity, context => context.owner)
-    contexts: ContextEntity[];
+    @OneToMany(type => TaskListEntity, taskList => taskList.owner)
+    taskLists: TaskList[];
 
     @OneToMany(type => SessionEntity, session => session.account)
     sessions: SessionEntity[];

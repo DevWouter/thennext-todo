@@ -4,6 +4,7 @@ enum TaskEventType {
 
 type TaskEvent {
     uuid: Uuid
+    taskUuid: Uuid
     task: Task
     eventType: TaskEventType
     stamp: Date
@@ -14,7 +15,7 @@ input TaskEventInput {
     stamp: Date!
 }
 
-type mutation {
-    addTaskEvent(taskUuid: Uuid!, input: TaskEventInput!): TaskEvent
+type Mutation {
+    createTaskEvent(taskUuid: Uuid!, input: TaskEventInput!): TaskEvent
     destroyTaskEvent(uuid: Uuid!): Boolean
 }

@@ -2,13 +2,13 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne
 import { AccountEntity } from './account.entity';
 import { TaskEntity } from './task.entity';
 
-@Entity('Context')
-export class ContextEntity {
+@Entity('TaskList')
+export class TaskListEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
     /**
-     * A unique identifier that can be used to find a context.
+     * A unique identifier that can be used to find a taskList.
      */
     @Column('varchar', { unique: true })
     @Generated('uuid')
@@ -20,10 +20,10 @@ export class ContextEntity {
     @Column()
     primary: boolean;
 
-    @ManyToOne(type => AccountEntity, account => account.contexts)
+    @ManyToOne(type => AccountEntity, account => account.taskLists)
     @JoinColumn()
     owner: AccountEntity;
 
-    @OneToMany(type => TaskEntity, task => task.context)
+    @OneToMany(type => TaskEntity, task => task.taskList)
     tasks: TaskEntity[];
 }

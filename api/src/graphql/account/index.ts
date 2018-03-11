@@ -1,3 +1,3 @@
-export { AccountMutation } from './mutations';
-export { AccountQuery } from './queries';
+export { AccountMutations } from './mutations';
+export { AccountQueries } from './queries';
 export { AccountResolvers } from './resolvers';
