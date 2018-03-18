@@ -53,6 +53,10 @@
     "styleExt": "scss",
     "component": {
       "spec": false
-    }
+    },
+    "service": {
+      "spec": false
+    },
+    "lintFix": true
   }
 }
