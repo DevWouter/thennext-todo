@@ -9,6 +9,9 @@
 </label>
 
 <button (click)="submit()">Submit</button>
+<button (click)="getAccounts()">Fetch</button>
 
 <code><pre>{{response | json}}</pre></code>
 Click counter: {{clickCounter}}
+
+<code><pre>{{accounts | async | json}}</pre></code>

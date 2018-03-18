@@ -3,7 +3,6 @@ import { AccountSettingsEntity } from "./account-settings.entity";
 import { DecaySpeedEntity } from "./decay-speed.entity";
 import { TagScoreEntity } from "./tag-score.entity";
 import { SessionEntity } from "./session.entity";
-import { TaskList } from "../../graphql/task-list/task-list";
 import { TaskListEntity } from "./task-list.entity";
 
 @Entity("Account")
@@ -31,7 +30,7 @@ export class AccountEntity {
     tagScores: TagScoreEntity[];
 
     @OneToMany(type => TaskListEntity, taskList => taskList.owner)
-    taskLists: TaskList[];
+    taskLists: TaskListEntity[];
 
     @OneToMany(type => SessionEntity, session => session.account)
     sessions: SessionEntity[];
