@@ -7,13 +7,15 @@ import { GraphQLOptions } from 'apollo-server-core';
 
 import { createConnection, getManager, Connection } from 'typeorm';
 import { GraphContext, typeDefs } from '../graphql/helpers';
-import { resolvers } from '../graphql';
+import { resolvers } from '../graphql/resolvers';
+import { directiveResolvers } from '../graphql/directive-resolvers';
 
 
 const schema = makeExecutableSchema({
     typeDefs: typeDefs,
     resolvers: resolvers,
     allowUndefinedInResolve: false,
+    directiveResolvers: directiveResolvers
 });
 
 async function optionsFunc(req?: express.Request, res?: express.Response): Promise<GraphQLOptions> {
