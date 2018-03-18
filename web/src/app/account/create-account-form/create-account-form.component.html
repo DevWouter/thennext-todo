@@ -1,0 +1,13 @@
+<label>
+    <div class="input-label">Name:</div>
+    <input type="text" [(ngModel)]="username">
+</label>
+
+<label>
+    <div class="input-label">Password:</div>
+    <input type="text" [(ngModel)]="password">
+</label>
+
+<button (click)="submit()">Submit</button>
+
+<code><pre>{{response | json}}</pre></code>
