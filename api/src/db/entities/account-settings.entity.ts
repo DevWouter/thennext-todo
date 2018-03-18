@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
-import { AccountEntity } from './account.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { AccountEntity } from "./account.entity";
 
-@Entity('AccountSettings')
+@Entity("AccountSettings")
 export class AccountSettingsEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -19,25 +19,25 @@ export class AccountSettingsEntity {
     @Column()
     defaultWaitUntil: string;
 
-    @Column('float')
+    @Column("float")
     urgencyPerDay: number;
 
-    @Column('float')
+    @Column("float")
     urgencyWhenActive: number;
 
-    @Column('float')
+    @Column("float")
     urgencyWhenDescription: number;
 
-    @Column('float')
+    @Column("float")
     urgencyWhenBlocking: number;
 
-    @Column('float')
+    @Column("float")
     urgencyWhenBlocked: number;
 
     static setDefaultValues(settings: AccountSettingsEntity): void {
         settings.scrollToNewTasks = true;
         settings.hideScoreInTaskList = false;
-        settings.defaultWaitUntil = '07:00';
+        settings.defaultWaitUntil = "07:00";
         settings.urgencyPerDay = 2.0;
         settings.urgencyWhenActive = 4.0;
         settings.urgencyWhenDescription = 1.0;

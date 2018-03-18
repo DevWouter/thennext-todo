@@ -6,4 +6,4 @@ export const ChecklistItemMutations = {
     createChecklistItem,
     destroyChecklistItem,
     updateChecklistItem,
-}
+};

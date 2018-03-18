@@ -4,4 +4,4 @@ export interface TaskList {
     name: string;
     primary: boolean;
     ownerUuid: string;
-};
+}

@@ -10,14 +10,14 @@ export interface Task {
 
     title: string;
     description: string;
-    
+
     createdOn: Date;
     updatedOn: Date;
     completedOn: Date;
 
     status: TaskStatus;
 
-    tags: [String]
+    tags: [String];
 
     relations: TaskRelation[];
     events: TaskEvent[];

@@ -6,4 +6,4 @@ export interface TaskEvent {
     taskUuid: string;
     eventType: TaskEventType;
     stamp: Date;
-};
+}

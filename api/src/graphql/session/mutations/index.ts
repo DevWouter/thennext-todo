@@ -6,4 +6,4 @@ export const SessionMutations = {
     createSession,
     extendSession,
     destroySession,
-}
+};

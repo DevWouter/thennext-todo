@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
-import { TaskEntity } from './task.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm";
+import { AccountEntity } from "./account.entity";
+import { TaskEntity } from "./task.entity";
 
 export enum TaskRelationType {
-    blocks = 'blocks',
+    blocks = "blocks",
 }
 
-@Entity('TaskRelation')
+@Entity("TaskRelation")
 export class TaskRelationEntity {
     @PrimaryGeneratedColumn()
     id: number;

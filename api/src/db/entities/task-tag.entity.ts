@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
-import { TaskEntity } from './task.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm";
+import { AccountEntity } from "./account.entity";
+import { TaskEntity } from "./task.entity";
 
-@Entity('TaskTag')
+@Entity("TaskTag")
 export class TaskTagEntity {
     @PrimaryGeneratedColumn()
     id: number;

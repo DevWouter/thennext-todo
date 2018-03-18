@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { AccountEntity } from "./account.entity";
 
-@Entity('Session')
+@Entity("Session")
 export class SessionEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -12,9 +12,9 @@ export class SessionEntity {
     @Column({ nullable: false, unique: true })
     token: string;
 
-    @Column('datetime')
+    @Column("datetime")
     created_on: Date;
 
-    @Column('datetime')
+    @Column("datetime")
     expire_on: Date;
 }

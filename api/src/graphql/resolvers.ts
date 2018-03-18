@@ -27,7 +27,7 @@ const Query = {
     ...TaskListQueries,
     ...TaskQueries,
     ...TaskRelationQueries,
-}
+};
 
 export const resolvers = {
     Query,
@@ -42,4 +42,4 @@ export const resolvers = {
     TaskEvent: TaskEventResolvers,
     TaskList: TaskListResolvers,
     TaskRelation: TaskRelationResolvers,
-}
+};

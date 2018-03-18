@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm";
+import { AccountEntity } from "./account.entity";
 
-@Entity('TagScore')
+@Entity("TagScore")
 export class TagScoreEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -12,6 +12,6 @@ export class TagScoreEntity {
     @Column()
     name: string;
 
-    @Column('float')
+    @Column("float")
     value: number;
 }

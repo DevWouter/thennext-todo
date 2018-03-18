@@ -1,5 +1,5 @@
 import { EntityManager } from "typeorm";
 
-export interface GraphContext { 
+export interface GraphContext {
     entityManager: EntityManager;
 }

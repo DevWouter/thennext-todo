@@ -13,7 +13,7 @@ export async function getAccountSettings(obj: Account, args, context: GraphConte
             ]
         });
 
-    
+
 
     const result = <AccountSettings>{
         _id: account.accountSettings.id,

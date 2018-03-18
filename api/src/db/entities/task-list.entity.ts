@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from 'typeorm';
-import { AccountEntity } from './account.entity';
-import { TaskEntity } from './task.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
+import { AccountEntity } from "./account.entity";
+import { TaskEntity } from "./task.entity";
 
-@Entity('TaskList')
+@Entity("TaskList")
 export class TaskListEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,8 +10,8 @@ export class TaskListEntity {
     /**
      * A unique identifier that can be used to find a taskList.
      */
-    @Column('varchar', { unique: true })
-    @Generated('uuid')
+    @Column("varchar", { unique: true })
+    @Generated("uuid")
     uuid: string;
 
     @Column({ nullable: false })

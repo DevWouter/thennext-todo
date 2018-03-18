@@ -1,13 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from 'typeorm';
-import { TaskEntity } from './task.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
+import { TaskEntity } from "./task.entity";
 
-@Entity('ChecklistItem')
+@Entity("ChecklistItem")
 export class ChecklistItemEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('varchar', { length: 36, unique: true, nullable: false })
-    @Generated('uuid')
+    @Column("varchar", { length: 36, unique: true, nullable: false })
+    @Generated("uuid")
     uuid: string;
 
     @Column()

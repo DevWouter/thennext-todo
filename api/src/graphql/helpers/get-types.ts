@@ -1,10 +1,10 @@
-import * as glob from 'glob';
-import * as fs from 'fs';
-import { mergeTypes } from 'merge-graphql-schemas';
+import * as glob from "glob";
+import * as fs from "fs";
+import { mergeTypes } from "merge-graphql-schemas";
 
 function loadFiles(pattern: string): any[] {
     const paths = glob.sync(pattern);
-    return paths.map(path => fs.readFileSync(path, 'utf8'));
+    return paths.map(path => fs.readFileSync(path, "utf8"));
 }
 
 function mergeTypesByPaths(...pathsToTypes: string[]): string {

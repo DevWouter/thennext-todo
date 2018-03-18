@@ -2,7 +2,7 @@ import { TagScore } from "./tag-score.model";
 import { DecaySpeed } from "./decay-speed.model";
 
 export interface AccountSettings {
-    _id: number,
+    _id: number;
     scrollToNewTasks: boolean;
     hideScoreInTaskList: boolean;
 

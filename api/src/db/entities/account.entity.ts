@@ -1,18 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from 'typeorm';
-import { AccountSettingsEntity } from './account-settings.entity';
-import { DecaySpeedEntity } from './decay-speed.entity';
-import { TagScoreEntity } from './tag-score.entity';
-import { SessionEntity } from './session.entity';
-import { TaskList } from '../../graphql/task-list/task-list';
-import { TaskListEntity } from './task-list.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
+import { AccountSettingsEntity } from "./account-settings.entity";
+import { DecaySpeedEntity } from "./decay-speed.entity";
+import { TagScoreEntity } from "./tag-score.entity";
+import { SessionEntity } from "./session.entity";
+import { TaskList } from "../../graphql/task-list/task-list";
+import { TaskListEntity } from "./task-list.entity";
 
-@Entity('Account')
+@Entity("Account")
 export class AccountEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('varchar', { unique: true })
-    @Generated('uuid')
+    @Column("varchar", { unique: true })
+    @Generated("uuid")
     uuid: string;
 
     @Column({ length: 500 })

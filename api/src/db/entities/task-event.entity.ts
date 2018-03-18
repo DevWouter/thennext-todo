@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
-import { TaskEntity } from './task.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm";
+import { AccountEntity } from "./account.entity";
+import { TaskEntity } from "./task.entity";
 
 export enum TaskEventType {
-    delay = 'delay',
+    delay = "delay",
 }
 
-@Entity('TaskEvent')
+@Entity("TaskEvent")
 export class TaskEventEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -17,6 +17,6 @@ export class TaskEventEntity {
     @Column({ nullable: false })
     eventType: TaskEventType;
 
-    @Column('datetime')
+    @Column("datetime")
     stamp: Date;
 }
