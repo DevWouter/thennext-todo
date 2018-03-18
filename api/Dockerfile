@@ -17,10 +17,6 @@ COPY \
     /server/
 
 COPY \
-    ./tools \
-    /server/tools/
-
-COPY \
     ./src \
     /server/src/
 
