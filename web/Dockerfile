@@ -1,7 +1,4 @@
-### STAGE 1: Build ###
-
-# We label our stage as 'builder'
-FROM node:8-alpine as builder
+FROM node:9-alpine
 
 WORKDIR /app
 
@@ -15,7 +12,8 @@ RUN \
     npm config set depth 0 &&\
     npm cache clean --force
 
-RUN npm install
+RUN \
+    npm install
 
 COPY . /app/
 
