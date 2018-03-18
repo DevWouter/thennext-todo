@@ -1,4 +1,8 @@
 version: '3'
+
+volumes:
+  node_modules:
+
 services:
 
   db:
@@ -11,17 +15,35 @@ services:
       MYSQL_USER: "test"
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "test"
+
+  proxy:
+    build: 
+      context: proxy
+      args:
+        - NGINX_CONFIG=dev
+    image: pa_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+      - web 
+
   api:
     build:
       context: api
     image: pa_api
-    volumes:
-      - ./api:/server
     ports:
       - "3000:3000"
+    volumes:
+      - ./api:/server
     depends_on:
       - db
     command: npm run start:watch
-  # TODO:
-  # - Add compose support for api
-  # - Add compose support for web
+
+  web:
+    build:
+      context: web
+    image: pa_web
+    volumes: 
+      - ./web:/app
+      - node_modules:/app/node_modules
