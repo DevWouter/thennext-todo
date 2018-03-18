@@ -7,6 +7,7 @@ import { AppComponent } from "./app.component";
 import { HomepageComponent } from "./homepage/homepage.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { AccountModule } from "./account/account.module";
+import { ServicesModule } from "./services/services.module";
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { AccountModule } from "./account/account.module";
   imports: [
     BrowserModule,
     FormsModule,
+    ServicesModule,
     AppRoutingModule,
     AccountModule,
   ],

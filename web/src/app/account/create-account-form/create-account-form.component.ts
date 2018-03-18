@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { AccountService } from "../../services/account.service";
 
 @Component({
   selector: "app-create-account-form",
@@ -9,14 +10,15 @@ export class CreateAccountFormComponent implements OnInit {
   username = "";
   password = "";
   response: any = undefined;
+  clickCounter = 0;
 
-  constructor() { }
+  constructor(private accountService: AccountService) { }
 
   ngOnInit() {
   }
 
-  submit() {
-    this.response = "test";
+  async submit() {
+    this.response = await this.accountService.createAccount(this.username, this.password);
+    this.clickCounter++;
   }
-
 }
