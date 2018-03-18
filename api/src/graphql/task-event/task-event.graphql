@@ -16,6 +16,6 @@ input TaskEventInput {
 }
 
 type Mutation {
-    createTaskEvent(taskUuid: Uuid!, input: TaskEventInput!): TaskEvent
-    destroyTaskEvent(uuid: Uuid!): Boolean
+    createTaskEvent(taskUuid: Uuid!, input: TaskEventInput!): TaskEvent @isAuthenticated
+    destroyTaskEvent(uuid: Uuid!): Boolean @isAuthenticated
 }

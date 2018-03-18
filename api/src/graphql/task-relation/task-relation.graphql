@@ -18,6 +18,6 @@ input TaskRelationInput {
 }
 
 type Mutation {
-    createTaskRelation(input: TaskRelationInput!): TaskRelation
-    destroyTaskRelation(uuid: Uuid!): Boolean
+    createTaskRelation(input: TaskRelationInput!): TaskRelation @isAuthenticated
+    destroyTaskRelation(uuid: Uuid!): Boolean @isAuthenticated
 }

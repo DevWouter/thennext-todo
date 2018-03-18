@@ -13,12 +13,12 @@ input TaskListInput {
 }
 
 type Query {
-    taskLists: [TaskList]
-    taskList(uuid: Uuid): TaskList
+    taskLists: [TaskList] @isAuthenticated
+    taskList(uuid: Uuid): TaskList @isAuthenticated
 }
 
 type Mutation {
-    createTaskList(name: String!): TaskList
-    destroyTaskList(uuid: Uuid!): Boolean
-    updateTaskList(uuid: Uuid!, input: TaskListInput!): TaskList
+    createTaskList(name: String!): TaskList @isAuthenticated
+    destroyTaskList(uuid: Uuid!): Boolean @isAuthenticated
+    updateTaskList(uuid: Uuid!, input: TaskListInput!): TaskList @isAuthenticated
 }

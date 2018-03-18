@@ -12,7 +12,7 @@ input ChecklistItemInput {
 }
 
 type Mutation {
-    createChecklistItem(taskUuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
-    updateChecklistItem(uuid: Uuid!, input: ChecklistItemInput!): ChecklistItem
-    destroyChecklistItem(uuid: Uuid!): Boolean
+    createChecklistItem(taskUuid: Uuid!, input: ChecklistItemInput!): ChecklistItem @isAuthenticated
+    updateChecklistItem(uuid: Uuid!, input: ChecklistItemInput!): ChecklistItem @isAuthenticated
+    destroyChecklistItem(uuid: Uuid!): Boolean @isAuthenticated
 }

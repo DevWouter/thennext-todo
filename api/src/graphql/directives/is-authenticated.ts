@@ -14,5 +14,5 @@ export async function isAuthenticated(
     context: GraphContext,
     info
 ) {
-    throw new Error("not implemented");
+    throw new Error("The authentication is not implemented");
 }

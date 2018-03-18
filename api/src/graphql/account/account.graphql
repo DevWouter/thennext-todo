@@ -5,15 +5,15 @@ type Account {
 }
 
 type Query {
-    me: Account
-    account(uuid: Uuid!): Account
-    accounts: [Account]
+    me: Account @isAuthenticated
+    account(uuid: Uuid!): Account @isAuthenticated
+    accounts: [Account] @isAuthenticated
 }
 
 type Mutation {
     createAccount(input: CreateAccountInput!): Account
-    changePassword(input: ChangePasswordInput!): Boolean
-    changeEmail(input: ChangeEmailInput!): Boolean
+    changePassword(input: ChangePasswordInput!): Boolean @isAuthenticated
+    changeEmail(input: ChangeEmailInput!): Boolean @isAuthenticated
 }
 
 

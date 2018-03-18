@@ -35,12 +35,12 @@ input TaskInput {
 }
 
 type Query {
-    tasks: [Task]
-    task(uuid: Uuid!): Task
+    tasks: [Task] @isAuthenticated
+    task(uuid: Uuid!): Task @isAuthenticated
 }
 
 type Mutation {
-    createTask(taskListUuid: Uuid!, input: TaskInput!): Task
-    updateTask(uuid: Uuid!, input: TaskInput!): Task
-    destroyTask(uuid: Uuid!): Boolean
+    createTask(taskListUuid: Uuid!, input: TaskInput!): Task @isAuthenticated
+    updateTask(uuid: Uuid!, input: TaskInput!): Task @isAuthenticated
+    destroyTask(uuid: Uuid!): Boolean @isAuthenticated
 }
