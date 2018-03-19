@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AccountService } from "../../services/account.service";
 import { Observable } from "rxjs/Observable";
+import { SessionService } from "../../services/session.service";
 
 @Component({
   selector: "app-create-account-form",
@@ -10,22 +11,17 @@ import { Observable } from "rxjs/Observable";
 export class CreateAccountFormComponent implements OnInit {
   username = "";
   password = "";
-  response: any = undefined;
-  accounts: Observable<any>;
-  clickCounter = 0;
+  response: any = null;
 
-  constructor(private accountService: AccountService) { }
+  constructor(
+    private accountService: AccountService,
+    private sessionService: SessionService,
+  ) { }
 
   ngOnInit() {
-    this.accounts = this.accountService.getAccounts();
   }
 
   async submit() {
     this.response = await this.accountService.createAccount(this.username, this.password);
-    this.clickCounter++;
-  }
-
-  getAccounts() {
-
   }
 }

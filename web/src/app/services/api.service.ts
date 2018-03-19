@@ -2,6 +2,11 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { HttpLink } from "apollo-angular-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { DocumentNode } from "graphql";
+
+export interface MutationResult<T> {
+  data: T;
+}
 
 @Injectable()
 export class ApiService {
@@ -16,4 +21,16 @@ export class ApiService {
     });
   }
 
+  // async mutate<TR>(mutation: DocumentNode, variables?: any): Promise<MutationResult<TR>> {
+  //   return new Promise<MutationResult<TR>>((resolve, reject) => {
+  //     this.apollo.mutate({
+  //       mutation,
+  //       variables,
+  //     }).subscribe(x => {
+  //       resolve(<MutationResult<TR>>{
+  //         data: x.data
+  //       });
+  //     }, (reason) => reject(reason));
+  //   });
+  // }
 }
