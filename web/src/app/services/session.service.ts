@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import gql from "graphql-tag";
 
 import { ApiService } from "./api.service";
+import { createSessionMutation, createSessionMutationVariables } from "./graphql-types/operation-result-types";
 
 const CREATE_SESSION = gql`
 mutation createSession($email: String!, $password: String!) {
@@ -17,17 +18,15 @@ export class SessionService {
     private apiService: ApiService,
   ) { }
 
-  async createSession(email: string, password: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.apiService.apollo.mutate({
+  async createSession(email: string, password: string): Promise<createSessionMutation> {
+    const variables = <createSessionMutationVariables>{ email, password };
+    return new Promise<createSessionMutation>((resolve, reject) => {
+      this.apiService.apollo.mutate<createSessionMutation, createSessionMutationVariables>({
         mutation: CREATE_SESSION,
-        variables: {
-          email: email,
-          password: password
-        }
+        variables,
       }).subscribe((x) => {
-        resolve(x);
-      }, (reason) => reject(reason));
+        resolve(x.data as createSessionMutation);
+      }, reject);
     });
   }
 }

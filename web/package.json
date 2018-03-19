@@ -8,7 +8,10 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "gql:introspect-schema": "apollo-codegen introspect-schema http://localhost/graphql --output src/app/services/graphql-types/schema.json",
+    "gql:generate": "apollo-codegen generate src/app/services/*.ts --schema src/app/services/graphql-types/schema.json --target typescript --output src/app/services/graphql-types/operation-result-types.ts --addTypename",
+    "gql:regen": "npm run gql:introspect-schema && npm run gql:generate"
   },
   "private": true,
   "dependencies": {
@@ -35,9 +38,11 @@
     "@angular/cli": "~1.7.3",
     "@angular/compiler-cli": "^5.2.0",
     "@angular/language-service": "^5.2.0",
+    "@types/graphql": "^0.12.5",
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
+    "apollo-codegen": "^0.19.0",
     "codelyzer": "^4.0.1",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",

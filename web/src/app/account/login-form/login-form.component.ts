@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit {
   async login() {
     try {
       const session = await this.sessionService.createSession(this.username, this.password);
-      this.response = session;
+      this.response = session.createSession;
     } catch (reason) {
       this.response = reason;
     }
