@@ -6,7 +6,7 @@ export class DecaySpeedEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => AccountEntity, account => account.decaySpeeds)
+    @ManyToOne(type => AccountEntity, account => account.decaySpeeds, { onDelete: "CASCADE" })
     account: AccountEntity;
 
     @Column("float")

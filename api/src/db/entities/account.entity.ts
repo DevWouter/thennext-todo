@@ -20,7 +20,7 @@ export class AccountEntity {
     @Column({ length: 500 })
     password_hash: string;
 
-    @OneToOne(type => AccountSettingsEntity, accountSettings => accountSettings.account, { cascadeAll: true })
+    @OneToOne(type => AccountSettingsEntity, accountSettings => accountSettings.account, { cascadeAll: true, onDelete: "CASCADE" })
     accountSettings: AccountSettingsEntity;
 
     @OneToMany(type => DecaySpeedEntity, decaySpeed => decaySpeed.account)

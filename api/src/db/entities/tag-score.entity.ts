@@ -6,7 +6,7 @@ export class TagScoreEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => AccountEntity, account => account.tagScores)
+    @ManyToOne(type => AccountEntity, account => account.tagScores, { onDelete: "CASCADE" })
     account: AccountEntity;
 
     @Column()

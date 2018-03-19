@@ -16,6 +16,6 @@ export class ChecklistItemEntity {
     @Column({ length: 512, nullable: false })
     title: string;
 
-    @ManyToOne(type => TaskEntity, task => task.checklistItems, { nullable: false })
+    @ManyToOne(type => TaskEntity, task => task.checklistItems, { nullable: false, onDelete: "CASCADE" })
     task: TaskEntity;
 }

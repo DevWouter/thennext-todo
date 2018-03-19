@@ -19,7 +19,7 @@ export class TaskEntity {
     @Generated("uuid")
     uuid: string;
 
-    @ManyToOne(type => TaskListEntity, taskList => taskList.tasks)
+    @ManyToOne(type => TaskListEntity, taskList => taskList.tasks, { onDelete: "CASCADE" })
     taskList: TaskListEntity;
 
     @Column({ nullable: false })

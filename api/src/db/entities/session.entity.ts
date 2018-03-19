@@ -6,7 +6,7 @@ export class SessionEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => AccountEntity, account => account.sessions)
+    @ManyToOne(type => AccountEntity, account => account.sessions, { onDelete: "CASCADE" })
     account: AccountEntity;
 
     @Column({ nullable: false, unique: true })

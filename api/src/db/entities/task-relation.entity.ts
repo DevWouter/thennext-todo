@@ -11,10 +11,10 @@ export class TaskRelationEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => TaskEntity, task => task.sourceInRelations)
+    @ManyToOne(type => TaskEntity, task => task.sourceInRelations, { onDelete: "CASCADE" })
     sourceTask: TaskEntity;
 
-    @ManyToOne(type => TaskEntity, task => task.targetInRelations)
+    @ManyToOne(type => TaskEntity, task => task.targetInRelations, { onDelete: "CASCADE" })
     targetTask: TaskEntity;
 
     @Column()

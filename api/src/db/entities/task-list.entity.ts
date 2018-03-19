@@ -20,7 +20,7 @@ export class TaskListEntity {
     @Column()
     primary: boolean;
 
-    @ManyToOne(type => AccountEntity, account => account.taskLists)
+    @ManyToOne(type => AccountEntity, account => account.taskLists, { onDelete: "CASCADE" })
     @JoinColumn()
     owner: AccountEntity;
 

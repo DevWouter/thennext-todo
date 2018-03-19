@@ -11,7 +11,7 @@ export class TaskEventEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => TaskEntity, task => task.tags)
+    @ManyToOne(type => TaskEntity, task => task.tags, { onDelete: "CASCADE" })
     task: TaskEntity;
 
     @Column({ nullable: false })
