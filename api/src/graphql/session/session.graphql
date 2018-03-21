@@ -37,5 +37,7 @@ type Mutation {
     destroySession(token: String!): Boolean @isAuthenticated
 
     # Extend the session of the given token
-    extendSession(token: String!): Session @isAuthenticated
+    # Returns an error if token is not of the current user.
+    # Returns an error if token does not exist
+    extendSession(token: String!): Session! @isAuthenticated
 }

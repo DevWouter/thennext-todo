@@ -10,4 +10,6 @@
 
 <button (click)="login()">Login</button>
 
-<code><pre>{{response | json}}</pre></code>
+<button (click)="extend()">Extend</button>
+
+<div *ngIf="showError">Unable to login, an error occured, please try again</div>

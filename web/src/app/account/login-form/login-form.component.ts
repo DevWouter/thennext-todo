@@ -1,5 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { SessionService } from "../../services/session.service";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+
+import {
+  ApiService,
+  SessionService,
+  StorageService,
+  StorageKey,
+} from "../../services";
 
 @Component({
   selector: "app-login-form",
@@ -9,21 +15,42 @@ import { SessionService } from "../../services/session.service";
 export class LoginFormComponent implements OnInit {
   username: string;
   password: string;
-  response: any = null;
+  showError = false;
+
+  @Output("success")
+  success = new EventEmitter<boolean>();
 
   constructor(
+    private apiService: ApiService,
     private sessionService: SessionService,
+    private storageService: StorageService,
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line:no-console
+    this.success.subscribe((x) => console.debug(`LoginForm.succes emits ${x}`));
+  }
+
+  async extend() {
+    try {
+      const token = this.storageService.get(StorageKey.SESSION_TOKEN);
+      const response = await this.sessionService.extendSession(token);
+      console.log("Extended");
+    } catch (reason) {
+      console.log(reason);
+    }
   }
 
   async login() {
+    this.showError = false;
     try {
       const session = await this.sessionService.createSession(this.username, this.password);
-      this.response = session.createSession;
+      this.apiService.setSessionToken(session.createSession.token, session.createSession.expireAt);
+      this.success.emit(true);
     } catch (reason) {
-      this.response = reason;
+      console.error("Unable to create session", reason);
+      this.showError = true;
+      this.success.emit(false);
     }
   }
 }

@@ -1,5 +1,7 @@
-import { GraphContext } from "../helpers";
+import * as moment from "moment";
 
+import { GraphContext } from "../helpers";
+import { SessionEntity } from "../../db/entities";
 /**
  * @param next The function that is called to continue resolving the graph.
  * @param source The object (if any) which is the owner/parent of what needs to be resolved
@@ -14,6 +16,24 @@ export async function isAuthenticated(
     context: GraphContext,
     info
 ) {
-    // throw new Error("The authentication is not implemented");
-    return next();
+    if (context.authorizationToken) {
+        // Validate the token
+        const session = await context.entityManager.findOne(SessionEntity, { where: { token: context.authorizationToken } });
+        if (!session) {
+            console.warn(`No session found with token: ${context.authorizationToken}`);
+            throw new Error(`Token invalid`);
+        }
+
+        if (moment(session.expire_on).isBefore(moment())) {
+            console.log(`AUTH token expired: ${context.authorizationToken}`);
+            context.entityManager.remove(session);
+            throw new Error(`Token expired`);
+        }
+
+        // Call the next resolver.
+        console.log(`AUTH token valid: ${context.authorizationToken}`);
+        return next();
+    }
+
+    throw new Error(`Token required`);
 }

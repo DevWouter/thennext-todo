@@ -29,3 +29,18 @@ export interface createSessionMutation {
     expireAt: string | null,
   } | null,
 };
+
+export interface extendSessionMutationVariables {
+  token: string,
+};
+
+export interface extendSessionMutation {
+  // Extend the session of the given token
+  extendSession:  {
+    __typename: "Session",
+    // The token of the session
+    token: string | null,
+    // When the token will expire
+    expireAt: string | null,
+  } | null,
+};

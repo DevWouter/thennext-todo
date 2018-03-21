@@ -4,8 +4,8 @@ import * as bodyParser from "body-parser";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { makeExecutableSchema } from "graphql-tools";
 import { GraphQLOptions } from "apollo-server-core";
-
 import { createConnection, getManager, Connection } from "typeorm";
+
 import { GraphContext, typeDefs } from "../graphql/helpers";
 import { resolvers } from "../graphql/resolvers";
 import { directiveResolvers } from "../graphql/directive-resolvers";
@@ -18,11 +18,27 @@ const schema = makeExecutableSchema({
     directiveResolvers: directiveResolvers
 });
 
+function getAuthorizationToken(req?: express.Request) {
+    const authorization_header = req.header("Authorization");
+    if (authorization_header) {
+        const regex_result = /Bearer (.*)/.exec(authorization_header);
+        if (regex_result) {
+            const token = regex_result[1];
+            return token;
+        }
+    }
+
+    // No token found in authorization.
+    return null;
+}
 async function optionsFunc(req?: express.Request, res?: express.Response): Promise<GraphQLOptions> {
     const manager = await getManager();
+
     const context = <GraphContext>{
-        entityManager: manager
+        entityManager: manager,
+        authorizationToken: getAuthorizationToken(req)
     };
+
     return {
         schema,
         context
