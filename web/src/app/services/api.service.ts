@@ -29,6 +29,7 @@ export class ApiService {
     // Store session token first and then also store it so we can retrieve it later.
     this._sessionToken = token;
     this.storageService.set(StorageKey.SESSION_TOKEN, token);
+    this.storageService.set(StorageKey.SESSION_EXPIRE, expireAt);
   }
 
   private createApollo_Http() {

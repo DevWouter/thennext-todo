@@ -35,6 +35,7 @@ export class LoginFormComponent implements OnInit {
     try {
       const token = this.storageService.get(StorageKey.SESSION_TOKEN);
       const response = await this.sessionService.extendSession(token);
+      this.apiService.setSessionToken(response.extendSession.token, response.extendSession.expireAt);
       console.log("Extended");
     } catch (reason) {
       console.log(reason);

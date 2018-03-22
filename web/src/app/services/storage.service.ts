@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 
 export enum StorageKey {
   SESSION_TOKEN = "SESSION_TOKEN",
+  SESSION_EXPIRE = "SESSION_EXPIRE",
 }
 
 @Injectable()
