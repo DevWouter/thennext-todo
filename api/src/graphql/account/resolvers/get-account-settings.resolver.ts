@@ -5,7 +5,8 @@ import { AccountEntity } from "../../../db/entities";
 import { DecaySpeed } from "../../account-settings/decay-speed.model";
 
 export async function getAccountSettings(obj: Account, args, context: GraphContext, info): Promise<AccountSettings> {
-    const account = await context.entityManager.findOne(AccountEntity,
+    const entityManager = context.entityManager;
+    const account = await entityManager.findOne(AccountEntity,
         {
             where: <AccountEntity>{ uuid: obj.uuid },
             relations: [

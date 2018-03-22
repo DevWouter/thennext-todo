@@ -10,8 +10,8 @@ export async function createSession(
     context: GraphContext,
     info
 ): Promise<Session> {
-
-    const account = await context.entityManager.findOne(AccountEntity, <Partial<AccountEntity>>{ email: args.email });
+    const entityManager = context.entityManager;
+    const account = await entityManager.findOne(AccountEntity, <Partial<AccountEntity>>{ email: args.email });
     if (!account) {
         throw new Error("No user found");
     }
@@ -22,13 +22,13 @@ export async function createSession(
     }
 
     // Create the session and store it.
-    let session = context.entityManager.create(SessionEntity);
+    let session = entityManager.create(SessionEntity);
     session.account = account;
     session.token = await bcrypt.genSalt();
     session.expire_on = moment().add({ weeks: 3 }).toDate();
     session.created_on = moment().toDate();
 
-    session = await context.entityManager.save(session);
+    session = await entityManager.save(session);
 
     return <Session>{
         _id: session.id,

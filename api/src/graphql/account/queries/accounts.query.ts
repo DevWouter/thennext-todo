@@ -3,7 +3,8 @@ import { Account } from "../account.model";
 import { AccountEntity } from "../../../db/entities";
 
 export async function accounts(obj: Account, args, context: GraphContext, info): Promise<Account[]> {
-    const repo = context.entityManager.getRepository<AccountEntity>(AccountEntity);
+    const entityManager = context.entityManager;
+    const repo = entityManager.getRepository<AccountEntity>(AccountEntity);
     const results = repo.find();
     return results.then(x =>
         x.map(y => {

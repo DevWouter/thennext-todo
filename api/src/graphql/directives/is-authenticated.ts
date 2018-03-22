@@ -17,8 +17,9 @@ export async function isAuthenticated(
     info
 ) {
     if (context.authorizationToken) {
+        const entityManager = context.entityManager;
         // Validate the token
-        const session = await context.entityManager.findOne(SessionEntity, { where: { token: context.authorizationToken } });
+        const session = await entityManager.findOne(SessionEntity, { where: { token: context.authorizationToken } });
         if (!session) {
             console.warn(`No session found with token: ${context.authorizationToken}`);
             throw new Error(`Token invalid`);
@@ -26,7 +27,7 @@ export async function isAuthenticated(
 
         if (moment(session.expire_on).isBefore(moment())) {
             console.log(`AUTH token expired: ${context.authorizationToken}`);
-            context.entityManager.remove(session);
+            entityManager.remove(session);
             throw new Error(`Token expired`);
         }
 

@@ -2,6 +2,7 @@ import { AccountMutations, AccountQueries, AccountResolvers } from "./account";
 import { AccountSettingsResolvers, AccountSettingsMutations } from "./account-settings";
 import { ChecklistItemMutations, ChecklistItemQueries, ChecklistItemResolvers } from "./checklist-item";
 import { SessionMutations, SessionQueries, SessionResolvers } from "./session";
+import { SupportQueries } from "./support";
 import { TaskEventMutations, TaskEventQueries, TaskEventResolvers } from "./task-event";
 import { TaskListMutations, TaskListQueries, TaskListResolvers } from "./task-list";
 import { TaskMutations, TaskQueries, TaskResolvers } from "./task";
@@ -23,6 +24,7 @@ const Query = {
     ...AccountQueries,
     ...ChecklistItemQueries,
     ...SessionQueries,
+    ...SupportQueries,
     ...TaskEventQueries,
     ...TaskListQueries,
     ...TaskQueries,

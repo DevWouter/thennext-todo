@@ -5,7 +5,8 @@ import * as moment from "moment";
 
 export async function extendSession(obj, args: { token: string }, context: GraphContext, info): Promise<Session> {
     // Also load the account.
-    let session = await context.entityManager.findOne(SessionEntity,
+    const entityManager = context.entityManager;
+    let session = await entityManager.findOne(SessionEntity,
         {
             where: { token: args.token },
             relations: ["account"]
@@ -19,7 +20,7 @@ export async function extendSession(obj, args: { token: string }, context: Graph
     session.expire_on = moment().add({ weeks: 3 }).toDate();
 
     // Store the session
-    session = await context.entityManager.save(session);
+    session = await entityManager.save(session);
     return <Session>{
         _id: session.id,
         expireAt: session.expire_on,
