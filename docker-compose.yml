@@ -6,7 +6,9 @@ volumes:
 services:
 
   db:
-    image: "mysql:5.7.21"
+    build:
+      context: db
+    image: pa_db
     ports:
       # Only allow this port to be public in development mode
       - "3306:3306"
@@ -15,6 +17,9 @@ services:
       MYSQL_USER: "test"
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "test"
+    volumes:
+      - ./db/docker_volume/lib/sql/lib:/var/lib/mysql
+      - ./db/backups:/backups
 
   proxy:
     build: 
