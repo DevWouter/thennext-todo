@@ -14,7 +14,7 @@ export class TaskPageHeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.refreshTaskList();
+    this.taskListService.taskLists.subscribe(x => this.lists = x);
   }
 
   createNewTaskList() {
@@ -27,7 +27,4 @@ export class TaskPageHeaderComponent implements OnInit {
     this.taskListService.createTaskList(result);
   }
 
-  refreshTaskList() {
-    this.taskListService.getTaskLists().then(x => this.lists = x.taskLists);
-  }
 }
