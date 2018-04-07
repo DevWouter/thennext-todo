@@ -14,7 +14,6 @@ export async function taskLists(obj, args: {}, context: GraphContext, info): Pro
         name: x.name,
         primary: x.primary,
         uuid: x.uuid,
-        ownerUuid: x.owner.uuid
     }));
 
     return result;

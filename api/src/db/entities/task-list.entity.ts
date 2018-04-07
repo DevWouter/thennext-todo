@@ -17,7 +17,7 @@ export class TaskListEntity {
     @Column({ nullable: false })
     name: string;
 
-    @Column()
+    @Column({ default: false })
     primary: boolean;
 
     @ManyToOne(type => AccountEntity, account => account.taskLists, { onDelete: "CASCADE" })

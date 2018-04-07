@@ -14,7 +14,20 @@ export class TaskPageHeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.taskListService.getTaskLists().then(x => this.lists = x.taskLists);
+    this.refreshTaskList();
   }
 
+  createNewTaskList() {
+    let result = prompt("Please enter the name of the new tasklist") || "";
+    result = result.trim();
+    if (result.length === 0) {
+      return;
+    }
+
+    this.taskListService.createTaskList(result);
+  }
+
+  refreshTaskList() {
+    this.taskListService.getTaskLists().then(x => this.lists = x.taskLists);
+  }
 }

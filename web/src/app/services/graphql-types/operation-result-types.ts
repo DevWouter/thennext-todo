@@ -55,3 +55,16 @@ export interface getTaskListsQuery {
     name: string,
   } | null > | null,
 };
+
+export interface createTaskListMutationVariables {
+  name: string,
+};
+
+export interface createTaskListMutation {
+  createTaskList:  {
+    __typename: "TaskList",
+    uuid: string,
+    primary: boolean,
+    name: string,
+  } | null,
+};
