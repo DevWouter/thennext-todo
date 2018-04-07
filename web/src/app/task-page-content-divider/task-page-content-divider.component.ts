@@ -11,6 +11,7 @@ export class TaskPageContentDividerComponent implements OnInit {
 
   private isCapturing = false;
   private prevPosition = 0;
+  private startPosition = 0;
 
   @Output()
   deltaMove = new EventEmitter<number>();
@@ -23,6 +24,7 @@ export class TaskPageContentDividerComponent implements OnInit {
 
     htmlElement.addEventListener("mousedown", (ev) => {
       this.isCapturing = true;
+      this.startPosition = ev.clientX;
       this.prevPosition = ev.clientX;
       ev.preventDefault();
     });

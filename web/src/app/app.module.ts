@@ -18,6 +18,7 @@ import { TaskPageContentListComponent } from "./task-page-content-list/task-page
 import { TaskPageContentPaneComponent } from "./task-page-content-pane/task-page-content-pane.component";
 import { TaskPageFooterComponent } from "./task-page-footer/task-page-footer.component";
 import { TaskPageHeaderComponent } from "./task-page-header/task-page-header.component";
+import { TaskPageContentListItemComponent } from "./task-page-content-list-item/task-page-content-list-item.component";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { TaskPageHeaderComponent } from "./task-page-header/task-page-header.com
     TaskPageContentPaneComponent,
     TaskPageFooterComponent,
     TaskPageHeaderComponent,
+    TaskPageContentListItemComponent,
   ],
   imports: [
     BrowserModule,
