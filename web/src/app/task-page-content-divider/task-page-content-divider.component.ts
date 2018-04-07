@@ -14,7 +14,7 @@ export class TaskPageContentDividerComponent implements OnInit {
   private startPosition = 0;
 
   @Output()
-  deltaMove = new EventEmitter<number>();
+  rightWidth = new EventEmitter<number>();
 
   constructor(private hostElement: ElementRef) {
   }
@@ -25,7 +25,6 @@ export class TaskPageContentDividerComponent implements OnInit {
     htmlElement.addEventListener("mousedown", (ev) => {
       this.isCapturing = true;
       this.startPosition = ev.clientX;
-      this.prevPosition = ev.clientX;
       ev.preventDefault();
     });
 
@@ -35,33 +34,20 @@ export class TaskPageContentDividerComponent implements OnInit {
         return;
       }
 
-      const delta = ev.clientX - this.prevPosition;
-
-      // Only report delta if useful.
-      if (delta !== 0) {
-        this.deltaMove.emit(delta);
-      }
-
-      // Store the new position.
-      this.prevPosition = ev.clientX;
+      const exact = window.innerWidth - ev.clientX;
+      this.rightWidth.emit(exact);
     });
+
     document.addEventListener("mouseup", (ev) => {
       if (!this.isCapturing) {
         // Not in capture mode.
         return;
       }
 
-      const delta = ev.clientX - this.prevPosition;
+      const exact = window.innerWidth - ev.clientX;
+      this.rightWidth.emit(exact);
 
-      // Only report delta if useful.
-      if (delta !== 0) {
-        this.deltaMove.emit(delta);
-      }
-
-      // Store the new position.
-      this.prevPosition = ev.clientX;
       this.isCapturing = false;
     });
   }
-
 }

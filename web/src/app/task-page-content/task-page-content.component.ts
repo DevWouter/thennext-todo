@@ -14,4 +14,8 @@ export class TaskPageContentComponent implements OnInit {
   offsetPaneWidth(offset: number): void {
     this.size += offset;
   }
+
+  setPaneWidth(width: number): void {
+    this.size = width;
+  }
 }
