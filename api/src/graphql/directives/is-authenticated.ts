@@ -32,7 +32,6 @@ export async function isAuthenticated(
         }
 
         // Call the next resolver.
-        console.log(`AUTH token valid: ${context.authorizationToken}`);
         return next();
     }
 
