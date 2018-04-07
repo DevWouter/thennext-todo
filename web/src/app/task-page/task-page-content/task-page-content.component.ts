@@ -6,10 +6,12 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./task-page-content.component.scss"]
 })
 export class TaskPageContentComponent implements OnInit {
-
-  constructor() { }
+  size = 300;
 
   ngOnInit() {
   }
 
+  offsetPaneWidth(offset: number): void {
+    this.size += offset;
+  }
 }

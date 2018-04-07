@@ -10,18 +10,12 @@ import { AppComponent } from "./app.component";
 
 import { HomepageComponent } from "./homepage/homepage.component";
 import { TaskPageComponent } from "./task-page/task-page.component";
-import { TaskPageHeaderComponent } from "./task-page-header/task-page-header.component";
-import { TaskPageFooterComponent } from "./task-page-footer/task-page-footer.component";
-import { TaskPageContentComponent } from "./task-page-content/task-page-content.component";
+import { TaskPageModule } from "./task-page/task-page.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
-    TaskPageComponent,
-    TaskPageHeaderComponent,
-    TaskPageFooterComponent,
-    TaskPageContentComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,6 +23,7 @@ import { TaskPageContentComponent } from "./task-page-content/task-page-content.
     ServicesModule,
     AppRoutingModule,
     AccountModule,
+    TaskPageModule
   ],
   providers: [],
   bootstrap: [AppComponent]
