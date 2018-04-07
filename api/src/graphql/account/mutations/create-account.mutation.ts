@@ -1,9 +1,10 @@
 import { GraphContext } from "../../helpers";
 import { Account } from "../account.model";
 import { CreateAccountInput } from "./create-account.input";
-import { AccountEntity, AccountSettingsEntity } from "../../../db/entities";
+import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../../db/entities";
 import * as bcrypt from "bcryptjs";
 import { SecurityConfig } from "../../../config";
+import { EntityManager } from "typeorm";
 
 
 function throwIfInvalid(input: CreateAccountInput): void {
@@ -35,6 +36,13 @@ export async function createAccount(obj, args: { input: CreateAccountInput }, co
     account.password_hash = await bcrypt.hash(args.input.password, SecurityConfig.saltRounds);
     account.accountSettings = new AccountSettingsEntity();
     AccountSettingsEntity.setDefaultValues(account.accountSettings);
+
+    // Create primary task list
+    const primaryTaskList = entityManager.create(TaskListEntity);
+    primaryTaskList.name = "Inbox";
+    primaryTaskList.primary = true;
+    account.taskLists = [primaryTaskList];
+
     const finalEntity = await entityManager.save(account);
 
     return <Account>{

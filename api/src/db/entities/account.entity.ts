@@ -29,7 +29,7 @@ export class AccountEntity {
     @OneToMany(type => TagScoreEntity, tagScore => tagScore.account)
     tagScores: TagScoreEntity[];
 
-    @OneToMany(type => TaskListEntity, taskList => taskList.owner)
+    @OneToMany(type => TaskListEntity, taskList => taskList.owner, { cascadeInsert: true })
     taskLists: TaskListEntity[];
 
     @OneToMany(type => SessionEntity, session => session.account)
