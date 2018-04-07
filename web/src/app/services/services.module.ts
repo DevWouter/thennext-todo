@@ -9,6 +9,7 @@ import { AccountService } from "./account.service";
 import { ApiService } from "./api.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
+import { TaskListService } from "./task-list.service";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { StorageService } from "./storage.service";
     ApiService,
     SessionService,
     StorageService,
+    TaskListService,
   ]
 })
 export class ServicesModule {

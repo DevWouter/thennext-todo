@@ -98,6 +98,22 @@
               "deprecationReason": null
             },
             {
+              "name": "serverTime",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Date",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "taskLists",
               "description": "",
               "args": [],
@@ -1496,7 +1512,7 @@
             },
             {
               "name": "extendSession",
-              "description": "Extend the session of the given token",
+              "description": "Extend the session of the given token\nReturns an error if token is not of the current user.\nReturns an error if token does not exist",
               "args": [
                 {
                   "name": "token",
@@ -1514,9 +1530,13 @@
                 }
               ],
               "type": {
-                "kind": "OBJECT",
-                "name": "Session",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Session",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null

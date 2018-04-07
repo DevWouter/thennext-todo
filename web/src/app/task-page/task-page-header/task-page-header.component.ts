@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { TaskListService } from "../../services/task-list.service";
 
 @Component({
   selector: "app-task-page-header",
@@ -7,9 +8,13 @@ import { Component, OnInit } from "@angular/core";
 })
 export class TaskPageHeaderComponent implements OnInit {
 
-  constructor() { }
+  lists: { uuid: string, primary: boolean, name }[] = [];
+  constructor(
+    private taskListService: TaskListService,
+  ) { }
 
   ngOnInit() {
+    this.taskListService.getTaskLists().then(x => this.lists = x.taskLists);
   }
 
 }

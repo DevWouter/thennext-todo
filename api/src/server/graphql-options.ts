@@ -29,7 +29,8 @@ export async function GraphqlRequestHandler(
 
     const context = <GraphContext>{
         entityManager: entityManager,
-        authorizationToken: getAuthorizationToken(req)
+        authorizationToken: getAuthorizationToken(req),
+        db: connection,
     };
 
     return {
