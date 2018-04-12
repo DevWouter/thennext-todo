@@ -1,3 +1,12 @@
-<p>
-  task-page-content-pane-tags works!
-</p>
+<div *ngFor="let tag of tags" class="tag">
+  <div class="tag__title">{{tag.title}}</div>
+  <div class="tag__icon">
+    <i class="fas fa-trash"></i>
+  </div>
+</div>
+<div class="newtag">
+  <input class="newtag__input" placeholder="Enter a tag here and press enter">
+  <div class="tag__icon">
+      <i class="fas fa-plus"></i>
+    </div>
+</div>

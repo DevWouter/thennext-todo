@@ -1,0 +1,39 @@
+.tag {
+    display: flex;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.tag__title {
+    flex-grow: 1;
+}
+
+.tag__icon {
+    flex-shrink: 0;
+    min-width: 36px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.tag+.newtag {
+    margin-top: 10px;
+}
+
+.newtag {
+    border: 1px solid black;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    .tag__icon {
+        border-left: 1px solid black;
+    }
+}
+
+.newtag__input {
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+}
