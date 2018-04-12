@@ -7,6 +7,8 @@
 <div class="buttons">
   <button (click)="createNewTaskList()"><i class="fas fa-plus fa-fw"></i></button>
   <button><i class="fas fa-search fa-fw"></i></button>
-  <button><i class="fas fa-filter fa-fw"></i></button>
+  <button (click)="toggleFilterMenu()"><i class="fas fa-filter fa-fw"></i></button>
   <button><i class="fas fa-cog fa-fw"></i></button>
 </div>
+
+<app-task-page-header-filter-menu *ngIf="showFilterMenu"></app-task-page-header-filter-menu>

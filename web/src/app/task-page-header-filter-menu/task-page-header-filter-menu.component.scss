@@ -1,0 +1,15 @@
+:host {
+    display: inline-block;
+    background: white;
+    position: fixed;
+    top: 48px;
+    right: 48px;
+    padding: 4px;
+    box-shadow: 1px 1px 2px #888, -1px 1px 2px #888;
+    border: 1px solid silver;
+    border-top: none;
+}
+
+label{
+  display: block;
+}

@@ -7,7 +7,7 @@ import { TaskListService } from "../services/task-list.service";
   styleUrls: ["./task-page-header.component.scss"]
 })
 export class TaskPageHeaderComponent implements OnInit {
-
+  showFilterMenu = false;
   lists: { uuid: string, primary: boolean, name }[] = [];
   constructor(
     private taskListService: TaskListService,
@@ -17,6 +17,9 @@ export class TaskPageHeaderComponent implements OnInit {
     this.taskListService.taskLists.subscribe(x => this.lists = x);
   }
 
+  toggleFilterMenu() {
+    this.showFilterMenu = !this.showFilterMenu;
+  }
   createNewTaskList() {
     let result = prompt("Please enter the name of the new tasklist") || "";
     result = result.trim();
