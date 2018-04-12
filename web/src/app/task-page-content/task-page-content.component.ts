@@ -6,7 +6,7 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./task-page-content.component.scss"]
 })
 export class TaskPageContentComponent implements OnInit {
-  size = 300;
+  size = 400;
 
   ngOnInit() {
   }

@@ -13,7 +13,7 @@ export class TaskPageContentPaneComponent implements OnInit {
   }
 
   @HostBinding("style.width.px")
-  private _width = 300;
+  private _width: number = undefined;
 
   constructor() { }
 
