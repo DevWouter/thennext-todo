@@ -6,15 +6,15 @@ import { Component, OnInit, Input } from "@angular/core";
   styleUrls: ["./task-page-content-pane-control.component.scss"]
 })
 export class TaskPageContentPaneControlComponent implements OnInit {
-  private _title: string;
+  private _header: string;
 
   @Input()
-  public set title(v: string) {
-    this._title = v;
+  public set header(v: string) {
+    this._header = v;
   }
 
-  public get title(): string {
-    return this._title;
+  public get header(): string {
+    return this._header;
   }
 
   constructor() { }
