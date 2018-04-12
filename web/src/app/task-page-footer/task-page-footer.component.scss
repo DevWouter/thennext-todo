@@ -1,5 +1,25 @@
 :host {
-  display: block;
-  height: 48px;
-  background-color: lighten(purple, 20);
+    display: flex;
+    font-size: 18px;
+    height: 48px;
+    border-top: 2px solid black;
+}
+
+.add-icon {
+    width: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    i {
+        font-size: 28px;
+    }
+}
+
+input {
+    height: 100%;
+    flex-grow: 1;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
 }
