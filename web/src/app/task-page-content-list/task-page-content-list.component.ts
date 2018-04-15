@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { TaskService, Task } from "../services/task.service";
 
 @Component({
   selector: "app-task-page-content-list",
@@ -6,8 +7,14 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./task-page-content-list.component.scss"]
 })
 export class TaskPageContentListComponent implements OnInit {
-
-  constructor() { }
+  public tasks: Task[] = [];
+  constructor(
+    private readonly taskService: TaskService
+  ) {
+    this.taskService.tasks.subscribe((tasks) => {
+      this.tasks = tasks;
+    });
+  }
 
   ngOnInit() {
   }

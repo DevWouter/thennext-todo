@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { NavigationService, TaskPageNavigation } from "../services";
 
 @Component({
   selector: "app-homepage",
@@ -9,13 +9,13 @@ import { Router } from "@angular/router";
 export class HomepageComponent implements OnInit {
 
   constructor(
-    private router: Router,
+    private navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
   }
 
   goToTaskPage() {
-    this.router.navigate(["/tasks"]);
+    this.navigationService.toTaskPage({});
   }
 }

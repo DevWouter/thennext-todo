@@ -27,6 +27,7 @@ import { TaskPageContentPaneChecklistComponent } from "./task-page-content-pane-
 import { TaskPageContentPaneRelationsComponent } from "./task-page-content-pane-relations/task-page-content-pane-relations.component";
 import { TaskPageContentPaneControlComponent } from "./task-page-content-pane-control/task-page-content-pane-control.component";
 import { TaskPageHeaderFilterMenuComponent } from "./task-page-header-filter-menu/task-page-header-filter-menu.component";
+import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page-footer-input.component";
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { TaskPageHeaderFilterMenuComponent } from "./task-page-header-filter-men
     TaskPageContentPaneRelationsComponent,
     TaskPageContentPaneControlComponent,
     TaskPageHeaderFilterMenuComponent,
+    TaskPageFooterInputComponent,
   ],
   imports: [
     BrowserModule,

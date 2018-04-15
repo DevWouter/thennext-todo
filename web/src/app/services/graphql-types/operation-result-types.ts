@@ -1,6 +1,13 @@
 /* tslint:disable */
 //  This file was automatically generated and should not be edited.
 
+export enum TaskStatus {
+  active = "active",
+  done = "done",
+  todo = "todo",
+}
+
+
 export interface createAccountMutationVariables {
   email: string,
   password: string,
@@ -67,4 +74,14 @@ export interface createTaskListMutation {
     primary: boolean,
     name: string,
   } | null,
+};
+
+export interface getTasksQuery {
+  tasks:  Array< {
+    __typename: "Task",
+    uuid: string | null,
+    taskListUuid: string | null,
+    title: string | null,
+    status: TaskStatus | null,
+  } | null > | null,
 };
