@@ -9,6 +9,7 @@ COPY \
     ./gzip-compression.conf \
     ./http-to-https.conf \
     ./letsencrypt.conf \
+    ./location-api.conf \
     ./location-graphiql.conf \
     ./location-graphql.conf \
     ./location-root.conf \

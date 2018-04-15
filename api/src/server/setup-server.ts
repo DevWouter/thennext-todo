@@ -1,21 +1,22 @@
 import "reflect-metadata"; // Required so that typeorm can read the types.
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
-import { createConnection } from "typeorm";
+import { createConnection, Connection } from "typeorm";
 
-import { GraphqlRequestHandler } from "./graphql-options";
-
+import { apiRouter } from "../route";
 
 export function startServer(port: number) {
     console.log("Server is starting");
-    const connectionPromise = createConnection();
 
     const app = express();
-    app.use("/graphql", bodyParser.json(), graphqlExpress((req, res) => GraphqlRequestHandler(connectionPromise, req, res)));
-    app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
+    app.use("/api", apiRouter);
 
-    app.listen(port, () => {
+    let connection: Connection;
+    app.listen(port, async () => {
+        connection = await createConnection();
         console.log("Server is ready");
+    }).on("close", () => {
+        connection.close();
+        console.log("Server is closed");
     });
 }
