@@ -1,3 +1,1 @@
-export { TaskMutations } from "./mutations";
-export { TaskResolvers } from "./resolvers";
-export { TaskQueries } from "./queries";
+export { taskRouter } from "./task.router";

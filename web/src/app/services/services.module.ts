@@ -1,9 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
-import { ApolloModule, Apollo } from "apollo-angular";
-import { HttpLinkModule, HttpLink } from "apollo-angular-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
 
 import { AccountService } from "./account.service";
 import { ApiService } from "./api.service";
@@ -17,8 +14,6 @@ import { NavigationService } from "./navigation.service";
   imports: [
     CommonModule,
     HttpClientModule,
-    HttpLinkModule,
-    ApolloModule,
   ],
   declarations: [],
   providers: [

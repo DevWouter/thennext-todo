@@ -1,3 +1,1 @@
-export { TaskEventMutations } from "./mutations";
-export { TaskEventQueries } from "./queries";
-export { TaskEventResolvers } from "./resolvers";
+export { taskEventRouter } from "./task-event.router";

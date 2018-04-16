@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { getConnection } from "typeorm";
 
 import * as bcrypt from "bcryptjs";
-import { Account } from "../../models";
+import { Account } from "./account.model";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
+import { TransformAccount } from "./helpers/account-to-model";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -29,10 +30,7 @@ export async function AccountCreate(req: Request, res: Response): Promise<void> 
     account.taskLists = [primaryTaskList];
 
     const finalEntity = await entityManager.save(account);
-    const dst = <Account>{
-        email: finalEntity.email,
-        uuid: finalEntity.uuid
-    };
+    const dst = TransformAccount(finalEntity);
 
     res.send(dst);
 

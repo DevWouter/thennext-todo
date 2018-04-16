@@ -1,7 +1,8 @@
-import { TaskEventType } from "./task-event-type.enum";
+export enum TaskEventType {
+    delay = "delay",
+}
 
 export interface TaskEvent {
-    _id: number;
     uuid: string;
     taskUuid: string;
     eventType: TaskEventType;

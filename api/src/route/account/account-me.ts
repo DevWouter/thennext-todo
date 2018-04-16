@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getConnection } from "typeorm";
 
-import { Account } from "../../models";
+import { Account } from "./account.model";
 
 import { AccountEntity, DecaySpeedEntity } from "../../db/entities";
 

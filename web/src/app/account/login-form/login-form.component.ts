@@ -33,9 +33,8 @@ export class LoginFormComponent implements OnInit {
 
   async extend() {
     try {
-      const token = this.storageService.get(StorageKey.SESSION_TOKEN);
-      const response = await this.sessionService.extendSession(token);
-      this.apiService.setSessionToken(response.extendSession.token, response.extendSession.expireAt);
+      const response = await this.sessionService.extendSession();
+      this.apiService.setSessionToken(response.token, response.expireAt);
       console.log("Extended");
     } catch (reason) {
       console.log(reason);
@@ -46,7 +45,7 @@ export class LoginFormComponent implements OnInit {
     this.showError = false;
     try {
       const session = await this.sessionService.createSession(this.username, this.password);
-      this.apiService.setSessionToken(session.createSession.token, session.createSession.expireAt);
+      this.apiService.setSessionToken(session.token, session.expireAt);
       this.success.emit(true);
     } catch (reason) {
       console.error("Unable to create session", reason);

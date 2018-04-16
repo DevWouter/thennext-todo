@@ -11,6 +11,6 @@ export function getAuthorizationToken(req?: express.Request) {
     }
 
     // No token found in authorization.
-    return "$2a$10$ynCT7Etbe4A1pSkuMxxPje";
+    return "$2a$10$j37JoqLKDS32z7396eQf4O";
     return null;
 }

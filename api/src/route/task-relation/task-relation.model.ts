@@ -1,7 +1,8 @@
-import { RelationType } from "./relation-type.enum";
+export enum RelationType {
+    blocks = "blocks",
+}
 
 export interface TaskRelation {
-    readonly _id: number;
     readonly uuid: string;
     readonly sourceTaskUuid: string;
     readonly targetTaskUuid: string;

@@ -1,1 +1,0 @@
-directive @isAuthenticated on QUERY | FIELD

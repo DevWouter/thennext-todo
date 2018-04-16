@@ -9,7 +9,7 @@ export function startServer(port: number) {
     console.log("Server is starting");
 
     const app = express();
-    app.use("/api", apiRouter);
+    app.use("/api", bodyParser.json(), apiRouter);
 
     let connection: Connection;
     app.listen(port, async () => {

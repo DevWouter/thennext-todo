@@ -8,7 +8,6 @@ import { Component, OnInit, Input, HostBinding } from "@angular/core";
 export class TaskPageContentPaneComponent implements OnInit {
   @Input()
   set width(value: number) {
-    console.log(`Recieved new width: ${value}`);
     this._width = +value;
   }
 
