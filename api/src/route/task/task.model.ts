@@ -20,5 +20,5 @@ export interface Task {
 
     status: TaskStatus;
 
-    tags: [String];
+    tags: string[];
 }

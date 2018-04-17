@@ -1,12 +1,9 @@
 import * as express from "express";
-// import { SessionCreate } from "./session-create";
-// import { SessionDestroy } from "./session-destroy";
-// import { SessionExtend } from "./session-extend";
+
+import { TaskIndex } from "./task-index";
 
 const taskRouter = express.Router();
 
-// taskRouter.post("/create", SessionCreate);
-// taskRouter.delete("/destroy", [isAuthenticated, SessionDestroy]);
-// taskRouter.patch("/extend", [isAuthenticated, SessionExtend]);
+taskRouter.get("/index", TaskIndex);
 
 export { taskRouter };

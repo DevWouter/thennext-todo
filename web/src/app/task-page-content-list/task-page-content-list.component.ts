@@ -11,7 +11,7 @@ export class TaskPageContentListComponent implements OnInit {
   constructor(
     private readonly taskService: TaskService
   ) {
-    this.taskService.tasks.subscribe((tasks) => {
+    this.taskService.entries.subscribe((tasks) => {
       this.tasks = tasks;
     });
   }
