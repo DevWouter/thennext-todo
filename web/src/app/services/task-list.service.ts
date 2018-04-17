@@ -2,35 +2,47 @@ import { Injectable } from "@angular/core";
 import { ApiService } from ".";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
+import { Entity } from "./repositories/entity";
+import { Repository } from "./repositories/repository";
+import { ApiRepository } from "./repositories/api-repository";
 
-interface TaskList {
+interface TaskList extends Entity {
   uuid: string;
   name: string;
   primary: boolean;
 }
 
 @Injectable()
-export class TaskListService {
-  private _taskLists = new BehaviorSubject<TaskList[]>(undefined);
-  public get taskLists(): Observable<TaskList[]> {
-    return this._taskLists.filter(x => x !== undefined);
+export class TaskListService implements Repository<TaskList> {
+  private _repository: Repository<TaskList>;
+
+  public get entries(): Observable<TaskList[]> {
+    return this._repository.entries;
   }
 
   constructor(
     private apiService: ApiService,
   ) {
-    this.pullTaskList();
+    this._repository = new ApiRepository(apiService, "/api/task-list/");
   }
 
   createTaskList(name: string): void {
-    this.apiService
-      .post("/api/task-list/", { name: name })
-      .subscribe(() => { this.pullTaskList(); });
+    this.add(<TaskList>{ name: name });
   }
 
-  private pullTaskList() {
-    this.apiService.get<TaskList[]>("/api/task-list/").subscribe(x => {
-      this._taskLists.next(x);
-    });
+  add(value: TaskList): Promise<TaskList> {
+    return this._repository.add(value);
+  }
+
+  update(value: TaskList): Promise<TaskList> {
+    return this._repository.update(value);
+  }
+
+  delete(value: TaskList): Promise<TaskList> {
+    return this._repository.delete(value);
+  }
+
+  deleteMany(values: TaskList[]): Promise<TaskList[]> {
+    return this._repository.deleteMany(values);
   }
 }

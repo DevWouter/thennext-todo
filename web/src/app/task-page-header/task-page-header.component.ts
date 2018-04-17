@@ -14,7 +14,7 @@ export class TaskPageHeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.taskListService.taskLists.subscribe(x => this.lists = x);
+    this.taskListService.entries.subscribe(x => this.lists = x);
   }
 
   toggleFilterMenu() {

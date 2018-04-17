@@ -5,8 +5,8 @@ import { taskListCreate } from "./task-list-create";
 
 const taskListRouter = express.Router();
 
-taskListRouter.get("/", TaskListList);
-taskListRouter.post("/", taskListCreate);
+taskListRouter.get("/index", TaskListList);
+taskListRouter.post("/create", taskListCreate);
 
 
 export { taskListRouter };
