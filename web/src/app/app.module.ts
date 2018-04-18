@@ -27,6 +27,8 @@ import { TaskPageContentPaneRelationsComponent } from "./task-page-content-pane-
 import { TaskPageContentPaneControlComponent } from "./task-page-content-pane-control/task-page-content-pane-control.component";
 import { TaskPageHeaderFilterMenuComponent } from "./task-page-header-filter-menu/task-page-header-filter-menu.component";
 import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page-footer-input.component";
+import { SettingsPageComponent } from "./settings-page/settings-page.component";
+import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page
     TaskPageContentPaneControlComponent,
     TaskPageHeaderFilterMenuComponent,
     TaskPageFooterInputComponent,
+    SettingsPageComponent,
+    SettingsPageTasklistsComponent,
   ],
   imports: [
     BrowserModule,

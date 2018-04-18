@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskListService } from "../services/task-list.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-task-page-header",
@@ -10,6 +11,7 @@ export class TaskPageHeaderComponent implements OnInit {
   showFilterMenu = false;
   lists: { uuid: string, primary: boolean, name }[] = [];
   constructor(
+    private router: Router,
     private taskListService: TaskListService,
   ) { }
 
@@ -20,6 +22,7 @@ export class TaskPageHeaderComponent implements OnInit {
   toggleFilterMenu() {
     this.showFilterMenu = !this.showFilterMenu;
   }
+
   createNewTaskList() {
     let result = prompt("Please enter the name of the new tasklist") || "";
     result = result.trim();
@@ -28,6 +31,10 @@ export class TaskPageHeaderComponent implements OnInit {
     }
 
     this.taskListService.createTaskList(result);
+  }
+
+  toSettings() {
+    this.router.navigate(["/settings"]);
   }
 
 }

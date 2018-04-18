@@ -1,14 +1,22 @@
-<div class="task-lists">
-  <select>
-    <option *ngFor="let list of lists">{{list.name}}</option>
-  </select>
+<div class="search">
+  <div class="button">
+    <i class="fas fa-search fa-fw"></i>
+  </div>
+  <input placeholder="Search" />
 </div>
 <div class="padding"></div>
 <div class="buttons">
-  <button (click)="createNewTaskList()"><i class="fas fa-plus fa-fw"></i></button>
-  <button><i class="fas fa-search fa-fw"></i></button>
-  <button (click)="toggleFilterMenu()"><i class="fas fa-filter fa-fw"></i></button>
-  <button><i class="fas fa-cog fa-fw"></i></button>
+  <div class="task-list-container">
+    <select>
+      <option *ngFor="let list of lists">{{list.name}}</option>
+    </select>
+  </div>
+  <button (click)="toggleFilterMenu()">
+    <i class="fas fa-filter fa-fw"></i>
+  </button>
+  <button (click)="toSettings()">
+    <i class="fas fa-cog fa-fw"></i>
+  </button>
 </div>
 
 <app-task-page-header-filter-menu *ngIf="showFilterMenu"></app-task-page-header-filter-menu>

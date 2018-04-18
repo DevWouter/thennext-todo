@@ -13,10 +13,9 @@ export async function TaskListList(req: Request, res: Response): Promise<void> {
     const src = await getConnection()
         .createQueryBuilder(AccountEntity, "account")
         .leftJoinAndSelect("account.taskLists", "taskList")
-        .innerJoinAndSelect("taskList.owner", "owner")
+        .leftJoinAndSelect("taskList.owner", "owner")
         .where("account.id = :id", { id: account.id })
         .getOne();
-
 
     const dst = src.taskLists.map(x => ({
         uuid: x.uuid,

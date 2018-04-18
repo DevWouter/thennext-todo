@@ -22,11 +22,7 @@ export class TaskListService implements Repository<TaskList> {
   constructor(
     private apiService: ApiService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task-list/");
-  }
-
-  createTaskList(name: string): void {
-    this.add(<TaskList>{ name: name });
+    this._repository = new ApiRepository(apiService, "/api/task-list");
   }
 
   add(value: TaskList): Promise<TaskList> {
