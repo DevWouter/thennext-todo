@@ -7,7 +7,7 @@
     "password": "test",
     "database": "test",
     "synchronize": false,
-    "logging": "all",
+    "logging": ["error"],
     "entities": [
         "src/**/*.entity.ts"
     ],
