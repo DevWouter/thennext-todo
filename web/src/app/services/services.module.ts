@@ -4,11 +4,12 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { AccountService } from "./account.service";
 import { ApiService } from "./api.service";
+import { NavigationService } from "./navigation.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
+import { TaskCreateService } from "./task-create.service";
 import { TaskListService } from "./task-list.service";
 import { TaskService } from "./task.service";
-import { NavigationService } from "./navigation.service";
 
 @NgModule({
   imports: [
@@ -19,11 +20,12 @@ import { NavigationService } from "./navigation.service";
   providers: [
     AccountService,
     ApiService,
+    NavigationService,
     SessionService,
     StorageService,
+    TaskCreateService,
     TaskListService,
     TaskService,
-    NavigationService,
   ]
 })
 export class ServicesModule {

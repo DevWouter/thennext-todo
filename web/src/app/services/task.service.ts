@@ -32,11 +32,6 @@ export class TaskService {
     this._repository = new ApiRepository(apiService, "/api/task");
   }
 
-  // TODO: Move this to another service to handle parsing.
-  parseCommand(command: string): any {
-    throw new Error("Method not implemented.");
-  }
-
   add(value: Task): Promise<Task> {
     return this._repository.add(value);
   }
