@@ -21,7 +21,6 @@ import { TaskPageHeaderComponent } from "./task-page-header/task-page-header.com
 import { TaskPageContentListItemComponent } from "./task-page-content-list-item/task-page-content-list-item.component";
 import { TaskPageContentPaneTitleComponent } from "./task-page-content-pane-title/task-page-content-pane-title.component";
 import { TaskPageContentPaneStatsComponent } from "./task-page-content-pane-stats/task-page-content-pane-stats.component";
-import { TaskPageContentPaneTagsComponent } from "./task-page-content-pane-tags/task-page-content-pane-tags.component";
 import { TaskPageContentPaneDescriptionComponent } from "./task-page-content-pane-description/task-page-content-pane-description.component";
 import { TaskPageContentPaneChecklistComponent } from "./task-page-content-pane-checklist/task-page-content-pane-checklist.component";
 import { TaskPageContentPaneRelationsComponent } from "./task-page-content-pane-relations/task-page-content-pane-relations.component";
@@ -43,7 +42,6 @@ import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page
     TaskPageContentListItemComponent,
     TaskPageContentPaneTitleComponent,
     TaskPageContentPaneStatsComponent,
-    TaskPageContentPaneTagsComponent,
     TaskPageContentPaneDescriptionComponent,
     TaskPageContentPaneChecklistComponent,
     TaskPageContentPaneRelationsComponent,
