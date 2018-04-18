@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { getConnection } from "typeorm";
 
-import { Account } from "../../models";
-
 import { AccountEntity } from "../../db/entities";
 import { getAuthorizationToken } from "../../server/get-authorization-token";
 import { getAccount } from "../../server/get-account";

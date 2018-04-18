@@ -19,6 +19,4 @@ export interface Task {
     completedOn: Date;
 
     status: TaskStatus;
-
-    tags: string[];
 }

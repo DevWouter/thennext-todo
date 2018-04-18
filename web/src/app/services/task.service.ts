@@ -8,7 +8,7 @@ import { ApiRepository } from "./repositories/api-repository";
 
 import { ApiService } from "./api.service";
 
-import { Task } from "./models/task.view-model";
+import { Task } from "./models/task.dto";
 
 @Injectable()
 export class TaskService {

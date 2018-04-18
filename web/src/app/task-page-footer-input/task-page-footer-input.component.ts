@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskService } from "../services/task.service";
-import { TaskCreateService } from "../services";
+import { TaskParseService } from "../services";
 
 @Component({
   selector: "app-task-page-footer-input",
@@ -11,7 +11,7 @@ export class TaskPageFooterInputComponent implements OnInit {
 
   value = "";
   constructor(
-    private readonly taskCreateService: TaskCreateService,
+    private readonly taskCreateService: TaskParseService,
   ) { }
 
   ngOnInit() {
@@ -28,7 +28,7 @@ export class TaskPageFooterInputComponent implements OnInit {
 
   processInput(): void {
     const value = this.getCleanValue();
-    this.taskCreateService.parseCommand(value);
+    this.taskCreateService.createTask(value, "70d4ca24-8934-4492-83a5-53edc232ac98");
   }
 
   getCleanValue(): string {

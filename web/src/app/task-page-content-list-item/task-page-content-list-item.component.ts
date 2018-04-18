@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
+import { Task } from "../services/models/task.dto";
 
 @Component({
   selector: "app-task-page-content-list-item",
@@ -9,14 +10,16 @@ export class TaskPageContentListItemComponent implements OnInit {
 
   score = 888.8;
   checked = false;
-  title = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. " +
-    "Cupiditate cumque inventore cum dignissimos velit, ullam eius nullaquod " +
-    "qui dicta recusandae, consequuntur, accusantium eos nostrum autem " +
-    "deserunt sunt ad rem.";
+  get title() {
+    return this.task.title;
+  }
 
   showCommentIcon = true;
   showSleepIcon = true;
   showPlayIcon = true;
+
+  @Input()
+  task: Task;
 
   constructor() { }
 

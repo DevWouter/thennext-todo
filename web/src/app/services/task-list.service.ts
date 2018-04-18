@@ -7,7 +7,7 @@ import { ApiRepository } from "./repositories/api-repository";
 import { Entity } from "./repositories/entity";
 import { Repository } from "./repositories/repository";
 
-import { TaskList } from "./models/task-list.view-model";
+import { TaskList } from "./models/task-list.dto";
 
 import { ApiService } from "./api.service";
 

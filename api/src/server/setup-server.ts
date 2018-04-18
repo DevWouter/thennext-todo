@@ -11,6 +11,7 @@ export function startServer(port: number) {
     const app = express();
     app.use("/api", bodyParser.json(), apiRouter);
 
+
     let connection: Connection;
     app.listen(port, async () => {
         connection = await createConnection();

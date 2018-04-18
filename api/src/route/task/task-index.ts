@@ -16,7 +16,6 @@ export async function TaskIndex(req: Request, res: Response): Promise<void> {
         .leftJoinAndSelect("account.taskLists", "taskList")
         .innerJoinAndSelect("taskList.owner", "owner")
         .leftJoinAndSelect("taskList.tasks", "task")
-        .leftJoinAndSelect("task.tags", "tag")
         .where("account.id = :id", { id: account.id })
         .getOne();
 
@@ -25,15 +24,14 @@ export async function TaskIndex(req: Request, res: Response): Promise<void> {
     src.taskLists.forEach(list => {
         list.tasks.forEach(task => {
             dst.push(<Task>{
-                title: task.title,
                 uuid: task.uuid,
-                updatedOn: task.updatedAt,
                 taskListUuid: list.uuid,
-                tags: task.tags.map(tag => tag.name),
+                title: task.title,
+                description: task.description,
                 status: task.status,
-                completedOn: task.completedAt,
                 createdOn: task.createdAt,
-                description: task.description
+                updatedOn: task.updatedAt,
+                completedOn: task.completedAt,
             });
         });
     });

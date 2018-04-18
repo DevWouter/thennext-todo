@@ -7,7 +7,7 @@ import { ApiService } from "./api.service";
 import { NavigationService } from "./navigation.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
-import { TaskCreateService } from "./task-create.service";
+import { TaskParseService } from "./task-parse.service";
 import { TaskListService } from "./task-list.service";
 import { TaskService } from "./task.service";
 
@@ -23,7 +23,7 @@ import { TaskService } from "./task.service";
     NavigationService,
     SessionService,
     StorageService,
-    TaskCreateService,
+    TaskParseService,
     TaskListService,
     TaskService,
   ]

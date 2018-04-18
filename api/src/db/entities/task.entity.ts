@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
 import { TaskListEntity } from "./task-list.entity";
 import { ChecklistItemEntity } from "./checklist-item.entity";
-import { TaskTagEntity } from "./task-tag.entity";
 import { TaskRelationEntity } from "./task-relation.entity";
 
 export enum TaskStatus {
@@ -37,14 +36,11 @@ export class TaskEntity {
     @Column("datetime")
     updatedAt: Date;
 
-    @Column("datetime")
+    @Column("datetime", { nullable: true })
     completedAt: Date;
 
     @OneToMany(type => ChecklistItemEntity, checklistItem => checklistItem.task)
     checklistItems: ChecklistItemEntity[];
-
-    @OneToMany(type => TaskTagEntity, tag => tag.task)
-    tags: TaskTagEntity[];
 
     @OneToMany(type => TaskRelationEntity, relation => relation.sourceTask)
     sourceInRelations: TaskRelationEntity[];

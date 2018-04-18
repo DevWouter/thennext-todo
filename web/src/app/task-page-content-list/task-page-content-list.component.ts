@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { TaskService, Task } from "../services/task.service";
+import { TaskService } from "../services/task.service";
+import { Task } from "../services/models/task.dto";
 
 @Component({
   selector: "app-task-page-content-list",
