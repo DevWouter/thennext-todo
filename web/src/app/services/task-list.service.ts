@@ -1,16 +1,15 @@
 import { Injectable } from "@angular/core";
-import { ApiService } from ".";
+
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
+
+import { ApiRepository } from "./repositories/api-repository";
 import { Entity } from "./repositories/entity";
 import { Repository } from "./repositories/repository";
-import { ApiRepository } from "./repositories/api-repository";
 
-interface TaskList extends Entity {
-  uuid: string;
-  name: string;
-  primary: boolean;
-}
+import { TaskList } from "./models/task-list.view-model";
+
+import { ApiService } from "./api.service";
 
 @Injectable()
 export class TaskListService implements Repository<TaskList> {

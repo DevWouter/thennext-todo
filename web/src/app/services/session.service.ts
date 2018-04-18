@@ -1,11 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ApiService } from "./api.service";
-import { Session } from "selenium-webdriver";
-
-export interface SessionResponse {
-  token: string;
-  expireAt: string;
-}
+import { Session } from "./models/session.view-model";
 
 @Injectable()
 export class SessionService {
@@ -13,12 +8,12 @@ export class SessionService {
     private apiService: ApiService,
   ) { }
 
-  async extendSession(): Promise<SessionResponse> {
-    return this.apiService.patch<SessionResponse>("/api/session/extend", {}).toPromise();
+  async extendSession(): Promise<Session> {
+    return this.apiService.patch<Session>("/api/session/extend", {}).toPromise();
   }
 
-  async createSession(email: string, password: string): Promise<SessionResponse> {
-    return this.apiService.post<SessionResponse>("/api/session/create", {
+  async createSession(email: string, password: string): Promise<Session> {
+    return this.apiService.post<Session>("/api/session/create", {
       email: email,
       password: password,
     }).toPromise();

@@ -1,23 +1,14 @@
 import { Injectable } from "@angular/core";
+
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 
-import { ApiService } from "./api.service";
 import { Repository } from "./repositories/repository";
 import { ApiRepository } from "./repositories/api-repository";
 
-export enum TaskStatus {
-  todo = "todo",
-  active = "active",
-  done = "done",
-}
+import { ApiService } from "./api.service";
 
-export interface Task {
-  uuid: string;
-  taskListUuid: string;
-  title: string;
-  status: TaskStatus;
-}
+import { Task } from "./models/task.view-model";
 
 @Injectable()
 export class TaskService {
