@@ -10,6 +10,7 @@ import { StorageService } from "./storage.service";
 import { TaskParseService } from "./task-parse.service";
 import { TaskListService } from "./task-list.service";
 import { TaskService } from "./task.service";
+import { ContextService } from "./context.service";
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { TaskService } from "./task.service";
     TaskParseService,
     TaskListService,
     TaskService,
+    ContextService,
   ]
 })
 export class ServicesModule {

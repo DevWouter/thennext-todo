@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskService } from "../services/task.service";
 import { Task } from "../services/models/task.dto";
+import { ContextService } from "../services/context.service";
 
 @Component({
   selector: "app-task-page-content-list",
@@ -10,11 +11,12 @@ import { Task } from "../services/models/task.dto";
 export class TaskPageContentListComponent implements OnInit {
   public tasks: Task[] = [];
   constructor(
-    private readonly taskService: TaskService
+    private readonly taskService: TaskService,
+    private readonly contextService: ContextService,
   ) {
-    this.taskService.entries.subscribe((tasks) => {
-      this.tasks = tasks;
-    });
+    this.contextService.activeTaskList.filter(x => !!x).combineLatest(this.taskService.entries, (list, tasks) => {
+      this.tasks = tasks.filter(x => x.taskListUuid === list.uuid);
+    }).subscribe();
   }
 
   ngOnInit() {

@@ -13,7 +13,7 @@ export class TaskPageNavigation {
   /**
    * The tasklist where we need to navigate to. Set to null to go to primary tasklist.
    */
-  taskListUuid: string;
+  taskListUuid?: string;
 }
 
 @Injectable()
