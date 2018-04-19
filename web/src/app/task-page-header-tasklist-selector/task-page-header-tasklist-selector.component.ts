@@ -37,6 +37,6 @@ export class TaskPageHeaderTasklistSelectorComponent implements OnInit {
   }
 
   updated() {
-    this.navigation.toTaskPage({ taskListUuid: this._currentListUuid });
+    this.navigation.toTaskPage({ taskListUuid: this._currentListUuid, taskUuid: null });
   }
 }

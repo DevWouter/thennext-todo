@@ -1,11 +1,7 @@
-:host {
+.container {
     min-height: 36px;
     display: flex;
-    margin: 8px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding: 8px;
     border-bottom: 1px solid black;
 }
 

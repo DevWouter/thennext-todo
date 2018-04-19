@@ -11,18 +11,27 @@ import { TaskListService } from "./task-list.service";
  */
 export class TaskPageNavigation {
   /**
-   * The tasklist where we need to navigate to. Set to null to go to primary tasklist.
+   * The tasklist where we need to navigate to.
+   * Set to null to go to primary tasklist.
    */
   taskListUuid?: string;
+
+  /**
+   * The task we need to show.
+   */
+  taskUuid?: string;
 }
 
 @Injectable()
 export class NavigationService {
   private _primaryTaskListUuid: string = undefined;
   private _taskListUuidValue: string = undefined;
+  private _taskUuidValue: string = undefined;
   private _taskListUuid = new BehaviorSubject<string>(this._taskListUuidValue);
+  private _taskUuid = new BehaviorSubject<string>(this._taskUuidValue);
 
   public get taskListUuid(): Observable<string> { return this._taskListUuid; }
+  public get taskUuid(): Observable<string> { return this._taskUuid; }
 
   constructor(
     private router: Router,
@@ -45,9 +54,15 @@ export class NavigationService {
       }
     }
 
+    let taskUuid = this._taskUuidValue;
+    if (params.taskUuid !== undefined) {
+      taskUuid = params.taskUuid;
+    }
+
     const navigationExtras: NavigationExtras = {
       queryParams: {
         "taskList": tasklist,
+        "task": taskUuid
       }
     };
 
@@ -72,9 +87,11 @@ export class NavigationService {
 
   private processRoute() {
     this.activatedRoute.queryParams.subscribe((pm: Params) => {
-
       this._taskListUuidValue = pm.taskList as string;
       this._taskListUuid.next(this._taskListUuidValue);
+
+      this._taskUuidValue = pm.task as string;
+      this._taskUuid.next(this._taskUuidValue);
     });
   }
 }
