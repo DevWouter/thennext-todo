@@ -52,8 +52,6 @@ export class TaskPageContentListItemComponent implements OnInit {
     this.navigation.taskUuid.subscribe(x => {
       if (this.task.uuid === x) {
         this.state = "selected";
-      console.log(this.state);
-
       } else {
         this.state = "default";
       }
