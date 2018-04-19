@@ -29,6 +29,7 @@ import { TaskPageHeaderFilterMenuComponent } from "./task-page-header-filter-men
 import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page-footer-input.component";
 import { SettingsPageComponent } from "./settings-page/settings-page.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
+import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-tasklist-selector/task-page-header-tasklist-selector.component";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settin
     TaskPageFooterInputComponent,
     SettingsPageComponent,
     SettingsPageTasklistsComponent,
+    TaskPageHeaderTasklistSelectorComponent,
   ],
   imports: [
     BrowserModule,
