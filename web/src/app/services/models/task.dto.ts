@@ -4,6 +4,7 @@ export interface Task extends Entity {
   uuid: string;
   taskListUuid: string;
   title: string;
+  description: string;
   status: TaskStatus;
 }
 

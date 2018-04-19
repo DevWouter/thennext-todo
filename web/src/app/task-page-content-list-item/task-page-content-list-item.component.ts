@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, HostListener } from "@angular/core";
 import { trigger, state, style, animate, transition } from "@angular/animations";
-import { Task } from "../services/models/task.dto";
+import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services";
+import { TaskService } from "../services/task.service";
 
 @Component({
   selector: "app-task-page-content-list-item",
@@ -34,18 +35,18 @@ export class TaskPageContentListItemComponent implements OnInit {
   showSleepIcon = true;
   showPlayIcon = true;
 
+  private _task: Task;
   @Input()
-  task: Task;
+  set task(v: Task) { this._task = v; this.updateTask(); }
+  get task(): Task { return this._task; }
 
-  /**
-   * Make the object selected when clicked upon.
-   */
   @HostListener("click") onClick() {
     this.navigation.toTaskPage({ taskUuid: this.task.uuid });
   }
 
   constructor(
     private navigation: NavigationService,
+    private taskService: TaskService,
   ) { }
 
   ngOnInit() {
@@ -60,6 +61,18 @@ export class TaskPageContentListItemComponent implements OnInit {
 
   toggle() {
     this.checked = !this.checked;
+    if (this.checked) {
+      this.task.status = TaskStatus.done;
+    } else {
+      this.task.status = TaskStatus.todo;
+    }
+
+    this.taskService.update(this.task);
   }
 
+  updateTask() {
+    if (this.task) {
+      this.checked = this.task.status === TaskStatus.done;
+    }
+  }
 }
