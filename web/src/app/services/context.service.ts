@@ -4,23 +4,25 @@ import { Observable } from "rxjs/Observable";
 import { TaskListService } from "./task-list.service";
 import { TaskList } from "./models/task-list.dto";
 import { NavigationService } from ".";
+import { Task } from "./models/task.dto";
+import { TaskService } from "./task.service";
 
 
 @Injectable()
 export class ContextService {
   private _activeTaskList = new BehaviorSubject<TaskList>(undefined);
+  private _activeTask = new BehaviorSubject<Task>(undefined);
 
-  get activeTaskList(): Observable<TaskList> {
-    return this._activeTaskList;
-  }
+  get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
+  get activeTask(): Observable<Task> { return this._activeTask; }
 
   constructor(
     private navigationService: NavigationService,
     private taskListService: TaskListService,
+    private taskService: TaskService,
   ) {
-
     this.setupActiveTaskList();
-
+    this.setupActiveTask();
   }
 
   private setupActiveTaskList() {
@@ -28,6 +30,13 @@ export class ContextService {
       (uuid, tasklists) => {
         this._activeTaskList.next(
           tasklists.find(x => x.uuid === uuid || x.primary && uuid === undefined));
+      }).subscribe();
+  }
+
+  private setupActiveTask() {
+    this.navigationService.taskUuid.combineLatest(this.taskService.entries,
+      (uuid, tasks) => {
+        this._activeTask.next(tasks.find(x => x.uuid === uuid));
       }).subscribe();
   }
 }
