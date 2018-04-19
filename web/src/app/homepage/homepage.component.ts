@@ -16,6 +16,6 @@ export class HomepageComponent implements OnInit {
   }
 
   goToTaskPage() {
-    this.navigationService.toTaskPage({});
+    this.navigationService.toTaskPage(<TaskPageNavigation>{});
   }
 }

@@ -28,7 +28,7 @@ export class TaskPageFooterInputComponent implements OnInit {
 
   processInput(): void {
     const value = this.getCleanValue();
-    this.taskCreateService.createTask(value, "70d4ca24-8934-4492-83a5-53edc232ac98");
+    this.taskCreateService.createTask(value);
   }
 
   getCleanValue(): string {
