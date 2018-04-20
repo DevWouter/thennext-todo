@@ -14,9 +14,7 @@ export class TaskPageContentListComponent implements OnInit {
     private readonly taskService: TaskService,
     private readonly contextService: ContextService,
   ) {
-    this.contextService.activeTaskList.filter(x => !!x).combineLatest(this.taskService.entries, (list, tasks) => {
-      this.tasks = tasks.filter(x => x.taskListUuid === list.uuid);
-    }).subscribe();
+    this.contextService.visibleTasks.subscribe(tasks => this.tasks = tasks);
   }
 
   ngOnInit() {

@@ -4,7 +4,7 @@ import { Observable } from "rxjs/Observable";
 import { TaskListService } from "./task-list.service";
 import { TaskList } from "./models/task-list.dto";
 import { NavigationService } from ".";
-import { Task } from "./models/task.dto";
+import { Task, TaskStatus } from "./models/task.dto";
 import { TaskService } from "./task.service";
 
 
@@ -15,6 +15,12 @@ export class ContextService {
 
   get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
   get activeTask(): Observable<Task> { return this._activeTask; }
+
+  get visibleTasks(): Observable<Task[]> {
+    return this.activeTaskList.filter(x => !!x)
+      .combineLatest(this.taskService.entries, (list, tasks) => tasks.filter(x => x.taskListUuid === list.uuid))
+      .map(x => x.filter(y => y.status !== TaskStatus.done));
+  }
 
   constructor(
     private navigationService: NavigationService,
