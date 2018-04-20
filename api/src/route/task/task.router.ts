@@ -6,11 +6,11 @@ import { TaskCreate } from "./task-create";
 import { TaskUpdate } from "./task-update";
 import { TaskDelete } from "./task-delete";
 
-const taskRouter = express.Router();
+const router = express.Router();
 
-taskRouter.get("/index", asyncMiddleware(TaskIndex));
-taskRouter.post("/create", asyncMiddleware(TaskCreate));
-taskRouter.patch("/:uuid", asyncMiddleware(TaskUpdate));
-taskRouter.delete("/:uuid", asyncMiddleware(TaskDelete));
+router.get("/index", asyncMiddleware(TaskIndex));
+router.post("/create", asyncMiddleware(TaskCreate));
+router.patch("/:uuid", asyncMiddleware(TaskUpdate));
+router.delete("/:uuid", asyncMiddleware(TaskDelete));
 
-export { taskRouter };
+export { router as taskRouter };

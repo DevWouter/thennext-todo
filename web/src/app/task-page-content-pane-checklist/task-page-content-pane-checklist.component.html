@@ -1,20 +1,13 @@
-<div class="item">
+<div class="item" *ngFor="let item of items">
   <div class="status">
     <i class="far fa-check-circle"></i>
   </div>
-  <input class="text" placeholder="What should we not forget?" value="Pizza"/>
-</div>
-
-<div class="item">
-  <div class="status">
-    <i class="far fa-circle"></i>
-  </div>
-  <input class="text" placeholder="What should we not forget?" value="Milk"/>
+  <input class="text" placeholder="What should we not forget?" [value]="item.title"/>
 </div>
 
 <div class="item">
   <div class="status">
     <i class="far fa-empty"></i>
   </div>
-  <input class="text" placeholder="What should we not forget?"/>
+  <input class="text" [(ngModel)]="newValue" (keydown.enter)="create()" placeholder="What should we not forget?"/>
 </div>

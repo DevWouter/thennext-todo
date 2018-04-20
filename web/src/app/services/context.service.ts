@@ -8,15 +8,19 @@ import { Task, TaskStatus } from "./models/task.dto";
 import { TaskService } from "./task.service";
 import { TaskView } from "./models/task-view";
 import { TaskViewService } from "./task-view.service";
+import { ChecklistItem } from "./models/checklist-item.dto";
+import { ChecklistItemService } from "./checklist-item.service";
 
 
 @Injectable()
 export class ContextService {
   private _activeTaskList = new BehaviorSubject<TaskList>(undefined);
   private _activeTask = new BehaviorSubject<TaskView>(undefined);
+  private _activeTaskChecklistItems = new BehaviorSubject<ChecklistItem[]>([]);
 
   get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
   get activeTaskView(): Observable<TaskView> { return this._activeTask; }
+  get activeTaskChecklistItems(): Observable<ChecklistItem[]> { return this._activeTaskChecklistItems; }
 
   get visibleTasks(): Observable<TaskView[]> {
     return this.activeTaskList.filter(x => !!x)
@@ -26,12 +30,14 @@ export class ContextService {
   }
 
   constructor(
+    private checklistItemService: ChecklistItemService,
     private navigationService: NavigationService,
     private taskListService: TaskListService,
     private taskViewService: TaskViewService,
   ) {
     this.setupActiveTaskList();
     this.setupActiveTask();
+    this.setupActiveChecklistItems();
   }
 
   private setupActiveTaskList() {
@@ -46,6 +52,13 @@ export class ContextService {
     this.navigationService.taskUuid.combineLatest(this.taskViewService.entries,
       (uuid, taskViews) => {
         this._activeTask.next(taskViews.find(x => x.task.uuid === uuid));
+      }).subscribe();
+  }
+
+  private setupActiveChecklistItems(): void {
+    this.navigationService.taskUuid.combineLatest(this.checklistItemService.entries,
+      (uuid, items) => {
+        this._activeTaskChecklistItems.next(items.filter(x => x.taskUuid === uuid));
       }).subscribe();
   }
 }

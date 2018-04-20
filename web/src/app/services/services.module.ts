@@ -4,6 +4,7 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { AccountService } from "./account.service";
 import { ApiService } from "./api.service";
+import { ChecklistItemService } from "./checklist-item.service";
 import { ContextService } from "./context.service";
 import { NavigationService } from "./navigation.service";
 import { SessionService } from "./session.service";
@@ -22,6 +23,7 @@ import { TaskViewService } from "./task-view.service";
   providers: [
     AccountService,
     ApiService,
+    ChecklistItemService,
     ContextService,
     NavigationService,
     SessionService,
