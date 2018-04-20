@@ -21,6 +21,7 @@ export class ContextService {
   get visibleTasks(): Observable<TaskView[]> {
     return this.activeTaskList.filter(x => !!x)
       .combineLatest(this.taskViewService.entries, (list, tasks) => tasks.filter(x => x.task.taskListUuid === list.uuid))
+      .map(x => x.sort((a, b) => b.score - a.score))
       .map(x => x.filter(y => y.task.status !== TaskStatus.done));
   }
 
