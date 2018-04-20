@@ -56,7 +56,7 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     // Wait until reload has been completed.
     const dst = await savePromise;
 
-    res.send(<Task>{
+    const result = <Task>{
         uuid: dst.uuid,
         taskListUuid: taskList.uuid,
         title: dst.title,
@@ -65,5 +65,9 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
         createdOn: dst.createdAt,
         updatedOn: dst.updatedAt,
         completedOn: dst.completedAt,
-    });
+    };
+
+    console.log(result);
+
+    res.send(result);
 }

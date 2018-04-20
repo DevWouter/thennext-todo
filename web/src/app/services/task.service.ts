@@ -47,6 +47,12 @@ export class TaskService {
   }
 
   add(value: Task): Promise<Task> {
+    if (!value.createdOn) {
+      value.createdOn = new Date();
+    }
+    if (!value.updatedOn) {
+      value.updatedOn = new Date();
+    }
     return this._repository.add(value);
   }
 

@@ -1,3 +1,8 @@
-<div>Score: -22.1</div>
-<div>Created on: {{createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
-<div>Updated on: {{updatedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+<div class="stats">
+  <div>Score: {{score | number:'1.2-2'}}</div>
+  <div>Created on: {{createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+  <div>Updated on: {{updatedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+</div>
+<div class="buttons">
+  <button class="btn-delete" (click)="delete()"><i class="fas fa-trash"></i></button>
+</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { TaskService } from "../services/task.service";
 import { Task } from "../services/models/task.dto";
 import { ContextService } from "../services/context.service";
+import { TaskView } from "../services/models/task-view";
 
 @Component({
   selector: "app-task-page-content-list",
@@ -9,12 +10,12 @@ import { ContextService } from "../services/context.service";
   styleUrls: ["./task-page-content-list.component.scss"]
 })
 export class TaskPageContentListComponent implements OnInit {
-  public tasks: Task[] = [];
+  public taskViews: TaskView[] = [];
   constructor(
     private readonly taskService: TaskService,
     private readonly contextService: ContextService,
   ) {
-    this.contextService.visibleTasks.subscribe(tasks => this.tasks = tasks);
+    this.contextService.visibleTasks.subscribe(tasks => this.taskViews = tasks);
   }
 
   ngOnInit() {

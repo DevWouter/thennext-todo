@@ -3,6 +3,7 @@ import { trigger, state, style, animate, transition } from "@angular/animations"
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services";
 import { TaskService } from "../services/task.service";
+import { TaskView } from "../services/models/task-view";
 
 @Component({
   selector: "app-task-page-content-list-item",
@@ -28,20 +29,20 @@ export class TaskPageContentListItemComponent implements OnInit {
   score = 888.8;
   checked = false;
   get title() {
-    return this.task.title;
+    return this.taskView.task.title;
   }
 
   showCommentIcon = true;
   showSleepIcon = true;
   showPlayIcon = true;
 
-  private _task: Task;
+  private _task: TaskView;
   @Input()
-  set task(v: Task) { this._task = v; this.updateTask(); }
-  get task(): Task { return this._task; }
+  set taskView(v: TaskView) { this._task = v; this.updateTask(); }
+  get taskView(): TaskView { return this._task; }
 
   @HostListener("click") onClick() {
-    this.navigation.toTaskPage({ taskUuid: this.task.uuid });
+    this.navigation.toTaskPage({ taskUuid: this.taskView.task.uuid });
   }
 
   constructor(
@@ -51,7 +52,7 @@ export class TaskPageContentListItemComponent implements OnInit {
 
   ngOnInit() {
     this.navigation.taskUuid.subscribe(x => {
-      if (this.task.uuid === x) {
+      if (this.taskView.task.uuid === x) {
         this.state = "selected";
       } else {
         this.state = "default";
@@ -62,17 +63,17 @@ export class TaskPageContentListItemComponent implements OnInit {
   toggle() {
     this.checked = !this.checked;
     if (this.checked) {
-      this.task.status = TaskStatus.done;
+      this.taskView.task.status = TaskStatus.done;
     } else {
-      this.task.status = TaskStatus.todo;
+      this.taskView.task.status = TaskStatus.todo;
     }
 
-    this.taskService.update(this.task);
+    this.taskService.update(this.taskView.task);
   }
 
   updateTask() {
-    if (this.task) {
-      this.checked = this.task.status === TaskStatus.done;
+    if (this.taskView) {
+      this.checked = this.taskView.task.status === TaskStatus.done;
     }
   }
 }

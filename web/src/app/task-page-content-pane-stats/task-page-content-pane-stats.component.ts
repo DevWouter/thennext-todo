@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { Task } from "../services/models/task.dto";
+import { TaskService } from "../services/task.service";
+import { TaskView } from "../services/models/task-view";
+import { NavigationService } from "../services";
 
 @Component({
   selector: "app-task-page-content-pane-stats",
@@ -9,33 +12,40 @@ import { Task } from "../services/models/task.dto";
 })
 export class TaskPageContentPaneStatsComponent implements OnInit {
 
+  private _taskView: TaskView;
   public createdOn: Date;
   public updatedOn: Date;
   public completedOn: Date;
+  public score: number;
 
-  private _task: Task = null;
-  public get task(): Task {
-    return this._task;
+
+  constructor(
+    private contextService: ContextService,
+    private taskService: TaskService,
+    private navigation: NavigationService,
+  ) { }
+
+  ngOnInit() {
+    this.contextService.activeTaskView.subscribe(x => this.setTask(x));
   }
-  public set task(v: Task) {
-    this._task = v;
-    if (this._task) {
-      this.createdOn = this._task.createdOn;
-      this.updatedOn = this._task.updatedOn;
-      this.completedOn = this._task.completedOn;
+
+  private setTask(taskView: TaskView) {
+    this._taskView = taskView;
+    if (taskView) {
+      this.createdOn = taskView.task.createdOn;
+      this.updatedOn = taskView.task.updatedOn;
+      this.completedOn = taskView.task.completedOn;
+      this.score = taskView.score;
     } else {
       this.createdOn = undefined;
       this.updatedOn = undefined;
       this.completedOn = undefined;
+      this.score = undefined;
     }
   }
 
-  constructor(
-    private contextService: ContextService,
-  ) { }
-
-  ngOnInit() {
-    this.contextService.activeTask.subscribe(x => this.task = x);
+  delete() {
+    this.taskService.delete(this._taskView.task);
+    this.navigation.toTaskPage({ taskUuid: null });
   }
-
 }

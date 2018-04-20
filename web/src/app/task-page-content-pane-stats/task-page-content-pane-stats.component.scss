@@ -1,0 +1,20 @@
+:host {
+    display: flex;
+}
+
+.stats {
+    flex-grow: 1;
+}
+
+.btn-delete {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 14px;
+    box-shadow: 0 0 1px silver;
+    &:hover {
+        box-shadow: 0 0 2px silver;
+        background-color: darken(red, 5);
+    }
+}
