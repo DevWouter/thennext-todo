@@ -13,7 +13,6 @@ export async function TaskUpdate(req: Request, res: Response): Promise<void> {
     const account = await getAccount(token);
 
     const model = req.body as Task;
-    console.log("model", model);
 
     if (!model.uuid) {
         throw new Error("An uuid is required to update a task");

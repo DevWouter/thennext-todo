@@ -13,7 +13,6 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     const account = await getAccount(token);
 
     const model = req.body as Task;
-    console.log("model", model);
 
     if (model.uuid) {
         throw new Error("No uuid should be set");
@@ -29,8 +28,6 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     if (!taskList) {
         throw new Error(`No taskList was not found with uuid '${model.taskListUuid}'`);
     }
-
-    console.log(taskList);
 
     const entityManager = db.createEntityManager();
     const task = entityManager.create(TaskEntity);
@@ -66,8 +63,6 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
         updatedOn: dst.updatedAt,
         completedOn: dst.completedAt,
     };
-
-    console.log(result);
 
     res.send(result);
 }

@@ -176,10 +176,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
   }
 
   private saveToStorage(): Promise<void> {
-    this._entries.filter(x => x.state !== EntryState.Unchanged)
-      .forEach(x =>
-        console.log(x.state, x.value)
-      );
+    this._entries.filter(x => x.state !== EntryState.Unchanged);
 
     // Determine the elements we want to save.
     const elements = this._entries
