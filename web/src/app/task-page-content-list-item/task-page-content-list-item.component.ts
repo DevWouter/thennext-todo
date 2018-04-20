@@ -26,10 +26,13 @@ import { TaskView } from "../services/models/task-view";
 })
 export class TaskPageContentListItemComponent implements OnInit {
   state = "default";
-  score = 888.8;
+
   checked = false;
   get title() {
     return this.taskView.task.title;
+  }
+  get score(): number {
+    return this.taskView.score;
   }
 
   showCommentIcon = true;
