@@ -6,6 +6,10 @@ export interface Task extends Entity {
   title: string;
   description: string;
   status: TaskStatus;
+
+  createdOn: Date;
+  updatedOn: Date;
+  completedOn: Date;
 }
 
 export enum TaskStatus {
