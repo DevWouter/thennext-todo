@@ -40,7 +40,13 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   showSleepIcon = true;
-  showPlayIcon = true;
+  get showPlayIcon(): boolean {
+    return this._task.task.status === TaskStatus.todo;
+  }
+
+  get showPauseIcon(): boolean {
+    return this._task.task.status === TaskStatus.active;
+  }
 
   private _task: TaskView;
   @Input()
@@ -81,5 +87,19 @@ export class TaskPageContentListItemComponent implements OnInit {
     if (this.taskView) {
       this.checked = this.taskView.task.status === TaskStatus.done;
     }
+  }
+
+  play() {
+    console.log("play");
+    this.checked = false;
+    this.taskView.task.status = TaskStatus.active;
+    this.taskService.update(this.taskView.task);
+  }
+
+  pause() {
+    console.log("pause");
+    this.checked = false;
+    this.taskView.task.status = TaskStatus.todo;
+    this.taskService.update(this.taskView.task);
   }
 }
