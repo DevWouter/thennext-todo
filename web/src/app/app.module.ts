@@ -31,6 +31,7 @@ import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page
 import { SettingsPageComponent } from "./settings-page/settings-page.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
 import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-tasklist-selector/task-page-header-tasklist-selector.component";
+import { TaskPageContentPaneChecklistItemComponent } from "./task-page-content-pane-checklist-item/task-page-content-pane-checklist-item.component";
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-task
     SettingsPageComponent,
     SettingsPageTasklistsComponent,
     TaskPageHeaderTasklistSelectorComponent,
+    TaskPageContentPaneChecklistItemComponent,
   ],
   imports: [
     AnimationModule,

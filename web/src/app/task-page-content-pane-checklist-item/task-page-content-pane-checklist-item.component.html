@@ -1,0 +1,5 @@
+<div class="status" (click)="toggle()">
+  <i class="far fa-check-circle" *ngIf="checked"></i>
+  <i class="far fa-circle" *ngIf="!checked"></i>
+</div>
+<input class="text" placeholder="What should we not forget?" [(ngModel)]="title" (blur)="updateTitle()" />

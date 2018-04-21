@@ -1,9 +1,4 @@
-<div class="item" *ngFor="let item of items">
-  <div class="status">
-    <i class="far fa-check-circle"></i>
-  </div>
-  <input class="text" placeholder="What should we not forget?" [value]="item.title"/>
-</div>
+<app-task-page-content-pane-checklist-item *ngFor="let item of items" [item]="item"></app-task-page-content-pane-checklist-item>
 
 <div class="item">
   <div class="status">

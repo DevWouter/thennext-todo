@@ -33,8 +33,11 @@ export class TaskPageContentPaneChecklistComponent implements OnInit {
     }
 
     this.checklistItemService.add(<ChecklistItem>{
+      checked: false,
       title: title,
       taskUuid: this.taskView.task.uuid,
     });
+
+    this.newValue = "";
   }
 }
