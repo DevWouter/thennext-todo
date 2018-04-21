@@ -56,8 +56,8 @@ export class ApiService {
       return undefined;
     }
 
-    const headers = new HttpHeaders();
-    headers.set("Authorization", `Bearer ${this._sessionToken}`);
+    let headers = new HttpHeaders();
+    headers = headers.set("Authorization", `Bearer ${this._sessionToken}`);
 
     return {
       headers: headers
