@@ -35,7 +35,10 @@ export class TaskPageContentListItemComponent implements OnInit {
     return this.taskView.score;
   }
 
-  showCommentIcon = true;
+  get showCommentIcon(): boolean {
+    return this._task.task.description.trim().length !== 0;
+  }
+
   showSleepIcon = true;
   showPlayIcon = true;
 

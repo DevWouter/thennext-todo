@@ -53,6 +53,8 @@ export class TaskService {
     if (!value.updatedOn) {
       value.updatedOn = new Date();
     }
+
+    value.description = value.description || "";
     return this._repository.add(value);
   }
 
