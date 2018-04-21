@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { getConnection } from "typeorm";
 
 import * as bcrypt from "bcryptjs";
-import { Account } from "../../models";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity, SessionEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";

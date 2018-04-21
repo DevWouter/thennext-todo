@@ -2,11 +2,13 @@ import * as moment from "moment";
 import * as express from "express";
 
 import { SessionEntity } from "../db/entities";
-import { getAuthorizationToken } from "../server/get-authorization-token";
 import { getConnection } from "typeorm";
+import container from "../inversify.config";
+import { AuthenticationService } from "../services/authentication-service";
 
 export async function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const token = getAuthorizationToken(req);
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     if (token == null) {
         res.status(403).send({ error: "No token was provided" });
         return;

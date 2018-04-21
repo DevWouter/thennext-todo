@@ -5,16 +5,18 @@ import { TaskList } from "./task-list.model";
 import { TaskListEntity } from "../../db/entities";
 
 import { getAccount } from "../../server/get-account";
-import { getAuthorizationToken } from "../../server/get-authorization-token";
+import { AuthenticationService } from "../../services/authentication-service";
+import container from "../../inversify.config";
 
 export interface TaskListInput {
     readonly name: string;
 }
 
 export async function taskListCreate(req: Request, res: Response): Promise<void> {
-    const entityManager = getConnection().createEntityManager();
-    const token = getAuthorizationToken(req);
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     const account = await getAccount(token);
+    const entityManager = getConnection().createEntityManager();
 
     const taskList = entityManager.create(TaskListEntity);
     const args = req.body as TaskListInput;

@@ -6,11 +6,13 @@ import { Account } from "./account.model";
 import { AccountEntity, DecaySpeedEntity } from "../../db/entities";
 
 import { TransformAccount } from "./helpers/account-to-model";
-import { getAuthorizationToken } from "../../server/get-authorization-token";
 import { getAccount } from "../../server/get-account";
+import { AuthenticationService } from "../../services/authentication-service";
+import container from "../../inversify.config";
 
 export async function AccountMe(req: Request, res: Response): Promise<void> {
-    const token = getAuthorizationToken(req);
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     const account = await getAccount(token);
 
     const src = await getConnection()

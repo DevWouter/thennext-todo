@@ -4,17 +4,18 @@ import { getConnection } from "typeorm";
 import * as moment from "moment";
 import * as bcrypt from "bcryptjs";
 
-import { Account } from "../../models";
-
 import { AccountEntity, AccountSettingsEntity, TaskListEntity, SessionEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
 import { Session } from "./session.model";
 import { getAccount } from "../../server/get-account";
-import { getAuthorizationToken } from "../../server/get-authorization-token";
+import container from "../../inversify.config";
+import { AuthenticationService } from "../../services/authentication-service";
+
 
 export async function SessionExtend(req: Request, res: Response): Promise<void> {
     const entityManager = getConnection().createEntityManager();
-    const token = getAuthorizationToken(req);
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     const account = await getAccount(token);
 
     const query = entityManager

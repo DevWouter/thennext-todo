@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
 import { getConnection } from "typeorm";
 
-import { getAuthorizationToken } from "../../server/get-authorization-token";
 import { getAccount } from "../../server/get-account";
 
 import { ChecklistItem } from "./checklist-item.model";
 import { TaskEntity, ChecklistItemEntity, AccountEntity } from "../../db/entities";
+import { AuthenticationService } from "../../services/authentication-service";
+import container from "../../inversify.config";
 
 export async function ChecklistItemIndex(req: Request, res: Response): Promise<void> {
-    const token = getAuthorizationToken(req);
+
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     const account = await getAccount(token);
     const db = await getConnection();
     const entityManager = db.createEntityManager();

@@ -4,17 +4,18 @@ import { getConnection } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import * as moment from "moment";
 
-import { Account } from "../../models";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity, SessionEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
 import { Session } from "./session.model";
 import { getAccount } from "../../server/get-account";
-import { getAuthorizationToken } from "../../server/get-authorization-token";
+import { AuthenticationService } from "../../services/authentication-service";
+import container from "../../inversify.config";
 
 export async function SessionDestroy(req: Request, res: Response): Promise<void> {
     const entityManager = getConnection().createEntityManager();
-    const token = getAuthorizationToken(req);
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     const account = await getAccount(token);
 
     const query = entityManager

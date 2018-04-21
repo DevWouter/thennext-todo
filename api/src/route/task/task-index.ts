@@ -2,13 +2,15 @@ import { Request, Response } from "express";
 import { getConnection } from "typeorm";
 
 import { AccountEntity } from "../../db/entities";
-import { getAuthorizationToken } from "../../server/get-authorization-token";
 import { getAccount } from "../../server/get-account";
 import { Task } from "./task.model";
+import container from "../../inversify.config";
+import { AuthenticationService } from "../../services/authentication-service";
 
 
 export async function TaskIndex(req: Request, res: Response): Promise<void> {
-    const token = getAuthorizationToken(req);
+    const authService = container.resolve(AuthenticationService);
+    const token = authService.getAuthenticationToken(req);
     const account = await getAccount(token);
 
     const src = await getConnection()
