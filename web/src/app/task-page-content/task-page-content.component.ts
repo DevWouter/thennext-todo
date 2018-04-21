@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ContextService } from "../services/context.service";
 
 @Component({
   selector: "app-task-page-content",
@@ -7,8 +8,16 @@ import { Component, OnInit } from "@angular/core";
 })
 export class TaskPageContentComponent implements OnInit {
   size = 400;
+  showPane = false;
+
+  constructor(
+    private readonly contextService: ContextService,
+  ) { }
 
   ngOnInit() {
+    this.contextService.activeTaskView.subscribe(x => {
+      this.showPane = !!x;
+    });
   }
 
   offsetPaneWidth(offset: number): void {
