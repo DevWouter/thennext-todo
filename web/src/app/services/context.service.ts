@@ -26,6 +26,21 @@ export class ContextService {
     return this.activeTaskList.filter(x => !!x)
       .combineLatest(this.taskViewService.entries, (list, tasks) => tasks.filter(x => x.task.taskListUuid === list.uuid))
       .map(x => x.sort((a, b) => b.score - a.score))
+      .map(x => {
+        const activeTasks: TaskView[] = [];
+        const todoTasks: TaskView[] = [];
+        const doneTasks: TaskView[] = [];
+        x.forEach(y => {
+          switch (y.task.status) {
+            case TaskStatus.done: { doneTasks.push(y); break; }
+            case TaskStatus.active: { activeTasks.push(y); break; }
+            case TaskStatus.todo: { todoTasks.push(y); break; }
+            default: { throw new Error(`Unsupported task status: ${y.task.status}`); }
+          }
+        });
+
+        return [...activeTasks, ...todoTasks, ...doneTasks];
+      })
       .map(x => x.filter(y => y.task.status !== TaskStatus.done));
   }
 
