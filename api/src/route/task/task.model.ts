@@ -1,5 +1,4 @@
 import { TaskRelation } from "../task-relation/task-relation.model";
-import { TaskEvent } from "../task-event/task-event.model";
 
 export enum TaskStatus {
     todo = "todo",
