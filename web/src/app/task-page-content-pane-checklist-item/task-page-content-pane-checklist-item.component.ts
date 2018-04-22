@@ -25,7 +25,6 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
   }
 
   updateTitle() {
-    console.log("updateTitle", this.item.title, this.title);
     if (this.item.title === this.title) {
       // No changes.
       return;
