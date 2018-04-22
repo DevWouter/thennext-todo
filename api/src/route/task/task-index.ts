@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
-import { getConnection } from "typeorm";
+import { getConnection, Connection } from "typeorm";
 
 import { AccountEntity } from "../../db/entities";
-import { getAccount } from "../../server/get-account";
+
 import { Task } from "./task.model";
 import container from "../../inversify.config";
 import { AuthenticationService } from "../../services/authentication-service";
+import { AccountService } from "../../services/account-service";
 
 
 export async function TaskIndex(req: Request, res: Response): Promise<void> {
     const authService = container.resolve(AuthenticationService);
+    const accountService = container.resolve(AccountService);
     const token = authService.getAuthenticationToken(req);
-    const account = await getAccount(token);
+    const account = await accountService.byToken(token);
 
     const src = await getConnection()
         .createQueryBuilder(AccountEntity, "account")

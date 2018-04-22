@@ -1,0 +1,53 @@
+import { injectable } from "inversify";
+import { Request } from "express";
+import { AccountEntity } from "../db/entities";
+import { Connection } from "typeorm";
+
+@injectable()
+export class AccountService {
+
+    constructor(
+        private readonly db: Connection
+    ) { }
+
+    byToken(token: string): Promise<AccountEntity> {
+        return this.db
+            .createQueryBuilder(AccountEntity, "account")
+            .innerJoin("account.sessions", "session", "session.token = :token", { token })
+            .getOne();
+    }
+    byUuid(uuid: string): Promise<AccountEntity> {
+        return this.db
+            .createQueryBuilder(AccountEntity, "account")
+            .where("account.uuid = :uuid", { uuid: uuid })
+            .getOne();
+    }
+    byId(id: number): Promise<AccountEntity> {
+        return this.db
+            .createQueryBuilder(AccountEntity, "account")
+            .where("account.id = :id", { id: id })
+            .getOne();
+    }
+
+    byEmail(email: string): Promise<AccountEntity> {
+        return this.db
+            .createQueryBuilder(AccountEntity, "account")
+            .where("account.email = :email", { email: email })
+            .getOne();
+    }
+
+    update(entity: AccountEntity): Promise<AccountEntity> {
+        const entityManager = this.db.createEntityManager();
+        return entityManager.save(AccountEntity, entity);
+    }
+    create(entity: AccountEntity): Promise<AccountEntity> {
+        const entityManager = this.db.createEntityManager();
+        return entityManager.insert(AccountEntity, entity).then(x => {
+            return this.db.createEntityManager().preload(AccountEntity, x);
+        });
+    }
+    destroy(entity: AccountEntity): Promise<void> {
+        const entityManager = this.db.createEntityManager();
+        return entityManager.delete(AccountEntity, entity);
+    }
+}

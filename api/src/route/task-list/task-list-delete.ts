@@ -4,9 +4,10 @@ import { getConnection } from "typeorm";
 import { TaskList } from "./task-list.model";
 import { TaskListEntity } from "../../db/entities";
 
-import { getAccount } from "../../server/get-account";
+
 import container from "../../inversify.config";
 import { AuthenticationService } from "../../services/authentication-service";
+import { AccountService } from "../../services/account-service";
 
 export interface TaskListInput {
     readonly name: string;
@@ -16,8 +17,10 @@ export async function TaskListDelete(req: Request, res: Response): Promise<void>
     const entityManager = getConnection().createEntityManager();
 
     const authService = container.resolve(AuthenticationService);
+    const accountService = container.resolve(AccountService);
+
     const token = authService.getAuthenticationToken(req);
-    const account = await getAccount(token);
+    const account = await accountService.byToken(token);
 
     const taskList = await entityManager.findOne(TaskListEntity, {
         where: {

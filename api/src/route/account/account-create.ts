@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { getConnection } from "typeorm";
 
 import * as bcrypt from "bcryptjs";
 import { Account } from "./account.model";
@@ -7,6 +6,8 @@ import { Account } from "./account.model";
 import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
 import { TransformAccount } from "./helpers/account-to-model";
+import container from "../../inversify.config";
+import { AccountService } from "../../services/account-service";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -16,25 +17,23 @@ export interface CreateAccountInput {
 export async function AccountCreate(req: Request, res: Response): Promise<void> {
     const input = req.body as CreateAccountInput;
     throwIfInvalid(input);
-    const entityManager = getConnection().createEntityManager();
-    const account = entityManager.create(AccountEntity);
+    const accountService = container.resolve(AccountService);
+    const account = new AccountEntity();
     account.email = input.email;
     account.password_hash = await bcrypt.hash(input.password, SecurityConfig.saltRounds);
     account.accountSettings = new AccountSettingsEntity();
     AccountSettingsEntity.setDefaultValues(account.accountSettings);
 
     // Create primary task list
-    const primaryTaskList = entityManager.create(TaskListEntity);
+    const primaryTaskList = new TaskListEntity();
     primaryTaskList.name = "Inbox";
     primaryTaskList.primary = true;
     account.taskLists = [primaryTaskList];
 
-    const finalEntity = await entityManager.save(account);
+    const finalEntity = await accountService.create(account);
     const dst = TransformAccount(finalEntity);
 
     res.send(dst);
-
-
 }
 
 function throwIfInvalid(input: CreateAccountInput): void {

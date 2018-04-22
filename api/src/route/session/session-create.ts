@@ -7,6 +7,8 @@ import { AccountEntity, AccountSettingsEntity, TaskListEntity, SessionEntity } f
 import { SecurityConfig } from "../../config";
 import { Session } from "./session.model";
 import * as moment from "moment";
+import container from "../../inversify.config";
+import { AccountService } from "../../services/account-service";
 
 export interface SessionCreateInput {
     readonly email: string;
@@ -15,8 +17,11 @@ export interface SessionCreateInput {
 
 export async function SessionCreate(req: Request, res: Response): Promise<void> {
     const input = req.body as SessionCreateInput;
+
+    const accountService = container.resolve(AccountService);
+
     const entityManager = getConnection().createEntityManager();
-    const account = await entityManager.findOne(AccountEntity, <Partial<AccountEntity>>{ email: input.email });
+    const account = await accountService.byEmail(input.email);
     if (!account) {
         throw new Error("No user found");
     }

@@ -1,9 +1,9 @@
 import * as moment from "moment";
 import * as express from "express";
+import container from "../inversify.config";
 
 import { SessionEntity } from "../db/entities";
 import { getConnection } from "typeorm";
-import container from "../inversify.config";
 import { AuthenticationService } from "../services/authentication-service";
 
 export async function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
