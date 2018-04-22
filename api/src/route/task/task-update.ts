@@ -8,29 +8,29 @@ import { TaskStatus } from "../../db/entities/task.entity";
 import container from "../../inversify.config";
 import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
+import { TaskService } from "../../services/task-service";
 
 
 export async function TaskUpdate(req: Request, res: Response): Promise<void> {
     const authService = container.resolve(AuthenticationService);
     const accountService = container.resolve(AccountService);
-    const token = authService.getAuthenticationToken(req);
-    const account = await accountService.byToken(token);
+    const taskService = container.resolve(TaskService);
 
     const model = req.body as Task;
 
-    if (!model.uuid) {
-        throw new Error("An uuid is required to update a task");
-    }
+    const token = authService.getAuthenticationToken(req);
+    const account = await accountService.byToken(token);
+    const task = await taskService.byUuid(<string>(req.params.uuid), account);
 
-    const db = await getConnection();
-    const entityManager = db.createEntityManager();
+    task.title = model.title;
+    task.description = model.description;
+    task.status = model.status;
 
-    // TODO: Add check if entity is of owner.
+    task.createdAt = model.createdOn;
+    task.updatedAt = model.updatedOn;
+    task.completedAt = model.completedOn;
 
-    await entityManager.update(TaskEntity, { uuid: model.uuid }, model);
-
-    const loadPromise = entityManager.findOne(TaskEntity, { where: { uuid: model.uuid } });
-
+    const loadPromise = taskService.update(task);
     loadPromise.catch(x => console.error(x));
 
     // Wait until reload has been completed.

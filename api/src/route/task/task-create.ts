@@ -8,11 +8,14 @@ import { TaskStatus } from "../../db/entities/task.entity";
 import { AuthenticationService } from "../../services/authentication-service";
 import container from "../../inversify.config";
 import { AccountService } from "../../services/account-service";
+import { TaskService } from "../../services/task-service";
 
 
 export async function TaskCreate(req: Request, res: Response): Promise<void> {
     const authService = container.resolve(AuthenticationService);
     const accountService = container.resolve(AccountService);
+    const taskService = container.resolve(TaskService);
+
     const token = authService.getAuthenticationToken(req);
     const account = await accountService.byToken(token);
 
@@ -34,7 +37,7 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     }
 
     const entityManager = db.createEntityManager();
-    const task = entityManager.create(TaskEntity);
+    const task = new TaskEntity();
     const src = req.body as Task;
 
 
@@ -47,11 +50,7 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     // Assign relations
     task.taskList = taskList;
 
-    const savePromise = entityManager.save(task).then(x => {
-        // Reload the entity so that we have all the needed values.
-        return entityManager.preload(TaskEntity, x);
-    });
-
+    const savePromise = taskService.create(task);
     savePromise.catch(x => console.error(x));
 
     // Wait until reload has been completed.
