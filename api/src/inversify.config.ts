@@ -1,7 +1,9 @@
 import { Container, injectable, decorate, unmanaged } from "inversify";
+import { getConnection, Connection } from "typeorm";
+
 import { AccountService } from "./services/account-service";
 import { AuthenticationService } from "./services/authentication-service";
-import { getConnection, Connection } from "typeorm";
+import { SessionService } from "./services/session-service";
 
 decorate(injectable(), Connection);
 decorate(unmanaged(), Connection, 1);
@@ -16,5 +18,6 @@ container.bind<Connection>(Connection)
 // The various services.
 container.bind<AccountService>(AccountService).toSelf();
 container.bind<AuthenticationService>(AuthenticationService).toSelf();
+container.bind<SessionService>(SessionService).toSelf();
 
 export default container;
