@@ -10,8 +10,8 @@ export async function SessionDestroy(req: Request, res: Response): Promise<void>
     const sessionService = container.resolve(SessionService);
 
     const token = authenticationService.getAuthenticationToken(req);
-    await sessionService.destroy(token);
+    const session = await sessionService.byToken(token);
 
-    // Tell the client the session was deleted.
+    await sessionService.destroy(session);
     res.sendStatus(200);
 }

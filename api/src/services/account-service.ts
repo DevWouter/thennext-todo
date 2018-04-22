@@ -16,12 +16,14 @@ export class AccountService {
             .innerJoin("account.sessions", "session", "session.token = :token", { token })
             .getOne();
     }
+
     byUuid(uuid: string): Promise<AccountEntity> {
         return this.db
             .createQueryBuilder(AccountEntity, "account")
             .where("account.uuid = :uuid", { uuid: uuid })
             .getOne();
     }
+
     byId(id: number): Promise<AccountEntity> {
         return this.db
             .createQueryBuilder(AccountEntity, "account")
@@ -42,12 +44,10 @@ export class AccountService {
     }
     create(entity: AccountEntity): Promise<AccountEntity> {
         const entityManager = this.db.createEntityManager();
-        return entityManager.insert(AccountEntity, entity).then(x => {
-            return this.db.createEntityManager().preload(AccountEntity, x);
-        });
+        return entityManager.save(entity);
     }
-    destroy(entity: AccountEntity): Promise<void> {
+    destroy(entity: AccountEntity): Promise<AccountEntity> {
         const entityManager = this.db.createEntityManager();
-        return entityManager.delete(AccountEntity, entity);
+        return entityManager.remove(AccountEntity, entity);
     }
 }

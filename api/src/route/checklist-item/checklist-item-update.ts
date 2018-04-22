@@ -1,46 +1,28 @@
 import { Request, Response } from "express";
-import { getConnection, Connection } from "typeorm";
 
-
+import container from "../../inversify.config";
 
 import { ChecklistItem } from "./checklist-item.model";
-import { TaskEntity, ChecklistItemEntity } from "../../db/entities";
-import { AuthenticationService } from "../../services/authentication-service";
-import container from "../../inversify.config";
+
 import { AccountService } from "../../services/account-service";
+import { AuthenticationService } from "../../services/authentication-service";
+import { ChecklistItemService } from "../../services/checklist-item-service";
 
 export async function ChecklistItemUpdate(req: Request, res: Response): Promise<void> {
-    const authService = container.resolve(AuthenticationService);
     const accountService = container.resolve(AccountService);
+    const authService = container.resolve(AuthenticationService);
+    const checklistItemService = container.resolve(ChecklistItemService);
+
     const token = authService.getAuthenticationToken(req);
+    const input = req.body as ChecklistItem;
+
     const account = await accountService.byToken(token);
-    const db = await getConnection();
-    const entityManager = db.createEntityManager();
+    const checklistItem = await checklistItemService.byUuid(req.params.uuid, account);
+    checklistItem.title = input.title;
+    checklistItem.checked = input.checked;
 
-    const model = req.body as ChecklistItem;
-
-    if (!model.taskUuid) {
-        throw new Error(`A checklist item must be assigned to a task, yet no taskUuid was provided`);
-    }
-
-    await entityManager.update(ChecklistItemEntity,
-        { uuid: model.uuid },
-        { title: model.title, checked: model.checked }
-    );
-
-    const loadPromise = entityManager.findOne(ChecklistItemEntity, {
-        where: { uuid: model.uuid },
-        join: {
-            alias: "checklistItem",
-            innerJoinAndSelect: {
-                task: "checklistItem.task"
-            }
-        }
-    });
-
-    loadPromise.catch(console.error);
-
-    const dbData = <ChecklistItemEntity>await loadPromise;
+    const savePromise = checklistItemService.update(checklistItem);
+    const dbData = await savePromise;
     const apiData = <ChecklistItem>{
         uuid: dbData.uuid,
         taskUuid: dbData.task.uuid,

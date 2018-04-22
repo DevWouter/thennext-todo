@@ -9,12 +9,14 @@ import { AuthenticationService } from "../../services/authentication-service";
 import container from "../../inversify.config";
 import { AccountService } from "../../services/account-service";
 import { TaskService } from "../../services/task-service";
+import { TaskListService } from "../../services/task-list-service";
 
 
 export async function TaskCreate(req: Request, res: Response): Promise<void> {
     const authService = container.resolve(AuthenticationService);
     const accountService = container.resolve(AccountService);
     const taskService = container.resolve(TaskService);
+    const taskListService = container.resolve(TaskListService);
 
     const token = authService.getAuthenticationToken(req);
     const account = await accountService.byToken(token);
@@ -25,18 +27,12 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
         throw new Error("No uuid should be set");
     }
 
-    const db = await getConnection();
-
-    const taskList = await db
-        .createQueryBuilder(TaskListEntity, "taskList")
-        .where("taskList.uuid = :uuid", { uuid: model.taskListUuid })
-        .getOne();
+    const taskList = await taskListService.byUuid(model.taskListUuid, account);
 
     if (!taskList) {
         throw new Error(`No taskList was not found with uuid '${model.taskListUuid}'`);
     }
 
-    const entityManager = db.createEntityManager();
     const task = new TaskEntity();
     const src = req.body as Task;
 

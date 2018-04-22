@@ -6,6 +6,7 @@ import * as moment from "moment";
 import { AccountService } from "./account-service";
 
 import { SessionEntity } from "../db/entities";
+import { Session } from "../route/session/session.model";
 
 @injectable()
 export class SessionService {
@@ -13,6 +14,13 @@ export class SessionService {
         private readonly db: Connection,
         private readonly accountService: AccountService,
     ) { }
+
+    async byToken(token: string): Promise<SessionEntity> {
+        return this.db
+            .createQueryBuilder(SessionEntity, "session")
+            .where("session.token = :token", { token: token })
+            .getOne();
+    }
 
     async create(email: string, password: string): Promise<SessionEntity> {
         const account = await this.accountService.byEmail(email);
@@ -35,22 +43,15 @@ export class SessionService {
     }
 
     async extend(token: string): Promise<SessionEntity> {
-        const session = await this.db.createQueryBuilder()
-            .select()
-            .from(SessionEntity, "session")
-            .where("session.token = :token", { token: token })
-            .getOne();
+        const session = await this.byToken(token);
 
         session.expire_on = moment().add({ weeks: 3 }).toDate();
 
         return this.db.createEntityManager().save(session);
     }
 
-    async destroy(token: string): Promise<void> {
-        return this.db.createQueryBuilder()
-            .delete()
-            .from(SessionEntity, "session")
-            .where("session.token = :token", { token: token })
-            .execute();
+    destroy(session: SessionEntity): Promise<SessionEntity> {
+        const entityManager = this.db.createEntityManager();
+        return entityManager.remove(session);
     }
 }

@@ -3,20 +3,23 @@ import * as express from "express";
 import container from "../inversify.config";
 
 import { SessionEntity } from "../db/entities";
-import { getConnection } from "typeorm";
+import { getConnection, Connection } from "typeorm";
 import { AuthenticationService } from "../services/authentication-service";
+import { SessionService } from "../services/session-service";
+import { AccountService } from "../services/account-service";
 
 export async function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
     const authService = container.resolve(AuthenticationService);
+    const accountService = container.resolve(AccountService);
+    const sessionService = container.resolve(SessionService);
+
     const token = authService.getAuthenticationToken(req);
     if (token == null) {
         res.status(403).send({ error: "No token was provided" });
         return;
     }
 
-    const entityManager = getConnection().createEntityManager();
-    // Validate the token
-    const session = await entityManager.findOne(SessionEntity, { where: { token: token } });
+    const session = await sessionService.byToken(token);
     if (!session) {
         console.warn(`No session found with token: ${token}`);
         res.status(403).send({ error: "Invalid token" });
@@ -25,7 +28,7 @@ export async function isAuthenticated(req: express.Request, res: express.Respons
 
     if (moment(session.expire_on).isBefore(moment())) {
         console.log(`AUTH token expired: ${token}`);
-        entityManager.remove(session);
+        sessionService.destroy(session);
         res.status(403).send({ error: "token expired" });
         return;
     }

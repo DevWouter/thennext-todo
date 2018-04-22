@@ -1,5 +1,4 @@
 import { injectable } from "inversify";
-import { Request } from "express";
 import { TaskEntity, AccountEntity, TaskListEntity } from "../db/entities";
 import { Connection } from "typeorm";
 
@@ -46,8 +45,8 @@ export class TaskService {
         return entityManager.save(TaskEntity, entity);
     }
 
-    destroy(entity: TaskEntity): Promise<void> {
+    destroy(entity: TaskEntity): Promise<TaskEntity> {
         const entityManager = this.db.createEntityManager();
-        return entityManager.delete(TaskEntity, entity);
+        return entityManager.remove(TaskEntity, entity);
     }
 }
