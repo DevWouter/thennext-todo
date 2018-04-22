@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
 import { AccountSettingsEntity } from "./account-settings.entity";
-import { DecaySpeedEntity } from "./decay-speed.entity";
-import { TagScoreEntity } from "./tag-score.entity";
 import { SessionEntity } from "./session.entity";
 import { TaskListEntity } from "./task-list.entity";
 
@@ -22,12 +20,6 @@ export class AccountEntity {
 
     @OneToOne(type => AccountSettingsEntity, accountSettings => accountSettings.account, { cascadeAll: true, onDelete: "CASCADE" })
     accountSettings: AccountSettingsEntity;
-
-    @OneToMany(type => DecaySpeedEntity, decaySpeed => decaySpeed.account)
-    decaySpeeds: DecaySpeedEntity[];
-
-    @OneToMany(type => TagScoreEntity, tagScore => tagScore.account)
-    tagScores: TagScoreEntity[];
 
     @OneToMany(type => TaskListEntity, taskList => taskList.owner, { cascadeInsert: true })
     taskLists: TaskListEntity[];
