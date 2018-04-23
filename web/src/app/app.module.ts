@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 import "./shared/shared";
 
 import { BrowserModule } from "@angular/platform-browser";
@@ -5,8 +6,8 @@ import { BrowserAnimationsModule as AnimationModule } from "@angular/platform-br
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { AppRoutingModule } from "./app-routing.module";
 import { AccountModule } from "./account/account.module";
+import { AppRoutingModule } from "./app-routing.module";
 import { ServicesModule } from "./services/services.module";
 
 import { AppComponent } from "./app.component";
@@ -32,6 +33,9 @@ import { SettingsPageComponent } from "./settings-page/settings-page.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
 import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-tasklist-selector/task-page-header-tasklist-selector.component";
 import { TaskPageContentPaneChecklistItemComponent } from "./task-page-content-pane-checklist-item/task-page-content-pane-checklist-item.component";
+import { SettingsPageHeaderComponent } from "./settings-page-header/settings-page-header.component";
+import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
+import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
 
 @NgModule({
   declarations: [
@@ -57,6 +61,9 @@ import { TaskPageContentPaneChecklistItemComponent } from "./task-page-content-p
     SettingsPageTasklistsComponent,
     TaskPageHeaderTasklistSelectorComponent,
     TaskPageContentPaneChecklistItemComponent,
+    SettingsPageHeaderComponent,
+    SettingsPageTabScoringComponent,
+    SettingsPageTabTasklistsComponent,
   ],
   imports: [
     AnimationModule,

@@ -1,5 +1,13 @@
-<h1>Settings</h1>
-<button (click)="toTaskList()">To tasks</button>
+<app-settings-page-header></app-settings-page-header>
 
-<h2>Tasklists</h2>
-<app-settings-page-tasklists></app-settings-page-tasklists>
+<div class="content">
+  <div class="tab-container tab-container--vertical">
+    <div class="tab-titles">
+      <a routerLinkActive='active' [routerLink]="[{outlets: {settings: 'tasklist'}}]">Tasklist</a>
+      <a routerLinkActive='active' [routerLink]="[{outlets: {settings: 'scoring'}}]">Scoring</a>
+    </div>
+    <div class="tab-content">
+      <router-outlet name="settings"></router-outlet>
+    </div>
+  </div>
+</div>
