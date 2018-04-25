@@ -1,1 +1,9 @@
-<i>Here we handle the tasks that are blocking or blocked by this task</i>
+<div class="timeline" *ngIf="showDropArea">
+    <div class="droparea droparea--before"><b>before</b><br>"{{taskname}}"</div>
+    <div class="droparea-splitter">
+      <span>or</span>
+    </div>
+  <div class="droparea droparea--after"><b>after</b><br>"{{taskname}}"</div>
+
+</div>
+<i *ngIf="!showDropArea">Drag a task of list and drop it here to determine if should be before the current or after the current task</i>

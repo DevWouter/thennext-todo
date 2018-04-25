@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ContextService } from "../services/context.service";
 
 @Component({
   selector: "app-task-page-content-pane-relations",
@@ -7,9 +8,15 @@ import { Component, OnInit } from "@angular/core";
 })
 export class TaskPageContentPaneRelationsComponent implements OnInit {
 
-  constructor() { }
+  taskname = "";
+  showDropArea = false;
+
+  constructor(
+    private contextService: ContextService,
+  ) { }
 
   ngOnInit() {
+    this.contextService.activeTaskView.subscribe(x => this.taskname = x.task.title);
   }
 
 }

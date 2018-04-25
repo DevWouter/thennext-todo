@@ -1,0 +1,26 @@
+.droparea {
+    font-style: italic;
+    $padding-h: 20px;
+    padding-top: $padding-h;
+    padding-bottom: $padding-h;
+    padding: 20px;
+    text-align: center;
+    margin: 10px;
+    border: 1px solid #f2f2f2; // background-color: lighten(black, 90);
+    transition: border-color 0.2s, box-shadow 0.6s;
+    &:hover {
+        border-color: #cccccc;
+        transition: border-color 0.2s, box-shadow 0.1s;
+        box-shadow: 0 0 3px #cccccc;
+    }
+}
+
+.droparea-splitter {
+    display: flex;
+    align-items: center; // v-align
+    justify-content: center; // h-align
+    span {
+        padding: 3px;
+        z-index: 1;
+    }
+}
