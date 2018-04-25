@@ -9,13 +9,12 @@ import { RepositoryRestoreTranslator } from "./repositories/repository-restore-t
 
 import { ApiService } from "./api.service";
 
-import { Task } from "./models/task.dto";
+import { ScoreShift } from "./models/score-shift.dto";
 
-class TaskRestoreTranslator implements RepositoryRestoreTranslator<Task> {
-  translate(entry: Task): void {
+class ScoreShiftRestoreTranslator implements RepositoryRestoreTranslator<ScoreShift> {
+  translate(entry: ScoreShift): void {
     entry.createdOn = this.fixDate(entry.createdOn);
     entry.updatedOn = this.fixDate(entry.updatedOn);
-    entry.completedOn = this.fixDate(entry.completedOn);
   }
 
   fixDate(v: string | Date): Date {
@@ -34,19 +33,19 @@ class TaskRestoreTranslator implements RepositoryRestoreTranslator<Task> {
 }
 
 @Injectable()
-export class TaskService {
-  private _repository: Repository<Task>;
-  public get entries(): Observable<Task[]> {
+export class ScoreShiftService {
+  private _repository: Repository<ScoreShift>;
+  public get entries(): Observable<ScoreShift[]> {
     return this._repository.entries;
   }
 
   constructor(
     private apiService: ApiService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task", new TaskRestoreTranslator());
+    this._repository = new ApiRepository(apiService, "/api/score-shift", new ScoreShiftRestoreTranslator());
   }
 
-  add(value: Task): Promise<Task> {
+  add(value: ScoreShift): Promise<ScoreShift> {
     if (!value.createdOn) {
       value.createdOn = new Date();
     }
@@ -54,20 +53,20 @@ export class TaskService {
       value.updatedOn = new Date();
     }
 
-    value.description = value.description || "";
+    value.score = value.score || 0;
     return this._repository.add(value);
   }
 
-  update(value: Task): Promise<Task> {
+  update(value: ScoreShift): Promise<ScoreShift> {
     value.updatedOn = new Date();
     return this._repository.update(value);
   }
 
-  delete(value: Task): Promise<Task> {
+  delete(value: ScoreShift): Promise<ScoreShift> {
     return this._repository.delete(value);
   }
 
-  deleteMany(values: Task[]): Promise<Task[]> {
+  deleteMany(values: ScoreShift[]): Promise<ScoreShift[]> {
     return this._repository.deleteMany(values);
   }
 }

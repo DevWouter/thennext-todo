@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne
 import { AccountSettingsEntity } from "./account-settings.entity";
 import { SessionEntity } from "./session.entity";
 import { TaskListEntity } from "./task-list.entity";
+import { ScoreShiftEntity } from ".";
 
 @Entity("Account")
 export class AccountEntity {
@@ -26,4 +27,7 @@ export class AccountEntity {
 
     @OneToMany(type => SessionEntity, session => session.account)
     sessions: SessionEntity[];
+
+    @OneToMany(type => ScoreShiftEntity, scoreShift => scoreShift.owner, { cascadeInsert: true })
+    scoreShifts: ScoreShiftEntity[];
 }

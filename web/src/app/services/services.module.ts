@@ -7,6 +7,7 @@ import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { ContextService } from "./context.service";
 import { NavigationService } from "./navigation.service";
+import { ScoreShiftService } from "./score-shift.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
 import { TaskListService } from "./task-list.service";
@@ -26,6 +27,7 @@ import { TaskViewService } from "./task-view.service";
     ChecklistItemService,
     ContextService,
     NavigationService,
+    ScoreShiftService,
     SessionService,
     StorageService,
     TaskListService,
