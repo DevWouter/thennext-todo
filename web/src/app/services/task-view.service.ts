@@ -8,6 +8,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { DateTime } from "luxon";
+import { TaskScoreService } from "./task-score.service";
 
 @Injectable()
 export class TaskViewService {
@@ -17,6 +18,7 @@ export class TaskViewService {
 
   constructor(
     private readonly taskService: TaskService,
+    private readonly taskScoreService: TaskScoreService,
     // TODO: Inject settings service which contains calculation method
   ) { this.setup(); }
 
@@ -33,10 +35,6 @@ export class TaskViewService {
   }
 
   calc(task: Task, tasks: Task[], now: DateTime): TaskView {
-    const tv = new TaskView(task);
-    const createdOn = DateTime.fromJSDate(tv.task.createdOn);
-    const age_created = now.diff(createdOn).as("days");
-    tv.score = age_created * 2;
-    return tv;
+    return this.taskScoreService.calculate(task, tasks, now);
   }
 }

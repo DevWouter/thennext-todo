@@ -36,6 +36,7 @@ import { TaskPageContentPaneChecklistItemComponent } from "./task-page-content-p
 import { SettingsPageHeaderComponent } from "./settings-page-header/settings-page-header.component";
 import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
 import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
+import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/settings-page-scoreshifts.component";
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists
     SettingsPageHeaderComponent,
     SettingsPageTabScoringComponent,
     SettingsPageTabTasklistsComponent,
+    SettingsPageScoreshiftsComponent,
   ],
   imports: [
     AnimationModule,
