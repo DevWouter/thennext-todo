@@ -1,9 +1,14 @@
 import * as express from "express";
+import { TaskRelationDestroy as destroy } from "./task-relation-delete";
+import { TaskRelationCreate as create } from "./task-relation-create";
+import { TaskRelationIndex as index } from "./task-relation-index";
+import { asyncMiddleware } from "../../helpers/async-helper";
 
-const TaskRelationRouter = express.Router();
+const router = express.Router();
 
-// taskListRouter.get("/", TaskListList);
-// taskListRouter.post("/", taskListCreate);
+router.get("/index", asyncMiddleware(index));
+router.post("/create", asyncMiddleware(create));
+router.delete("/:uuid", asyncMiddleware(destroy));
 
 
-export { TaskRelationRouter };
+export { router as taskRelationRouter };

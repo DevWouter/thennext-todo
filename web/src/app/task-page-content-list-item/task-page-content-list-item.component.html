@@ -1,4 +1,4 @@
-<div class="container" [@taskState]="state">
+<div class="container" [@taskState]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
   <div class="checkbox" (click)="toggle()">
     <i *ngIf="checked == false" class="far fa-square"></i>
     <i *ngIf="checked == true" class="far fa-check-square"></i>

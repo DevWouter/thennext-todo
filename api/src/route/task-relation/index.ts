@@ -1,1 +1,1 @@
-export { TaskRelationRouter } from "./task-relation.router";
+export { taskRelationRouter } from "./task-relation.router";

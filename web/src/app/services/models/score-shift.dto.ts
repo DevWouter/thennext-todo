@@ -1,4 +1,6 @@
-export interface ScoreShift {
+import { Entity } from "../repositories/entity";
+
+export interface ScoreShift extends Entity {
   uuid: string;
   phrase: string;
   score: number;

@@ -18,9 +18,15 @@ export class ContextService {
   private _activeTask = new BehaviorSubject<TaskView>(undefined);
   private _activeTaskChecklistItems = new BehaviorSubject<ChecklistItem[]>([]);
 
+  private _taskDragStatus = new BehaviorSubject<boolean>(false);
+  private _taskDragging = new BehaviorSubject<string>(undefined);
+
   get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
   get activeTaskView(): Observable<TaskView> { return this._activeTask; }
   get activeTaskChecklistItems(): Observable<ChecklistItem[]> { return this._activeTaskChecklistItems; }
+  get taskDragStatus(): Observable<boolean> { return this._taskDragStatus.asObservable(); }
+
+  get taskDragging(): Observable<string> { return this._taskDragging.asObservable(); }
 
   get visibleTasks(): Observable<TaskView[]> {
     return this.activeTaskList.filter(x => !!x)
@@ -75,5 +81,10 @@ export class ContextService {
       (uuid, items) => {
         this._activeTaskChecklistItems.next(items.filter(x => x.taskUuid === uuid));
       }).subscribe();
+  }
+
+  public setDragStatus(v: boolean, taskUuid: string) {
+    this._taskDragStatus.next(v);
+    this._taskDragging.next(taskUuid);
   }
 }

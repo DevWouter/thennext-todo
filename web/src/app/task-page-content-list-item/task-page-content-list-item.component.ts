@@ -4,6 +4,7 @@ import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services";
 import { TaskService } from "../services/task.service";
 import { TaskView } from "../services/models/task-view";
+import { ContextService } from "../services/context.service";
 
 @Component({
   selector: "app-task-page-content-list-item",
@@ -60,6 +61,7 @@ export class TaskPageContentListItemComponent implements OnInit {
   constructor(
     private navigation: NavigationService,
     private taskService: TaskService,
+    private contextService: ContextService,
   ) { }
 
   ngOnInit() {
@@ -101,5 +103,14 @@ export class TaskPageContentListItemComponent implements OnInit {
     this.checked = false;
     this.taskView.task.status = TaskStatus.todo;
     this.taskService.update(this.taskView.task);
+  }
+
+  dragStart(event: DragEvent) {
+    event.dataTransfer.setData("task/uuid", this.taskView.task.uuid);
+    this.contextService.setDragStatus(true, this.taskView.task.uuid);
+  }
+
+  dragEnd(event: DragEvent) {
+    this.contextService.setDragStatus(false, undefined);
   }
 }

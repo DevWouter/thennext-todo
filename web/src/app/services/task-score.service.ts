@@ -10,24 +10,30 @@ import { Observable } from "rxjs/Observable";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { ScoreShiftService } from "./score-shift.service";
 import { ScoreShift } from "./models/score-shift.dto";
+import { TaskRelation } from "./models/task-relation.dto";
+import { TaskRelationService } from "./task-relation.service";
 
 @Injectable()
 export class TaskScoreService {
   public changed = new BehaviorSubject<void>(null);
 
   private scoreShifts: ScoreShift[] = [];
+  private taskRelations: TaskRelation[] = [];
 
   constructor(
     private readonly scoreShiftService: ScoreShiftService,
+    private readonly taskRelationService: TaskRelationService,
   ) { this.setup(); }
 
   private setup() {
     // Whenever the values of a dependcy change, we need to emit a changed event.
     // That way listeners now they should perform a recalculation.
-    this.scoreShiftService.entries.subscribe(x => {
-      this.scoreShifts = x;
-      this.changed.next(null);
-    });
+    this.scoreShiftService.entries
+      .combineLatest(this.taskRelationService.entries, (scoreShifts, taskRelations) => {
+        this.scoreShifts = scoreShifts;
+        this.taskRelations = taskRelations;
+        this.changed.next(null);
+      }).subscribe();
   }
 
   calculate(task: Task, tasks: Task[], now: DateTime): TaskView {
@@ -35,6 +41,8 @@ export class TaskScoreService {
     tv.score = 0;
     this.addAgeToScore(tv, now);
     this.addScoreShift(tv);
+    this.addBlockedScore(tv);
+    this.addBlockingScore(tv);
     return tv;
   }
 
@@ -43,6 +51,18 @@ export class TaskScoreService {
     const age_created = now.diff(createdOn).as("days");
 
     tv.score += age_created * 2;
+  }
+
+  private addBlockedScore(tv: TaskView): void {
+    if (this.taskRelations.some(x => x.targetTaskUuid === tv.task.uuid)) {
+      tv.score -= 5;
+    }
+  }
+
+  private addBlockingScore(tv: TaskView): void {
+    if (this.taskRelations.some(x => x.sourceTaskUuid === tv.task.uuid)) {
+      tv.score += 8;
+    }
   }
 
   private addScoreShift(tv: TaskView): void {
