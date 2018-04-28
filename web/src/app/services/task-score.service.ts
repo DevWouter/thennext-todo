@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { TaskView } from "./models/task-view";
 import { ContextService } from "./context.service";
 import { TaskService } from "./task.service";
-import { Task } from "./models/task.dto";
+import { Task, TaskStatus } from "./models/task.dto";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
@@ -41,8 +41,8 @@ export class TaskScoreService {
     tv.score = 0;
     this.addAgeToScore(tv, now);
     this.addScoreShift(tv);
-    this.addBlockedScore(tv);
-    this.addBlockingScore(tv);
+    this.addBlockedScore(tv, tasks);
+    this.addBlockingScore(tv, tasks);
     return tv;
   }
 
@@ -53,14 +53,34 @@ export class TaskScoreService {
     tv.score += age_created * 2;
   }
 
-  private addBlockedScore(tv: TaskView): void {
-    if (this.taskRelations.some(x => x.targetTaskUuid === tv.task.uuid)) {
+  private addBlockedScore(tv: TaskView, tasks: Task[]): void {
+    const relations = this.taskRelations
+      .filter(x => x.targetTaskUuid === tv.task.uuid)
+      .filter(r => {
+        const task = tasks.find(t => t.uuid === r.sourceTaskUuid);
+        return task && task.status !== TaskStatus.done;
+      }).filter(r => {
+        const task = tasks.find(t => t.uuid === r.targetTaskUuid);
+        return task && task.status !== TaskStatus.done;
+      })
+      ;
+    // Remove any relation in which
+    if (relations.length !== 0) {
       tv.score -= 5;
     }
   }
 
-  private addBlockingScore(tv: TaskView): void {
-    if (this.taskRelations.some(x => x.sourceTaskUuid === tv.task.uuid)) {
+  private addBlockingScore(tv: TaskView, tasks: Task[]): void {
+    const relations = this.taskRelations
+      .filter(x => x.sourceTaskUuid === tv.task.uuid)
+      .filter(r => {
+        const task = tasks.find(t => t.uuid === r.sourceTaskUuid);
+        return task && task.status !== TaskStatus.done;
+      }).filter(r => {
+        const task = tasks.find(t => t.uuid === r.targetTaskUuid);
+        return task && task.status !== TaskStatus.done;
+      });
+    if (relations.length !== 0) {
       tv.score += 8;
     }
   }
