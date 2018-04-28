@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskListService } from "../services/task-list.service";
 import { TaskList } from "../services/models/task-list.dto";
-import { NavigationService } from "../services";
+import { NavigationService } from "../services/navigation.service";
 
 
 @Component({

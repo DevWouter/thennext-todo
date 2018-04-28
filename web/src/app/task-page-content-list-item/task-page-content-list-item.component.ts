@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, HostListener } from "@angular/core";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Task, TaskStatus } from "../services/models/task.dto";
-import { NavigationService } from "../services";
 import { TaskService } from "../services/task.service";
 import { TaskView } from "../services/models/task-view";
 import { ContextService } from "../services/context.service";
+import { NavigationService } from "../services/navigation.service";
 
 enum State {
   default = "default",

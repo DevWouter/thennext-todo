@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationService } from "../services";
+import { NavigationService } from "../services/navigation.service";
 
 @Component({
   selector: "app-task-page-header-filter-menu",

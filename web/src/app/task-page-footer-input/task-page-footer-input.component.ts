@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskService } from "../services/task.service";
-import { TaskParseService } from "../services";
+import { TaskParseService } from "../services/task-parse.service";
 
 @Component({
   selector: "app-task-page-footer-input",

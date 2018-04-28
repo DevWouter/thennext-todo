@@ -1,11 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-
-import {
-  ApiService,
-  SessionService,
-  StorageService,
-  StorageKey,
-} from "../../services";
+import { ApiService } from "../../services/api.service";
+import { SessionService } from "../../services/session.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
   selector: "app-login-form",

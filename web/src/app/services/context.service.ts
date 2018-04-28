@@ -3,13 +3,13 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import { TaskListService } from "./task-list.service";
 import { TaskList } from "./models/task-list.dto";
-import { NavigationService } from ".";
 import { Task, TaskStatus } from "./models/task.dto";
 import { TaskService } from "./task.service";
 import { TaskView } from "./models/task-view";
 import { TaskViewService } from "./task-view.service";
 import { ChecklistItem } from "./models/checklist-item.dto";
 import { ChecklistItemService } from "./checklist-item.service";
+import { NavigationService } from "./navigation.service";
 
 
 @Injectable()

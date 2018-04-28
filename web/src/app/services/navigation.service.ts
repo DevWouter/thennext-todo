@@ -4,43 +4,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import { TaskListService } from "./task-list.service";
 
-/**
- * This class contains information about the state of the tasklist.
- * Whenever we leave something to `undefined` we mean it won't be changed.
- * Setting values to `null` means set to setting to `undefined` (AKA: remove it).
- */
-export class TaskPageNavigation {
-  /**
-   * The tasklist where we need to navigate to.
-   * Set to null to go to primary tasklist.
-   */
-  taskListUuid?: string;
-
-  /**
-   * The task we need to show.
-   */
-  taskUuid?: string;
-
-  /**
-   * Show completed tasks.
-   */
-  showCompleted?: boolean;
-
-  /**
-   * Show delayed tasks.
-   */
-  showDelayed?: boolean;
-
-  /**
-   * Only show unblocked tasks.
-   */
-  onlyUnblocked?: boolean;
-
-  /**
-   * Only show positive tasks.
-   */
-  onlyPositive?: boolean;
-}
+import { TaskPageNavigation } from "./models/task-page-navigation";
 
 enum ShowValues {
   completed = "completed",

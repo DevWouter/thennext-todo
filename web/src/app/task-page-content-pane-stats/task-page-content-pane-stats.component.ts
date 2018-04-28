@@ -3,7 +3,7 @@ import { ContextService } from "../services/context.service";
 import { Task } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
 import { TaskView } from "../services/models/task-view";
-import { NavigationService } from "../services";
+import { NavigationService } from "../services/navigation.service";
 
 @Component({
   selector: "app-task-page-content-pane-stats",

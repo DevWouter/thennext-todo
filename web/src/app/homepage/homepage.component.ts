@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationService, TaskPageNavigation } from "../services";
+import { NavigationService } from "../services/navigation.service";
+import { TaskPageNavigation } from "../services/models/task-page-navigation";
 
 @Component({
   selector: "app-homepage",
