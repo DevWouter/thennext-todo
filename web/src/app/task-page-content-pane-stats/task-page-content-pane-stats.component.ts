@@ -16,8 +16,12 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
   public createdOn: Date;
   public updatedOn: Date;
   public completedOn: Date;
+  public sleepUntil: Date;
   public score: number;
 
+  get showDelay(): boolean {
+    return !!this.sleepUntil;
+  }
 
   constructor(
     private contextService: ContextService,
@@ -35,6 +39,7 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
       this.createdOn = taskView.task.createdOn;
       this.updatedOn = taskView.task.updatedOn;
       this.completedOn = taskView.task.completedOn;
+      this.sleepUntil = taskView.task.sleepUntil;
       this.score = taskView.score;
     } else {
       this.createdOn = undefined;
@@ -47,5 +52,9 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
   delete() {
     this.taskService.delete(this._taskView.task);
     this.navigation.toTaskPage({ taskUuid: null });
+  }
+
+  wakeup() {
+    this.taskService.wakeup(this._taskView.task);
   }
 }

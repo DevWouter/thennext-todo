@@ -78,4 +78,9 @@ export class TaskService {
     value.sleepUntil = sleepUntil;
     return this.update(value);
   }
+
+  wakeup(value: Task): Promise<Task> {
+    value.sleepUntil = null;
+    return this.update(value);
+  }
 }
