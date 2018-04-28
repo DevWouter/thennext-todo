@@ -34,4 +34,9 @@ export class TaskPageNavigation {
    * Only show positive tasks.
    */
   onlyPositive?: boolean;
+
+  /**
+   * The term we are searching for.
+   */
+  search?: string;
 }

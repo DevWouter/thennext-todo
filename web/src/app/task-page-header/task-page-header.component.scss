@@ -11,38 +11,9 @@
     flex-shrink: 1;
 }
 
-.search {
-    flex-grow: 1;
-    display: flex;
-    width: 100%;
-    .button {
-      height: 100%;
-      min-width: 48px;
-      line-height: 48px;
-      text-align: center;
-      color: white;
-      background-color: transparentize($color: black, $amount: 1);
-      &:hover {
-          background-color: transparentize($color: black, $amount: 0.90);
-      }
-    }
-    input {
-        flex-grow: 1;
-        outline: none;
-        padding: 8px;
-        color: white;
-        background: transparent;
-        border: none;
-        &:hover {
-          background-color: transparentize($color: black, $amount: 0.90);
-      }
-    }
-}
-
 .buttons {
     min-width: 400px;
     display: flex;
-    // background-color: transparentize($color: black, $amount: 0.95);
     .task-list-container {
         min-width: 100px;
         flex-grow: 1;

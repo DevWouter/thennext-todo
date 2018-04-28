@@ -20,6 +20,7 @@ export class NavigationService {
   private _primaryTaskListUuid: string = undefined;
   private _taskListUuidValue: string = undefined;
   private _taskUuidValue: string = undefined;
+  private _searchValue: string = undefined;
   private _showCompletedValue = false;
   private _showDelayedValue = false;
   private _onlyUnblockedValue = false;
@@ -30,6 +31,7 @@ export class NavigationService {
   private _showDelayed = new BehaviorSubject<boolean>(this._showDelayedValue);
   private _onlyUnblocked = new BehaviorSubject<boolean>(this._onlyUnblockedValue);
   private _onlyPositive = new BehaviorSubject<boolean>(this._onlyPositiveValue);
+  private _search = new BehaviorSubject<string>(this._searchValue);
 
   public get taskListUuid(): Observable<string> { return this._taskListUuid; }
   public get taskUuid(): Observable<string> { return this._taskUuid; }
@@ -37,6 +39,7 @@ export class NavigationService {
   public get showDelayed(): Observable<boolean> { return this._showDelayed; }
   public get onlyUnblocked(): Observable<boolean> { return this._onlyUnblocked; }
   public get onlyPositive(): Observable<boolean> { return this._onlyPositive; }
+  public get search(): Observable<string> { return this._search; }
 
   constructor(
     private router: Router,
@@ -108,12 +111,22 @@ export class NavigationService {
       only = null;
     }
 
+    let search = this._searchValue;
+    if (params.search !== undefined) {
+      search = params.search;
+    }
+
+    if (search === "") {
+      search = undefined;
+    }
+
     const navigationExtras: NavigationExtras = {
       queryParams: {
         "taskList": tasklist,
         "task": taskUuid,
         "show": show,
         "only": only,
+        "search": search,
       }
     };
 
@@ -143,6 +156,9 @@ export class NavigationService {
 
       this._taskUuidValue = pm.task as string;
       this._taskUuid.next(this._taskUuidValue);
+
+      this._searchValue = pm.search as string;
+      this._search.next(this._searchValue);
 
       this._showCompletedValue = false; // Set to default.
       this._showDelayedValue = false;

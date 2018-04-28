@@ -1,15 +1,18 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
-import { TaskListService } from "./task-list.service";
-import { TaskList } from "./models/task-list.dto";
-import { Task, TaskStatus } from "./models/task.dto";
-import { TaskService } from "./task.service";
-import { TaskView } from "./models/task-view";
-import { TaskViewService } from "./task-view.service";
+
 import { ChecklistItem } from "./models/checklist-item.dto";
+import { Task, TaskStatus } from "./models/task.dto";
+import { TaskList } from "./models/task-list.dto";
+import { TaskView } from "./models/task-view";
+
 import { ChecklistItemService } from "./checklist-item.service";
 import { NavigationService } from "./navigation.service";
+import { SearchService } from "./search.service";
+import { TaskListService } from "./task-list.service";
+import { TaskService } from "./task.service";
+import { TaskViewService } from "./task-view.service";
 
 
 @Injectable()
@@ -57,6 +60,11 @@ export class ContextService {
           return tasks.filter(y => !y.isBlocked);
         }
         return tasks;
+      }).combineLatest(this.navigationService.search, (tasks, search) => {
+        if (search) {
+          return tasks.filter(x => this.searchService.isResult(x, search));
+        }
+        return tasks;
       })
       ;
   }
@@ -64,6 +72,7 @@ export class ContextService {
   constructor(
     private checklistItemService: ChecklistItemService,
     private navigationService: NavigationService,
+    private searchService: SearchService,
     private taskListService: TaskListService,
     private taskViewService: TaskViewService,
   ) {

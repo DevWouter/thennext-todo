@@ -37,6 +37,7 @@ import { SettingsPageHeaderComponent } from "./settings-page-header/settings-pag
 import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
 import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
 import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/settings-page-scoreshifts.component";
+import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-page-header-search.component";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/se
     SettingsPageTabScoringComponent,
     SettingsPageTabTasklistsComponent,
     SettingsPageScoreshiftsComponent,
+    TaskPageHeaderSearchComponent,
   ],
   imports: [
     AnimationModule,
