@@ -5,14 +5,14 @@ import { Observable } from "rxjs/Observable";
 
 import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
-import { RepositoryRestoreTranslator } from "./repositories/repository-restore-translator";
+import { RepositoryEventHandler } from "./repositories/repository-event-handler";
 
 import { ApiService } from "./api.service";
 
 import { Task } from "./models/task.dto";
 
-class TaskRestoreTranslator implements RepositoryRestoreTranslator<Task> {
-  translate(entry: Task): void {
+class TaskRestoreTranslator implements RepositoryEventHandler<Task> {
+  onItemLoad(entry: Task): void {
     entry.createdOn = this.fixDate(entry.createdOn);
     entry.updatedOn = this.fixDate(entry.updatedOn);
     entry.completedOn = this.fixDate(entry.completedOn);

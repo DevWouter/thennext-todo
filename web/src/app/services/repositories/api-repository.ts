@@ -7,7 +7,7 @@ import { Repository, Entry, EntryState } from "./repository";
 import { ApiService } from "../api.service";
 import { Entity } from "./entity";
 import { ApiResource } from "./api-resource";
-import { RepositoryRestoreTranslator } from "./repository-restore-translator";
+import { RepositoryEventHandler } from "./repository-event-handler";
 
 export class ApiRepository<T extends Entity> implements Repository<T> {
   private _apiResource: ApiResource<T>;
@@ -18,7 +18,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
   constructor(
     private apiService: ApiService,
     private resourcePath: string,
-    private translator?: RepositoryRestoreTranslator<T>,
+    private eventHandler?: RepositoryEventHandler<T>,
   ) {
     this._apiResource = new ApiResource(apiService, resourcePath);
     this.initialLoad();
@@ -162,8 +162,8 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
   private loadFromStorage(): void {
     this._apiResource.index().subscribe(items => {
       if (items) {
-        if (this.translator) {
-          items.forEach(item => this.translator.translate(item));
+        if (this.eventHandler) {
+          items.forEach(item => this.eventHandler.onItemLoad(item));
         }
         this._entries = items.map(item => new Entry(item, EntryState.Unchanged));
       } else {

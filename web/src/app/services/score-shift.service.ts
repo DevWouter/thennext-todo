@@ -5,14 +5,14 @@ import { Observable } from "rxjs/Observable";
 
 import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
-import { RepositoryRestoreTranslator } from "./repositories/repository-restore-translator";
+import { RepositoryEventHandler } from "./repositories/repository-event-handler";
 
 import { ApiService } from "./api.service";
 
 import { ScoreShift } from "./models/score-shift.dto";
 
-class ScoreShiftRestoreTranslator implements RepositoryRestoreTranslator<ScoreShift> {
-  translate(entry: ScoreShift): void {
+class ScoreShiftRestoreTranslator implements RepositoryEventHandler<ScoreShift> {
+  onItemLoad(entry: ScoreShift): void {
     entry.createdOn = this.fixDate(entry.createdOn);
     entry.updatedOn = this.fixDate(entry.updatedOn);
   }
