@@ -101,14 +101,15 @@ export class TaskPageContentListItemComponent implements OnInit {
     });
   }
 
-  toggle() {
-    this.checked = !this.checked;
-    if (this.checked) {
-      this.taskView.task.status = TaskStatus.done;
-    } else {
-      this.taskView.task.status = TaskStatus.todo;
-    }
+  check() {
+    this.taskView.task.completedOn = new Date();
+    this.taskView.task.status = TaskStatus.done;
+    this.taskService.update(this.taskView.task);
+  }
 
+  uncheck() {
+    this.taskView.task.completedOn = null;
+    this.taskView.task.status = TaskStatus.todo;
     this.taskService.update(this.taskView.task);
   }
 

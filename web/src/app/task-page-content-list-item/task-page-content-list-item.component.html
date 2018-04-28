@@ -1,14 +1,24 @@
 <div class="container" [@taskState]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
-  <div class="checkbox" (click)="toggle()">
-    <i *ngIf="checked == false" class="far fa-square"></i>
-    <i *ngIf="checked == true" class="far fa-check-square"></i>
+  <div *ngIf="checked == false" class="checkbox" (click)="check()">
+    <i class="far fa-square"></i>
+  </div>
+  <div *ngIf="checked == true" class="checkbox" (click)="uncheck()">
+    <i class="far fa-check-square"></i>
   </div>
   <div class="title">{{title}}</div>
   <div class="buttons">
-    <div *ngIf="showCommentIcon" class="button"><i class="far fa-comments fa-fw"></i></div>
-    <div *ngIf="showSleepIcon" class="button" (click)="delay()"><i class="far fa-moon fa-fw"></i></div>
-    <div *ngIf="showPlayIcon" class="button" (click)="play()"><i class="fas fa-play fa-fw"></i></div>
-    <div *ngIf="showPauseIcon" class="button" (click)="pause()"><i class="fas fa-pause fa-fw"></i></div>
+    <div *ngIf="showCommentIcon" class="button">
+      <i class="far fa-comments fa-fw"></i>
+    </div>
+    <div *ngIf="showSleepIcon" class="button" (click)="delay()">
+      <i class="far fa-moon fa-fw"></i>
+    </div>
+    <div *ngIf="showPlayIcon" class="button" (click)="play()">
+      <i class="fas fa-play fa-fw"></i>
+    </div>
+    <div *ngIf="showPauseIcon" class="button" (click)="pause()">
+      <i class="fas fa-pause fa-fw"></i>
+    </div>
   </div>
   <div class="score">{{score | number:'1.1-1'}}</div>
 </div>

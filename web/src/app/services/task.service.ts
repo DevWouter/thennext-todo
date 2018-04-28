@@ -9,7 +9,7 @@ import { RepositoryEventHandler } from "./repositories/repository-event-handler"
 
 import { ApiService } from "./api.service";
 
-import { Task } from "./models/task.dto";
+import { Task, TaskStatus } from "./models/task.dto";
 import { TaskEventService } from "./task-event.service";
 
 class TaskEventHandler implements RepositoryEventHandler<Task> {
