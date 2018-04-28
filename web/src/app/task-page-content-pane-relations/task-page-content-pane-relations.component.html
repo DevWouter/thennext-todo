@@ -13,11 +13,11 @@
   <i *ngIf="showExplain">Drag a task of list and drop it here to determine if should be before the current or after the current task</i>
   <div *ngIf="!showExplain">
     <b>Before:</b>
-    <div *ngFor="let item of tasksBefore">
+    <div *ngFor="let item of tasksBefore" [class.done]="item.isDone">
       <i (click)="delete(item)" class="fa fa-trash"></i>{{item.taskTitle}}
     </div>
     <b>After:</b>
-    <div *ngFor="let item of tasksAfter">
+    <div *ngFor="let item of tasksAfter" [class.done]="item.isDone">
       <i (click)="delete(item)" class="fa fa-trash"></i>{{item.taskTitle}}
     </div>
   </div>

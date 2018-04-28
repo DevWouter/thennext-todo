@@ -4,17 +4,19 @@ import { TaskRelationService } from "../services/task-relation.service";
 import { TaskService } from "../services/task.service";
 import { TaskViewService } from "../services/task-view.service";
 import { TaskRelation } from "../services/models/task-relation.dto";
-import { Task } from "../services/models/task.dto";
+import { Task, TaskStatus } from "../services/models/task.dto";
 
 class RemoteTask {
   relationUuid: string;
   taskUuid: string;
   taskTitle: string;
+  isDone: boolean;
 
   constructor(task: Task, public relation: TaskRelation) {
     this.relationUuid = relation.uuid;
     this.taskUuid = task.uuid;
     this.taskTitle = task.title;
+    this.isDone = task.status === TaskStatus.done;
   }
 }
 
