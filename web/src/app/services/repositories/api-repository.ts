@@ -187,50 +187,26 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     const updatedElements = this._entries.filter(_ => _.state === EntryState.Updated);
     const deletedElements = this._entries.filter(_ => _.state === EntryState.Deleted);
 
-    let promise = Promise.resolve({});
-    createdElements.map(_ => _.value).forEach(value => {
-      promise = promise.then(() => {
-        return new Promise((_resolve, _reject) => {
-          this._apiResource.create(value).subscribe(_ => {
-            value.uuid = _.uuid;
-            setTimeout(() => {
-              _resolve();
-            }, 100);
-          }, _reject);
-        });
-      });
+    createdElements.map(_ => _.value).forEach(async value => {
+      const apiResponse = await this._apiResource.create(value).toPromise();
+      value.uuid = apiResponse.uuid;
     });
 
-    updatedElements.map(_ => _.value).forEach(value => {
-      promise = promise.then(() => {
-        return new Promise((_resolve, _reject) => {
-          this._apiResource.update(value).subscribe(_ => _resolve(), _reject);
-        });
-      });
+    updatedElements.map(_ => _.value).forEach(async value => {
+      await this._apiResource.update(value).toPromise();
     });
 
-    deletedElements.map(_ => _.value).forEach(value => {
-      promise = promise.then(() => {
-        return new Promise((_resolve, _reject) => {
-          this._apiResource.destroy(value).subscribe(_ => _resolve(), _reject);
-        });
-      });
+    deletedElements.map(_ => _.value).forEach(async value => {
+      await this._apiResource.destroy(value).toPromise();
     });
 
-    // Handlers.
-    const removeDeleteItemsHandler = () => {
-      deletedElements.forEach(item => {
-        const pos = this._entries.indexOf(item);
-        this._entries.splice(pos, 1);
-      });
-    };
+    deletedElements.forEach(item => {
+      const pos = this._entries.indexOf(item);
+      this._entries.splice(pos, 1);
+    });
 
-    const setAllEntriesToUnchangedHandler = () => {
-      this._entries.forEach(x => x.state = EntryState.Unchanged);
-    };
+    this._entries.forEach(x => x.state = EntryState.Unchanged);
 
-    return promise
-      .then(removeDeleteItemsHandler)
-      .then(setAllEntriesToUnchangedHandler);
+    return Promise.resolve();
   }
 }
