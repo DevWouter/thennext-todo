@@ -1,20 +1,28 @@
 <table>
-  <tr *ngFor="let tasklist of tasklists">
-
-    <td>{{tasklist.name}}</td>
-
-    <td>
-      <button (click)="delete(tasklist)"><i class="fas fa-trash fa-fw"></i></button>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input [(ngModel)]="newTaskListName" (keydown.enter)="create()">
-    </td>
-    <td>
-      <button (click)="create()">
-        <i class="fas fa-plus fa-fw"></i>
-      </button>
-    </td>
-  </tr>
+  <tbody>
+    <tr>
+      <td>Inbox</td>
+      <td></td>
+    </tr>
+    <tr *ngFor="let tasklist of tasklists">
+      <td>{{tasklist.name}}</td>
+      <td>
+        <button (click)="delete(tasklist)">
+          <i class="fas fa-trash fa-fw"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>
+        <input [(ngModel)]="newTaskListName" (keydown.enter)="create()">
+      </td>
+      <td>
+        <button (click)="create()">
+          <i class="fas fa-plus fa-fw"></i>
+        </button>
+      </td>
+    </tr>
+  </tfoot>
 </table>
