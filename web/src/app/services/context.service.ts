@@ -55,12 +55,25 @@ export class ContextService {
         }
         return tasks;
       })
+      .combineLatest(this.navigationService.showDelayed, (tasks, showDelayed) => {
+        if (!showDelayed) {
+          return tasks.filter(y => !y.isDelayed);
+        }
+        return tasks;
+      })
       .combineLatest(this.navigationService.onlyUnblocked, (tasks, onlyUnblocked) => {
         if (onlyUnblocked) {
           return tasks.filter(y => !y.isBlocked);
         }
         return tasks;
-      }).combineLatest(this.navigationService.search, (tasks, search) => {
+      })
+      .combineLatest(this.navigationService.onlyPositive, (tasks, onlyPositive) => {
+        if (onlyPositive) {
+          return tasks.filter(y => y.score >= 0);
+        }
+        return tasks;
+      })
+      .combineLatest(this.navigationService.search, (tasks, search) => {
         if (search) {
           return tasks.filter(x => this.searchService.isResult(x, search));
         }
