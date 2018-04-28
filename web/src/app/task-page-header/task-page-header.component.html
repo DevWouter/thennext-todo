@@ -13,3 +13,4 @@
 </div>
 
 <app-task-page-header-filter-menu *ngIf="showFilterMenu"></app-task-page-header-filter-menu>
+<div *ngIf="showFilterMenu" (click)="toggleFilterMenu()" class="filter-menu-overlay"></div>
