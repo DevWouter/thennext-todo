@@ -11,6 +11,9 @@ export class TaskView {
    */
   task: Task;
 
+  isBlocking = false;
+  isBlocked = false;
+
   public constructor(task: Task) {
     this.task = task;
   }

@@ -66,6 +66,7 @@ export class TaskScoreService {
       ;
     // Remove any relation in which
     if (relations.length !== 0) {
+      tv.isBlocked = true;
       tv.score -= 5;
     }
   }
@@ -81,6 +82,7 @@ export class TaskScoreService {
         return task && task.status !== TaskStatus.done;
       });
     if (relations.length !== 0) {
+      tv.isBlocking = true;
       tv.score += 8;
     }
   }
