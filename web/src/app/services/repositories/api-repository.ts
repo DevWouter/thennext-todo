@@ -24,7 +24,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     this.initialLoad();
   }
 
-  add(value: T): Promise<T> {
+  async add(value: T): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       if (!this._entries) {
         return reject(new Error("This repository has no been initialized"));
@@ -48,7 +48,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  update(value: T): Promise<T> {
+  async update(value: T): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       if (!this._entries) {
         return reject(new Error("This container has no been initialized"));
@@ -71,7 +71,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  delete(value: T): Promise<T> {
+  async delete(value: T): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       if (!this._entries) {
         return reject(new Error("This container has no been initialized"));
@@ -95,7 +95,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  deleteMany(values: T[]): Promise<T[]> {
+  async deleteMany(values: T[]): Promise<T[]> {
     if (values === null || values === undefined || values.length === 0) {
       // No values, nothing to resolve.
       return Promise.resolve([]);
@@ -119,7 +119,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  public addMany(values: T[]): Promise<T[]> {
+  async addMany(values: T[]): Promise<T[]> {
     if (values === null || values === undefined || values.length === 0) {
       // No values, nothing to resolve.
       return Promise.resolve([]);
@@ -175,7 +175,7 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  private saveToStorage(): Promise<void> {
+  private async saveToStorage(): Promise<void> {
     this._entries.filter(x => x.state !== EntryState.Unchanged);
 
     // Determine the elements we want to save.
