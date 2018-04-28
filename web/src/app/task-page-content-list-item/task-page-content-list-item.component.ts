@@ -6,6 +6,14 @@ import { TaskService } from "../services/task.service";
 import { TaskView } from "../services/models/task-view";
 import { ContextService } from "../services/context.service";
 
+enum State {
+  default = "default",
+  active = "active",
+  selected = "selected",
+  new = "new",
+  activeSelected = "activeSelected",
+}
+
 @Component({
   selector: "app-task-page-content-list-item",
   templateUrl: "./task-page-content-list-item.component.html",
@@ -18,7 +26,14 @@ import { ContextService } from "../services/context.service";
       state("new", style({
         backgroundColor: "yellow",
       })),
+      state("active", style({
+        fontWeight: "bold",
+      })),
       state("selected", style({
+        backgroundColor: "#e1f2fe",
+      })),
+      state("activeSelected", style({
+        fontWeight: "bold",
         backgroundColor: "#e1f2fe",
       })),
       transition("new => default", animate("1000ms ease-in")),
@@ -26,7 +41,7 @@ import { ContextService } from "../services/context.service";
   ]
 })
 export class TaskPageContentListItemComponent implements OnInit {
-  state = "default";
+  state = State.default;
 
   checked = false;
   get title() {
@@ -67,9 +82,17 @@ export class TaskPageContentListItemComponent implements OnInit {
   ngOnInit() {
     this.navigation.taskUuid.subscribe(x => {
       if (this.taskView.task.uuid === x) {
-        this.state = "selected";
+        if (this.taskView.task.status === TaskStatus.active) {
+          this.state = State.activeSelected;
+        } else {
+          this.state = State.selected;
+        }
       } else {
-        this.state = "default";
+        if (this.taskView.task.status === TaskStatus.active) {
+          this.state = State.active;
+        } else {
+          this.state = State.default;
+        }
       }
     });
   }
