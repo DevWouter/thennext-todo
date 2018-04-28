@@ -10,6 +10,7 @@ import { NavigationService } from "./navigation.service";
 import { ScoreShiftService } from "./score-shift.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
+import { TaskEventService } from "./task-event.service";
 import { TaskListService } from "./task-list.service";
 import { TaskParseService } from "./task-parse.service";
 import { TaskRelationService } from "./task-relation.service";
@@ -32,6 +33,7 @@ import { TaskViewService } from "./task-view.service";
     ScoreShiftService,
     SessionService,
     StorageService,
+    TaskEventService,
     TaskListService,
     TaskParseService,
     TaskRelationService,

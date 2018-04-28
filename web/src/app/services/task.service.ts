@@ -10,8 +10,9 @@ import { RepositoryEventHandler } from "./repositories/repository-event-handler"
 import { ApiService } from "./api.service";
 
 import { Task } from "./models/task.dto";
+import { TaskEventService } from "./task-event.service";
 
-class TaskRestoreTranslator implements RepositoryEventHandler<Task> {
+class TaskEventHandler implements RepositoryEventHandler<Task> {
   onItemLoad(entry: Task): void {
     entry.createdOn = this.fixDate(entry.createdOn);
     entry.updatedOn = this.fixDate(entry.updatedOn);
@@ -42,8 +43,9 @@ export class TaskService {
 
   constructor(
     private apiService: ApiService,
+    private taskEventService: TaskEventService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task", new TaskRestoreTranslator());
+    this._repository = new ApiRepository(apiService, "/api/task", new TaskEventHandler());
   }
 
   add(value: Task): Promise<Task> {
@@ -64,10 +66,18 @@ export class TaskService {
   }
 
   delete(value: Task): Promise<Task> {
-    return this._repository.delete(value);
+    return this._repository.delete(value)
+      .then(x => {
+        this.taskEventService.deleted(value);
+        return x;
+      });
   }
 
   deleteMany(values: Task[]): Promise<Task[]> {
-    return this._repository.deleteMany(values);
+    return this._repository.deleteMany(values)
+      .then(x => {
+        x.forEach(y => this.taskEventService.deleted(y));
+        return x;
+      });
   }
 }
