@@ -62,7 +62,7 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
 
     this.taskRelationService.entries.combineLatest(
       this.taskService.entries,
-      this.contextService.activeTaskView,
+      this.contextService.activeTaskView.filter(x => !!x),
       (relations, tasks, currentTask) => {
         const blockedTasks = relations
           .filter(x => x.sourceTaskUuid === currentTask.task.uuid)
