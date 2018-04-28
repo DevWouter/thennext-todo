@@ -14,11 +14,13 @@
   <div *ngIf="!showExplain">
     <b>Before:</b>
     <div *ngFor="let item of tasksBefore" [class.done]="item.isDone">
-      <i (click)="delete(item)" class="fa fa-trash"></i>{{item.taskTitle}}
+      <i (click)="delete(item)" class="fa fa-trash"></i>
+      <span (click)="goTo(item)">{{item.taskTitle}}</span>
     </div>
     <b>After:</b>
     <div *ngFor="let item of tasksAfter" [class.done]="item.isDone">
-      <i (click)="delete(item)" class="fa fa-trash"></i>{{item.taskTitle}}
+      <i (click)="delete(item)" class="fa fa-trash"></i>
+      <span (click)="goTo(item)">{{item.taskTitle}}</span>
     </div>
   </div>
 </div>

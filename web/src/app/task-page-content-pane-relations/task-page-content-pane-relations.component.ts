@@ -5,6 +5,7 @@ import { TaskService } from "../services/task.service";
 import { TaskViewService } from "../services/task-view.service";
 import { TaskRelation } from "../services/models/task-relation.dto";
 import { Task, TaskStatus } from "../services/models/task.dto";
+import { NavigationService } from "../services/navigation.service";
 
 class RemoteTask {
   relationUuid: string;
@@ -43,6 +44,7 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
     private contextService: ContextService,
     private taskRelationService: TaskRelationService,
     private taskService: TaskService,
+    private navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
@@ -134,5 +136,9 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
       targetTaskUuid: target,
       relationType: "blocks",
     });
+  }
+
+  goTo(remoteTask: RemoteTask) {
+    this.navigationService.toTaskPage({ taskUuid: remoteTask.taskUuid });
   }
 }
