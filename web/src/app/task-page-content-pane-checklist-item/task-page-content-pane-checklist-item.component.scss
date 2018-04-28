@@ -14,8 +14,20 @@
     flex-grow: 1;
     border-bottom: 1px solid grey;
     padding-bottom: 4px;
+    width: 100%;
+    position: relative;
 }
 
-input {
+input,
+textarea {
     border: none;
+}
+
+textarea {
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    width: 100%;
+    transition: height 0.1s;
 }

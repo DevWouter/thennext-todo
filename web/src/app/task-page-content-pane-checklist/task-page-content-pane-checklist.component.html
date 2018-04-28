@@ -4,5 +4,7 @@
   <div class="status">
     <i class="far fa-empty"></i>
   </div>
-  <input class="text" [(ngModel)]="newValue" (keydown.enter)="create()" placeholder="What should we not forget?"/>
+  <div class="text">
+    <textarea rows="1" appTextareaResize="" [(ngModel)]="newValue" (keydown.enter)="create()" placeholder="What should we not forget?"></textarea>
+  </div>
 </div>

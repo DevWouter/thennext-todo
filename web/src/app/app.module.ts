@@ -7,6 +7,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { AccountModule } from "./account/account.module";
+import { HtmlDirectivesModule } from "./html-directives/html-directives.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { ServicesModule } from "./services/services.module";
 
@@ -73,6 +74,7 @@ import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-pa
     AnimationModule,
     BrowserModule,
     FormsModule,
+    HtmlDirectivesModule,
     ServicesModule,
     AppRoutingModule,
     AccountModule,

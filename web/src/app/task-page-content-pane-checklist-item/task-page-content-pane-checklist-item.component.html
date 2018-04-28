@@ -2,4 +2,6 @@
   <i class="far fa-check-circle" *ngIf="checked"></i>
   <i class="far fa-circle" *ngIf="!checked"></i>
 </div>
-<input class="text" placeholder="What should we not forget?" [(ngModel)]="title" (blur)="updateTitle()" />
+<div class="text">
+  <textarea rows="1" appTextareaResize="" placeholder="What should we not forget?" [(ngModel)]="title" (blur)="updateTitle()"></textarea>
+</div>

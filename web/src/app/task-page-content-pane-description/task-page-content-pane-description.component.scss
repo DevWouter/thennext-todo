@@ -1,3 +1,8 @@
+host {
+  display: host;
+  position: relative;
+
+}
 textarea {
     width: 100%;
     font-family: monospace;
@@ -5,4 +10,7 @@ textarea {
     outline: none;
     -moz-appearance: none;
     resize: vertical;
+    overflow: hidden;
+    width: 100%;
+    transition: height 0.1s;
 }

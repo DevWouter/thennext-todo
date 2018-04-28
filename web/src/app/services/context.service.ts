@@ -25,7 +25,7 @@ export class ContextService {
   private _taskDragging = new BehaviorSubject<string>(undefined);
 
   get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
-  get activeTaskView(): Observable<TaskView> { return this._activeTask; }
+  get activeTaskView(): Observable<TaskView> { return this._activeTask.distinctUntilChanged(); }
   get activeTaskChecklistItems(): Observable<ChecklistItem[]> { return this._activeTaskChecklistItems; }
   get taskDragStatus(): Observable<boolean> { return this._taskDragStatus.asObservable(); }
 
