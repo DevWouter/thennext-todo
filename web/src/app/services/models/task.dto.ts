@@ -7,6 +7,8 @@ export interface Task extends Entity {
   description: string;
   status: TaskStatus;
 
+  sleepUntil?: Date;
+
   createdOn: Date;
   updatedOn: Date;
   completedOn: Date;

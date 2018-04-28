@@ -29,6 +29,7 @@ export async function TaskUpdate(req: Request, res: Response): Promise<void> {
     task.createdAt = model.createdOn;
     task.updatedAt = model.updatedOn;
     task.completedAt = model.completedOn;
+    task.sleepUntil = model.sleepUntil;
 
     const loadPromise = taskService.update(task);
     loadPromise.catch(x => console.error(x));
@@ -42,6 +43,7 @@ export async function TaskUpdate(req: Request, res: Response): Promise<void> {
         title: dst.title,
         status: dst.status,
         description: dst.description,
+        sleepUntil: dst.sleepUntil,
         createdOn: dst.createdAt,
         updatedOn: dst.updatedAt,
         completedOn: dst.completedAt,

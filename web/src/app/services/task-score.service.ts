@@ -43,7 +43,15 @@ export class TaskScoreService {
     this.addScoreShift(tv);
     this.addBlockedScore(tv, tasks);
     this.addBlockingScore(tv, tasks);
+    this.addDelay(tv, now);
     return tv;
+  }
+
+  private addDelay(tv: TaskView, now: DateTime): void {
+    if (tv.task.sleepUntil) {
+      const wakeupTime = DateTime.fromJSDate(tv.task.sleepUntil);
+      tv.isDelayed = wakeupTime > now;
+    }
   }
 
   private addAgeToScore(tv: TaskView, now: DateTime): void {

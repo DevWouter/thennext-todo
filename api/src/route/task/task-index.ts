@@ -24,6 +24,7 @@ export async function TaskIndex(req: Request, res: Response): Promise<void> {
         title: task.title,
         description: task.description,
         status: task.status,
+        sleepUntil: task.sleepUntil,
         createdOn: task.createdAt,
         updatedOn: task.updatedAt,
         completedOn: task.completedAt,

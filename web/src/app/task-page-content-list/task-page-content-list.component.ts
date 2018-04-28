@@ -20,7 +20,6 @@ export class TaskPageContentListComponent implements OnInit {
     this.contextService.visibleTasks
       .distinctUntilChanged((before, after): boolean => {
         if (before.length !== after.length) {
-          console.log("Updating the task-list because the length of items has changed");
           return false;
         }
 
@@ -28,7 +27,14 @@ export class TaskPageContentListComponent implements OnInit {
           const old_uuid = before[i].task.uuid;
           const new_uuid = after[i].task.uuid;
           if (old_uuid !== new_uuid) {
-            console.log("Updating the task-list because the order of items has changed");
+            return false;
+          }
+
+          // Also need to check for isDelayed, because it is reliant on time.
+          const old_delayed = before[i].isDelayed;
+          const new_delayed = after[i].isDelayed;
+
+          if (old_delayed !== new_delayed) {
             return false;
           }
 
@@ -36,7 +42,6 @@ export class TaskPageContentListComponent implements OnInit {
           const new_score = score_func(after[i].score);
 
           if (old_score !== new_score) {
-            console.log("Updating the task-list because the one of the items has a new visual score");
             return false;
           }
         }

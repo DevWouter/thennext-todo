@@ -13,6 +13,7 @@ export class TaskView {
 
   isBlocking = false;
   isBlocked = false;
+  isDelayed = false;
 
   public constructor(task: Task) {
     this.task = task;

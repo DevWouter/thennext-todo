@@ -30,6 +30,9 @@ export class TaskEntity {
     @Column()
     status: TaskStatus;
 
+    @Column("datetime", { nullable: true })
+    sleepUntil: Date;
+
     @Column("datetime")
     createdAt: Date;
 

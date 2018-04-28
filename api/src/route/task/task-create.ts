@@ -42,6 +42,7 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     task.status = src.status || TaskStatus.todo;
     task.createdAt = src.createdOn || new Date();
     task.updatedAt = src.updatedOn || new Date();
+    task.sleepUntil = src.sleepUntil;
 
     // Assign relations
     task.taskList = taskList;
@@ -58,6 +59,7 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
         title: dst.title,
         status: dst.status,
         description: dst.description,
+        sleepUntil: dst.sleepUntil,
         createdOn: dst.createdAt,
         updatedOn: dst.updatedAt,
         completedOn: dst.completedAt,

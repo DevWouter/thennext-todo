@@ -13,6 +13,7 @@ export interface Task {
     title: string;
     description: string;
 
+    sleepUntil: Date;
     createdOn: Date;
     updatedOn: Date;
     completedOn: Date;

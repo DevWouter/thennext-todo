@@ -6,6 +6,8 @@ import { TaskView } from "../services/models/task-view";
 import { ContextService } from "../services/context.service";
 import { NavigationService } from "../services/navigation.service";
 
+import { DateTime, Interval, Duration } from "luxon";
+
 enum State {
   default = "default",
   active = "active",
@@ -55,7 +57,9 @@ export class TaskPageContentListItemComponent implements OnInit {
     return this._task.task.description.trim().length !== 0;
   }
 
-  showSleepIcon = true;
+  get showSleepIcon(): boolean {
+    return !this._task.isDelayed;
+  }
   get showPlayIcon(): boolean {
     return this._task.task.status === TaskStatus.todo;
   }
@@ -126,6 +130,21 @@ export class TaskPageContentListItemComponent implements OnInit {
     this.checked = false;
     this.taskView.task.status = TaskStatus.todo;
     this.taskService.update(this.taskView.task);
+  }
+
+  delay() {
+    let local = DateTime.local().set({
+      hour: 7,
+      minute: 0,
+      second: 0,
+      millisecond: 0
+    });
+
+    if (local < DateTime.local()) {
+      local = local.plus({ days: 1 });
+    }
+
+    this.taskService.delay(this.taskView.task, local.toJSDate());
   }
 
   dragStart(event: DragEvent) {
