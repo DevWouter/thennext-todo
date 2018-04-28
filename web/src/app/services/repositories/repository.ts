@@ -48,6 +48,9 @@ export interface RepositoryView<T> {
   readonly entries: Observable<T[]>;
 }
 
+export interface RemoveOptions {
+  readonly onlyInternal?: boolean;
+}
 
 /**
  * An interface that acts as a template for all data service.
@@ -84,5 +87,5 @@ export interface Repository<T> extends RepositoryView<T> {
    * The values might be altered inside this function.
    * @param values The values that need to be deleted.
    */
-  deleteMany(values: T[]): Promise<T[]>;
+  removeMany(values: T[], options?: RemoveOptions): Promise<T[]>;
 }

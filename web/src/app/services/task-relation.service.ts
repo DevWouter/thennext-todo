@@ -30,7 +30,7 @@ export class TaskRelationService {
       // Find all relations beloning to the task and delete them.
       const relations = this._internalList
         .filter(x => x.sourceTaskUuid === task.uuid || x.targetTaskUuid === task.uuid);
-      this.deleteMany(relations);
+      this._repository.removeMany(relations, { onlyInternal: true });
     });
   }
 
@@ -45,10 +45,6 @@ export class TaskRelationService {
 
   delete(value: TaskRelation): Promise<TaskRelation> {
     return this._repository.delete(value);
-  }
-
-  deleteMany(values: TaskRelation[]): Promise<TaskRelation[]> {
-    return this._repository.deleteMany(values);
   }
 
   findAllParents(child: string, relations: TaskRelation[]): string[] {

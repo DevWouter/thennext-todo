@@ -37,7 +37,7 @@ export class TaskListService implements Repository<TaskList> {
     return this._repository.delete(value);
   }
 
-  deleteMany(values: TaskList[]): Promise<TaskList[]> {
-    return this._repository.deleteMany(values);
+  removeMany(values: TaskList[]): Promise<TaskList[]> {
+    return this._repository.removeMany(values);
   }
 }

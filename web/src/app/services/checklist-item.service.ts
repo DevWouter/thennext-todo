@@ -28,7 +28,7 @@ export class ChecklistItemService {
         // Find all relations beloning to the task and delete them.
         const items = checklistItems
           .filter(x => x.taskUuid === task.uuid);
-        this.deleteMany(items);
+        this._repository.removeMany(items, { onlyInternal: true });
       }).subscribe();
   }
 
@@ -42,9 +42,5 @@ export class ChecklistItemService {
 
   delete(value: ChecklistItem): Promise<ChecklistItem> {
     return this._repository.delete(value);
-  }
-
-  deleteMany(values: ChecklistItem[]): Promise<ChecklistItem[]> {
-    return this._repository.deleteMany(values);
   }
 }

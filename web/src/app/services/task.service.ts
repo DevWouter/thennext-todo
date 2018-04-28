@@ -74,14 +74,6 @@ export class TaskService {
       });
   }
 
-  deleteMany(values: Task[]): Promise<Task[]> {
-    return this._repository.deleteMany(values)
-      .then(x => {
-        x.forEach(y => this.taskEventService.deleted(y));
-        return x;
-      });
-  }
-
   delay(value: Task, sleepUntil: Date): Promise<Task> {
     value.sleepUntil = sleepUntil;
     return this.update(value);

@@ -65,8 +65,4 @@ export class ScoreShiftService {
   delete(value: ScoreShift): Promise<ScoreShift> {
     return this._repository.delete(value);
   }
-
-  deleteMany(values: ScoreShift[]): Promise<ScoreShift[]> {
-    return this._repository.deleteMany(values);
-  }
 }

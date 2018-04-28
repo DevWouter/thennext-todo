@@ -3,7 +3,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 
 import { StorageService } from "../storage.service";
-import { Repository, Entry, EntryState } from "./repository";
+import { Repository, Entry, EntryState, RemoveOptions } from "./repository";
 import { ApiService } from "../api.service";
 import { Entity } from "./entity";
 import { ApiResource } from "./api-resource";
@@ -95,28 +95,32 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  async deleteMany(values: T[]): Promise<T[]> {
+  async removeMany(values: T[], options: RemoveOptions): Promise<T[]> {
     if (values === null || values === undefined || values.length === 0) {
       // No values, nothing to resolve.
       return Promise.resolve([]);
     }
 
-    return new Promise<T[]>((resolve, reject) => {
+    options = options || {};
+
+    return new Promise<T[]>(async (resolve, reject) => {
       if (!this._entries) {
         return reject(new Error("This container has no been initialized"));
       }
 
       // Find the entries we need to delete
       const entriesToDelete = this._entries.filter(entry => values.includes(entry.value));
+      // Mark as delete
       entriesToDelete.forEach(entry => entry.state = EntryState.Deleted);
-
+      if (!options.onlyInternal) {
+        await this.save().catch(reason => reject(reason));
+      }
       // Inform the caller that entries was deleted but only when it was saved.
       // The save function is responsible for removing it.
-      this.save()
-        .then(() => this.updateSubject())
-        .then(() => resolve(values))
-        .catch(reason => reject(reason));
+      this.updateSubject();
+      resolve(values);
     });
+
   }
 
   async addMany(values: T[]): Promise<T[]> {
