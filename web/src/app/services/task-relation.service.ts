@@ -7,6 +7,7 @@ import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
 
 import { ApiService } from "./api.service";
+import { TaskEventService } from "./task-event.service";
 
 import { TaskRelation, TaskRelationType } from "./models/task-relation.dto";
 
@@ -20,9 +21,17 @@ export class TaskRelationService {
 
   constructor(
     private apiService: ApiService,
+    private taskEventService: TaskEventService,
   ) {
     this._repository = new ApiRepository(apiService, "/api/task-relation");
     this._repository.entries.subscribe(x => this._internalList = x);
+
+    this.taskEventService.deletedTask.subscribe(task => {
+      // Find all relations beloning to the task and delete them.
+      const relations = this._internalList
+        .filter(x => x.sourceTaskUuid === task.uuid || x.targetTaskUuid === task.uuid);
+      this.deleteMany(relations);
+    });
   }
 
   add(value: TaskRelation): Promise<TaskRelation> {
@@ -75,7 +84,7 @@ export class TaskRelationService {
     return parents;
   }
 
-   checkAllow(input: { before: string, after: string }): boolean {
+  checkAllow(input: { before: string, after: string }): boolean {
     if (input.before === input.after) {
       // A relation with yourself is not allowed.
       return false;
