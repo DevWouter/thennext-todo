@@ -9,6 +9,7 @@ import { Repository } from "./repositories/repository";
 import { ApiService } from "./api.service";
 
 import { ChecklistItem } from "./models/checklist-item.dto";
+import { TaskEventService } from "./task-event.service";
 
 @Injectable()
 export class ChecklistItemService {
@@ -19,8 +20,16 @@ export class ChecklistItemService {
 
   constructor(
     private apiService: ApiService,
+    private taskEventService: TaskEventService,
   ) {
     this._repository = new ApiRepository(apiService, "/api/checklist-item");
+    this.taskEventService.deletedTask
+      .combineLatest(this._repository.entries, (task, checklistItems) => {
+        // Find all relations beloning to the task and delete them.
+        const items = checklistItems
+          .filter(x => x.taskUuid === task.uuid);
+        this.deleteMany(items);
+      }).subscribe();
   }
 
   add(value: ChecklistItem): Promise<ChecklistItem> {
