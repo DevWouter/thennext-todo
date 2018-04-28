@@ -46,8 +46,13 @@ export class ContextService {
         });
 
         return [...activeTasks, ...todoTasks, ...doneTasks];
-      })
-      .map(x => x.filter(y => y.task.status !== TaskStatus.done));
+      }).combineLatest(this.navigationService.showCompleted, (tasks, showCompleted) => {
+        console.log("showCompelted", showCompleted);
+        if (!showCompleted) {
+          return tasks.filter(y => y.task.status !== TaskStatus.done);
+        }
+        return tasks;
+      });
   }
 
   constructor(
