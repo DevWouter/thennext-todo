@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
@@ -11,54 +11,40 @@ import { NavigationService } from "../services/navigation.service";
   styleUrls: ["./task-page-content-pane-stats.component.scss"]
 })
 export class TaskPageContentPaneStatsComponent implements OnInit {
-
-  private _taskView: TaskView;
   private _task: Task;
-  public createdOn: Date;
-  public updatedOn: Date;
-  public completedOn: Date;
-  public sleepUntil: Date;
+  public get createdOn(): Date { return this._task && this._task.createdOn; }
+  public get updatedOn(): Date { return this._task && this._task.updatedOn; }
+  public get completedOn(): Date { return this._task && this._task.completedOn; }
+  public get sleepUntil(): Date { return this._task && this._task.sleepUntil; }
 
   get showDelay(): boolean {
-    return !!this.sleepUntil;
+    return this._task && !!this._task.sleepUntil;
   }
 
   get showCompleted(): boolean {
     return this._task && this._task.status === TaskStatus.done;
   }
 
+
+  @Input()
+  public set task(v: Task) {
+    this._task = v;
+  }
+
   constructor(
-    private contextService: ContextService,
     private taskService: TaskService,
     private navigation: NavigationService,
   ) { }
 
   ngOnInit() {
-    this.contextService.activeTaskView.subscribe(x => this.setTask(x));
-  }
-
-  private setTask(taskView: TaskView) {
-    this._taskView = taskView;
-    if (taskView) {
-      this._task = taskView.task;
-      this.createdOn = taskView.task.createdOn;
-      this.updatedOn = taskView.task.updatedOn;
-      this.completedOn = taskView.task.completedOn;
-      this.sleepUntil = taskView.task.sleepUntil;
-    } else {
-      this._task = undefined;
-      this.createdOn = undefined;
-      this.updatedOn = undefined;
-      this.completedOn = undefined;
-    }
   }
 
   delete() {
-    this.taskService.delete(this._taskView.task);
+    this.taskService.delete(this._task);
     this.navigation.toTaskPage({ taskUuid: null });
   }
 
   wakeup() {
-    this.taskService.wakeup(this._taskView.task);
+    this.taskService.wakeup(this.task);
   }
 }
