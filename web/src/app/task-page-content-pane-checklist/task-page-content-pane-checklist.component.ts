@@ -1,8 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { ChecklistItem } from "../services/models/checklist-item.dto";
 import { ChecklistItemService } from "../services/checklist-item.service";
 import { TaskView } from "../services/models/task-view";
+import { Task } from "../services/models/task.dto";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 @Component({
   selector: "app-task-page-content-pane-checklist",
@@ -11,31 +13,40 @@ import { TaskView } from "../services/models/task-view";
 })
 export class TaskPageContentPaneChecklistComponent implements OnInit {
   items: ChecklistItem[] = [];
-  taskView: TaskView = undefined;
   newValue = "";
+
+  private _taskSubject = new BehaviorSubject<Task>(undefined);
+  private _task: Task;
+  @Input()
+  public set task(v: Task) {
+    this._task = v;
+    this._taskSubject.next(v);
+  }
+
   constructor(
-    private contextService: ContextService,
     private checklistItemService: ChecklistItemService,
   ) { }
 
   ngOnInit() {
-    this.contextService.activeTaskChecklistItems
+    this.checklistItemService.entries
+      .combineLatest(this._taskSubject,
+        (items, task) => items.filter(x => x.taskUuid === (task && task.uuid))
+      )
       .subscribe(items => this.items = items);
-    this.contextService.activeTaskView
-      .subscribe(v => this.taskView = v);
   }
 
   create(event: Event) {
     const title = this.newValue.trim();
     if (title.length === 0) {
       this.newValue = "";
+      event.preventDefault(); // Prevent return
       return;
     }
 
     this.checklistItemService.add(<ChecklistItem>{
       checked: false,
       title: title,
-      taskUuid: this.taskView.task.uuid,
+      taskUuid: this._task.uuid,
     });
 
     this.newValue = "";
