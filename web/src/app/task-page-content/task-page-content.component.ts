@@ -15,14 +15,14 @@ export class TaskPageContentComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.contextService.activeTaskView
+    this.contextService.activeTask
       .combineLatest(this.contextService.visibleTasks, (currentTask, visibleTasks) => {
         if (!currentTask) {
           this.showPane = false;
           return;
         }
 
-        this.showPane = (visibleTasks.some(x => x.task.uuid === currentTask.task.uuid));
+        this.showPane = (visibleTasks.some(x => x.task.uuid === currentTask.uuid));
       }).subscribe();
   }
 

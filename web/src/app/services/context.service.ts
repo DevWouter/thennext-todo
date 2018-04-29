@@ -20,8 +20,6 @@ export class ContextService {
   private _activeTaskList = new BehaviorSubject<TaskList>(undefined);
   private _activeTask = new BehaviorSubject<Task>(undefined);
 
-  // TODO: Remove TaskView
-  private _activeTaskView = new BehaviorSubject<TaskView>(undefined);
   private _activeTaskChecklistItems = new BehaviorSubject<ChecklistItem[]>([]);
 
   private _taskDragStatus = new BehaviorSubject<boolean>(false);
@@ -30,8 +28,6 @@ export class ContextService {
   get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
   get activeTask(): Observable<Task> { return this._activeTask; }
 
-  // TODO: Remove TaskView
-  get activeTaskView(): Observable<TaskView> { return this._activeTaskView.distinctUntilChanged(); }
   get activeTaskChecklistItems(): Observable<ChecklistItem[]> { return this._activeTaskChecklistItems; }
   get taskDragStatus(): Observable<boolean> { return this._taskDragStatus.asObservable(); }
 
@@ -98,7 +94,6 @@ export class ContextService {
   ) {
     this.setupActiveTaskList();
     this.setupActiveTask();
-    this.setupActiveTaskView();
     this.setupActiveChecklistItems();
   }
 
@@ -120,14 +115,6 @@ export class ContextService {
 
       this._activeTask.next(tasks.find(task => task.uuid === uuid));
     }).subscribe();
-  }
-
-  // TODO: Remove TaskView
-  private setupActiveTaskView() {
-    this.navigationService.taskUuid.combineLatest(this.taskViewService.entries,
-      (uuid, taskViews) => {
-        this._activeTaskView.next(taskViews.find(x => x.task.uuid === uuid));
-      }).subscribe();
   }
 
   private setupActiveChecklistItems(): void {
