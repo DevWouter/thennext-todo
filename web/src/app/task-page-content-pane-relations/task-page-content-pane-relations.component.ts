@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { TaskRelationService } from "../services/task-relation.service";
 import { TaskService } from "../services/task.service";
@@ -6,6 +6,7 @@ import { TaskViewService } from "../services/task-view.service";
 import { TaskRelation } from "../services/models/task-relation.dto";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services/navigation.service";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 class RemoteTask {
   relationUuid: string;
@@ -40,6 +41,17 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
   tasksBefore: RemoteTask[] = [];
   tasksAfter: RemoteTask[] = [];
 
+  private _task: Task;
+  private _taskSubject = new BehaviorSubject<Task>(undefined);
+  @Input()
+  public set task(v: Task) {
+    this._task = v;
+    this.taskname = v.title;
+    this.taskUuid = v.uuid;
+    this._taskSubject.next(v);
+  }
+
+
   constructor(
     private contextService: ContextService,
     private taskRelationService: TaskRelationService,
@@ -57,19 +69,12 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
       this.afterAllow = this.taskRelationService.checkAllow({ after: x, before: this.taskUuid });
     });
 
-    this.contextService.activeTaskView.subscribe(x => {
-      if (x) {
-        this.taskname = x.task.title;
-        this.taskUuid = x.task.uuid;
-      }
-    });
-
     this.taskRelationService.entries.combineLatest(
       this.taskService.entries,
-      this.contextService.activeTaskView.filter(x => !!x),
-      (relations, tasks, currentTask) => {
+      this._taskSubject.filter(x => !!x),
+      (relations, tasks, task) => {
         const blockedTasks = relations
-          .filter(x => x.sourceTaskUuid === currentTask.task.uuid)
+          .filter(x => x.sourceTaskUuid === task.uuid)
           .map(relation => {
             const remoteTaskUuid = relation.targetTaskUuid;
             const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
@@ -77,7 +82,7 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
           });
 
         const blockingTasks = relations
-          .filter(x => x.targetTaskUuid === currentTask.task.uuid)
+          .filter(x => x.targetTaskUuid === task.uuid)
           .map(relation => {
             const remoteTaskUuid = relation.sourceTaskUuid;
             const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
