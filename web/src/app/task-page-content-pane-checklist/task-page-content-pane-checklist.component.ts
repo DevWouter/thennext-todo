@@ -25,7 +25,7 @@ export class TaskPageContentPaneChecklistComponent implements OnInit {
       .subscribe(v => this.taskView = v);
   }
 
-  create() {
+  create(event: Event) {
     const title = this.newValue.trim();
     if (title.length === 0) {
       this.newValue = "";
@@ -39,5 +39,7 @@ export class TaskPageContentPaneChecklistComponent implements OnInit {
     });
 
     this.newValue = "";
+    // Prevent the enter button from adding a line after keyup.
+    event.preventDefault();
   }
 }
