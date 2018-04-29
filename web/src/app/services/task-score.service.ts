@@ -41,8 +41,7 @@ export class TaskScoreService {
     tv.score = 0;
     this.addAgeToScore(tv, now);
     this.addScoreShift(tv);
-    this.addBlockedScore(tv, tasks);
-    this.addBlockingScore(tv, tasks);
+    this.addRelationScore(tv, tasks);
     this.addActiveScore(tv);
 
     this.addDelay(tv, now);
@@ -70,8 +69,8 @@ export class TaskScoreService {
     tv.score += age_created * 2;
   }
 
-  private addBlockedScore(tv: TaskView, tasks: Task[]): void {
-    const relations = this.taskRelations
+  private addRelationScore(tv: TaskView, tasks: Task[]): void {
+    const blockingRelations = this.taskRelations
       .filter(x => x.targetTaskUuid === tv.task.uuid)
       .filter(r => {
         const task = tasks.find(t => t.uuid === r.sourceTaskUuid);
@@ -79,17 +78,8 @@ export class TaskScoreService {
       }).filter(r => {
         const task = tasks.find(t => t.uuid === r.targetTaskUuid);
         return task && task.status !== TaskStatus.done;
-      })
-      ;
-    // Remove any relation in which
-    if (relations.length !== 0) {
-      tv.isBlocked = true;
-      tv.score -= 5;
-    }
-  }
-
-  private addBlockingScore(tv: TaskView, tasks: Task[]): void {
-    const relations = this.taskRelations
+      });
+    const blockedRelations = this.taskRelations
       .filter(x => x.sourceTaskUuid === tv.task.uuid)
       .filter(r => {
         const task = tasks.find(t => t.uuid === r.sourceTaskUuid);
@@ -98,10 +88,18 @@ export class TaskScoreService {
         const task = tasks.find(t => t.uuid === r.targetTaskUuid);
         return task && task.status !== TaskStatus.done;
       });
-    if (relations.length !== 0) {
+
+    let scoreModification = 0;
+    if (blockedRelations.length !== 0) {
       tv.isBlocking = true;
-      tv.score += 8;
+      scoreModification = 8;
     }
+    if (blockingRelations.length !== 0) {
+      tv.isBlocked = true;
+      scoreModification = -5;
+    }
+
+    tv.score += scoreModification;
   }
 
   private addScoreShift(tv: TaskView): void {
