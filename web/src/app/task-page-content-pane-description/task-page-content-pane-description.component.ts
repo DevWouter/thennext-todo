@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { TaskService } from "../services/task.service";
 import { Task } from "../services/models/task.dto";
-import { TaskView } from "../services/models/task-view";
 import { Subject } from "rxjs/Subject";
 
 @Component({

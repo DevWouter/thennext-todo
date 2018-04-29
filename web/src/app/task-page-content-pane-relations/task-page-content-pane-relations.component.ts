@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { TaskRelationService } from "../services/task-relation.service";
 import { TaskService } from "../services/task.service";
-import { TaskViewService } from "../services/task-view.service";
 import { TaskRelation } from "../services/models/task-relation.dto";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services/navigation.service";

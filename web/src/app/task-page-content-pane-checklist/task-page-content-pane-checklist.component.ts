@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { ChecklistItem } from "../services/models/checklist-item.dto";
 import { ChecklistItemService } from "../services/checklist-item.service";
-import { TaskView } from "../services/models/task-view";
 import { Task } from "../services/models/task.dto";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
