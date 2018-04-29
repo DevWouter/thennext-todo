@@ -1,51 +1,46 @@
-import { Component, OnInit } from "@angular/core";
-import { ContextService } from "../services/context.service";
+import { Component, OnInit, Input } from "@angular/core";
+import { Subject } from "rxjs/Subject";
 import { Task } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
-import { TaskViewService } from "../services/task-view.service";
-import { TaskView } from "../services/models/task-view";
 
 @Component({
   selector: "app-task-page-content-pane-title",
   templateUrl: "./task-page-content-pane-title.component.html",
-  styleUrls: ["./task-page-content-pane-title.component.scss"]
+  styleUrls: ["./task-page-content-pane-title.component.scss"],
 })
 export class TaskPageContentPaneTitleComponent implements OnInit {
-  private taskView: TaskView = undefined;
-
   private _taskTitle: string;
+  private _nextTaskTitle = new Subject<string>();
+
+  @Input()
+  set task(task: Task) {
+    this._nextTaskTitle.complete();
+    this._taskTitle = task.title;
+
+    // Create a new subjec to follow.
+    this._nextTaskTitle = new Subject<string>();
+    this._nextTaskTitle.subscribe(t => task.title = t);
+    this._nextTaskTitle
+      .debounceTime(350)
+      .subscribe(title => {
+        task.title = this._taskTitle;
+        this.taskService.update(task);
+      });
+  }
+
   public get taskTitle(): string {
     return this._taskTitle;
   }
+
   public set taskTitle(v: string) {
     this._taskTitle = v;
-    this.update();
+    this._nextTaskTitle.next(v);
   }
 
   constructor(
-    private contextService: ContextService,
-    private taskViewService: TaskViewService,
     private taskService: TaskService,
   ) { }
 
   ngOnInit() {
-    this.contextService.activeTaskView.subscribe(x => {
-      this.taskView = x;
-      if (this.taskView) {
-        this._taskTitle = this.taskView.task.title;
-      } else {
-        this._taskTitle = "";
-      }
-    });
   }
-
-  private update() {
-    if (!this.taskView) {
-      return;
-    }
-
-    this.taskView.task.title = this._taskTitle;
-    this.taskService.update(this.taskView.task);
-  }
-
 }

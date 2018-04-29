@@ -18,14 +18,20 @@ import { TaskViewService } from "./task-view.service";
 @Injectable()
 export class ContextService {
   private _activeTaskList = new BehaviorSubject<TaskList>(undefined);
-  private _activeTask = new BehaviorSubject<TaskView>(undefined);
+  private _activeTask = new BehaviorSubject<Task>(undefined);
+
+  // TODO: Remove TaskView
+  private _activeTaskView = new BehaviorSubject<TaskView>(undefined);
   private _activeTaskChecklistItems = new BehaviorSubject<ChecklistItem[]>([]);
 
   private _taskDragStatus = new BehaviorSubject<boolean>(false);
   private _taskDragging = new BehaviorSubject<string>(undefined);
 
   get activeTaskList(): Observable<TaskList> { return this._activeTaskList; }
-  get activeTaskView(): Observable<TaskView> { return this._activeTask.distinctUntilChanged(); }
+  get activeTask(): Observable<Task> { return this._activeTask; }
+
+  // TODO: Remove TaskView
+  get activeTaskView(): Observable<TaskView> { return this._activeTaskView.distinctUntilChanged(); }
   get activeTaskChecklistItems(): Observable<ChecklistItem[]> { return this._activeTaskChecklistItems; }
   get taskDragStatus(): Observable<boolean> { return this._taskDragStatus.asObservable(); }
 
@@ -87,10 +93,12 @@ export class ContextService {
     private navigationService: NavigationService,
     private searchService: SearchService,
     private taskListService: TaskListService,
+    private taskService: TaskService,
     private taskViewService: TaskViewService,
   ) {
     this.setupActiveTaskList();
     this.setupActiveTask();
+    this.setupActiveTaskView();
     this.setupActiveChecklistItems();
   }
 
@@ -103,9 +111,22 @@ export class ContextService {
   }
 
   private setupActiveTask() {
+    this.navigationService.taskUuid.combineLatest(this.taskService.entries, (uuid, tasks) => {
+      if (!uuid) {
+        // No task is selected.
+        this._activeTask.next(undefined);
+        return;
+      }
+
+      this._activeTask.next(tasks.find(task => task.uuid === uuid));
+    }).subscribe();
+  }
+
+  // TODO: Remove TaskView
+  private setupActiveTaskView() {
     this.navigationService.taskUuid.combineLatest(this.taskViewService.entries,
       (uuid, taskViews) => {
-        this._activeTask.next(taskViews.find(x => x.task.uuid === uuid));
+        this._activeTaskView.next(taskViews.find(x => x.task.uuid === uuid));
       }).subscribe();
   }
 

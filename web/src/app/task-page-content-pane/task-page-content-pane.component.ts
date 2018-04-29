@@ -1,4 +1,7 @@
 import { Component, OnInit, Input, HostBinding } from "@angular/core";
+import { TaskService } from "../services/task.service";
+import { ContextService } from "../services/context.service";
+import { Task } from "../services/models/task.dto";
 
 @Component({
   selector: "app-task-page-content-pane",
@@ -7,16 +10,20 @@ import { Component, OnInit, Input, HostBinding } from "@angular/core";
 })
 export class TaskPageContentPaneComponent implements OnInit {
   @Input()
-  set width(value: number) {
-    this._width = +value;
-  }
+  set width(value: number) { this._width = +value; }
 
   @HostBinding("style.width.px")
   private _width: number = undefined;
 
-  constructor() { }
+  task: Task = undefined;
+
+  constructor(
+    private readonly contextService: ContextService
+  ) {
+  }
 
   ngOnInit() {
+    this.contextService.activeTask.subscribe(x => this.task = x);
   }
 
 }
