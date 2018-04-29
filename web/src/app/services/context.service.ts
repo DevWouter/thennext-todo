@@ -77,7 +77,7 @@ export class ContextService {
       })
       .combineLatest(this.navigationService.search, (tasks, search) => {
         if (search) {
-          return tasks.filter(x => this.searchService.isResult(x, search));
+          return tasks.filter(x => this.searchService.isResult(x.task, search));
         }
         return tasks;
       })
