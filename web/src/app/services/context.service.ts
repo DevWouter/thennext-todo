@@ -16,7 +16,6 @@ import { TaskRelationService } from "./task-relation.service";
 import { RelationViewService } from "./relation-view.service";
 import { TaskScoreService } from "./task-score.service";
 
-
 @Injectable()
 export class ContextService {
   private _activeTaskList = new BehaviorSubject<TaskList>(undefined);
@@ -34,67 +33,6 @@ export class ContextService {
   get taskDragStatus(): Observable<boolean> { return this._taskDragStatus.asObservable(); }
 
   get taskDragging(): Observable<string> { return this._taskDragging.asObservable(); }
-
-  get visibleTasks(): Observable<Task[]> {
-    return this.activeTaskList.filter(x => !!x)
-      .combineLatest(this.taskService.entries, (list, tasks) => tasks.filter(x => x.taskListUuid === list.uuid))
-      .combineLatest(this.taskScoreService.taskScores, (tasks, scores) => {
-        return scores.map(s => tasks.find(t => t.uuid === s.taskUuid)).filter(y => !!y);
-      })
-      .map(x => {
-        const activeTasks: Task[] = [];
-        const todoTasks: Task[] = [];
-        const doneTasks: Task[] = [];
-        x.forEach(y => {
-          switch (y.status) {
-            case TaskStatus.done: { doneTasks.push(y); break; }
-            case TaskStatus.active: { activeTasks.push(y); break; }
-            case TaskStatus.todo: { todoTasks.push(y); break; }
-            default: { throw new Error(`Unsupported task status: ${y.status}`); }
-          }
-        });
-
-        return [...activeTasks, ...todoTasks, ...doneTasks];
-      }).combineLatest(this.navigationService.showCompleted, (tasks, showCompleted) => {
-        if (!showCompleted) {
-          return tasks.filter(y => y.status !== TaskStatus.done);
-        }
-        return tasks;
-      })
-      // .combineLatest(this.navigationService.showDelayed, (tasks, showDelayed) => {
-      //   if (!showDelayed) {
-      //     return tasks.filter(y => !y.isDelayed);
-      //   }
-      //   return tasks;
-      // })
-      .combineLatest(this.navigationService.onlyUnblocked, this.relationViewService.blockedTaskUuids,
-        (tasks, onlyUnblocked, blockedUuids) => {
-          if (onlyUnblocked) {
-            return tasks.filter(y => !blockedUuids.includes(y.uuid));
-          }
-          return tasks;
-        })
-      .combineLatest(this.navigationService.onlyPositive, this.taskScoreService.taskScores,
-        (tasks, onlyPositive, scores) => {
-          if (onlyPositive) {
-            return tasks.filter(task => {
-              const taskScore = scores.find(s => s.taskUuid === task.uuid);
-              if (taskScore) {
-                return taskScore.score >= 0;
-              }
-              return true; // No score, so we can assume 0.
-            });
-          }
-          return tasks;
-        })
-      .combineLatest(this.navigationService.search, (tasks, search) => {
-        if (search) {
-          return tasks.filter(x => this.searchService.isResult(x, search));
-        }
-        return tasks;
-      })
-      ;
-  }
 
   constructor(
     private checklistItemService: ChecklistItemService,

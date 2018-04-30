@@ -29,8 +29,10 @@ export class TaskScoreService {
   private _blockingTaskUuids: string[] = [];
 
   private _taskScores = new BehaviorSubject<TaskScoreView[]>(undefined);
+  private _delayedTaskUuids = new BehaviorSubject<string[]>(undefined);
 
   public get taskScores(): Observable<TaskScoreView[]> { return this._taskScores.filter(x => !!x); }
+  public get delayedTaskUuids(): Observable<string[]> { return this._delayedTaskUuids.filter(x => !!x); }
 
   constructor(
     private readonly taskService: TaskService,                   // Since we need the title
@@ -77,6 +79,19 @@ export class TaskScoreService {
           v.roundedScore === y[i].roundedScore)      // Check if the visual score has changed.
       )
       .subscribe(scores => this._taskScores.next(scores));
+
+    this._timeSubject
+      .map(x => DateTime.fromJSDate(x))
+      .combineLatest(this.taskService.entries, (now, tasks) => {
+        return tasks
+          .filter(x => x.sleepUntil && DateTime.fromJSDate(x.sleepUntil) > now)
+          .map(x => x.uuid);
+      })
+      .distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i]))
+      .subscribe(x => {
+        console.log("Updated delays", x);
+        this._delayedTaskUuids.next(x);
+      });
   }
 
   private getBlockScore(task: Task, blockedTaskUuids: string[], blockingTaskUuids: string[]): number {

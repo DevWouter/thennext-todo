@@ -16,14 +16,9 @@ export class TaskPageContentComponent implements OnInit {
 
   ngOnInit() {
     this.contextService.activeTask
-      .combineLatest(this.contextService.visibleTasks, (currentTask, visibleTasks) => {
-        if (!currentTask) {
-          this.showPane = false;
-          return;
-        }
-
-        this.showPane = (visibleTasks.some(x => x.uuid === currentTask.uuid));
-      }).subscribe();
+      .subscribe((task) => {
+        this.showPane = !!task;
+      });
   }
 
   offsetPaneWidth(offset: number): void {
