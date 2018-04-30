@@ -8,6 +8,7 @@ import { Router } from "@angular/router";
 })
 export class TaskPageHeaderComponent implements OnInit {
   showFilterMenu = false;
+  enableTaskLists = false; // Disabled for now
   constructor(
     private router: Router,
   ) { }

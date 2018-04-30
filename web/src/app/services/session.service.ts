@@ -4,6 +4,7 @@ import { Session } from "./models/session.dto";
 
 @Injectable()
 export class SessionService {
+
   constructor(
     private apiService: ApiService,
   ) { }
@@ -17,5 +18,10 @@ export class SessionService {
       email: email,
       password: password,
     }).toPromise();
+  }
+  async logout(): Promise<void> {
+    await this.apiService.delete<object>("/api/session/destroy")
+      .toPromise()
+      .catch((reason) => console.error(reason));
   }
 }

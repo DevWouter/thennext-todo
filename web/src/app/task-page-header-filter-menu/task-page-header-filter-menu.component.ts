@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
+import { Router } from "@angular/router";
+import { SessionService } from "../services/session.service";
 
 @Component({
   selector: "app-task-page-header-filter-menu",
@@ -25,6 +27,8 @@ export class TaskPageHeaderFilterMenuComponent implements OnInit {
 
   constructor(
     private readonly navigation: NavigationService,
+    private readonly router: Router,
+    private readonly sessionService: SessionService,
   ) { }
 
   ngOnInit() {
@@ -32,6 +36,17 @@ export class TaskPageHeaderFilterMenuComponent implements OnInit {
     this.navigation.showDelayed.subscribe(x => { this._showDelayed = x; });
     this.navigation.onlyPositive.subscribe(x => { this._onlyPositive = x; });
     this.navigation.onlyUnblocked.subscribe(x => { this._onlyUnblocked = x; });
+  }
+
+  goToSettings() {
+    this.router.navigate(["/settings"]);
+  }
+
+  logout() {
+    if (confirm("Are you sure you want to logout?")) {
+      this.sessionService.logout();
+      this.router.navigate(["/"]);
+    }
   }
 
 }
