@@ -91,9 +91,9 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
         return { tasksAfter: blockedTasks, tasksBefore: blockingTasks };
       })
       .subscribe(x => {
-        this.showExplain = x.tasksAfter.length === 0 && x.tasksBefore.length === 0;
         this.tasksBefore = x.tasksBefore;
         this.tasksAfter = x.tasksAfter;
+        this.showExplain = x.tasksAfter.length === 0 && x.tasksBefore.length === 0;
       });
   }
 
@@ -140,6 +140,11 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
       targetTaskUuid: target,
       relationType: "blocks",
     });
+
+    // Explicit unset of drag-status.
+    // This is because the dragged element might no longer exist and as such the drop-event
+    // is not invoked.
+    this.contextService.setDragStatus(false, undefined);
   }
 
   goTo(remoteTask: RemoteTask) {
