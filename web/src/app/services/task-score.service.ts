@@ -24,10 +24,6 @@ export class TaskScoreService {
   // When set, this will cause the score to be calculated
   private _timeSubject = new BehaviorSubject<Date>(new Date());
 
-  private _scoreShifts: ScoreShift[] = [];
-  private _blockedTaskUuids: string[] = [];
-  private _blockingTaskUuids: string[] = [];
-
   private _taskScores = new BehaviorSubject<TaskScoreView[]>(undefined);
   private _delayedTaskUuids = new BehaviorSubject<string[]>(undefined);
 
