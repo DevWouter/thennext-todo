@@ -2,11 +2,11 @@ import { Component, OnInit, Input, HostListener } from "@angular/core";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
-import { TaskView } from "../services/models/task-view";
 import { ContextService } from "../services/context.service";
 import { NavigationService } from "../services/navigation.service";
 
 import { DateTime, Interval, Duration } from "luxon";
+import { TaskScoreService } from "../services/task-score.service";
 
 enum State {
   default = "default",
@@ -44,55 +44,62 @@ enum State {
 })
 export class TaskPageContentListItemComponent implements OnInit {
   state = State.default;
-
+  score = 0;
   checked = false;
   get title() {
-    return this.taskView.task.title;
-  }
-  get score(): number {
-    return this.taskView.score;
+    return this.task.title;
   }
 
   get showCommentIcon(): boolean {
-    return this._task.task.description.trim().length !== 0;
+    return this._task.description.trim().length !== 0;
   }
 
   get showSleepIcon(): boolean {
-    return !this._task.isDelayed;
+    return true;
   }
   get showPlayIcon(): boolean {
-    return this._task.task.status === TaskStatus.todo;
+    return this._task.status === TaskStatus.todo;
   }
 
   get showPauseIcon(): boolean {
-    return this._task.task.status === TaskStatus.active;
+    return this._task.status === TaskStatus.active;
   }
 
-  private _task: TaskView;
+  private _task: Task;
   @Input()
-  set taskView(v: TaskView) { this._task = v; this.updateTask(); }
-  get taskView(): TaskView { return this._task; }
+  set task(v: Task) { this._task = v; this.updateTask(); }
+  get task(): Task { return this._task; }
 
   @HostListener("click") onClick() {
-    this.navigation.toTaskPage({ taskUuid: this.taskView.task.uuid });
+    this.navigation.toTaskPage({ taskUuid: this.task.uuid });
   }
 
   constructor(
     private navigation: NavigationService,
     private taskService: TaskService,
     private contextService: ContextService,
+    private taskScoreService: TaskScoreService,
   ) { }
 
   ngOnInit() {
+    this.taskScoreService.taskScores.subscribe(taskScores => {
+      const taskScore = taskScores.find(x => x.taskUuid === this._task.uuid);
+      if (taskScore) {
+        this.score = taskScore.score;
+      } else {
+        this.score = Number.NaN;
+      }
+    });
+
     this.navigation.taskUuid.subscribe(x => {
-      if (this.taskView.task.uuid === x) {
-        if (this.taskView.task.status === TaskStatus.active) {
+      if (this.task.uuid === x) {
+        if (this.task.status === TaskStatus.active) {
           this.state = State.activeSelected;
         } else {
           this.state = State.selected;
         }
       } else {
-        if (this.taskView.task.status === TaskStatus.active) {
+        if (this.task.status === TaskStatus.active) {
           this.state = State.active;
         } else {
           this.state = State.default;
@@ -102,35 +109,35 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   check() {
-    this.taskView.task.completedOn = new Date();
-    this.taskView.task.status = TaskStatus.done;
-    this.taskService.update(this.taskView.task);
+    this.task.completedOn = new Date();
+    this.task.status = TaskStatus.done;
+    this.taskService.update(this.task);
   }
 
   uncheck() {
-    this.taskView.task.completedOn = null;
-    this.taskView.task.status = TaskStatus.todo;
-    this.taskService.update(this.taskView.task);
+    this.task.completedOn = null;
+    this.task.status = TaskStatus.todo;
+    this.taskService.update(this.task);
   }
 
   updateTask() {
-    if (this.taskView) {
-      this.checked = this.taskView.task.status === TaskStatus.done;
+    if (this.task) {
+      this.checked = this.task.status === TaskStatus.done;
     }
   }
 
   play() {
     console.log("play");
     this.checked = false;
-    this.taskView.task.status = TaskStatus.active;
-    this.taskService.update(this.taskView.task);
+    this.task.status = TaskStatus.active;
+    this.taskService.update(this.task);
   }
 
   pause() {
     console.log("pause");
     this.checked = false;
-    this.taskView.task.status = TaskStatus.todo;
-    this.taskService.update(this.taskView.task);
+    this.task.status = TaskStatus.todo;
+    this.taskService.update(this.task);
   }
 
   delay() {
@@ -145,12 +152,12 @@ export class TaskPageContentListItemComponent implements OnInit {
       local = local.plus({ days: 1 });
     }
 
-    this.taskService.delay(this.taskView.task, local.toJSDate());
+    this.taskService.delay(this.task, local.toJSDate());
   }
 
   dragStart(event: DragEvent) {
-    event.dataTransfer.setData("task/uuid", this.taskView.task.uuid);
-    this.contextService.setDragStatus(true, this.taskView.task.uuid);
+    event.dataTransfer.setData("task/uuid", this.task.uuid);
+    this.contextService.setDragStatus(true, this.task.uuid);
   }
 
   dragEnd(event: DragEvent) {

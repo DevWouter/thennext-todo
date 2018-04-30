@@ -22,7 +22,7 @@ export class TaskPageContentComponent implements OnInit {
           return;
         }
 
-        this.showPane = (visibleTasks.some(x => x.task.uuid === currentTask.uuid));
+        this.showPane = (visibleTasks.some(x => x.uuid === currentTask.uuid));
       }).subscribe();
   }
 

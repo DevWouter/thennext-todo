@@ -18,6 +18,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TaskViewService } from "./task-view.service";
 import { SearchService } from "./search.service";
+import { RelationViewService } from "./relation-view.service";
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { SearchService } from "./search.service";
     TaskService,
     TaskViewService,
     SearchService,
+    RelationViewService,
   ]
 })
 export class ServicesModule {
