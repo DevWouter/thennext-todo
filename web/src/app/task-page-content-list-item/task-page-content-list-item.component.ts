@@ -43,6 +43,7 @@ enum State {
   ]
 })
 export class TaskPageContentListItemComponent implements OnInit {
+  private _delayedUuids: string[] = [];
   state = State.default;
   score = 0;
   checked = false;
@@ -55,7 +56,7 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   get showSleepIcon(): boolean {
-    return true;
+    return !this._delayedUuids.includes(this._task.uuid);
   }
   get showPlayIcon(): boolean {
     return this._task.status === TaskStatus.todo;
@@ -90,6 +91,8 @@ export class TaskPageContentListItemComponent implements OnInit {
         this.score = Number.NaN;
       }
     });
+
+    this.taskScoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
 
     this.navigation.taskUuid.subscribe(x => {
       if (this.task.uuid === x) {

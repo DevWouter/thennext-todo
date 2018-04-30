@@ -89,7 +89,6 @@ export class TaskScoreService {
       })
       .distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i]))
       .subscribe(x => {
-        console.log("Updated delays", x);
         this._delayedTaskUuids.next(x);
       });
   }
