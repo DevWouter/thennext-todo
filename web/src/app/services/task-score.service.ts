@@ -62,6 +62,7 @@ export class TaskScoreService {
             r.score += this.getTermScore(task, scoreShifts);
             r.score += this.getAgeScore(task, now);
             r.score += this.getActiveScore(task);
+            r.score += this.getDescriptionScore(task);
 
             r.roundedScore = Math.floor(r.score * 10) / 10;
             return r;
@@ -120,6 +121,10 @@ export class TaskScoreService {
 
   private getActiveScore(task: Task): number {
     return task.status === TaskStatus.active ? 4 : 0;
+  }
+
+  private getDescriptionScore(task: Task): number {
+    return (task.description || "").trim().length > 0 ? 1 : 0;
   }
 
   /**
