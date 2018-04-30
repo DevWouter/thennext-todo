@@ -1,7 +1,5 @@
-host {
-  display: host;
+.container{
   position: relative;
-
 }
 textarea {
     width: 100%;
@@ -9,7 +7,7 @@ textarea {
     border: none;
     outline: none;
     -moz-appearance: none;
-    resize: vertical;
+    resize: none;
     overflow: hidden;
     width: 100%;
     transition: height 0.1s;
