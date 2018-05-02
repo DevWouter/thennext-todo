@@ -10,6 +10,9 @@ export class ChecklistItemEntity {
     @Generated("uuid")
     uuid: string;
 
+    @Column({ default: 0 })
+    order: number;
+
     @Column()
     checked: boolean;
 
