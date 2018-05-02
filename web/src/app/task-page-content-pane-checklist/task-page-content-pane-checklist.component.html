@@ -1,4 +1,5 @@
-<app-task-page-content-pane-checklist-item *ngFor="let item of items" [item]="item"></app-task-page-content-pane-checklist-item>
+<app-task-page-content-pane-checklist-item *ngFor="let item of items" [item]="item" (move)="move(item, $event)">
+</app-task-page-content-pane-checklist-item>
 
 <div class="item">
   <div class="status">

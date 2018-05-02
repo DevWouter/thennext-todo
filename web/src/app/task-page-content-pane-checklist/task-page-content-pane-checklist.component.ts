@@ -4,6 +4,7 @@ import { ChecklistItem } from "../services/models/checklist-item.dto";
 import { ChecklistItemService } from "../services/checklist-item.service";
 import { Task } from "../services/models/task.dto";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { TaskService } from "../services/task.service";
 
 @Component({
   selector: "app-task-page-content-pane-checklist",
@@ -24,6 +25,7 @@ export class TaskPageContentPaneChecklistComponent implements OnInit {
 
   constructor(
     private checklistItemService: ChecklistItemService,
+    private taskService: TaskService,
   ) { }
 
   ngOnInit() {
@@ -45,11 +47,35 @@ export class TaskPageContentPaneChecklistComponent implements OnInit {
     this.checklistItemService.add(<ChecklistItem>{
       checked: false,
       title: title,
+      order: this._task.nextChecklistOrder,
       taskUuid: this._task.uuid,
     });
+
+    this._task.nextChecklistOrder = this._task.nextChecklistOrder + 1;
+    this.taskService.update(this._task);
 
     this.newValue = "";
     // Prevent the enter button from adding a line after keyup.
     event.preventDefault();
+  }
+
+  move(item: ChecklistItem, direction: "up" | "down") {
+    const curPos = this.items.indexOf(item);
+    const otherPos = curPos + (direction === "up" ? 1 : -1);
+    if (
+      otherPos >= this.items.length // Current is already last
+      || otherPos < 0  // Current is already first.
+    ) {
+      return;
+    }
+
+    const srcItem = this.items[curPos];
+    const dstItem = this.items[otherPos];
+    const t = srcItem.order;
+    srcItem.order = dstItem.order;
+    dstItem.order = t;
+
+    this.checklistItemService.update(srcItem);
+    this.checklistItemService.update(dstItem);
   }
 }

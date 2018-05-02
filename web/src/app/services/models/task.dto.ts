@@ -3,6 +3,7 @@ import { Entity } from "../repositories/entity";
 export interface Task extends Entity {
   uuid: string;
   taskListUuid: string;
+  nextChecklistOrder: number;
   title: string;
   description: string;
   status: TaskStatus;

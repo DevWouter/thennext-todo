@@ -9,6 +9,7 @@ export enum TaskStatus {
 export interface Task {
     uuid: string;
     taskListUuid: string;
+    nextChecklistOrder: number;
 
     title: string;
     description: string;

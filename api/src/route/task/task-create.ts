@@ -36,13 +36,13 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     const task = new TaskEntity();
     const src = req.body as Task;
 
-
     task.title = src.title;
     task.description = src.description || "";
     task.status = src.status || TaskStatus.todo;
     task.createdAt = src.createdOn || new Date();
     task.updatedAt = src.updatedOn || new Date();
     task.sleepUntil = src.sleepUntil;
+    task.nextChecklistOrder = 1;
 
     // Assign relations
     task.taskList = taskList;
@@ -56,6 +56,7 @@ export async function TaskCreate(req: Request, res: Response): Promise<void> {
     const result = <Task>{
         uuid: dst.uuid,
         taskListUuid: taskList.uuid,
+        nextChecklistOrder: dst.nextChecklistOrder,
         title: dst.title,
         status: dst.status,
         description: dst.description,

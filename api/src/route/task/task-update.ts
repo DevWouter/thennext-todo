@@ -25,6 +25,7 @@ export async function TaskUpdate(req: Request, res: Response): Promise<void> {
     task.title = model.title;
     task.description = model.description;
     task.status = model.status;
+    task.nextChecklistOrder = model.nextChecklistOrder;
 
     task.createdAt = model.createdOn;
     task.updatedAt = model.updatedOn;
@@ -40,6 +41,7 @@ export async function TaskUpdate(req: Request, res: Response): Promise<void> {
     res.send(<Task>{
         uuid: dst.uuid,
         taskListUuid: model.taskListUuid,
+        nextChecklistOrder: model.nextChecklistOrder,
         title: dst.title,
         status: dst.status,
         description: dst.description,

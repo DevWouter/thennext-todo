@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, HostListener, Host } from "@angular/core";
 import { ChecklistItem } from "../services/models/checklist-item.dto";
 import { ChecklistItemService } from "../services/checklist-item.service";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
@@ -17,6 +17,9 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
   private _checkedSubject = new BehaviorSubject<boolean>(undefined);
   public get checked(): boolean { return this._item.checked; }
   public set checked(v: boolean) { this._item.checked = v; this._checkedSubject.next(v); }
+
+  @Output()
+  public move = new EventEmitter<"up"|"down">();
 
   private _item: ChecklistItem = undefined;
   @Input()
@@ -51,6 +54,25 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
   constructor(
     private readonly checklistItemService: ChecklistItemService,
   ) { }
+
+  @HostListener("keydown", ["$event"])
+  // 221
+  // 219
+  up(e: KeyboardEvent) {
+    if (!e.altKey) {
+      return;
+    }
+
+    if (e.keyCode === 221) { // ']'
+      this.move.emit("down");
+      e.preventDefault();
+    }
+
+    if (e.keyCode === 219) { // ']'
+      this.move.emit("up");
+      e.preventDefault();
+    }
+  }
 
   ngOnInit() {
   }

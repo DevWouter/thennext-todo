@@ -15,7 +15,7 @@ import { TaskEventService } from "./task-event.service";
 export class ChecklistItemService {
   private _repository: Repository<ChecklistItem>;
   public get entries(): Observable<ChecklistItem[]> {
-    return this._repository.entries;
+    return this._repository.entries.map(x => x.sort((a, b) => a.order - b.order));
   }
 
   constructor(

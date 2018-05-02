@@ -20,6 +20,7 @@ export async function TaskIndex(req: Request, res: Response): Promise<void> {
 
     const dst: Task[] = tasks.map(task => <Task>{
         uuid: task.uuid,
+        nextChecklistOrder: task.nextChecklistOrder,
         taskListUuid: task.taskList.uuid,
         title: task.title,
         description: task.description,

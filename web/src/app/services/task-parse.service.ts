@@ -34,6 +34,7 @@ export class TaskParseService {
       taskListUuid: taskListUuid,
       status: TaskStatus.todo,
       title: title,
+      nextChecklistOrder: 1,
     };
 
     this.taskService.add(newTask);
