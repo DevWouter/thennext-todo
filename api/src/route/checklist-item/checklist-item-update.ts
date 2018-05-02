@@ -19,6 +19,7 @@ export async function ChecklistItemUpdate(req: Request, res: Response): Promise<
     const account = await accountService.byToken(token);
     const checklistItem = await checklistItemService.byUuid(req.params.uuid, account);
     checklistItem.title = input.title;
+    checklistItem.order = input.order;
     checklistItem.checked = input.checked;
 
     const savePromise = checklistItemService.update(checklistItem);

@@ -21,6 +21,7 @@ export async function ChecklistItemIndex(req: Request, res: Response): Promise<v
 
     const dst = src.map(item => (<ChecklistItem>{
         uuid: item.uuid,
+        order: item.order,
         checked: item.checked,
         title: item.title,
         taskUuid: item.task.uuid

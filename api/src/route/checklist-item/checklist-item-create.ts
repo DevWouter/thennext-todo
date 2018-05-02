@@ -33,6 +33,7 @@ export async function ChecklistItemCreate(req: Request, res: Response): Promise<
     const checklistItem = new ChecklistItemEntity();
     checklistItem.title = data.title;
     checklistItem.checked = data.checked || false;
+    checklistItem.order = data.order || 0;
 
     // Assign relation
     checklistItem.task = task;
@@ -41,6 +42,7 @@ export async function ChecklistItemCreate(req: Request, res: Response): Promise<
     const dbData = await savePromise;
     const apiData = <ChecklistItem>{
         uuid: dbData.uuid,
+        order: dbData.order,
         taskUuid: task.uuid,
         title: dbData.title,
         checked: dbData.checked,
