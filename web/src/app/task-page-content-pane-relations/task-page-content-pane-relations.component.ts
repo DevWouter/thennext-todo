@@ -64,6 +64,15 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
     });
 
     this.contextService.taskDragging.subscribe(x => {
+      const beforeExists = this.taskRelationService.exists({ before: x, after: this.taskUuid });
+      const afterExists = this.taskRelationService.exists({ after: x, before: this.taskUuid });
+
+      if (beforeExists || afterExists) {
+        this.beforeAllow = false;
+        this.afterAllow = false;
+        return;
+      }
+
       this.beforeAllow = this.taskRelationService.checkAllow({ before: x, after: this.taskUuid });
       this.afterAllow = this.taskRelationService.checkAllow({ after: x, before: this.taskUuid });
     });

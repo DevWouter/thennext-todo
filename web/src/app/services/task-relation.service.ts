@@ -80,6 +80,13 @@ export class TaskRelationService {
     return parents;
   }
 
+  exists(input: { before: string, after: string }): boolean {
+    return this._internalList
+      .some(x =>
+        x.sourceTaskUuid === input.before &&
+        x.targetTaskUuid === input.after);
+  }
+
   checkAllow(input: { before: string, after: string }): boolean {
     if (input.before === input.after) {
       // A relation with yourself is not allowed.
