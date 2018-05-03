@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 
 import * as bcrypt from "bcryptjs";
-import { Account } from "./account.model";
+import { Account, TransformAccount } from "./account.model";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
-import { TransformAccount } from "./helpers/account-to-model";
 import container from "../../inversify.config";
 import { AccountService } from "../../services/account-service";
 
