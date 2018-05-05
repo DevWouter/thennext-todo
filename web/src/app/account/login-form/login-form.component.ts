@@ -27,16 +27,6 @@ export class LoginFormComponent implements OnInit {
     this.success.subscribe((x) => console.debug(`LoginForm.succes emits ${x}`));
   }
 
-  async extend() {
-    try {
-      const response = await this.sessionService.extendSession();
-      this.apiService.setSessionToken(response.token, response.expireAt);
-      console.log("Extended");
-    } catch (reason) {
-      console.log(reason);
-    }
-  }
-
   async login() {
     this.showError = false;
     try {

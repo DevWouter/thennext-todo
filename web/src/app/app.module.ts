@@ -38,6 +38,8 @@ import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists
 import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/settings-page-scoreshifts.component";
 import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-page-header-search.component";
 import { CommandInputComponent } from "./command-input/command-input.component";
+import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
+import { LoginPageComponent } from "./login-page/login-page.component";
 
 @NgModule({
   declarations: [
@@ -67,6 +69,8 @@ import { CommandInputComponent } from "./command-input/command-input.component";
     SettingsPageScoreshiftsComponent,
     TaskPageHeaderSearchComponent,
     CommandInputComponent,
+    CreateAccountPageComponent,
+    LoginPageComponent,
   ],
   imports: [
     AnimationModule,

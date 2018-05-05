@@ -5,11 +5,9 @@
 
 <label>
   <div class="input-label">Password:</div>
-  <input type="text" [(ngModel)]="password">
+  <input type="password" [(ngModel)]="password">
 </label>
 
 <button (click)="login()">Login</button>
-
-<button (click)="extend()">Extend</button>
 
 <div *ngIf="showError">Unable to login, an error occured, please try again</div>

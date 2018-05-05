@@ -13,12 +13,13 @@ export class SessionService {
     return this.apiService.patch<Session>("/api/session/extend", {}).toPromise();
   }
 
-  async createSession(email: string, password: string): Promise<Session> {
+  createSession(email: string, password: string): Promise<Session> {
     return this.apiService.post<Session>("/api/session/create", {
       email: email,
       password: password,
     }).toPromise();
   }
+
   async logout(): Promise<void> {
     await this.apiService.delete<object>("/api/session/destroy")
       .toPromise()

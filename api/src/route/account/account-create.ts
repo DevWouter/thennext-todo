@@ -14,25 +14,29 @@ export interface CreateAccountInput {
 }
 
 export async function AccountCreate(req: Request, res: Response): Promise<void> {
-    const input = req.body as CreateAccountInput;
-    throwIfInvalid(input);
-    const accountService = container.resolve(AccountService);
-    const account = new AccountEntity();
-    account.email = input.email;
-    account.password_hash = await bcrypt.hash(input.password, SecurityConfig.saltRounds);
-    account.accountSettings = new AccountSettingsEntity();
-    AccountSettingsEntity.setDefaultValues(account.accountSettings);
+    try {
+        const input = req.body as CreateAccountInput;
+        throwIfInvalid(input);
+        const accountService = container.resolve(AccountService);
+        const account = new AccountEntity();
+        account.email = input.email;
+        account.password_hash = await bcrypt.hash(input.password, SecurityConfig.saltRounds);
+        account.accountSettings = new AccountSettingsEntity();
+        AccountSettingsEntity.setDefaultValues(account.accountSettings);
 
-    // Create primary task list
-    const primaryTaskList = new TaskListEntity();
-    primaryTaskList.name = "Inbox";
-    primaryTaskList.primary = true;
-    account.taskLists = [primaryTaskList];
+        // Create primary task list
+        const primaryTaskList = new TaskListEntity();
+        primaryTaskList.name = "Inbox";
+        primaryTaskList.primary = true;
+        account.taskLists = [primaryTaskList];
 
-    const finalEntity = await accountService.create(account);
-    const dst = TransformAccount(finalEntity);
-
-    res.send(dst);
+        const finalEntity = await accountService.create(account);
+        const dst = TransformAccount(finalEntity);
+        res.send(dst);
+    } catch (ex) {
+        console.error(ex);
+        res.status(500).send((<Error>ex).message);
+    }
 }
 
 function throwIfInvalid(input: CreateAccountInput): void {
