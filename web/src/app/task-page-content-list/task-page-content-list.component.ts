@@ -34,6 +34,12 @@ export class TaskPageContentListComponent implements OnInit {
       .combineLatest(this.taskScoreService.taskScores, (tasks, scores) => {
         return scores.map(s => tasks.find(t => t.uuid === s.taskUuid)).filter(y => !!y);
       })
+      .combineLatest(this.navigationService.showCompleted, (tasks, showCompleted) => {
+        if (!showCompleted) {
+          return tasks.filter(y => y.status !== TaskStatus.done);
+        }
+        return tasks;
+      })
       .map(x => {
         const activeTasks: Task[] = [];
         const todoTasks: Task[] = [];
@@ -48,45 +54,56 @@ export class TaskPageContentListComponent implements OnInit {
         });
 
         return [...activeTasks, ...todoTasks, ...doneTasks];
-      }).combineLatest(this.navigationService.showCompleted, (tasks, showCompleted) => {
-        if (!showCompleted) {
-          return tasks.filter(y => y.status !== TaskStatus.done);
-        }
-        return tasks;
       })
-      .combineLatest(this.navigationService.showDelayed, this.taskScoreService.delayedTaskUuids,
-        (tasks, showDelayed, delayedUuids) => {
-          if (!showDelayed) {
-            return tasks.filter(y => !delayedUuids.includes(y.uuid));
-          }
-          return tasks;
+      .combineLatest(
+        this.navigationService.search,
+        this.navigationService.showDelayed,
+        this.navigationService.onlyUnblocked,
+        this.navigationService.onlyPositive,
+        this.taskScoreService.delayedTaskUuids,
+        (tasks, search, showDelayed, onlyUnblocked, onlyPositive) => {
+          return {
+            tasks,
+            search,
+            showDelayed,
+            onlyUnblocked,
+            onlyPositive
+          };
         })
-      .combineLatest(this.navigationService.onlyUnblocked, this.relationViewService.blockedTaskUuids,
-        (tasks, onlyUnblocked, blockedUuids) => {
-          if (onlyUnblocked) {
-            return tasks.filter(y => !blockedUuids.includes(y.uuid));
+      .combineLatest(
+        this.taskScoreService.delayedTaskUuids,
+        this.relationViewService.blockedTaskUuids,
+        this.taskScoreService.taskScores,
+        (combo, delayedUuids, blockedUuids, scores) => {
+          let tasks = combo.tasks;
+
+          if (combo.search && combo.search.trim() !== "") {
+            tasks = tasks.filter(x => this.searchService.isResult(x, combo.search));
+          } else {
+            // No search, so use the filters.
+            if (!combo.showDelayed) {
+              tasks = tasks.filter(y => !delayedUuids.includes(y.uuid));
+            }
+
+            if (combo.onlyUnblocked) {
+              tasks = tasks.filter(y => !blockedUuids.includes(y.uuid));
+            }
+
+            if (combo.onlyPositive) {
+              tasks = tasks.filter(task => {
+                const taskScore = scores.find(s => s.taskUuid === task.uuid);
+                if (taskScore) {
+                  return taskScore.score >= 0;
+                }
+                return true; // No score, so we can assume 0.
+              });
+            }
           }
+
+
           return tasks;
-        })
-      .combineLatest(this.navigationService.onlyPositive, this.taskScoreService.taskScores,
-        (tasks, onlyPositive, scores) => {
-          if (onlyPositive) {
-            return tasks.filter(task => {
-              const taskScore = scores.find(s => s.taskUuid === task.uuid);
-              if (taskScore) {
-                return taskScore.score >= 0;
-              }
-              return true; // No score, so we can assume 0.
-            });
-          }
-          return tasks;
-        })
-      .combineLatest(this.navigationService.search, (tasks, search) => {
-        if (search) {
-          return tasks.filter(x => this.searchService.isResult(x, search));
         }
-        return tasks;
-      })
+      )
       .subscribe(tasks => this.tasks = tasks);
   }
 

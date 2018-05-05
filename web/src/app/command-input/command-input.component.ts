@@ -44,6 +44,11 @@ export class CommandInputComponent implements OnInit {
         console.log("Searching");
         this.navigationService.toTaskPage({ search: v });
       });
+
+    // Only restore search on the first load.
+    this.navigationService.search
+      .first()
+      .subscribe(x => this._value = x);
   }
 
   submit() {
