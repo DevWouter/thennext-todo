@@ -37,7 +37,6 @@ export class CommandInputComponent implements OnInit {
     this._searchSubject
       .filter(v => v !== undefined && v !== null) // Ignore invalid values
       .map(v => v.trim())                         // Remove any space before/after
-      .filter(v => v !== "")                      // Ignore the empty case since we do that instantly
       .distinctUntilChanged()                     // Only listen for changes.
       .debounceTime(SEARCH_DELAY)                 // React on the first input, then start ignoring
       .subscribe(v => {
