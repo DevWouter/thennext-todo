@@ -11,9 +11,11 @@ import { TaskScoreService } from "../services/task-score.service";
 enum State {
   default = "default",
   active = "active",
+  delayed = "delayed",
   selected = "selected",
   new = "new",
-  activeSelected = "activeSelected",
+  selectedActive = "selectedActive",
+  selectedDelayed = "selectedDelayed"
 }
 
 @Component({
@@ -22,23 +24,32 @@ enum State {
   styleUrls: ["./task-page-content-list-item.component.scss"],
   animations: [
     trigger("taskState", [
-      state("default", style({
+      state(State.default, style({
         // backgroundColor: 'white',
       })),
-      state("new", style({
+      state(State.new, style({
         backgroundColor: "yellow",
       })),
-      state("active", style({
+      state(State.active, style({
         fontWeight: "bold",
       })),
-      state("selected", style({
+      state(State.selected, style({
         backgroundColor: "#e1f2fe",
       })),
-      state("activeSelected", style({
+      state(State.delayed, style({
+        fontStyle: "italic",
+        color: "grey",
+      })),
+      state(State.selectedActive, style({
         fontWeight: "bold",
         backgroundColor: "#e1f2fe",
       })),
-      transition("new => default", animate("1000ms ease-in")),
+      state(State.selectedDelayed, style({
+        color: "grey",
+        fontStyle: "italic",
+        backgroundColor: "#e1f2fe",
+      })),
+      transition(`${State.new} => ${State.default}`, animate("1000ms ease-in")),
     ])
   ]
 })
@@ -94,21 +105,32 @@ export class TaskPageContentListItemComponent implements OnInit {
 
     this.taskScoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
 
-    this.navigation.taskUuid.subscribe(x => {
-      if (this.task.uuid === x) {
-        if (this.task.status === TaskStatus.active) {
-          this.state = State.activeSelected;
+    this.navigation.taskUuid
+      .combineLatest(this.taskScoreService.delayedTaskUuids, (taskUuid, delayedTaskUuids) => ({
+        taskUuid,
+        delayedTaskUuids,
+      }))
+      .subscribe(combo => {
+        const taskUuid = combo.taskUuid;
+        const isDelayed = combo.delayedTaskUuids.includes(this.task.uuid);
+        if (this.task.uuid === taskUuid) {
+          if (this.task.status === TaskStatus.active) {
+            this.state = State.selectedActive;
+          } else if (isDelayed) {
+            this.state = State.selectedDelayed;
+          } else {
+            this.state = State.selected;
+          }
         } else {
-          this.state = State.selected;
+          if (this.task.status === TaskStatus.active) {
+            this.state = State.active;
+          } else if (isDelayed) {
+            this.state = State.delayed;
+          } else {
+            this.state = State.default;
+          }
         }
-      } else {
-        if (this.task.status === TaskStatus.active) {
-          this.state = State.active;
-        } else {
-          this.state = State.default;
-        }
-      }
-    });
+      });
   }
 
   check() {
