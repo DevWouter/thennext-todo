@@ -1,5 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskParseService } from "../services/task-parse.service";
+import { NavigationService } from "../services/navigation.service";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+
+const SEARCH_DELAY = 300;
 
 @Component({
   selector: "app-command-input",
@@ -7,12 +11,39 @@ import { TaskParseService } from "../services/task-parse.service";
   styleUrls: ["./command-input.component.scss"]
 })
 export class CommandInputComponent implements OnInit {
-  value = "";
+  private _value = "";
+  private _searchSubject = new BehaviorSubject("");
+  public get value(): string {
+    return this._value;
+  }
+  public set value(v: string) {
+    // Set it as the search value.
+    if (v.trim() === "") {
+      // Cancel search instantly.
+      this.navigationService.toTaskPage({ search: "" });
+    }
+
+    this._searchSubject.next(v);
+
+    this._value = v;
+  }
+
   constructor(
     private readonly taskCreateService: TaskParseService,
+    private readonly navigationService: NavigationService,
   ) { }
 
   ngOnInit() {
+    this._searchSubject
+      .filter(v => v !== undefined && v !== null) // Ignore invalid values
+      .map(v => v.trim())                         // Remove any space before/after
+      .filter(v => v !== "")                      // Ignore the empty case since we do that instantly
+      .distinctUntilChanged()                     // Only listen for changes.
+      .debounceTime(SEARCH_DELAY)                 // React on the first input, then start ignoring
+      .subscribe(v => {
+        console.log("Searching");
+        this.navigationService.toTaskPage({ search: v });
+      });
   }
 
   submit() {
