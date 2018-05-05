@@ -72,6 +72,9 @@ export class TaskPageContentListItemComponent implements OnInit {
   get showPlayIcon(): boolean {
     return this._task.status === TaskStatus.todo;
   }
+  get isDone(): boolean {
+    return this._task.status === TaskStatus.done;
+  }
 
   get showPauseIcon(): boolean {
     return this._task.status === TaskStatus.active;
@@ -137,12 +140,14 @@ export class TaskPageContentListItemComponent implements OnInit {
     this.task.completedOn = new Date();
     this.task.status = TaskStatus.done;
     this.taskService.update(this.task);
+    this.checked = true;
   }
 
   uncheck() {
     this.task.completedOn = null;
     this.task.status = TaskStatus.todo;
     this.taskService.update(this.task);
+    this.checked = false;
   }
 
   updateTask() {

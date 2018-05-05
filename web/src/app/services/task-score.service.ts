@@ -58,11 +58,13 @@ export class TaskScoreService {
             const r = new TaskScoreView();
             r.taskUuid = task.uuid;
             r.score = 0;
-            r.score += this.getBlockScore(task, blockedTaskUuids, blockingTaskUuids);
-            r.score += this.getTermScore(task, scoreShifts);
             r.score += this.getAgeScore(task, now);
-            r.score += this.getActiveScore(task);
-            r.score += this.getDescriptionScore(task);
+            if (task.status !== TaskStatus.done) {
+              r.score += this.getBlockScore(task, blockedTaskUuids, blockingTaskUuids);
+              r.score += this.getTermScore(task, scoreShifts);
+              r.score += this.getActiveScore(task);
+              r.score += this.getDescriptionScore(task);
+            }
 
             r.roundedScore = Math.floor(r.score * 10) / 10;
             return r;

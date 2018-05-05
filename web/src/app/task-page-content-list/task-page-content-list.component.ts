@@ -53,7 +53,7 @@ export class TaskPageContentListComponent implements OnInit {
           }
         });
 
-        return [...activeTasks, ...todoTasks, ...doneTasks];
+        return [...activeTasks, ...todoTasks, ...doneTasks.reverse()];
       })
       .combineLatest(
         this.navigationService.search,
