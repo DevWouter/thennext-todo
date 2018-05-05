@@ -1,14 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { TaskService } from "../services/task.service";
 import { TaskParseService } from "../services/task-parse.service";
 
 @Component({
-  selector: "app-task-page-footer-input",
-  templateUrl: "./task-page-footer-input.component.html",
-  styleUrls: ["./task-page-footer-input.component.scss"]
+  selector: "app-command-input",
+  templateUrl: "./command-input.component.html",
+  styleUrls: ["./command-input.component.scss"]
 })
-export class TaskPageFooterInputComponent implements OnInit {
-
+export class CommandInputComponent implements OnInit {
   value = "";
   constructor(
     private readonly taskCreateService: TaskParseService,

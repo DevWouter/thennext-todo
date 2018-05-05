@@ -1,9 +1,29 @@
-<p>
-  homepage works!
-</p>
-
-<h2>Create Account</h2>
-<app-create-account-form></app-create-account-form>
-
-<h2>Login</h2>
-<app-login-form (success)="goToTaskPage()"></app-login-form>
+<div class='header'>
+  <div class='__container'>
+    <div class='item logo'></div>
+    <div class='item'>ThenNext</div>
+    <div class='item'>Assistent</div>
+    <div class='item'>Premium</div>
+    <div class='divider'></div>
+    <div class='item'>Sign up</div>
+  </div>
+</div>
+<div class="row--backgroundcolor">
+  <div class='row'>
+    <div class='column'>
+      <div class='banner-title'>ThenNext</div>
+      <div class='banner-sub-title'>... {{exampletask | async}}</div>
+      <div class='blurb'>
+        If every day you get more tasks then you can finish, it becomes hard to keep track of what is next. ThenNext makes it easy
+        for you to stay on top what is urgent and what is not.
+        <br>
+        <br> You should keep the focus on the now.
+        <br>ThenNext will handle the rest.
+      </div>
+      <div class='actie-knop'>Start now</div>
+    </div>
+    <div class='column'>
+      <img src="/assets/jake-hills-389-unsplash-small.jpg">
+    </div>
+  </div>
+</div>

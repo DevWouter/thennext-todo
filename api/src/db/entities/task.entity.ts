@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne
 import { TaskListEntity } from "./task-list.entity";
 import { ChecklistItemEntity } from "./checklist-item.entity";
 import { TaskRelationEntity } from "./task-relation.entity";
+import { TaskTimeLapEntity } from "./task-time-lap.entity";
 
 export enum TaskStatus {
     todo = "todo",
@@ -33,7 +34,7 @@ export class TaskEntity {
     @Column("datetime", { nullable: true })
     sleepUntil: Date;
 
-    @Column({default: 1})
+    @Column({ default: 1 })
     nextChecklistOrder: number;
 
     @Column("datetime")
@@ -53,4 +54,7 @@ export class TaskEntity {
 
     @OneToMany(type => TaskRelationEntity, relation => relation.targetTask)
     targetInRelations: TaskRelationEntity[];
+
+    @OneToMany(type => TaskTimeLapEntity, timeLap => timeLap.task)
+    timeLaps: TaskTimeLapEntity[];
 }

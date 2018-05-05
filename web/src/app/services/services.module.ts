@@ -7,7 +7,9 @@ import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { ContextService } from "./context.service";
 import { NavigationService } from "./navigation.service";
+import { RelationViewService } from "./relation-view.service";
 import { ScoreShiftService } from "./score-shift.service";
+import { SearchService } from "./search.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
 import { TaskEventService } from "./task-event.service";
@@ -16,9 +18,8 @@ import { TaskParseService } from "./task-parse.service";
 import { TaskRelationService } from "./task-relation.service";
 import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
+import { TaskTimeLapService } from "./task-time-lap.service";
 import { TaskViewService } from "./task-view.service";
-import { SearchService } from "./search.service";
-import { RelationViewService } from "./relation-view.service";
 
 @NgModule({
   imports: [
@@ -32,7 +33,9 @@ import { RelationViewService } from "./relation-view.service";
     ChecklistItemService,
     ContextService,
     NavigationService,
+    RelationViewService,
     ScoreShiftService,
+    SearchService,
     SessionService,
     StorageService,
     TaskEventService,
@@ -41,9 +44,8 @@ import { RelationViewService } from "./relation-view.service";
     TaskRelationService,
     TaskScoreService,
     TaskService,
+    TaskTimeLapService,
     TaskViewService,
-    SearchService,
-    RelationViewService,
   ]
 })
 export class ServicesModule {

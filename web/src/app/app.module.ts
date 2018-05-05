@@ -29,7 +29,6 @@ import { TaskPageContentPaneChecklistComponent } from "./task-page-content-pane-
 import { TaskPageContentPaneRelationsComponent } from "./task-page-content-pane-relations/task-page-content-pane-relations.component";
 import { TaskPageContentPaneControlComponent } from "./task-page-content-pane-control/task-page-content-pane-control.component";
 import { TaskPageHeaderFilterMenuComponent } from "./task-page-header-filter-menu/task-page-header-filter-menu.component";
-import { TaskPageFooterInputComponent } from "./task-page-footer-input/task-page-footer-input.component";
 import { SettingsPageComponent } from "./settings-page/settings-page.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
 import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-tasklist-selector/task-page-header-tasklist-selector.component";
@@ -39,6 +38,7 @@ import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/set
 import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
 import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/settings-page-scoreshifts.component";
 import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-page-header-search.component";
+import { CommandInputComponent } from "./command-input/command-input.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +59,6 @@ import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-pa
     TaskPageContentPaneRelationsComponent,
     TaskPageContentPaneControlComponent,
     TaskPageHeaderFilterMenuComponent,
-    TaskPageFooterInputComponent,
     SettingsPageComponent,
     SettingsPageTasklistsComponent,
     TaskPageHeaderTasklistSelectorComponent,
@@ -69,6 +68,7 @@ import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-pa
     SettingsPageTabTasklistsComponent,
     SettingsPageScoreshiftsComponent,
     TaskPageHeaderSearchComponent,
+    CommandInputComponent,
   ],
   imports: [
     AnimationModule,

@@ -7,6 +7,7 @@ import { SessionService } from "./services/session-service";
 import { TaskService } from "./services/task-service";
 import { TaskListService } from "./services/task-list-service";
 import { ChecklistItemService } from "./services/checklist-item-service";
+import { TaskTimeLapService } from "./services/task-time-lap-service";
 
 decorate(injectable(), Connection);
 decorate(unmanaged(), Connection, 1);
@@ -25,5 +26,6 @@ container.bind<SessionService>(SessionService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
 container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
+container.bind<TaskTimeLapService>(TaskTimeLapService).toSelf();
 
 export default container;
