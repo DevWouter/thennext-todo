@@ -6,5 +6,7 @@
 </div>
 
 <div class="task-list">
-  <app-task-page-content-list-item *ngFor="let task of tasks" [task]="task"></app-task-page-content-list-item>
+  <app-task-page-content-list-item *ngFor="let task of activeTasks" [task]="task"></app-task-page-content-list-item>
+  <div class="spacer" *ngIf="activeTasks.length != 0"></div>
+  <app-task-page-content-list-item *ngFor="let task of nonActiveTasks" [task]="task"></app-task-page-content-list-item>
 </div>

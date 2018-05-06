@@ -17,6 +17,8 @@ import { Observable } from "rxjs/Observable";
 })
 export class TaskPageContentListComponent implements OnInit {
   public tasks: Task[] = [];
+  public activeTasks: Task[] = [];
+  public nonActiveTasks: Task[] = [];
 
   constructor(
     private readonly taskService: TaskService,
@@ -100,11 +102,14 @@ export class TaskPageContentListComponent implements OnInit {
             }
           }
 
-
           return tasks;
         }
       )
-      .subscribe(tasks => this.tasks = tasks);
+      .subscribe(tasks => {
+        this.tasks = tasks;
+        this.activeTasks = tasks.filter(x => x.status === TaskStatus.active);
+        this.nonActiveTasks = tasks.filter(x => x.status !== TaskStatus.active);
+      });
   }
 
 }
