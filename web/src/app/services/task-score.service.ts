@@ -21,6 +21,7 @@ export class TaskScoreView {
 
 @Injectable()
 export class TaskScoreService {
+
   // When set, this will cause the score to be calculated
   private _timeSubject = new BehaviorSubject<Date>(new Date());
 
@@ -58,12 +59,14 @@ export class TaskScoreService {
             const r = new TaskScoreView();
             r.taskUuid = task.uuid;
             r.score = 0;
-            r.score += this.getAgeScore(task, now);
             if (task.status !== TaskStatus.done) {
               r.score += this.getBlockScore(task, blockedTaskUuids, blockingTaskUuids);
               r.score += this.getTermScore(task, scoreShifts);
               r.score += this.getActiveScore(task);
               r.score += this.getDescriptionScore(task);
+              r.score += this.getAgeScore(task, now);
+            } else {
+              r.score += this.getCompletionScore(task, now);
             }
 
             r.roundedScore = Math.floor(r.score * 10) / 10;
@@ -119,6 +122,12 @@ export class TaskScoreService {
     const createdOn = DateTime.fromJSDate(task.createdOn);
     const age_created = now.diff(createdOn).as("days");
     return age_created * 2;
+  }
+
+  private getCompletionScore(task: Task, now: DateTime): any {
+    const completedOn = DateTime.fromJSDate(task.completedOn);
+    const age_completed = now.diff(completedOn).as("days");
+    return age_completed * 2;
   }
 
   private getActiveScore(task: Task): number {
