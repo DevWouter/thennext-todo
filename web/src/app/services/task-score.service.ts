@@ -104,11 +104,11 @@ export class TaskScoreService {
 
   private getBlockScore(task: Task, blockedTaskUuids: string[], blockingTaskUuids: string[]): Modifier[] {
     if (blockedTaskUuids.includes(task.uuid)) {
-      return [{ description: "Blocked by another task", score: -5 }];
+      return [{ description: "Blocked by another task", score: -2.5 }];
     }
 
     if (blockingTaskUuids.includes(task.uuid)) {
-      return [{ description: "Required by another task", score: 8 }];
+      return [{ description: "Required by another task", score: 4 }];
     }
 
     return [];
@@ -129,25 +129,25 @@ export class TaskScoreService {
   private getAgeScore(task: Task, now: DateTime): Modifier[] {
     const createdOn = DateTime.fromJSDate(task.createdOn);
     const age_created = now.diff(createdOn).as("days");
-    return [{ description: "Days since creation times 2", score: age_created * 2 }];
+    return [{ description: "Days since creation", score: age_created }];
   }
 
   private getCompletionScore(task: Task, now: DateTime): Modifier[] {
     const completedOn = DateTime.fromJSDate(task.completedOn);
     const age_completed = now.diff(completedOn).as("days");
-    return [{ description: "Days since completion", score: age_completed * 2 }];
+    return [{ description: "Days since completion", score: age_completed }];
   }
 
   private getActiveScore(task: Task): Modifier[] {
     if (task.status === TaskStatus.active) {
-      return [{ description: "Is active", score: 4 }];
+      return [{ description: "Is active", score: 2 }];
     }
     return [];
   }
 
   private getDescriptionScore(task: Task): Modifier[] {
     if ((task.description || "").trim().length > 0) {
-      return [{ description: "Contains description", score: 1 }];
+      return [{ description: "Contains description", score: 0.5 }];
     }
 
     return [];
