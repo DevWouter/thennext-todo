@@ -13,10 +13,16 @@ import { TaskRelation } from "./models/task-relation.dto";
 import { TaskRelationService } from "./task-relation.service";
 import { RelationViewService } from "./relation-view.service";
 
+export interface Modifier {
+  description: string;
+  score: number;
+}
+
 export class TaskScoreView {
   taskUuid: string;     // The uuid of the task.
   score: number;        // The exact score of the task (used for sorting).
   roundedScore: number; // The rounded score of the task (which is used for invalidating the list)
+  modifiers: Modifier[] = [];
 }
 
 @Injectable()
@@ -58,18 +64,19 @@ export class TaskScoreService {
           return tasks.map(task => {
             const r = new TaskScoreView();
             r.taskUuid = task.uuid;
-            r.score = 0;
             if (task.status !== TaskStatus.done) {
-              r.score += this.getBlockScore(task, blockedTaskUuids, blockingTaskUuids);
-              r.score += this.getTermScore(task, scoreShifts);
-              r.score += this.getActiveScore(task);
-              r.score += this.getDescriptionScore(task);
-              r.score += this.getAgeScore(task, now);
+              r.modifiers.push(...this.getBlockScore(task, blockedTaskUuids, blockingTaskUuids));
+              r.modifiers.push(...this.getTermScore(task, scoreShifts));
+              r.modifiers.push(...this.getActiveScore(task));
+              r.modifiers.push(...this.getDescriptionScore(task));
+              r.modifiers.push(...this.getAgeScore(task, now));
             } else {
-              r.score += this.getCompletionScore(task, now);
+              r.modifiers.push(...this.getCompletionScore(task, now));
             }
 
+            r.score = r.modifiers.reduce((pv, cv) => pv + cv.score, 0);
             r.roundedScore = Math.floor(r.score * 10) / 10;
+
             return r;
           });
         })
@@ -95,47 +102,55 @@ export class TaskScoreService {
       });
   }
 
-  private getBlockScore(task: Task, blockedTaskUuids: string[], blockingTaskUuids: string[]): number {
+  private getBlockScore(task: Task, blockedTaskUuids: string[], blockingTaskUuids: string[]): Modifier[] {
     if (blockedTaskUuids.includes(task.uuid)) {
-      return -5;
+      return [{ description: "Blocked by another task", score: -5 }];
     }
 
     if (blockingTaskUuids.includes(task.uuid)) {
-      return 8;
+      return [{ description: "Required by another task", score: 8 }];
     }
 
-    return 0;
+    return [];
   }
 
-  private getTermScore(task: Task, scoreShifts: ScoreShift[]): number {
-    return scoreShifts.reduce((pv, cv) => {
+  private getTermScore(task: Task, scoreShifts: ScoreShift[]): Modifier[] {
+    const r: Modifier[] = [];
+    scoreShifts.forEach((cv) => {
       const hasPhrase = task.title.includes(cv.phrase);
       if (hasPhrase) {
-        return pv + cv.score;
+        r.push({ description: `Has the phrase ${cv.phrase}`, score: cv.score });
       }
+    });
 
-      return pv;
-    }, 0);
+    return r;
   }
 
-  private getAgeScore(task: Task, now: DateTime): number {
+  private getAgeScore(task: Task, now: DateTime): Modifier[] {
     const createdOn = DateTime.fromJSDate(task.createdOn);
     const age_created = now.diff(createdOn).as("days");
-    return age_created * 2;
+    return [{ description: "Days since creation times 2", score: age_created * 2 }];
   }
 
-  private getCompletionScore(task: Task, now: DateTime): any {
+  private getCompletionScore(task: Task, now: DateTime): Modifier[] {
     const completedOn = DateTime.fromJSDate(task.completedOn);
     const age_completed = now.diff(completedOn).as("days");
-    return age_completed * 2;
+    return [{ description: "Days since completion", score: age_completed * 2 }];
   }
 
-  private getActiveScore(task: Task): number {
-    return task.status === TaskStatus.active ? 4 : 0;
+  private getActiveScore(task: Task): Modifier[] {
+    if (task.status === TaskStatus.active) {
+      return [{ description: "Is active", score: 4 }];
+    }
+    return [];
   }
 
-  private getDescriptionScore(task: Task): number {
-    return (task.description || "").trim().length > 0 ? 1 : 0;
+  private getDescriptionScore(task: Task): Modifier[] {
+    if ((task.description || "").trim().length > 0) {
+      return [{ description: "Contains description", score: 1 }];
+    }
+
+    return [];
   }
 
   /**

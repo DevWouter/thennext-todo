@@ -3,7 +3,9 @@ import { ContextService } from "../services/context.service";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
 import { NavigationService } from "../services/navigation.service";
-import { TaskScoreService } from "../services/task-score.service";
+import { TaskScoreService, Modifier as TaskScoreModifier } from "../services/task-score.service";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: "app-task-page-content-pane-stats",
@@ -17,6 +19,10 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
   public get updatedOn(): Date { return this._task && this._task.updatedOn; }
   public get completedOn(): Date { return this._task && this._task.completedOn; }
   public get sleepUntil(): Date { return this._task && this._task.sleepUntil; }
+  public urgency = 0;
+  public showUrgencyBreakdown = false;
+  public modifiers: TaskScoreModifier[] = [];
+  private _scoreSubscription = Subscription.EMPTY;
 
   get showDelay(): boolean {
     return this._delayedUuids.includes(this._task.uuid);
@@ -28,7 +34,21 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
 
   @Input()
   public set task(v: Task) {
+    this._scoreSubscription.unsubscribe();
     this._task = v;
+
+    if (this._task) {
+      this._scoreSubscription = this.scoreService.taskScores
+        .map(x => x.find(y => y.taskUuid === v.uuid))
+        .subscribe(x => {
+          this.modifiers = x.modifiers;
+          this.urgency = x.roundedScore;
+        });
+    } else {
+      this.modifiers = [];
+      this.urgency = 0;
+      this._scoreSubscription = Subscription.EMPTY;
+    }
   }
 
   constructor(
@@ -48,5 +68,8 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
 
   wakeup() {
     this.taskService.wakeup(this._task);
+  }
+  toggleUrgencyBreakdown() {
+    this.showUrgencyBreakdown = !this.showUrgencyBreakdown;
   }
 }

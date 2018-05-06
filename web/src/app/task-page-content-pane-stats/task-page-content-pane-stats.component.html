@@ -2,8 +2,26 @@
   <div>Created on: {{createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
   <div>Updated on: {{updatedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
   <div *ngIf="showCompleted">Completed on: {{completedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
-  <div *ngIf="showDelay">Delay until: {{sleepUntil | date:'yyyy-MM-dd HH:mm:ss'}} <button (click)="wakeup()"><i class="fas fa-trash"></i></button></div>
+  <div *ngIf="showDelay">Delay until: {{sleepUntil | date:'yyyy-MM-dd HH:mm:ss'}}
+    <button (click)="wakeup()">
+      <i class="fas fa-trash"></i>
+    </button>
+  </div>
+  <div>
+      <i class="fas fa-fw" [class.fa-chevron-right]="!showUrgencyBreakdown" [class.fa-chevron-down]="showUrgencyBreakdown" (click)="toggleUrgencyBreakdown()"></i>
+      Urgency: {{urgency}}
+  </div>
+  <div *ngIf="showUrgencyBreakdown">
+    <table style="width: 100%">
+      <tr *ngFor="let x of modifiers">
+        <td>- {{x.description}}</td>
+        <td style="text-align: right">{{x.score| number:'1.2-2'}}</td>
+      </tr>
+    </table>
+  </div>
 </div>
 <div class="buttons">
-  <button class="btn-delete" (click)="delete()"><i class="fas fa-trash"></i></button>
+  <button class="btn-delete" (click)="delete()">
+    <i class="fas fa-trash"></i>
+  </button>
 </div>
