@@ -41,8 +41,13 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
       this._scoreSubscription = this.scoreService.taskScores
         .map(x => x.find(y => y.taskUuid === v.uuid))
         .subscribe(x => {
-          this.modifiers = x.modifiers;
-          this.urgency = x.roundedScore;
+          if (x) {
+            this.modifiers = x.modifiers;
+            this.urgency = x.roundedScore;
+          } else {
+            this.modifiers = [];
+            this.urgency = 0;
+          }
         });
     } else {
       this.modifiers = [];
