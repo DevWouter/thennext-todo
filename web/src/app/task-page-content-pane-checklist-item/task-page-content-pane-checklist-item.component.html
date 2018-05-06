@@ -1,6 +1,8 @@
-<div class="status" (click)="toggle()">
-  <i class="far fa-check-circle" *ngIf="checked"></i>
-  <i class="far fa-circle" *ngIf="!checked"></i>
+<div class="status" [class.checked]="checked" [class.unchecked]="!checked" (click)="toggle()">
+  <span class="fa-stack">
+    <i class="far fa-circle fa-stack-2x"></i>
+    <i class="fas fa-check fa-stack-1x checkbox__check"></i>
+  </span>
 </div>
 <div class="text">
   <textarea rows="1" appTextareaResize="" placeholder="What should we not forget?" [(ngModel)]="title" (blur)="updateTitle()"></textarea>

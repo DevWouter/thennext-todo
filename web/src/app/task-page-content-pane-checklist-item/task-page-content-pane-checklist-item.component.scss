@@ -8,6 +8,20 @@
     cursor: pointer;
     margin-right: 8px;
     width: 16px;
+    font-size: 9px;
+    &.unchecked {
+        .checkbox__check {
+            opacity: 0;
+            &:hover {
+                opacity: 0.4;
+            }
+        }
+    }
+    &.checked {
+        .checkbox__check {
+            opacity: 1;
+        }
+    }
 }
 
 .text {
