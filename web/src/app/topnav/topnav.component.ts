@@ -4,11 +4,11 @@ import { Router } from "@angular/router";
 import { SessionService } from "../services/session.service";
 
 @Component({
-  selector: "app-task-page-header-filter-menu",
-  templateUrl: "./task-page-header-filter-menu.component.html",
-  styleUrls: ["./task-page-header-filter-menu.component.scss"]
+  selector: "app-topnav",
+  templateUrl: "./topnav.component.html",
+  styleUrls: ["./topnav.component.scss"]
 })
-export class TaskPageHeaderFilterMenuComponent implements OnInit {
+export class TopnavComponent implements OnInit {
   private _showCompleted: boolean;
   public get showCompleted(): boolean { return this._showCompleted; }
   public set showCompleted(v: boolean) { this.navigation.toTaskPage({ showCompleted: v }); }
@@ -25,6 +25,7 @@ export class TaskPageHeaderFilterMenuComponent implements OnInit {
   public get onlyPositive(): boolean { return this._onlyPositive; }
   public set onlyPositive(v: boolean) { this.navigation.toTaskPage({ onlyPositive: v }); }
 
+  expand = false;
   constructor(
     private readonly navigation: NavigationService,
     private readonly router: Router,
@@ -38,6 +39,13 @@ export class TaskPageHeaderFilterMenuComponent implements OnInit {
     this.navigation.onlyUnblocked.subscribe(x => { this._onlyUnblocked = x; });
   }
 
+  close() {
+    this.expand = false;
+  }
+
+  toggle() {
+    this.expand = !this.expand;
+  }
   goToSettings() {
     this.router.navigate(["/settings"]);
   }

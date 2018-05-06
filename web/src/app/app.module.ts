@@ -19,7 +19,6 @@ import { TaskPageContentComponent } from "./task-page-content/task-page-content.
 import { TaskPageContentDividerComponent } from "./task-page-content-divider/task-page-content-divider.component";
 import { TaskPageContentListComponent } from "./task-page-content-list/task-page-content-list.component";
 import { TaskPageContentPaneComponent } from "./task-page-content-pane/task-page-content-pane.component";
-import { TaskPageHeaderComponent } from "./task-page-header/task-page-header.component";
 import { TaskPageContentListItemComponent } from "./task-page-content-list-item/task-page-content-list-item.component";
 import { TaskPageContentPaneTitleComponent } from "./task-page-content-pane-title/task-page-content-pane-title.component";
 import { TaskPageContentPaneStatsComponent } from "./task-page-content-pane-stats/task-page-content-pane-stats.component";
@@ -27,7 +26,6 @@ import { TaskPageContentPaneDescriptionComponent } from "./task-page-content-pan
 import { TaskPageContentPaneChecklistComponent } from "./task-page-content-pane-checklist/task-page-content-pane-checklist.component";
 import { TaskPageContentPaneRelationsComponent } from "./task-page-content-pane-relations/task-page-content-pane-relations.component";
 import { TaskPageContentPaneControlComponent } from "./task-page-content-pane-control/task-page-content-pane-control.component";
-import { TaskPageHeaderFilterMenuComponent } from "./task-page-header-filter-menu/task-page-header-filter-menu.component";
 import { SettingsPageComponent } from "./settings-page/settings-page.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
 import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-tasklist-selector/task-page-header-tasklist-selector.component";
@@ -36,10 +34,10 @@ import { SettingsPageHeaderComponent } from "./settings-page-header/settings-pag
 import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
 import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
 import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/settings-page-scoreshifts.component";
-import { TaskPageHeaderSearchComponent } from "./task-page-header-search/task-page-header-search.component";
 import { CommandInputComponent } from "./command-input/command-input.component";
 import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
+import { TopnavComponent } from "./topnav/topnav.component";
 
 @NgModule({
   declarations: [
@@ -50,7 +48,6 @@ import { LoginPageComponent } from "./login-page/login-page.component";
     TaskPageContentDividerComponent,
     TaskPageContentListComponent,
     TaskPageContentPaneComponent,
-    TaskPageHeaderComponent,
     TaskPageContentListItemComponent,
     TaskPageContentPaneTitleComponent,
     TaskPageContentPaneStatsComponent,
@@ -58,7 +55,6 @@ import { LoginPageComponent } from "./login-page/login-page.component";
     TaskPageContentPaneChecklistComponent,
     TaskPageContentPaneRelationsComponent,
     TaskPageContentPaneControlComponent,
-    TaskPageHeaderFilterMenuComponent,
     SettingsPageComponent,
     SettingsPageTasklistsComponent,
     TaskPageHeaderTasklistSelectorComponent,
@@ -67,10 +63,10 @@ import { LoginPageComponent } from "./login-page/login-page.component";
     SettingsPageTabScoringComponent,
     SettingsPageTabTasklistsComponent,
     SettingsPageScoreshiftsComponent,
-    TaskPageHeaderSearchComponent,
     CommandInputComponent,
     CreateAccountPageComponent,
     LoginPageComponent,
+    TopnavComponent,
   ],
   imports: [
     AnimationModule,

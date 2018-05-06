@@ -9,7 +9,6 @@
   min-height: 36px;
   display: flex;
   padding: 8px;
-  border-left: 3px solid #71af8c;
   border-bottom: 3px solid #71af8c;
 }
 
@@ -19,7 +18,7 @@
 }
 
 .add-8px-right-margin {
-  margin-right: calc(8px - 3px);
+  margin-right: 8px;
 }
 
 .task-list {
