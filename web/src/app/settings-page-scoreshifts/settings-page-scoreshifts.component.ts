@@ -17,7 +17,9 @@ export class SettingsPageScoreshiftsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.scoreShiftService.entries.subscribe(x => this.items = x);
+    this.scoreShiftService.entries
+      .map(x => x.sort((a, b) => b.score - a.score))
+      .subscribe(x => this.items = x);
   }
 
   delete(item: ScoreShift) {
