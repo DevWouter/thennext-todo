@@ -1,9 +1,15 @@
 <div class="container" [@taskState]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
-  <div *ngIf="checked == false" class="checkbox" (click)="check()">
-    <i class="far fa-square"></i>
+  <div *ngIf="checked == false" class="checkbox unchecked" (click)="check()">
+    <span class="fa-stack">
+      <i class="far fa-circle fa-stack-2x"></i>
+      <i class="fas fa-check fa-stack-1x checkbox__check"></i>
+    </span>
   </div>
-  <div *ngIf="checked == true" class="checkbox" (click)="uncheck()">
-    <i class="far fa-check-square"></i>
+  <div *ngIf="checked == true" class="checkbox checked" (click)="uncheck()">
+    <span class="fa-stack">
+      <i class="far fa-circle fa-stack-2x"></i>
+      <i class="fas fa-check fa-stack-1x checkbox__check"></i>
+    </span>
   </div>
   <div class="title">{{title}}</div>
   <div class="buttons">

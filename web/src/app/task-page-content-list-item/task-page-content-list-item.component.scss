@@ -6,8 +6,26 @@
 }
 
 .checkbox {
-    font-size: 24px;
-    margin: auto;
+  font-size: 12px; // Should be halve the size due to stacking.
+  margin: auto;
+  cursor: pointer;
+
+  &.unchecked {
+    .checkbox__check {
+      opacity: 0;
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+  &.checked {
+    .checkbox__check {
+      opacity: 1;
+      &:hover {
+        opacity: 0.3;
+      }
+    }
+  }
 }
 
 .title {
