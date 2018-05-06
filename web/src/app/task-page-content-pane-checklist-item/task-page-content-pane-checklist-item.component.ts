@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, HostListener, Host } fr
 import { ChecklistItem } from "../services/models/checklist-item.dto";
 import { ChecklistItemService } from "../services/checklist-item.service";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Subject } from "rxjs/Subject";
 
 @Component({
   selector: "app-task-page-content-pane-checklist-item",
@@ -9,17 +10,17 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
   styleUrls: ["./task-page-content-pane-checklist-item.component.scss"]
 })
 export class TaskPageContentPaneChecklistItemComponent implements OnInit {
-
+  private _changeSubject = new Subject();
   private _titleSubject = new BehaviorSubject<string>(undefined);
   public get title(): string { return this._item.title; }
-  public set title(v: string) { this._item.title = v; this._titleSubject.next(v); }
+  public set title(v: string) { this._item.title = v; this._titleSubject.next(v); this._changeSubject.next(); }
 
   private _checkedSubject = new BehaviorSubject<boolean>(undefined);
   public get checked(): boolean { return this._item.checked; }
-  public set checked(v: boolean) { this._item.checked = v; this._checkedSubject.next(v); }
+  public set checked(v: boolean) { this._item.checked = v; this._checkedSubject.next(v); this._changeSubject.next(); }
 
   @Output()
-  public move = new EventEmitter<"up"|"down">();
+  public move = new EventEmitter<"up" | "down">();
 
   private _item: ChecklistItem = undefined;
   @Input()
@@ -27,6 +28,7 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
     // Mark as complete.
     this._titleSubject.complete();
     this._checkedSubject.complete();
+
 
     this._item = v;
 
@@ -41,6 +43,7 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
         v.checked = checked;
         return v;
       })
+      .combineLatest(this._changeSubject, (x, _) => x)
       .debounceTime(350)
       .subscribe(x => {
         this.checklistItemService.update(x);
