@@ -26,6 +26,6 @@
       <i class="fas fa-pause fa-fw"></i>
     </div>
   </div>
-  <div *ngIf="!isDone" class="score">{{score | number:'1.1-1'}}</div>
-  <div *ngIf="isDone" class="score done">({{score | number:'1.1-1'}})</div>
+  <div class="score" [class.done]="isDone">{{score | number:'1.1-1'}}
+  </div>
 </div>
