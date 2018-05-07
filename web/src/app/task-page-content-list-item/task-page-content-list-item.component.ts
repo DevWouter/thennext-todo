@@ -7,14 +7,17 @@ import { NavigationService } from "../services/navigation.service";
 
 import { DateTime, Interval, Duration } from "luxon";
 import { TaskScoreService } from "../services/task-score.service";
+import { RelationViewService } from "../services/relation-view.service";
 
 enum State {
   default = "default",
   active = "active",
   delayed = "delayed",
+  blocked = "blocked",
   selected = "selected",
   new = "new",
   selectedActive = "selectedActive",
+  selectedBlocked = "selectedBlocked",
   selectedDelayed = "selectedDelayed"
 }
 
@@ -40,6 +43,10 @@ enum State {
         fontStyle: "italic",
         color: "grey",
       })),
+      state(State.blocked, style({
+        fontStyle: "italic",
+        // color: "grey",
+      })),
       state(State.selectedActive, style({
         fontWeight: "bold",
         backgroundColor: "#e1f2fe",
@@ -49,12 +56,18 @@ enum State {
         fontStyle: "italic",
         backgroundColor: "#e1f2fe",
       })),
+      state(State.selectedBlocked, style({
+        // color: "grey",
+        fontStyle: "italic",
+        backgroundColor: "#e1f2fe",
+      })),
       transition(`${State.new} => ${State.default}`, animate("1000ms ease-in")),
     ])
   ]
 })
 export class TaskPageContentListItemComponent implements OnInit {
   private _delayedUuids: string[] = [];
+  private _blockedUuids: string[] = [];
   state = State.default;
   score = 0;
   checked = false;
@@ -76,6 +89,10 @@ export class TaskPageContentListItemComponent implements OnInit {
     return this._task.status === TaskStatus.done;
   }
 
+  get isBlocked(): boolean {
+    return this._blockedUuids.includes(this._task.uuid);
+  }
+
   get showPauseIcon(): boolean {
     return this._task.status === TaskStatus.active;
   }
@@ -92,6 +109,7 @@ export class TaskPageContentListItemComponent implements OnInit {
   constructor(
     private navigation: NavigationService,
     private taskService: TaskService,
+    private relationViewService: RelationViewService,
     private contextService: ContextService,
     private taskScoreService: TaskScoreService,
   ) { }
@@ -107,18 +125,26 @@ export class TaskPageContentListItemComponent implements OnInit {
     });
 
     this.taskScoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
+    this.relationViewService.blockedTaskUuids.subscribe(x => this._blockedUuids = x);
 
     this.navigation.taskUuid
-      .combineLatest(this.taskScoreService.delayedTaskUuids, (taskUuid, delayedTaskUuids) => ({
-        taskUuid,
-        delayedTaskUuids,
-      }))
+      .combineLatest(
+        this.taskScoreService.delayedTaskUuids,
+        this.relationViewService.blockedTaskUuids,
+        (taskUuid, delayedTaskUuids, blockedTaskUuids) => ({
+          taskUuid,
+          delayedTaskUuids,
+          blockedTaskUuids,
+        }))
       .subscribe(combo => {
         const taskUuid = combo.taskUuid;
         const isDelayed = combo.delayedTaskUuids.includes(this.task.uuid);
+        const isBlocked = combo.blockedTaskUuids.includes(this.task.uuid);
         if (this.task.uuid === taskUuid) {
           if (this.task.status === TaskStatus.active) {
             this.state = State.selectedActive;
+          } else if (isBlocked) {
+            this.state = State.selectedBlocked;
           } else if (isDelayed) {
             this.state = State.selectedDelayed;
           } else {
@@ -127,6 +153,8 @@ export class TaskPageContentListItemComponent implements OnInit {
         } else {
           if (this.task.status === TaskStatus.active) {
             this.state = State.active;
+          } else if (isBlocked) {
+            this.state = State.blocked;
           } else if (isDelayed) {
             this.state = State.delayed;
           } else {
@@ -137,6 +165,13 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   check() {
+    if (this.isBlocked) {
+      if (!confirm("Do you want to mark the task as done?\n\n" +
+        "We ask this since another task that should have been completed before this one hasn't been completed.")) {
+        return;
+      }
+    }
+
     this.task.completedOn = new Date();
     this.task.status = TaskStatus.done;
     this.taskService.update(this.task);

@@ -9,6 +9,9 @@
   font-size: 12px; // Should be halve the size due to stacking.
   margin: auto;
   cursor: pointer;
+  .checkbox__locked {
+    color: #666;
+  }
 
   &.unchecked {
     .checkbox__check {

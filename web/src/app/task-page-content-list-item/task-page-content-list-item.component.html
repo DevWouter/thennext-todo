@@ -3,6 +3,7 @@
     <span class="fa-stack">
       <i class="far fa-circle fa-stack-2x"></i>
       <i class="fas fa-check fa-stack-1x checkbox__check"></i>
+      <i class="fas fa-lock fa-stack-1x checkbox__locked" *ngIf="isBlocked"></i>
     </span>
   </div>
   <div *ngIf="checked == true" class="checkbox checked" (click)="uncheck()">
