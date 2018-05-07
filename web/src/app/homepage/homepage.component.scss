@@ -28,11 +28,12 @@ $color-complement-4: #532300;
 $primary-green: #71af8c;
 $primary-color: #c2e1e6;
 $darker-green: darken($primary-green, 20);
+$footer-height: 60px;
+$header-height: 48px;
 .row--backgroundcolor {
     background-color: lighten($color-secondary-2-1, 10);
     background-color: lighten($color-primary-1, 10);
-    background-color: lighten($primary-green, 35);
-    // background-color: $color-complement-1;
+    background-color: lighten($primary-green, 35); // background-color: $color-complement-1;
     // color: $color-primary-0;
 }
 
@@ -100,4 +101,19 @@ $darker-green: darken($primary-green, 20);
 
 .blurb {
     margin-bottom: 8px;
+}
+
+.content {
+    // has a min-height\
+    min-height: calc(100vh - (#{$footer-height} + #{$header-height}));
+}
+
+.footer {
+    height: $footer-height;
+    background-color: #00342E;
+    color: white;
+    .__container {
+      line-height: 48px;
+        @extend .x_container;
+    }
 }
