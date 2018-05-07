@@ -10,16 +10,27 @@
     <br>"{{taskname}}"</div>
 </div>
 <div *ngIf="!showDropArea">
-  <i *ngIf="showExplain">Drag a task of list and drop it here to determine if should be before the current or after the current task</i>
+  <div *ngIf="showExplain">
+    <div class="title">Order of tasks</div>
+    <i>Drag a task from the list list and drop it here so that we know if the task needs to be completed before or can only
+      be completed after this task.</i>
+  </div>
   <div *ngIf="!showExplain">
-    <b>Before:</b>
+    <div class="title">Before this task:</div>
+    <div *ngIf="showExplainBefore">
+      <i>No tasks are blocking this task</i>
+    </div>
     <div *ngFor="let item of tasksBefore" [class.done]="item.isDone">
-      <i (click)="delete(item)" class="fa fa-trash"></i>
+      <i (click)="delete(item)" class="fa fa-minus-circle fa-fw clickable"></i>
       <span (click)="goTo(item)">{{item.taskTitle}}</span>
     </div>
-    <b>After:</b>
+    <div class="spacer"></div>
+    <div class="title">After this task:</div>
+    <div *ngIf="showExplainAfter">
+      <i>No tasks are being blocked by this task</i>
+    </div>
     <div *ngFor="let item of tasksAfter" [class.done]="item.isDone">
-      <i (click)="delete(item)" class="fa fa-trash"></i>
+      <i (click)="delete(item)" class="fa fa-minus-circle fa-fw clickable"></i>
       <span (click)="goTo(item)">{{item.taskTitle}}</span>
     </div>
   </div>

@@ -33,6 +33,8 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
   showDropArea = false;
   taskDragging: string = undefined;
   showExplain = false;
+  showExplainBefore = false;
+  showExplainAfter = false;
 
   beforeAllow = true;
   afterAllow = true;
@@ -102,6 +104,8 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
       .subscribe(x => {
         this.tasksBefore = x.tasksBefore;
         this.tasksAfter = x.tasksAfter;
+        this.showExplainBefore = x.tasksBefore.length === 0;
+        this.showExplainAfter = x.tasksAfter.length === 0;
         this.showExplain = x.tasksAfter.length === 0 && x.tasksBefore.length === 0;
       });
   }
