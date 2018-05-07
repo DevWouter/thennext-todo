@@ -29,3 +29,12 @@
 .spacer {
   border-bottom: 3px solid #71af8c;
 }
+
+.empty-message{
+  margin: auto;
+  text-align: center;
+  .content {
+    margin-bottom: 90px;
+    padding: 16px;
+  }
+}

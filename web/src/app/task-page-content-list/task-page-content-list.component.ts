@@ -20,6 +20,9 @@ export class TaskPageContentListComponent implements OnInit {
   public activeTasks: Task[] = [];
   public nonActiveTasks: Task[] = [];
 
+  public showEmptyListMessage = false;
+  public showTasks = true;
+
   constructor(
     private readonly taskService: TaskService,
     private readonly contextService: ContextService,
@@ -106,6 +109,9 @@ export class TaskPageContentListComponent implements OnInit {
         }
       )
       .subscribe(tasks => {
+        this.showEmptyListMessage = tasks.length <= 0;
+        this.showTasks = tasks.length > 0;
+
         this.tasks = tasks;
         this.activeTasks = tasks.filter(x => x.status === TaskStatus.active);
         this.nonActiveTasks = tasks.filter(x => x.status !== TaskStatus.active);
