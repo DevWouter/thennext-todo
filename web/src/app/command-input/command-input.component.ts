@@ -34,19 +34,20 @@ export class CommandInputComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // TODO: Remove WORKAROUND for the skip and first.
     this._searchSubject
+      .skip(1)                                    // Skip the first one. <<-- WORKAROUND
       .filter(v => v !== undefined && v !== null) // Ignore invalid values
       .map(v => v.trim())                         // Remove any space before/after
       .distinctUntilChanged()                     // Only listen for changes.
       .debounceTime(SEARCH_DELAY)                 // React on the first input, then start ignoring
       .subscribe(v => {
-        console.log("Searching");
         this.navigationService.toTaskPage({ search: v });
       });
 
     // Only restore search on the first load.
     this.navigationService.search
-      .first()
+      .first()                                    // <<-- WORKAROUND
       .subscribe(x => this._value = x);
   }
 

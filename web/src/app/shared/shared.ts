@@ -13,4 +13,5 @@ import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/combineLatest";
 import "rxjs/add/operator/first";
+import "rxjs/add/operator/skip";
 import "rxjs/add/operator/timeInterval";
