@@ -43,7 +43,7 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
         .subscribe(x => {
           if (x) {
             this.modifiers = x.modifiers;
-            this.urgency = x.roundedScore;
+            this.urgency = Math.round(x.score * 10) / 10;
           } else {
             this.modifiers = [];
             this.urgency = 0;

@@ -75,7 +75,7 @@ export class TaskScoreService {
             }
 
             r.score = r.modifiers.reduce((pv, cv) => pv + cv.score, 0);
-            r.roundedScore = Math.floor(r.score * 10) / 10;
+            r.roundedScore = Math.round(r.score * 10) / 10;
 
             return r;
           });
