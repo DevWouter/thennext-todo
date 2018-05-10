@@ -1,4 +1,4 @@
-<div class="container" [@taskState]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
+<div class="container" [ngClass]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
   <div *ngIf="checked == false" class="checkbox unchecked" (click)="check()">
     <span class="fa-stack">
       <i class="far fa-circle fa-stack-2x"></i>

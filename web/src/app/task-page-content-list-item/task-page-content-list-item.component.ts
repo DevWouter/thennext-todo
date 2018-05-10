@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, HostListener } from "@angular/core";
-import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
 import { ContextService } from "../services/context.service";
@@ -9,68 +8,36 @@ import { DateTime, Interval, Duration } from "luxon";
 import { TaskScoreService } from "../services/task-score.service";
 import { RelationViewService } from "../services/relation-view.service";
 
-enum State {
-  default = "default",
-  active = "active",
-  delayed = "delayed",
-  blocked = "blocked",
-  selected = "selected",
-  new = "new",
-  selectedActive = "selectedActive",
-  selectedBlocked = "selectedBlocked",
-  selectedDelayed = "selectedDelayed"
+interface State {
+  active: boolean;
+  blocked: boolean;
+  selected: boolean;
+  delayed: boolean;
 }
 
 @Component({
   selector: "app-task-page-content-list-item",
   templateUrl: "./task-page-content-list-item.component.html",
   styleUrls: ["./task-page-content-list-item.component.scss"],
-  animations: [
-    trigger("taskState", [
-      state(State.default, style({
-        // backgroundColor: 'white',
-      })),
-      state(State.new, style({
-        backgroundColor: "yellow",
-      })),
-      state(State.active, style({
-        fontWeight: "bold",
-      })),
-      state(State.selected, style({
-        backgroundColor: "#e1f2fe",
-      })),
-      state(State.delayed, style({
-        fontStyle: "italic",
-        color: "grey",
-      })),
-      state(State.blocked, style({
-        fontStyle: "italic",
-        // color: "grey",
-      })),
-      state(State.selectedActive, style({
-        fontWeight: "bold",
-        backgroundColor: "#e1f2fe",
-      })),
-      state(State.selectedDelayed, style({
-        color: "grey",
-        fontStyle: "italic",
-        backgroundColor: "#e1f2fe",
-      })),
-      state(State.selectedBlocked, style({
-        // color: "grey",
-        fontStyle: "italic",
-        backgroundColor: "#e1f2fe",
-      })),
-      transition(`${State.new} => ${State.default}`, animate("1000ms ease-in")),
-    ])
-  ]
 })
 export class TaskPageContentListItemComponent implements OnInit {
   private _delayedUuids: string[] = [];
   private _blockedUuids: string[] = [];
-  state = State.default;
   score = 0;
+
+  // State is also used to determine the "class of the container"
+  state: State = <State>{
+    active: false,
+    blocked: false,
+    delayed: false,
+    selected: false,
+  };
+
   checked = false;
+  public get classes() {
+    return this.state;
+  }
+
   get title() {
     return this.task.title;
   }
@@ -138,29 +105,12 @@ export class TaskPageContentListItemComponent implements OnInit {
         }))
       .subscribe(combo => {
         const taskUuid = combo.taskUuid;
-        const isDelayed = combo.delayedTaskUuids.includes(this.task.uuid);
-        const isBlocked = combo.blockedTaskUuids.includes(this.task.uuid);
-        if (this.task.uuid === taskUuid) {
-          if (this.task.status === TaskStatus.active) {
-            this.state = State.selectedActive;
-          } else if (isBlocked) {
-            this.state = State.selectedBlocked;
-          } else if (isDelayed) {
-            this.state = State.selectedDelayed;
-          } else {
-            this.state = State.selected;
-          }
-        } else {
-          if (this.task.status === TaskStatus.active) {
-            this.state = State.active;
-          } else if (isBlocked) {
-            this.state = State.blocked;
-          } else if (isDelayed) {
-            this.state = State.delayed;
-          } else {
-            this.state = State.default;
-          }
-        }
+        this.state = <State>{
+          active: (this.task.status === TaskStatus.active),
+          blocked: combo.blockedTaskUuids.includes(this.task.uuid),
+          delayed: combo.delayedTaskUuids.includes(this.task.uuid),
+          selected: this.task.uuid === taskUuid
+        };
       });
   }
 
