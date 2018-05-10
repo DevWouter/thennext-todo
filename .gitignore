@@ -1,2 +1,5 @@
 # This is the main ignore file
 # Only add items here that needs to be ignored by all projects.
+
+# Ignore the build images by docker
+docks

@@ -1,0 +1,42 @@
+# This file is intended to be used to run the production environment.
+# IT CAN NOT BE USED TO BUILD IT.
+version: '3'
+services:
+  db:
+    image: pa_db:production
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
+    volumes:
+      - /home/core/docker_volume/lib/sql/lib:/var/lib/mysql
+      - /home/core/backups:/backups
+
+  api:
+    image: pa_api:production
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    depends_on: 
+      - db
+
+  web:
+    image: pa_web:production
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+
+  proxy:
+    image: pa_proxy:production
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/core/certs:/etc/letsencrypt
+      - /home/core/certs-data:/data/letsencrypt
+    depends_on:
+      - web
+      - api
