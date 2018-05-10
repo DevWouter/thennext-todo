@@ -1,0 +1,52 @@
+# This docker-compose file is intended to build the production environments
+version: '3'
+
+volumes:
+  node_modules:
+
+services:
+  db:
+    build:
+      context: db
+    image: pa_db
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
+    volumes:
+      - ./db/docker_volume/lib/sql/lib:/var/lib/mysql
+      - ./db/backups:/backups
+
+  proxy:
+    build: 
+      context: proxy
+      args:
+        - NGINX_CONFIG=dev
+    image: pa_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+      - web 
+
+  api:
+    build:
+      context: api
+      dockerfile: Dockerfile
+    image: pa_api
+    volumes:
+      - ./api:/server
+    depends_on:
+      - db
+    command: npm run start:watch
+
+  web:
+    build:
+      context: web
+      dockerfile: prod-build.Dockerfile
+    image: pa_web
+    volumes: 
+      - './web:/app'
+      # - node_modules:/app/node_modules # Exclude the folder and persist it between runtime sessions.
+      - /app/node_modules # Exclude the folder
