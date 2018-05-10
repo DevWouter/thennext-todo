@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "build": "tsc",
     "prestart": "npm run orm:run-migrations",
     "start:watch": "nodemon",
-    "prestart:prod": "tsc",
-    "start:prod": "node dist/main.js",
+    "start:prod": "node index.js",
     "orm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm",
     "orm:run-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:run",
     "orm:revert-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:revert",
