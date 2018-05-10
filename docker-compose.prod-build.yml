@@ -8,7 +8,7 @@ services:
   db:
     build:
       context: db
-    image: pa_db
+    image: pa_db:production
     environment:
       MYSQL_ROOT_PASSWORD: "admin"
       MYSQL_USER: "test"
@@ -24,7 +24,7 @@ services:
       dockerfile: prod-build.Dockerfile
     environment:
       NODE_ENV: "production"
-    image: pa_api
+    image: pa_api:production
     depends_on:
       - db
 
@@ -32,7 +32,7 @@ services:
     build:
       context: web
       dockerfile: prod-build.Dockerfile
-    image: pa_web
+    image: pa_web:production
     environment:
       NODE_ENV: "production"
 
@@ -41,7 +41,7 @@ services:
       context: proxy
       args:
         - NGINX_CONFIG=dev      # Change this fallow to "prod" to start using certificates
-    image: pa_proxy
+    image: pa_proxy:production
     ports:
       - "80:80"
     depends_on:
