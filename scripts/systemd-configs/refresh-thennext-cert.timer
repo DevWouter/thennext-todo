@@ -1,0 +1,10 @@
+# Location: /etc/systemd/system/refresh-thennext-cert.timer
+[Unit]
+Description=Run refresh cert daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

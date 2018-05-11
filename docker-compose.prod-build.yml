@@ -40,7 +40,7 @@ services:
     build: 
       context: proxy
       args:
-        - NGINX_CONFIG=dev      # Change this fallow to "prod" to start using certificates
+        - NGINX_CONFIG=prod      # Change this fallow to "prod" to start using certificates
     image: pa_proxy:production
     ports:
       - "80:80"

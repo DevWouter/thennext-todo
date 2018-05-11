@@ -1,0 +1,7 @@
+# Location: /etc/systemd/system/refresh-thennext-cert.service
+[Unit]
+Description=Updates the certificates
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker run --rm -v /home/core/certs:/etc/letsencrypt -v /home/core/certs-data:/data/letsencrypt certbot/certbot renew
