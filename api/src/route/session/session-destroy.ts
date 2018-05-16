@@ -13,5 +13,5 @@ export async function SessionDestroy(req: Request, res: Response): Promise<void>
     const session = await sessionService.byToken(token);
 
     await sessionService.destroy(session);
-    res.sendStatus(200);
+    res.send({});
 }
