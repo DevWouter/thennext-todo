@@ -43,4 +43,8 @@ export class TaskPageContentPaneTitleComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  reject(event: KeyboardEvent) {
+    event.preventDefault();
+  }
 }

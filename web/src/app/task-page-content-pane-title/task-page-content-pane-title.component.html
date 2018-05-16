@@ -1,2 +1,2 @@
 <!-- <input [(ngModel)]="taskTitle" placeholder="title of the task"> -->
-<textarea rows="1" [(ngModel)]="taskTitle" appTextareaResize="" placeholder="title of the task"></textarea>
+<textarea rows="1" [(ngModel)]="taskTitle" appTextareaResize="" placeholder="title of the task" (keydown.enter)="reject($event)"></textarea>
