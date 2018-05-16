@@ -24,16 +24,11 @@ export class HomepageComponent implements OnInit {
 
   public exampletask = new BehaviorSubject<string>(undefined);
 
-  constructor(
-    private navigationService: NavigationService,
-  ) { }
+  constructor() { }
 
   ngOnInit() {
     const chosen = this.exampleTasks[Math.floor(Math.random() * this.exampleTasks.length)];
     this.exampletask.next(chosen);
   }
 
-  goToTaskPage() {
-    this.navigationService.toTaskPage(<TaskPageNavigation>{});
-  }
 }
