@@ -8,6 +8,13 @@
 <div class="panel" [class.expand]="expand">
   <div class="title"> Menu</div>
 
+  <div class="item">
+    <div class="icon">
+      <i class="fas fa-fw fa-list"></i>
+    </div>
+    <app-task-page-header-tasklist-selector></app-task-page-header-tasklist-selector>
+  </div>
+
   <div class="item" (click)="onlyUnblocked = !onlyUnblocked">
     <div class="icon">
       <i class="far fa-fw" [class.fa-square]="!onlyUnblocked" [class.fa-check-square]="onlyUnblocked"></i>
@@ -37,12 +44,6 @@
   </div>
 
   <div class="spacer"></div>
-  <div class="item">
-    <div class="icon">
-      <i class="fas fa-fw fa-list"></i>
-    </div>
-    <app-task-page-header-tasklist-selector></app-task-page-header-tasklist-selector>
-  </div>
 
   <div class="item" (click)="goToSettings()">
     <div class="icon">
