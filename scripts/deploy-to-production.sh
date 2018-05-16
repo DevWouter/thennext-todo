@@ -26,6 +26,9 @@ rsync -avPz ${DIR}/../docks/pa_{db,api,web,proxy}.tar core@${SERVER}:/home/core/
 rsync -avPz ${DIR}/../docker-compose.prod-run.yml core@${SERVER}:/home/core/docker-compose.yml
 
 ssh core@$SERVER "
+# Create backups
+./scripts/backup.sh
+
 # Load the images
 docker load -i /home/core/docks/pa_db.tar
 docker load -i /home/core/docks/pa_api.tar
