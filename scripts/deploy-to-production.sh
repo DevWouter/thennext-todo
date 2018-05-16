@@ -27,7 +27,7 @@ rsync -avPz ${DIR}/../docker-compose.prod-run.yml core@${SERVER}:/home/core/dock
 
 ssh core@$SERVER "
 # Create backups
-./scripts/backup.sh
+sudo ./scripts/backup.sh
 
 # Load the images
 docker load -i /home/core/docks/pa_db.tar
