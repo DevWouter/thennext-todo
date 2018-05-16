@@ -10,13 +10,18 @@ import { StorageService, StorageKey } from "./storage.service";
 @Injectable()
 export class ApiService {
   private _sessionToken: string = undefined;
+  private _sessionTokenSubject = new BehaviorSubject<string>(null);
+
+  public get sessionToken(): Observable<string> {
+    return this._sessionTokenSubject;
+  }
 
   constructor(
     private storageService: StorageService,
     private client: HttpClient,
   ) {
     // On load always retrieve the session key.
-    this._sessionToken = this.storageService.get(StorageKey.SESSION_TOKEN);
+    this._sessionTokenSubject.next(this.storageService.get(StorageKey.SESSION_TOKEN));
   }
 
   get<T>(url: string): Observable<T> {
@@ -41,18 +46,19 @@ export class ApiService {
 
   setSessionToken(token: string, expireAt: string) {
     // Store session token first and then also store it so we can retrieve it later.
-    this._sessionToken = token;
     this.storageService.set(StorageKey.SESSION_TOKEN, token);
     this.storageService.set(StorageKey.SESSION_EXPIRE, expireAt);
+    this._sessionTokenSubject.next(token);
   }
 
   private options(): { headers?: HttpHeaders } {
-    if (this._sessionToken === undefined) {
+    const sessionTokenValue = this._sessionTokenSubject.value;
+    if (sessionTokenValue === undefined || sessionTokenValue === null) {
       return undefined;
     }
 
     let headers = new HttpHeaders();
-    headers = headers.set("Authorization", `Bearer ${this._sessionToken}`);
+    headers = headers.set("Authorization", `Bearer ${sessionTokenValue}`);
 
     return {
       headers: headers

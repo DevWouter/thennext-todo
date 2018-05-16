@@ -24,5 +24,7 @@ export class SessionService {
     await this.apiService.delete<object>("/api/session/destroy")
       .toPromise()
       .catch((reason) => console.error(reason));
+
+    this.apiService.setSessionToken(undefined, undefined);
   }
 }
