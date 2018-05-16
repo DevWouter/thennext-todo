@@ -6,15 +6,10 @@ import { ApiService } from "../api.service";
 import { DirectApiResource } from "./direct-api-resource";
 
 export class ApiResource<T extends Entity> {
-  private _ready = new BehaviorSubject<boolean>(false);
   private _direct: DirectApiResource;
 
   get direct(): DirectApiResource {
     return this._direct;
-  }
-
-  public get ready(): Observable<boolean> {
-    return this._ready;
   }
 
   constructor(
@@ -22,7 +17,6 @@ export class ApiResource<T extends Entity> {
     private resourcePath: string,
   ) {
     this._direct = new DirectApiResource(apiService, resourcePath);
-    apiService.ready.subscribe(x => this._ready.next(x));
   }
 
   index(): Observable<T[]> {

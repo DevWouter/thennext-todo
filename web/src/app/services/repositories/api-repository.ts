@@ -21,7 +21,14 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
     private eventHandler?: RepositoryEventHandler<T>,
   ) {
     this._apiResource = new ApiResource(apiService, resourcePath);
-    this.initialLoad();
+    apiService.sessionToken.subscribe((token) => {
+      console.log("token", token);
+      if (token) {
+        this.initialLoad();
+      } else {
+        this.clearData();
+      }
+    });
   }
 
   async add(value: T): Promise<T> {
@@ -161,6 +168,11 @@ export class ApiRepository<T extends Entity> implements Repository<T> {
 
   private initialLoad(): void {
     this.loadFromStorage();
+  }
+
+  private clearData(): void {
+    this._entries = [];
+    this._entriesSubject.next([]);
   }
 
   private loadFromStorage(): void {

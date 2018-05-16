@@ -15,8 +15,6 @@ import { Subscription } from "rxjs/Subscription";
 export class TaskPageContentPaneStatsComponent implements OnInit {
   private _task: Task;
   private _delayedUuids: string[] = [];
-  public get createdOn(): Date { return this._task && this._task.createdOn; }
-  public get updatedOn(): Date { return this._task && this._task.updatedOn; }
   public get completedOn(): Date { return this._task && this._task.completedOn; }
   public get sleepUntil(): Date { return this._task && this._task.sleepUntil; }
   public urgency = 0;

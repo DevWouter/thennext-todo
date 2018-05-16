@@ -42,10 +42,6 @@ export class TaskPageContentListItemComponent implements OnInit {
     return this.task.title;
   }
 
-  get showCommentIcon(): boolean {
-    return this._task.description.trim().length !== 0;
-  }
-
   get showSleepIcon(): boolean {
     return !this._delayedUuids.includes(this._task.uuid);
   }

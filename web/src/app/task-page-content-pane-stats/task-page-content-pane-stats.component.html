@@ -1,6 +1,4 @@
 <div class="stats">
-  <div>Created on: {{createdOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
-  <div>Updated on: {{updatedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
   <div *ngIf="showCompleted">Completed on: {{completedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
   <div *ngIf="showDelay">Delay until: {{sleepUntil | date:'yyyy-MM-dd HH:mm:ss'}}
     <button (click)="wakeup()">

@@ -23,12 +23,17 @@ $animation-speed: 0.1s;
     }
 }
 
+app-task-page-header-tasklist-selector {
+  flex-grow: 1;
+}
+
 .item {
     height: 48px;
     line-height: 48px;
     color: black;
     cursor: pointer;
     display: flex;
+    padding-right: 16px;
     &:hover {
         background-color: darken(#71af8c, 10);
         background-color: #e1f2fe;
