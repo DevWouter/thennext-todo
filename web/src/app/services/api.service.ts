@@ -10,10 +10,6 @@ import { StorageService, StorageKey } from "./storage.service";
 @Injectable()
 export class ApiService {
   private _sessionToken: string = undefined;
-  private _ready = new BehaviorSubject<boolean>(false);
-  public get ready(): Observable<boolean> {
-    return this._ready;
-  }
 
   constructor(
     private storageService: StorageService,
@@ -21,7 +17,6 @@ export class ApiService {
   ) {
     // On load always retrieve the session key.
     this._sessionToken = this.storageService.get(StorageKey.SESSION_TOKEN);
-    this._ready.next(true);
   }
 
   get<T>(url: string): Observable<T> {
