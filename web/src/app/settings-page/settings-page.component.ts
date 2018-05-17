@@ -14,8 +14,4 @@ export class SettingsPageComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  toTaskList() {
-    this.navigation.toTaskPage({});
-  }
 }
