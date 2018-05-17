@@ -1,13 +1,29 @@
-<label>
-  <div class="input-label">Name:</div>
-  <input type="text" [(ngModel)]="username">
-</label>
+<div class="container">
+  <label class="row">
+    <div class="icon">
+      <i class="far fa-fw fa-envelope"></i>
+    </div>
+    <div class="input">
+      <input type="text" [(ngModel)]="username" name="username" placeholder="email">
+    </div>
+  </label>
+  <div class="input-splitter"></div>
+  <label class="row">
+    <div class="icon">
+      <i class="fas fa-fw fa-lock"></i>
+    </div>
+    <div class="input">
+      <input type="password" [(ngModel)]="password" name="password" placeholder="password">
+    </div>
+  </label>
+  <div class="input-splitter"></div>
 
-<label>
-  <div class="input-label">Password:</div>
-  <input type="password" [(ngModel)]="password">
-</label>
+  <div class="row">
+    <button class="login-button" (click)="login()">Login</button>
+  </div>
 
-<button (click)="login()">Login</button>
 
-<div *ngIf="showError">Unable to login, an error occured, please try again</div>
+  <div *ngIf="showError">
+    <div class="input-splitter"></div>
+    Unable to login, an error occured, please try again</div>
+</div>
