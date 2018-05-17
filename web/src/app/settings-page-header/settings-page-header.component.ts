@@ -16,6 +16,8 @@ export class SettingsPageHeaderComponent implements OnInit {
   }
 
   toTasks() {
-    this.navigation.toTaskPage({});
+    this.navigation.toTaskPage({
+      taskListUuid: this.navigation.lastTaskListUuid
+    });
   }
 }

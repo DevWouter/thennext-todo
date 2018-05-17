@@ -5,6 +5,7 @@ import { Observable } from "rxjs/Observable";
 import { TaskListService } from "./task-list.service";
 
 import { TaskPageNavigation } from "./models/task-page-navigation";
+import { StorageService, StorageKey } from "./storage.service";
 
 enum ShowValues {
   completed = "completed",
@@ -41,10 +42,15 @@ export class NavigationService {
   public get onlyPositive(): Observable<boolean> { return this._onlyPositive; }
   public get search(): Observable<string> { return this._search; }
 
+  public get lastTaskListUuid(): string {
+    return this.storageService.get(StorageKey.LAST_TASKLIST);
+  }
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private taskListService: TaskListService,
+    private storageService: StorageService,
   ) {
     this.setup();
   }
@@ -57,6 +63,7 @@ export class NavigationService {
     let tasklist = this._taskListUuidValue;
     if (params.taskListUuid !== undefined) {
       tasklist = params.taskListUuid; // Might be null.
+      this.storageService.set(StorageKey.LAST_TASKLIST, tasklist);
       if (tasklist === this._primaryTaskListUuid) {
         tasklist = null; // Primary context does not need to be named.
       }
