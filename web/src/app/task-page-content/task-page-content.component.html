@@ -1,3 +1,3 @@
-<app-task-page-content-list></app-task-page-content-list>
+<app-task-page-content-list [width]="size"></app-task-page-content-list>
 <app-task-page-content-divider *ngIf="showPane" (rightWidth)="setPaneWidth($event)"></app-task-page-content-divider>
 <app-task-page-content-pane *ngIf="showPane" [width]="size"></app-task-page-content-pane>

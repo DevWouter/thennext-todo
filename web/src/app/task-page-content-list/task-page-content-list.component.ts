@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, HostBinding } from "@angular/core";
 
 import { TaskService } from "../services/task.service";
 import { ContextService } from "../services/context.service";
@@ -22,6 +22,14 @@ export class TaskPageContentListComponent implements OnInit {
 
   public showEmptyListMessage = false;
   public showTasks = true;
+
+  @Input()
+  set width(value: number) {
+    this._width = window.innerWidth - (value + 6);
+  }
+
+  @HostBinding("style.width.px")
+  private _width: number = undefined;
 
   constructor(
     private readonly taskService: TaskService,

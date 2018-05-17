@@ -14,7 +14,9 @@ export class LoginFormComponent implements OnInit {
   showError = false;
 
   @Output("success")
-  success = new EventEmitter<boolean>();
+  success = new EventEmitter();
+
+  working = false;
 
   constructor(
     private apiService: ApiService,
@@ -30,13 +32,15 @@ export class LoginFormComponent implements OnInit {
   async login() {
     this.showError = false;
     try {
+      this.working = true;
       const session = await this.sessionService.createSession(this.username, this.password);
       this.apiService.setSessionToken(session.token, session.expireAt);
-      this.success.emit(true);
+      this.success.emit();
+      this.working = false;
     } catch (reason) {
       console.error("Unable to create session", reason);
       this.showError = true;
-      this.success.emit(false);
+      this.working = false;
     }
   }
 }

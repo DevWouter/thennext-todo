@@ -2,46 +2,44 @@
     min-height: 36px;
     display: flex;
     padding: 8px;
-    // border-bottom: 1px solid black;
     &.active {
-      font-weight: bold;
+        // font-weight: bold;
     }
     &.delayed {
-      font-style: italic;
-      color: grey;
+        font-style: italic;
+        color: grey;
     }
     &.blocked {
-      font-style: italic;
+        font-style: italic;
     }
     &.selected {
-      background-color: #e1f2fe;
+        background-color: #e1f2fe;
     }
 }
 
 .checkbox {
-  font-size: 12px; // Should be halve the size due to stacking.
-  margin: auto;
-  cursor: pointer;
-  .checkbox__locked {
-    color: #666;
-  }
-
-  &.unchecked {
-    .checkbox__check {
-      opacity: 0;
-      &:hover {
-        opacity: 0.5;
-      }
+    font-size: 12px; // Should be halve the size due to stacking.
+    margin: auto;
+    cursor: pointer;
+    .checkbox__locked {
+        color: #666;
     }
-  }
-  &.checked {
-    .checkbox__check {
-      opacity: 1;
-      &:hover {
-        opacity: 0.3;
-      }
+    &.unchecked {
+        .checkbox__check {
+            opacity: 0;
+            &:hover {
+                opacity: 0.5;
+            }
+        }
     }
-  }
+    &.checked {
+        .checkbox__check {
+            opacity: 1;
+            &:hover {
+                opacity: 0.3;
+            }
+        }
+    }
 }
 
 .title {
@@ -58,9 +56,29 @@
 .buttons {
     display: flex;
     .button {
+        cursor: pointer;
         font-size: 24px;
+        color: #4f4f4f;
+        transition: color 500ms;
+        &:hover {
+            color: inherit;
+            transition: color 500ms;
+        }
     }
     margin: auto;
+}
+
+
+.button--pause:hover {
+    i {
+        animation: jumpdown steps(4) 500ms infinite;
+    }
+}
+
+.button--play:hover {
+    i {
+        animation: jumpup steps(4) 500ms infinite;
+    }
 }
 
 .score {
@@ -70,7 +88,34 @@
     text-align: right;
     margin: auto;
     &.done {
-      font-style: italic;
-      text-decoration: line-through;
+        font-style: italic;
+        text-decoration: line-through;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+@keyframes jumpup {
+    0% {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes jumpdown {
+    0% {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(2px);
     }
 }

@@ -43,11 +43,12 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   get showSleepIcon(): boolean {
-    return !this._delayedUuids.includes(this._task.uuid);
+    return !this._delayedUuids.includes(this._task.uuid) && this._task.status !== TaskStatus.active;
   }
   get showPlayIcon(): boolean {
     return this._task.status === TaskStatus.todo;
   }
+
   get isDone(): boolean {
     return this._task.status === TaskStatus.done;
   }
