@@ -50,4 +50,11 @@ $row-spacing: 16px;
     margin: $row-spacing;
     padding: 12px 8px;
     box-sizing: border-box;
+    &.working{
+      background-color: darken(#71af8c, 10);
+      color: silver;
+    }
+}
+.row--error {
+  padding: $row-spacing;
 }

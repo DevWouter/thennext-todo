@@ -4,7 +4,7 @@
       <i class="far fa-fw fa-envelope"></i>
     </div>
     <div class="input">
-      <input type="text" [(ngModel)]="username" name="username" placeholder="email">
+      <input type="text" [(ngModel)]="username" name="username" placeholder="email" (keydown.enter)="login()">
     </div>
   </label>
   <div class="input-splitter"></div>
@@ -13,17 +13,27 @@
       <i class="fas fa-fw fa-lock"></i>
     </div>
     <div class="input">
-      <input type="password" [(ngModel)]="password" name="password" placeholder="password">
+      <input type="password" [(ngModel)]="password" name="password" placeholder="password" (keydown.enter)="login()">
     </div>
   </label>
   <div class="input-splitter"></div>
 
   <div class="row">
-    <button class="login-button" (click)="login()">Login</button>
+    <button class="login-button" (click)="login()" [disabled]="working" [class.working]="working">
+      <span *ngIf="working">
+        <i class="fas fa-spin fa-cog fa-fw"></i>
+        Trying to login
+      </span>
+      <span *ngIf="!working">
+        Login
+      </span>
+    </button>
   </div>
 
 
   <div *ngIf="showError">
     <div class="input-splitter"></div>
-    Unable to login, an error occured, please try again</div>
+    <div class="row row--error">
+      Unable to login, an error occured, please try again</div>
+  </div>
 </div>
