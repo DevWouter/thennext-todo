@@ -6,8 +6,10 @@
     </button>
   </div>
   <div>
-      <i class="fas fa-fw" [class.fa-chevron-right]="!showUrgencyBreakdown" [class.fa-chevron-down]="showUrgencyBreakdown" (click)="toggleUrgencyBreakdown()"></i>
-      Urgency: {{urgency}}
+    <span (click)="toggleUrgencyBreakdown()" class="breakdown-toggle">
+      <i class="fas fa-fw" [class.fa-chevron-right]="!showUrgencyBreakdown" [class.fa-chevron-down]="showUrgencyBreakdown"></i>
+    </span>
+    Urgency: {{urgency}}
   </div>
   <div *ngIf="showUrgencyBreakdown">
     <table style="width: 100%">
@@ -17,9 +19,4 @@
       </tr>
     </table>
   </div>
-</div>
-<div class="buttons">
-  <button class="btn-delete" (click)="delete()">
-    <i class="fas fa-trash"></i>
-  </button>
 </div>

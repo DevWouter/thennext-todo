@@ -64,11 +64,6 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
     this.scoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
   }
 
-  delete() {
-    this.taskService.delete(this._task);
-    this.navigation.toTaskPage({ taskUuid: null });
-  }
-
   wakeup() {
     this.taskService.wakeup(this._task);
   }
