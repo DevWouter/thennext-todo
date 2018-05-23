@@ -29,7 +29,9 @@ class RemoteTask {
 })
 export class TaskPageContentPaneRelationsComponent implements OnInit {
 
-  taskname = "";
+  get taskname(): string {
+    return this._task.title;
+  }
   taskUuid: string;
   showDropArea = false;
   taskDragging: string = undefined;
@@ -48,7 +50,6 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
   @Input()
   public set task(v: Task) {
     this._task = v;
-    this.taskname = v.title;
     this.taskUuid = v.uuid;
     this._taskSubject.next(v);
   }
