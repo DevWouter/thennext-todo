@@ -4,8 +4,8 @@ import { Task, TaskStatus } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
 import { NavigationService } from "../services/navigation.service";
 import { TaskScoreService, Modifier as TaskScoreModifier } from "../services/task-score.service";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Subscription } from "rxjs/Subscription";
+import { BehaviorSubject, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-content-pane-stats",
@@ -37,7 +37,7 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
 
     if (this._task) {
       this._scoreSubscription = this.scoreService.taskScores
-        .map(x => x.find(y => y.taskUuid === v.uuid))
+        .pipe(map(x => x.find(y => y.taskUuid === v.uuid)))
         .subscribe(x => {
           if (x) {
             this.modifiers = x.modifiers;

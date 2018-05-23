@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs/Subject";
+import { Subject ,  Observable } from "rxjs";
 import { Task } from "./models/task.dto";
-import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class TaskEventService {

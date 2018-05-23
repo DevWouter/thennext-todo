@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener, Host } from "@angular/core";
 import { ChecklistItem } from "../services/models/checklist-item.dto";
 import { ChecklistItemService } from "../services/checklist-item.service";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Subject } from "rxjs/Subject";
+import { BehaviorSubject, Subject } from "rxjs";
+import { filter, combineLatest, debounceTime } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-content-pane-checklist-item",
@@ -37,14 +37,14 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
 
     // Update is not called when the new title is empty
     this._titleSubject
-      .filter(x => x !== undefined && x.length !== 0)
-      .combineLatest(this._checkedSubject, (title, checked) => {
-        v.title = title;
-        v.checked = checked;
-        return v;
-      })
-      .combineLatest(this._changeSubject, (x, _) => x)
-      .debounceTime(350)
+      .pipe(filter(x => x !== undefined && x.length !== 0),
+        combineLatest(this._checkedSubject, (title, checked) => {
+          v.title = title;
+          v.checked = checked;
+          return v;
+        }),
+        combineLatest(this._changeSubject, (x, _) => x),
+        debounceTime(350))
       .subscribe(x => {
         this.checklistItemService.update(x);
       });

@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { TaskListService } from "../services/task-list.service";
 import { TaskList } from "../services/models/task-list.dto";
 import { NavigationService } from "../services/navigation.service";
-
+import { combineLatest } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-header-tasklist-selector",
@@ -22,18 +22,20 @@ export class TaskPageHeaderTasklistSelectorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.taskListService.entries.combineLatest(
-      this.navigation.taskListUuid, (taskList, currentUuid) => {
-        this.lists = taskList;
-        this._currentListUuid = currentUuid;
-        if (!this._currentListUuid) {
-          const primaryTasklist = this.lists.find(x => x.primary);
-          if (primaryTasklist) {
-            this._currentListUuid = primaryTasklist.uuid;
+    this.taskListService.entries
+      .pipe(
+        combineLatest(
+          this.navigation.taskListUuid, (taskList, currentUuid) => {
+            this.lists = taskList;
+            this._currentListUuid = currentUuid;
+            if (!this._currentListUuid) {
+              const primaryTasklist = this.lists.find(x => x.primary);
+              if (primaryTasklist) {
+                this._currentListUuid = primaryTasklist.uuid;
+              }
+            }
           }
-        }
-      }
-    ).subscribe();
+        )).subscribe();
   }
 
   updated() {

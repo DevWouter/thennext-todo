@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject ,  Observable } from "rxjs";
 
 import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";

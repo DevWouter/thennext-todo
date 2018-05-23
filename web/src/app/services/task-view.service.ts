@@ -2,20 +2,18 @@ import { Injectable } from "@angular/core";
 
 import { ContextService } from "./context.service";
 import { TaskService } from "./task.service";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
-import { IntervalObservable } from "rxjs/observable/IntervalObservable";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { interval } from "rxjs";
 import { DateTime } from "luxon";
 import { TaskScoreService } from "./task-score.service";
 import { TaskRelationService } from "./task-relation.service";
 import { TaskRelation } from "./models/task-relation.dto";
-import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class TaskViewService {
 
 
-  private _timer = new IntervalObservable(1000);
+  private _timer = interval(1000);
 
   constructor(
     private readonly taskService: TaskService,

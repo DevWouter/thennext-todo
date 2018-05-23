@@ -3,6 +3,7 @@ import { Task, TaskStatus } from "./models/task.dto";
 import { TaskService } from "./task.service";
 import { TaskListService } from "./task-list.service";
 import { NavigationService } from "./navigation.service";
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class TaskParseService {
@@ -43,7 +44,7 @@ export class TaskParseService {
   private setup() {
     this.navigation.taskListUuid.subscribe(x => this.taskListUuid = x);
     this.taskListService.entries
-      .map(taskLists => taskLists.find(y => y.primary))
+      .pipe(map(taskLists => taskLists.find(y => y.primary)))
       .subscribe(taskList => {
         if (taskList) {
           this._primaryTaskListUuid = taskList.uuid;

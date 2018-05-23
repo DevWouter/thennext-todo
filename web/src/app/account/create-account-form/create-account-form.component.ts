@@ -1,6 +1,6 @@
 import { Output, Component, OnInit, EventEmitter } from "@angular/core";
 import { AccountService } from "../../services/account.service";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { SessionService } from "../../services/session.service";
 import { ApiService } from "../../services/api.service";
 

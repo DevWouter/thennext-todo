@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ScoreShift } from "../services/models/score-shift.dto";
 import { ScoreShiftService } from "../services/score-shift.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-settings-page-scoreshifts",
@@ -17,8 +18,9 @@ export class SettingsPageScoreshiftsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.scoreShiftService.entries
-      .map(x => x.sort((a, b) => b.score - a.score))
+    this.scoreShiftService.entries.pipe(
+      map(x => x.sort((a, b) => b.score - a.score))
+    )
       .subscribe(x => this.items = x);
   }
 

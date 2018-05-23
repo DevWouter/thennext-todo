@@ -7,6 +7,7 @@ import { NavigationService } from "../services/navigation.service";
 import { DateTime, Interval, Duration } from "luxon";
 import { TaskScoreService } from "../services/task-score.service";
 import { RelationViewService } from "../services/relation-view.service";
+import { combineLatest } from "rxjs/operators";
 
 interface State {
   active: boolean;
@@ -91,15 +92,15 @@ export class TaskPageContentListItemComponent implements OnInit {
     this.taskScoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
     this.relationViewService.blockedTaskUuids.subscribe(x => this._blockedUuids = x);
 
-    this.navigation.taskUuid
-      .combineLatest(
+    this.navigation.taskUuid.pipe(
+      combineLatest(
         this.taskScoreService.delayedTaskUuids,
         this.relationViewService.blockedTaskUuids,
         (taskUuid, delayedTaskUuids, blockedTaskUuids) => ({
           taskUuid,
           delayedTaskUuids,
           blockedTaskUuids,
-        }))
+        })))
       .subscribe(combo => {
         const taskUuid = combo.taskUuid;
         this.state = <State>{

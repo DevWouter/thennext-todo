@@ -2,7 +2,8 @@ import { Component, OnInit, Input } from "@angular/core";
 import { ContextService } from "../services/context.service";
 import { TaskService } from "../services/task.service";
 import { Task } from "../services/models/task.dto";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-content-pane-description",
@@ -24,7 +25,7 @@ export class TaskPageContentPaneDescriptionComponent implements OnInit {
     this._nextValue = new Subject<string>();
     this._nextValue.subscribe(v => task.description = v);
     this._nextValue
-      .debounceTime(350)
+      .pipe(debounceTime(350))
       .subscribe(v => {
         task.description = v;
         this.taskService.update(task);

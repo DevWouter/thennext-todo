@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { ChecklistItem } from "./models/checklist-item.dto";
 import { Task, TaskStatus } from "./models/task.dto";
@@ -15,6 +14,7 @@ import { TaskViewService } from "./task-view.service";
 import { TaskRelationService } from "./task-relation.service";
 import { RelationViewService } from "./relation-view.service";
 import { TaskScoreService } from "./task-score.service";
+import { combineLatest } from "rxjs/operators";
 
 @Injectable()
 export class ContextService {
@@ -50,15 +50,15 @@ export class ContextService {
   }
 
   private setupActiveTaskList() {
-    this.navigationService.taskListUuid.combineLatest(this.taskListService.entries,
+    this.navigationService.taskListUuid.pipe(combineLatest(this.taskListService.entries,
       (uuid, tasklists) => {
         this._activeTaskList.next(
           tasklists.find(x => x.uuid === uuid || x.primary && uuid === undefined));
-      }).subscribe();
+      })).subscribe();
   }
 
   private setupActiveTask() {
-    this.navigationService.taskUuid.combineLatest(this.taskService.entries, (uuid, tasks) => {
+    this.navigationService.taskUuid.pipe(combineLatest(this.taskService.entries, (uuid, tasks) => {
       if (!uuid) {
         // No task is selected.
         this._activeTask.next(undefined);
@@ -66,14 +66,14 @@ export class ContextService {
       }
 
       this._activeTask.next(tasks.find(task => task.uuid === uuid));
-    }).subscribe();
+    })).subscribe();
   }
 
   private setupActiveChecklistItems(): void {
-    this.navigationService.taskUuid.combineLatest(this.checklistItemService.entries,
+    this.navigationService.taskUuid.pipe(combineLatest(this.checklistItemService.entries,
       (uuid, items) => {
         this._activeTaskChecklistItems.next(items.filter(x => x.taskUuid === uuid));
-      }).subscribe();
+      })).subscribe();
   }
 
   public setDragStatus(v: boolean, taskUuid: string) {
