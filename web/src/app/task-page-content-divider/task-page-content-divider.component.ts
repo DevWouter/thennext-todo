@@ -1,6 +1,5 @@
 import { Component, OnInit, ElementRef, Output, EventEmitter } from "@angular/core";
-import { Observable } from "rxjs/Observable";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Observable ,  BehaviorSubject } from "rxjs";
 
 @Component({
   selector: "app-task-page-content-divider",

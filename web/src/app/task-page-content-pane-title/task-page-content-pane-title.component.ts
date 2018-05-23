@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 import { Task } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
+import { debounceTime } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-content-pane-title",
@@ -20,8 +21,8 @@ export class TaskPageContentPaneTitleComponent implements OnInit {
     // Create a new subjec to follow.
     this._nextTaskTitle = new Subject<string>();
     this._nextTaskTitle.subscribe(t => task.title = t);
-    this._nextTaskTitle
-      .debounceTime(350)
+    this._nextTaskTitle.pipe(
+      debounceTime(350))
       .subscribe(title => {
         task.title = this._taskTitle;
         this.taskService.update(task);

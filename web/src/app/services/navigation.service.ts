@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router, ActivatedRoute, NavigationExtras, Params } from "@angular/router";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject ,  Observable } from "rxjs";
 import { TaskListService } from "./task-list.service";
 
 import { TaskPageNavigation } from "./models/task-page-navigation";

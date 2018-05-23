@@ -1,5 +1,4 @@
 // tslint:disable:max-line-length
-import "./shared/shared";
 
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule as AnimationModule } from "@angular/platform-browser/animations";

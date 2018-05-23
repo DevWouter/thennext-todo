@@ -13,7 +13,6 @@
 .text {
     flex-grow: 1;
     border-bottom: 1px solid grey;
-    padding-bottom: 4px;
     width: 100%;
     position: relative;
 }
@@ -21,6 +20,7 @@
 input,
 textarea {
     border: none;
+    padding: 0;
 }
 
 textarea {

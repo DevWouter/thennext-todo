@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import { TaskPageNavigation } from "../services/models/task-page-navigation";
-import { Subject } from "rxjs/Subject";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Subject ,  BehaviorSubject } from "rxjs";
 
 @Component({
   selector: "app-homepage",

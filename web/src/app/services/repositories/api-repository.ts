@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { StorageService } from "../storage.service";
 import { Repository, Entry, EntryState, RemoveOptions } from "./repository";
@@ -8,12 +7,13 @@ import { ApiService } from "../api.service";
 import { Entity } from "./entity";
 import { ApiResource } from "./api-resource";
 import { RepositoryEventHandler } from "./repository-event-handler";
+import { filter } from "rxjs/operators";
 
 export class ApiRepository<T extends Entity> implements Repository<T> {
   private _apiResource: ApiResource<T>;
   private _entries: Entry<T>[] = undefined;
   private _entriesSubject = new BehaviorSubject<T[]>(undefined);
-  get entries(): Observable<T[]> { return this._entriesSubject.filter(x => !!x); }
+  get entries(): Observable<T[]> { return this._entriesSubject.pipe(filter(x => !!x)); }
 
   constructor(
     private apiService: ApiService,

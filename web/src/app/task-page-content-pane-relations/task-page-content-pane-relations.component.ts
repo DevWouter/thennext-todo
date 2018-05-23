@@ -5,7 +5,8 @@ import { TaskService } from "../services/task.service";
 import { TaskRelation } from "../services/models/task-relation.dto";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services/navigation.service";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from "rxjs";
+import { filter, combineLatest } from "rxjs/operators";
 
 class RemoteTask {
   relationUuid: string;
@@ -28,7 +29,9 @@ class RemoteTask {
 })
 export class TaskPageContentPaneRelationsComponent implements OnInit {
 
-  taskname = "";
+  get taskname(): string {
+    return this._task.title;
+  }
   taskUuid: string;
   showDropArea = false;
   taskDragging: string = undefined;
@@ -47,7 +50,6 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
   @Input()
   public set task(v: Task) {
     this._task = v;
-    this.taskname = v.title;
     this.taskUuid = v.uuid;
     this._taskSubject.next(v);
   }
@@ -79,28 +81,29 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
       this.afterAllow = this.taskRelationService.checkAllow({ after: x, before: this.taskUuid });
     });
 
-    this.taskRelationService.entries.combineLatest(
-      this.taskService.entries,
-      this._taskSubject.filter(x => !!x),
-      (relations, tasks, task) => {
-        const blockedTasks = relations
-          .filter(x => x.sourceTaskUuid === task.uuid)
-          .map(relation => {
-            const remoteTaskUuid = relation.targetTaskUuid;
-            const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
-            return new RemoteTask(remoteTask, relation);
-          });
+    this.taskRelationService.entries
+      .pipe(combineLatest(
+        this.taskService.entries,
+        this._taskSubject.pipe(filter(x => !!x)),
+        (relations, tasks, task) => {
+          const blockedTasks = relations
+            .filter(x => x.sourceTaskUuid === task.uuid)
+            .map(relation => {
+              const remoteTaskUuid = relation.targetTaskUuid;
+              const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
+              return new RemoteTask(remoteTask, relation);
+            });
 
-        const blockingTasks = relations
-          .filter(x => x.targetTaskUuid === task.uuid)
-          .map(relation => {
-            const remoteTaskUuid = relation.sourceTaskUuid;
-            const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
-            return new RemoteTask(remoteTask, relation);
-          });
+          const blockingTasks = relations
+            .filter(x => x.targetTaskUuid === task.uuid)
+            .map(relation => {
+              const remoteTaskUuid = relation.sourceTaskUuid;
+              const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
+              return new RemoteTask(remoteTask, relation);
+            });
 
-        return { tasksAfter: blockedTasks, tasksBefore: blockingTasks };
-      })
+          return { tasksAfter: blockedTasks, tasksBefore: blockingTasks };
+        }))
       .subscribe(x => {
         this.tasksBefore = x.tasksBefore;
         this.tasksAfter = x.tasksAfter;

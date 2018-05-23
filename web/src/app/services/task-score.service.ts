@@ -4,14 +4,14 @@ import { DateTime } from "luxon";
 import { ContextService } from "./context.service";
 import { TaskService } from "./task.service";
 import { Task, TaskStatus } from "./models/task.dto";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
-import { IntervalObservable } from "rxjs/observable/IntervalObservable";
+import { BehaviorSubject, Observable } from "rxjs";
+import { interval } from "rxjs";
 import { ScoreShiftService } from "./score-shift.service";
 import { ScoreShift } from "./models/score-shift.dto";
 import { TaskRelation } from "./models/task-relation.dto";
 import { TaskRelationService } from "./task-relation.service";
 import { RelationViewService } from "./relation-view.service";
+import { map, combineLatest, distinctUntilChanged, filter } from "rxjs/operators";
 
 export interface Modifier {
   description: string;
@@ -34,8 +34,8 @@ export class TaskScoreService {
   private _taskScores = new BehaviorSubject<TaskScoreView[]>(undefined);
   private _delayedTaskUuids = new BehaviorSubject<string[]>(undefined);
 
-  public get taskScores(): Observable<TaskScoreView[]> { return this._taskScores.filter(x => !!x); }
-  public get delayedTaskUuids(): Observable<string[]> { return this._delayedTaskUuids.filter(x => !!x); }
+  public get taskScores(): Observable<TaskScoreView[]> { return this._taskScores.pipe(filter(x => !!x)); }
+  public get delayedTaskUuids(): Observable<string[]> { return this._delayedTaskUuids.pipe(filter(x => !!x)); }
 
   constructor(
     private readonly taskService: TaskService,                   // Since we need the title
@@ -47,9 +47,9 @@ export class TaskScoreService {
   private setup() {
     // Whenever the values of a dependcy change, we need to emit a changed event.
     // That way listeners now they should perform a recalculation.
-    this._timeSubject
-      .map(x => DateTime.fromJSDate(x))
-      .combineLatest(
+    this._timeSubject.pipe(
+      map(x => DateTime.fromJSDate(x))
+      , combineLatest(
         this.taskService.entries,
         this.scoreShiftService.entries,
         this.relationViewService.blockedTaskUuids,
@@ -80,24 +80,25 @@ export class TaskScoreService {
             return r;
           });
         })
-      .map(x => x.sort((a, b) => b.score - a.score))
-      .distinctUntilChanged((x, y) =>
+      , map(x => x.sort((a, b) => b.score - a.score))
+      , distinctUntilChanged((x, y) =>
         x.length === y.length &&
         x.every((v, i) =>
           v.taskUuid === y[i].taskUuid &&            // Check if the order is the same
           v.roundedScore === y[i].roundedScore)      // Check if the visual score has changed.
-      )
+      ))
       .subscribe(scores => this._taskScores.next(scores));
 
     this._timeSubject
-      .map(x => DateTime.fromJSDate(x))
-      .combineLatest(this.taskService.entries, (now, tasks) => {
-        return tasks
-          .filter(x => x.sleepUntil && DateTime.fromJSDate(x.sleepUntil) > now)
-          .map(x => x.uuid);
-      })
-      .distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i]))
-      .subscribe(x => {
+      .pipe(
+        map(x => DateTime.fromJSDate(x)),
+        combineLatest(this.taskService.entries, (now, tasks) => {
+          return tasks
+            .filter(x => x.sleepUntil && DateTime.fromJSDate(x.sleepUntil) > now)
+            .map(x => x.uuid);
+        }),
+        distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i]))
+      ).subscribe(x => {
         this._delayedTaskUuids.next(x);
       });
   }

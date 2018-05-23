@@ -2,6 +2,7 @@ import { Component, OnInit, Input, HostBinding } from "@angular/core";
 import { TaskService } from "../services/task.service";
 import { ContextService } from "../services/context.service";
 import { Task } from "../services/models/task.dto";
+import { NavigationService } from "../services/navigation.service";
 
 @Component({
   selector: "app-task-page-content-pane",
@@ -18,12 +19,26 @@ export class TaskPageContentPaneComponent implements OnInit {
   task: Task = undefined;
 
   constructor(
-    private readonly contextService: ContextService
+    private readonly contextService: ContextService,
+    private readonly taskService: TaskService,
+    private readonly navigation: NavigationService,
   ) {
   }
 
   ngOnInit() {
     this.contextService.activeTask.subscribe(x => this.task = x);
   }
+
+  delete() {
+    if (confirm(`Are you sure you "${this.task.title}" want to delete?`)) {
+      this.taskService.delete(this.task);
+      this.navigation.toTaskPage({ taskUuid: null });
+    }
+  }
+
+  hide() {
+    this.navigation.toTaskPage({ taskUuid: null });
+  }
+
 
 }
