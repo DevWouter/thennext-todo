@@ -14,7 +14,8 @@ export class TaskService {
         return this.db
             .createQueryBuilder(TaskEntity, "task")
             .leftJoinAndSelect("task.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
+            .innerJoin("taskList.rights", "right")
+            .innerJoin("right.account", "account")
             .where("task.uuid = :uuid", { uuid: uuid })
             .andWhere("account.id = :id", { id: account.id })
             .getOne();
@@ -30,7 +31,8 @@ export class TaskService {
     of(account: AccountEntity): Promise<TaskEntity[]> {
         return this.db.createQueryBuilder(TaskEntity, "task")
             .leftJoinAndSelect("task.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
+            .innerJoin("taskList.rights", "right")
+            .innerJoin("right.account", "account")
             .where("account.id = :id", { id: account.id })
             .getMany();
     }

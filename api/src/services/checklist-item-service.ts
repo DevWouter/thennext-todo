@@ -15,7 +15,8 @@ export class ChecklistItemService {
             .createQueryBuilder(ChecklistItemEntity, "checklistItem")
             .innerJoinAndSelect("checklistItem.task", "task")
             .innerJoin("task.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
+            .innerJoin("taskList.rights", "right")
+            .innerJoin("right.account", "account")
             .where("checklistItem.uuid = :uuid", { uuid: uuid })
             .andWhere("account.id = :id", { id: account.id })
             .getOne();
@@ -33,7 +34,8 @@ export class ChecklistItemService {
             .createQueryBuilder(ChecklistItemEntity, "checklistItem")
             .leftJoinAndSelect("checklistItem.task", "task")
             .innerJoin("task.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
+            .innerJoin("taskList.rights", "right")
+            .innerJoin("right.account", "account")
             .andWhere("account.id = :id", { id: account.id })
             .getMany();
     }

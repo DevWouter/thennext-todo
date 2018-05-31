@@ -2,6 +2,7 @@ import { Container, injectable, decorate, unmanaged } from "inversify";
 import { getConnection, Connection } from "typeorm";
 
 import { AccountService } from "./services/account-service";
+import { AccountSettingsService } from "./services/account-settings-service";
 import { AuthenticationService } from "./services/authentication-service";
 import { SessionService } from "./services/session-service";
 import { TaskService } from "./services/task-service";
@@ -21,6 +22,7 @@ container.bind<Connection>(Connection)
 
 // The various services.
 container.bind<AccountService>(AccountService).toSelf();
+container.bind<AccountSettingsService>(AccountSettingsService).toSelf();
 container.bind<AuthenticationService>(AuthenticationService).toSelf();
 container.bind<SessionService>(SessionService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();

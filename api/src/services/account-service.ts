@@ -42,6 +42,7 @@ export class AccountService {
         const entityManager = this.db.createEntityManager();
         return entityManager.save(AccountEntity, entity);
     }
+
     create(entity: AccountEntity): Promise<AccountEntity> {
         const entityManager = this.db.createEntityManager();
         return entityManager.save(entity);

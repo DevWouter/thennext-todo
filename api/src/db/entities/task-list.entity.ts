@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
 import { AccountEntity } from "./account.entity";
 import { TaskEntity } from "./task.entity";
+import { TaskListRightEntity } from "./task-list-right.entity";
 
 @Entity("TaskList")
 export class TaskListEntity {
@@ -17,13 +18,15 @@ export class TaskListEntity {
     @Column({ nullable: false })
     name: string;
 
-    @Column({ default: false })
-    primary: boolean;
-
-    @ManyToOne(type => AccountEntity, account => account.taskLists, { onDelete: "CASCADE" })
+    @OneToMany(type => TaskListRightEntity, right => right.taskList, { cascadeInsert: true })
     @JoinColumn()
-    owner: AccountEntity;
+    rights: TaskListRightEntity[];
 
     @OneToMany(type => TaskEntity, task => task.taskList)
     tasks: TaskEntity[];
+
+    @ManyToOne(type => AccountEntity)
+    @JoinColumn()
+    owner: AccountEntity;
+
 }

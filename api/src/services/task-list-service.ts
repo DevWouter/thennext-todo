@@ -13,7 +13,9 @@ export class TaskListService {
         // this function requires the account to ensure we have ownership.
         return this.db
             .createQueryBuilder(TaskListEntity, "taskList")
-            .innerJoinAndSelect("taskList.owner", "account")
+            .innerJoin("taskList.rights", "right")
+            .innerJoin("right.account", "account")
+            .innerJoinAndSelect("taskList.owner", "owner")
             .where("taskList.uuid = :uuid", { uuid: uuid })
             .andWhere("account.id = :id", { id: account.id })
             .getOne();
@@ -22,13 +24,16 @@ export class TaskListService {
     byId(id: number): Promise<TaskListEntity> {
         return this.db
             .createQueryBuilder(TaskListEntity, "taskList")
+            .innerJoinAndSelect("taskList.owner", "owner")
             .where("taskList.id = :id", { id: id })
             .getOne();
     }
 
     of(account: AccountEntity): Promise<TaskListEntity[]> {
         return this.db.createQueryBuilder(TaskListEntity, "taskList")
-            .innerJoinAndSelect("taskList.owner", "account")
+            .innerJoin("taskList.rights", "right")
+            .innerJoinAndSelect("right.account", "account")
+            .innerJoinAndSelect("taskList.owner", "owner")
             .where("account.id = :id", { id: account.id })
             .getMany();
     }

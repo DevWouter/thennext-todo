@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { AccountEntity } from "./account.entity";
+import { TaskListEntity } from ".";
 
 @Entity("AccountSettings")
 export class AccountSettingsEntity {
@@ -9,6 +10,10 @@ export class AccountSettingsEntity {
     @OneToOne(type => AccountEntity, accountEntity => accountEntity.accountSettings, { cascadeInsert: true, onDelete: "CASCADE" })
     @JoinColumn()
     account: AccountEntity;
+
+    @ManyToOne(type => TaskListEntity)
+    @JoinColumn()
+    primaryList: TaskListEntity;
 
     @Column()
     scrollToNewTasks: boolean;
