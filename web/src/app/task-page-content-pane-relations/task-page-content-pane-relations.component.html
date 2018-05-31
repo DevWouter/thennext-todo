@@ -20,7 +20,7 @@
     <div *ngIf="showExplainBefore">
       <i>No tasks are blocking this task</i>
     </div>
-    <div *ngFor="let item of tasksBefore" [class.done]="item.isDone">
+    <div *ngFor="let item of tasksBefore" class="item" [class.done]="item.isDone">
       <i (click)="delete(item)" class="fa fa-minus-circle fa-fw clickable"></i>
       <span (click)="goTo(item)">{{item.taskTitle}}</span>
     </div>
@@ -29,7 +29,7 @@
     <div *ngIf="showExplainAfter">
       <i>No tasks are being blocked by this task</i>
     </div>
-    <div *ngFor="let item of tasksAfter" [class.done]="item.isDone">
+    <div *ngFor="let item of tasksAfter" class="item" [class.done]="item.isDone">
       <i (click)="delete(item)" class="fa fa-minus-circle fa-fw clickable"></i>
       <span (click)="goTo(item)">{{item.taskTitle}}</span>
     </div>
