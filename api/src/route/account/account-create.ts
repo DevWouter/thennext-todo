@@ -7,6 +7,10 @@ import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/e
 import { SecurityConfig } from "../../config";
 import container from "../../inversify.config";
 import { AccountService } from "../../services/account-service";
+import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
+import { TaskListRightService } from "../../services/task-list-right-service";
+import { AccountSettingsService } from "../../services/account-settings-service";
+import { TaskListService } from "../../services/task-list-service";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -15,23 +19,42 @@ export interface CreateAccountInput {
 
 export async function AccountCreate(req: Request, res: Response): Promise<void> {
     try {
+        const accountService = container.resolve(AccountService);
+        const accountSettingsService = container.resolve(AccountSettingsService);
+        const taskListService = container.resolve(TaskListService);
+        const taskListRightService = container.resolve(TaskListRightService);
+
         const input = req.body as CreateAccountInput;
         throwIfInvalid(input);
-        const accountService = container.resolve(AccountService);
-        const account = new AccountEntity();
-        account.email = input.email;
-        account.password_hash = await bcrypt.hash(input.password, SecurityConfig.saltRounds);
-        account.accountSettings = new AccountSettingsEntity();
-        AccountSettingsEntity.setDefaultValues(account.accountSettings);
 
-        // Create primary task list
+        const accountInput = new AccountEntity();
+        accountInput.email = input.email;
+        accountInput.password_hash = await bcrypt.hash(input.password, SecurityConfig.saltRounds);
+        accountInput.accountSettings = new AccountSettingsEntity();
+        AccountSettingsEntity.setDefaultValues(accountInput.accountSettings);
+
+        // Create account
+        const accountResult = await accountService.create(accountInput);
+
         const primaryTaskList = new TaskListEntity();
         primaryTaskList.name = "Inbox";
-        primaryTaskList.primary = true;
-        account.taskLists = [primaryTaskList];
+        primaryTaskList.owner = accountInput;
 
-        const finalEntity = await accountService.create(account);
-        const dst = TransformAccount(finalEntity);
+        const taskListResult = await taskListService.create(primaryTaskList);
+
+
+        const ownerRight = new TaskListRightEntity();
+        ownerRight.access = AccessRight.owner;
+        ownerRight.account = accountResult;
+        ownerRight.taskList = primaryTaskList;
+        await taskListRightService.create(ownerRight);
+
+        const accountSettings = accountResult.accountSettings;
+        accountSettings.primaryList = taskListResult;
+
+        await accountSettingsService.update(accountSettings);
+
+        const dst = TransformAccount(accountResult);
         res.send(dst);
     } catch (ex) {
         console.error(ex);
