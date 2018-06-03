@@ -21,14 +21,6 @@ export class TaskListService {
             .getOne();
     }
 
-    byId(id: number): Promise<TaskListEntity> {
-        return this.db
-            .createQueryBuilder(TaskListEntity, "taskList")
-            .innerJoinAndSelect("taskList.owner", "owner")
-            .where("taskList.id = :id", { id: id })
-            .getOne();
-    }
-
     of(account: AccountEntity): Promise<TaskListEntity[]> {
         return this.db.createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.rights", "right")
