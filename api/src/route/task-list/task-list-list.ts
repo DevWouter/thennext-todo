@@ -20,7 +20,7 @@ export async function TaskListList(req: Request, res: Response): Promise<void> {
     const account = await accountService.byToken(token);
     const accountSettings = await accountSettingsService.of(account);
 
-    const src = await taskListService.of(account);
+    const src = await taskListService.for(account);
 
     const dst = src.map(x => ({
         uuid: x.uuid,

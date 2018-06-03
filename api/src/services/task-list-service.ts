@@ -15,17 +15,29 @@ export class TaskListService {
             .createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.rights", "right")
             .innerJoin("right.account", "account")
-            .innerJoinAndSelect("taskList.owner", "owner")
             .where("taskList.uuid = :uuid", { uuid: uuid })
             .andWhere("account.id = :id", { id: account.id })
             .getOne();
     }
 
-    of(account: AccountEntity): Promise<TaskListEntity[]> {
+    hasOwnership(account: AccountEntity, taskList: TaskListEntity): Promise<boolean> {
+        return this.db
+            .createQueryBuilder(TaskListEntity, "taskList")
+            .innerJoin("taskList.owner", "owner")
+            .where("taskList.id = :id", { id: taskList.id })
+            .andWhere("owner.id = :id", { id: account.id })
+            .getCount()
+            .then(x => x === 1);
+    }
+
+    /**
+     * Returns a list of tasks that are accessible (and maybe owned) by the user.
+     * @param account The account that can access the lists
+     */
+    for(account: AccountEntity): Promise<TaskListEntity[]> {
         return this.db.createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.rights", "right")
             .innerJoinAndSelect("right.account", "account")
-            .innerJoinAndSelect("taskList.owner", "owner")
             .where("account.id = :id", { id: account.id })
             .getMany();
     }

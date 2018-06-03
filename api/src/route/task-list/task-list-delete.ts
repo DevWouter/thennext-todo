@@ -26,8 +26,13 @@ export async function TaskListDelete(req: Request, res: Response): Promise<void>
     const accountSettings = await accountSettingsService.of(account);
 
     const taskList = await taskListService.byUuid(req.params.uuid, account);
+    const ownership = await taskListService.hasOwnership(account, taskList);
     if (taskList.id === accountSettings.primaryList.id) {
         throw new Error(`Primary TaskList can not be deleted (uuid: ${taskList.uuid})`);
+    }
+
+    if (!ownership) {
+        throw new Error(`You are not the owner of TaskList ${taskList.uuid}`);
     }
 
     await taskListService.destroy(taskList);
