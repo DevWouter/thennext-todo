@@ -25,7 +25,6 @@ export async function TaskListList(req: Request, res: Response): Promise<void> {
     const dst = src.map(x => ({
         uuid: x.uuid,
         name: x.name,
-        ownerUuid: x.owner.uuid,
         primary: x.id === accountSettings.primaryList.id, // TO BE REMOVED
     }));
 

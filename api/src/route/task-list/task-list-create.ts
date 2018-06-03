@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { getConnection } from "typeorm";
+import container from "../../inversify.config";
 
 import { TaskList } from "./task-list.model";
 import { TaskListEntity } from "../../db/entities";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
-
 import { AuthenticationService } from "../../services/authentication-service";
-import container from "../../inversify.config";
 import { AccountService } from "../../services/account-service";
 import { TaskListService } from "../../services/task-list-service";
 import { AccountSettingsService } from "../../services/account-settings-service";
@@ -45,10 +44,9 @@ export async function taskListCreate(req: Request, res: Response): Promise<void>
     ownerRight.taskList = dst;
     await taskListRightService.create(ownerRight);
 
-    res.send({
+    res.send(<TaskList>{
         name: dst.name,
         uuid: dst.uuid,
         primary: dst.id === accountSettings.primaryList.id, // TO BE REMOVED
-        ownerUuid: account.uuid,
     });
 }
