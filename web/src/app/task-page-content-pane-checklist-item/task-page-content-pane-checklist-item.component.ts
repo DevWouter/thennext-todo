@@ -59,19 +59,17 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
   ) { }
 
   @HostListener("keydown", ["$event"])
-  // 221
-  // 219
   up(e: KeyboardEvent) {
     if (!e.altKey) {
       return;
     }
 
-    if (e.keyCode === 221) { // ']'
+    if (e.keyCode === 74) { // 'k'
       this.move.emit("down");
       e.preventDefault();
     }
 
-    if (e.keyCode === 219) { // ']'
+    if (e.keyCode === 75) { // 'j'
       this.move.emit("up");
       e.preventDefault();
     }
