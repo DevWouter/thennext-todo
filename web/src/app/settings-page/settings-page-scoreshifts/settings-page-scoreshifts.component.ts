@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { ScoreShift } from "../services/models/score-shift.dto";
-import { ScoreShiftService } from "../services/score-shift.service";
+import { ScoreShift } from "../../services/models/score-shift.dto";
+import { ScoreShiftService } from "../../services/score-shift.service";
 import { map } from "rxjs/operators";
 
 @Component({

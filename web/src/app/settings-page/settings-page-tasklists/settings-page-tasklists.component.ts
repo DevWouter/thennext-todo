@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { TaskList } from "../services/models/task-list.dto";
-import { TaskListService } from "../services/task-list.service";
+import { Router } from "@angular/router";
+import { TaskList } from "../../services/models/task-list.dto";
+import { TaskListService } from "../../services/task-list.service";
 
 @Component({
   selector: "app-settings-page-tasklists",
@@ -13,6 +14,7 @@ export class SettingsPageTasklistsComponent implements OnInit {
 
   constructor(
     private tasklistService: TaskListService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -33,5 +35,6 @@ export class SettingsPageTasklistsComponent implements OnInit {
 
     this.tasklistService.add(<TaskList>{ name: name });
   }
+
 
 }
