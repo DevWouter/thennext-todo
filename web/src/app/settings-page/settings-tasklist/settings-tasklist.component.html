@@ -1,0 +1,26 @@
+<app-settings-page-header></app-settings-page-header>
+
+<div class="content">
+  <div class="tab-container tab-container--vertical">
+    <app-tab-titles></app-tab-titles>
+    <div class="tab-content">
+      <div *ngIf="taskList">
+        <h2>{{taskList.name}}</h2>
+        Show information about the current task-list
+
+        <h3>Shared with</h3>
+        <ul>
+          <li>You, the owner</li>
+        </ul>
+
+        <h3>Unused share-tokens</h3>
+        <ul>
+          <li>No tokens are shared</li>
+        </ul>
+      </div>
+      <div *ngIf="!taskList">
+        Loading or not found...
+      </div>
+    </div>
+  </div>
+</div>

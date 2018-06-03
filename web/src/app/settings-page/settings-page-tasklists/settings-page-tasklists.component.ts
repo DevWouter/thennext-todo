@@ -19,7 +19,7 @@ export class SettingsPageTasklistsComponent implements OnInit {
 
   ngOnInit() {
     this.tasklistService.entries
-      .subscribe(tasklists => this.tasklists = tasklists.filter(x => !x.primary));
+      .subscribe(tasklists => this.tasklists = tasklists);
   }
 
   delete(tasklist: TaskList) {

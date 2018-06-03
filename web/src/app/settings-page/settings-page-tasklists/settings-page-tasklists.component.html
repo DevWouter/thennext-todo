@@ -1,11 +1,9 @@
 <table>
   <tbody>
-    <tr>
-      <td>Inbox</td>
-      <td></td>
-    </tr>
     <tr *ngFor="let tasklist of tasklists">
-      <td>{{tasklist.name}}</td>
+      <td>
+        <a routerLinkActive='active' [routerLink]="['/settings', 'tasklists', tasklist.uuid]">{{tasklist.name}}</a>
+      </td>
       <td>
         <button (click)="delete(tasklist)">
           <i class="fas fa-trash fa-fw"></i>

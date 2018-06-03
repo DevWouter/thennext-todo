@@ -12,6 +12,7 @@ import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settin
 
 import { TabTitlesComponent } from "./tab-titles/tab-titles.component";
 import { AppSettingsRoutingModule } from "./settings.routing";
+import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist.component";
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { AppSettingsRoutingModule } from "./settings.routing";
     SettingsPageHeaderComponent,
     SettingsPageTasklistsComponent,
     SettingsPageScoreshiftsComponent,
+    SettingsTasklistComponent,
   ],
   exports: [TabTitlesComponent]
 })
