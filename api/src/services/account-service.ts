@@ -17,20 +17,6 @@ export class AccountService {
             .getOne();
     }
 
-    byUuid(uuid: string): Promise<AccountEntity> {
-        return this.db
-            .createQueryBuilder(AccountEntity, "account")
-            .where("account.uuid = :uuid", { uuid: uuid })
-            .getOne();
-    }
-
-    byId(id: number): Promise<AccountEntity> {
-        return this.db
-            .createQueryBuilder(AccountEntity, "account")
-            .where("account.id = :id", { id: id })
-            .getOne();
-    }
-
     byEmail(email: string): Promise<AccountEntity> {
         return this.db
             .createQueryBuilder(AccountEntity, "account")
