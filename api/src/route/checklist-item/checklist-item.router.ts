@@ -1,16 +1,15 @@
 import * as express from "express";
+import container from "../../inversify.config";
 import { asyncMiddleware } from "../../helpers/async-helper";
 
-import { ChecklistItemCreate } from "./checklist-item-create";
-import { ChecklistItemDelete } from "./checklist-item-delete";
-import { ChecklistItemUpdate } from "./checklist-item-update";
-import { ChecklistItemIndex } from "./checklist-item-index";
+import { ChecklistItemController } from "./checklist-item.controller";
 
+const controller = container.resolve(ChecklistItemController);
 const router = express.Router();
 
-router.get("/index", asyncMiddleware(ChecklistItemIndex));
-router.post("/create", asyncMiddleware(ChecklistItemCreate));
-router.patch("/:uuid", asyncMiddleware(ChecklistItemUpdate));
-router.delete("/:uuid", asyncMiddleware(ChecklistItemDelete));
+router.get("/index", asyncMiddleware(controller.index.bind(controller)));
+router.post("/create", asyncMiddleware(controller.create.bind(controller)));
+router.patch("/:uuid", asyncMiddleware(controller.update.bind(controller)));
+router.delete("/:uuid", asyncMiddleware(controller.delete.bind(controller)));
 
 export { router as checklistItemRouter };
