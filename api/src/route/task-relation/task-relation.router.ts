@@ -1,14 +1,15 @@
 import * as express from "express";
-import { TaskRelationDestroy as destroy } from "./task-relation-delete";
-import { TaskRelationCreate as create } from "./task-relation-create";
-import { TaskRelationIndex as index } from "./task-relation-index";
-import { asyncMiddleware } from "../../helpers/async-helper";
+import container from "../../inversify.config";
 
+import { asyncMiddleware } from "../../helpers/async-helper";
+import { TaskRelationController } from "./task-relation.controller";
+
+const controller = container.resolve(TaskRelationController);
 const router = express.Router();
 
-router.get("/index", asyncMiddleware(index));
-router.post("/create", asyncMiddleware(create));
-router.delete("/:uuid", asyncMiddleware(destroy));
+router.get("/index", asyncMiddleware(controller.index.bind(controller)));
+router.post("/create", asyncMiddleware(controller.create.bind(controller)));
+router.delete("/:uuid", asyncMiddleware(controller.delete.bind(controller)));
 
 
 export { router as taskRelationRouter };
