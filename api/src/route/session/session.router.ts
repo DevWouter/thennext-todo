@@ -1,13 +1,14 @@
 import * as express from "express";
+import container from "../../inversify.config";
 import { isAuthenticated } from "../../helpers/is-authenticated";
-import { SessionCreate } from "./session-create";
-import { SessionDestroy } from "./session-destroy";
-import { SessionExtend } from "./session-extend";
+import { asyncMiddleware } from "../../helpers/async-helper";
+import { SessionController } from "./session.controller";
 
-const sessionRouter = express.Router();
+const controller = container.resolve(SessionController);
+const router = express.Router();
 
-sessionRouter.post("/create", SessionCreate);
-sessionRouter.delete("/destroy", [isAuthenticated, SessionDestroy]);
-sessionRouter.patch("/extend", [isAuthenticated, SessionExtend]);
+router.post("/create", asyncMiddleware(controller.create.bind(controller)));
+router.delete("/destroy", [isAuthenticated, asyncMiddleware(controller.create.bind(controller))]);
+router.patch("/extend", [isAuthenticated, asyncMiddleware(controller.extend.bind(controller))]);
 
-export { sessionRouter };
+export { router as sessionRouter };
