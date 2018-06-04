@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { Connection } from "typeorm";
 
 import { AccountEntity, ChecklistItemEntity, TaskTimeLapEntity } from "../db/entities";
@@ -7,12 +7,11 @@ import { TaskTimeLap } from "../route/task-time-lap/task-time-lap.model";
 @injectable()
 export class TaskTimeLapService {
     constructor(
-        private readonly db: Connection
+        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
     ) { }
 
-    byUuid(uuid: string, account: AccountEntity): Promise<TaskTimeLapEntity> {
-        // this function requires the account to ensure we have ownership.
-        return this.db
+    async byUuid(uuid: string, account: AccountEntity): Promise<TaskTimeLapEntity> {
+        return (await this.db())
             .createQueryBuilder(TaskTimeLapEntity, "timelap")
             .innerJoinAndSelect("timelap.task", "task")
             .innerJoinAndSelect("timelap.owner", "owner")
@@ -20,8 +19,8 @@ export class TaskTimeLapService {
             .getOne();
     }
 
-    of(account: AccountEntity): Promise<TaskTimeLapEntity[]> {
-        return this.db
+    async of(account: AccountEntity): Promise<TaskTimeLapEntity[]> {
+        return (await this.db())
             .createQueryBuilder(TaskTimeLapEntity, "timelap")
             .innerJoinAndSelect("timelap.task", "task")
             .innerJoinAndSelect("timelap.owner", "owner")
@@ -29,18 +28,18 @@ export class TaskTimeLapService {
             .getMany();
     }
 
-    update(entity: TaskTimeLapEntity): Promise<TaskTimeLapEntity> {
-        const entityManager = this.db.createEntityManager();
+    async update(entity: TaskTimeLapEntity): Promise<TaskTimeLapEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.save(TaskTimeLapEntity, entity);
     }
 
-    create(entity: TaskTimeLapEntity): Promise<TaskTimeLapEntity> {
-        const entityManager = this.db.createEntityManager();
+    async create(entity: TaskTimeLapEntity): Promise<TaskTimeLapEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.save(TaskTimeLapEntity, entity);
     }
 
-    destroy(entity: TaskTimeLapEntity): Promise<TaskTimeLapEntity> {
-        const entityManager = this.db.createEntityManager();
+    async destroy(entity: TaskTimeLapEntity): Promise<TaskTimeLapEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.remove(TaskTimeLapEntity, entity);
     }
 }

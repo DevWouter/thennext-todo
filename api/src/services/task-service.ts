@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { TaskEntity, AccountEntity, TaskListEntity } from "../db/entities";
 import { Connection } from "typeorm";
 
@@ -6,12 +6,11 @@ import { Connection } from "typeorm";
 export class TaskService {
 
     constructor(
-        private readonly db: Connection
+        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
     ) { }
 
-    byUuid(uuid: string, account: AccountEntity): Promise<TaskEntity> {
-        // this function requires the account to ensure we have ownership.
-        return this.db
+    async byUuid(uuid: string, account: AccountEntity): Promise<TaskEntity> {
+        return (await this.db())
             .createQueryBuilder(TaskEntity, "task")
             .leftJoinAndSelect("task.taskList", "taskList")
             .innerJoin("taskList.rights", "right")
@@ -21,15 +20,15 @@ export class TaskService {
             .getOne();
     }
 
-    byId(id: number): Promise<TaskEntity> {
-        return this.db
+    async byId(id: number): Promise<TaskEntity> {
+        return (await this.db())
             .createQueryBuilder(TaskEntity, "task")
             .where("task.id = :id", { id: id })
             .getOne();
     }
 
-    of(account: AccountEntity): Promise<TaskEntity[]> {
-        return this.db.createQueryBuilder(TaskEntity, "task")
+    async of(account: AccountEntity): Promise<TaskEntity[]> {
+        return (await this.db()).createQueryBuilder(TaskEntity, "task")
             .leftJoinAndSelect("task.taskList", "taskList")
             .innerJoin("taskList.rights", "right")
             .innerJoin("right.account", "account")
@@ -37,18 +36,18 @@ export class TaskService {
             .getMany();
     }
 
-    update(entity: TaskEntity): Promise<TaskEntity> {
-        const entityManager = this.db.createEntityManager();
+    async update(entity: TaskEntity): Promise<TaskEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.save(TaskEntity, entity);
     }
 
-    create(entity: TaskEntity): Promise<TaskEntity> {
-        const entityManager = this.db.createEntityManager();
+    async create(entity: TaskEntity): Promise<TaskEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.save(TaskEntity, entity);
     }
 
-    destroy(entity: TaskEntity): Promise<TaskEntity> {
-        const entityManager = this.db.createEntityManager();
+    async destroy(entity: TaskEntity): Promise<TaskEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.remove(TaskEntity, entity);
     }
 }
