@@ -10,6 +10,7 @@ import { TaskListService } from "./services/task-list-service";
 import { ChecklistItemService } from "./services/checklist-item-service";
 import { TaskTimeLapService } from "./services/task-time-lap-service";
 import { ScoreShiftService } from "./services/score-shift-service";
+import { TaskListRightService } from "./services/task-list-right-service";
 
 decorate(injectable(), Connection);
 decorate(unmanaged(), Connection, 1);
@@ -36,5 +37,6 @@ container.bind<TaskListService>(TaskListService).toSelf();
 container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskTimeLapService>(TaskTimeLapService).toSelf();
+container.bind<TaskListRightService>(TaskListRightService).toSelf();
 
 export default container;
