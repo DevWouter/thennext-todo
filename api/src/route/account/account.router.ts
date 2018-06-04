@@ -1,12 +1,13 @@
 import * as express from "express";
+import container from "../../inversify.config";
 
-import { AccountCreate } from "./account-create";
 import { isAuthenticated } from "../../helpers/is-authenticated";
+import { asyncMiddleware } from "../../helpers/async-helper";
+import { AccountController } from "./account.controller";
 
-
-
+const controller = container.resolve(AccountController);
 const router = express.Router();
 
-router.post("/", AccountCreate); // The post method doesn't require an authentication state.
+router.post("/", asyncMiddleware(controller.create.bind(controller)));
 
 export { router as accountRouter };
