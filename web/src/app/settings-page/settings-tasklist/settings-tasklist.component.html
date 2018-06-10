@@ -18,7 +18,12 @@
 
         <h3>Unused share-tokens</h3>
         <ul>
-          <li>No tokens are shared</li>
+          <li *ngFor="let token of tokens">
+            {{token.taskListUuid}} -
+            {{token.token}}
+            <button (click)="deleteToken(token)">Delete</button>
+          </li>
+          <button (click)="addShareToken(1)">Add token to share list</button>
         </ul>
       </div>
       <div *ngIf="!taskList || !rights">

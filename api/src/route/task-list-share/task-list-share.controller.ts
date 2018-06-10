@@ -9,7 +9,7 @@ import { TaskListShareTokenService } from "../../services/task-list-share-token-
 
 
 export interface TaskListShareInput {
-    tasklistUuid: string;
+    taskListUuid: string;
 }
 
 @injectable()
@@ -27,7 +27,7 @@ export class TaskListShareController {
         const account = await this.accountService.byToken(token);
 
         const input = req.body as TaskListShareInput;
-        const taskList = await this.taskListService.byUuid(input.tasklistUuid, account);
+        const taskList = await this.taskListService.byUuid(input.taskListUuid, account);
 
         if (!this.taskListService.hasOwnership(account, taskList)) {
             res.status(403).send({ error: `You have no ownership for tasklist: ${taskList.uuid}` });
