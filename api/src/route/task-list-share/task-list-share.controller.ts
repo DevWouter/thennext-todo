@@ -3,7 +3,6 @@ import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { TaskListService } from "../../services/task-list-service";
-import { AccountSettingsService } from "../../services/account-settings-service";
 import { TaskListShare } from "./task-list-share.model";
 import { TaskListShareTokenEntity } from "../../db/entities/task-list-share-token.entity";
 import { TaskListShareTokenService } from "../../services/task-list-share-token-service";
@@ -18,7 +17,6 @@ export class TaskListShareController {
     constructor(
         private readonly authService: AuthenticationService,
         private readonly accountService: AccountService,
-        private readonly accountSettingsService: AccountSettingsService,
         private readonly taskListService: TaskListService,
         private readonly taskListShareTokenService: TaskListShareTokenService,
     ) {
@@ -55,7 +53,6 @@ export class TaskListShareController {
     async index(req: Request, res: Response): Promise<void> {
         const token = this.authService.getAuthenticationToken(req);
         const account = await this.accountService.byToken(token);
-        const accountSettings = await this.accountSettingsService.of(account);
 
         const src = await this.taskListShareTokenService.of(account);
 
@@ -71,7 +68,6 @@ export class TaskListShareController {
     async delete(req: Request, res: Response): Promise<void> {
         const token = this.authService.getAuthenticationToken(req);
         const account = await this.accountService.byToken(token);
-        const accountSettings = await this.accountSettingsService.of(account);
 
         const tasklistShareToken = await this.taskListShareTokenService.byUuid(req.params.uuid, account);
 
