@@ -11,6 +11,9 @@ export class TaskListShareTokenEntity {
     @Generated("uuid")
     uuid: string;
 
+    /**
+     * The token that can be given to a user so it can granted access.
+     */
     @Column("varchar")
     @Generated("uuid")
     token: string;
