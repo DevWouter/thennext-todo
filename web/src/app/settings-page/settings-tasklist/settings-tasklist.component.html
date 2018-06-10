@@ -4,13 +4,16 @@
   <div class="tab-container tab-container--vertical">
     <app-tab-titles></app-tab-titles>
     <div class="tab-content">
-      <div *ngIf="taskList">
+      <div *ngIf="taskList && rights">
         <h2>{{taskList.name}}</h2>
         Show information about the current task-list
 
         <h3>Shared with</h3>
         <ul>
-          <li>You, the owner</li>
+          <li *ngFor="let right of rights">
+            {{right.name}}
+            <button (click)="delete(right)">Delete</button>
+          </li>
         </ul>
 
         <h3>Unused share-tokens</h3>
@@ -18,7 +21,7 @@
           <li>No tokens are shared</li>
         </ul>
       </div>
-      <div *ngIf="!taskList">
+      <div *ngIf="!taskList || !rights">
         Loading or not found...
       </div>
     </div>

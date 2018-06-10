@@ -69,6 +69,7 @@ export class TaskListRightController {
         res.send(<TaskListRight>{
             taskListUuid: tasklist.uuid,
             uuid: newRight.uuid,
+            name: account.email,
         });
     }
 

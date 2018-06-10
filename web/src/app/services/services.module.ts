@@ -20,6 +20,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TaskTimeLapService } from "./task-time-lap.service";
 import { TaskViewService } from "./task-view.service";
+import { TaskListRightService } from "./task-list-right.service";
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { TaskViewService } from "./task-view.service";
     StorageService,
     TaskEventService,
     TaskListService,
+    TaskListRightService,
     TaskParseService,
     TaskRelationService,
     TaskScoreService,
