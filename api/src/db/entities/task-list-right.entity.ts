@@ -4,6 +4,7 @@ import { TaskListEntity } from "./task-list.entity";
 
 export enum AccessRight {
     none = "none",
+    default = "default",
     owner = "owner",
 }
 
