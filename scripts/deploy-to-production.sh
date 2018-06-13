@@ -37,7 +37,7 @@ docker load -i /home/core/docks/pa_web.tar
 docker load -i /home/core/docks/pa_proxy.tar
 
 # Create backup
-./scripts/backup.sh
+sudo ./scripts/backup.sh
 
 # Restart docker-compose
 /opt/bin/docker-compose up -d --no-build
