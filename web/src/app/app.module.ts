@@ -10,6 +10,8 @@ import { HtmlDirectivesModule } from "./html-directives/html-directives.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { ServicesModule } from "./services/services.module";
 
+import { SettingsPageModule } from "./settings-page/settings-page.module";
+
 import { AppComponent } from "./app.component";
 
 import { HomepageComponent } from "./homepage/homepage.component";
@@ -25,14 +27,8 @@ import { TaskPageContentPaneDescriptionComponent } from "./task-page-content-pan
 import { TaskPageContentPaneChecklistComponent } from "./task-page-content-pane-checklist/task-page-content-pane-checklist.component";
 import { TaskPageContentPaneRelationsComponent } from "./task-page-content-pane-relations/task-page-content-pane-relations.component";
 import { TaskPageContentPaneControlComponent } from "./task-page-content-pane-control/task-page-content-pane-control.component";
-import { SettingsPageComponent } from "./settings-page/settings-page.component";
-import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
 import { TaskPageHeaderTasklistSelectorComponent } from "./task-page-header-tasklist-selector/task-page-header-tasklist-selector.component";
 import { TaskPageContentPaneChecklistItemComponent } from "./task-page-content-pane-checklist-item/task-page-content-pane-checklist-item.component";
-import { SettingsPageHeaderComponent } from "./settings-page-header/settings-page-header.component";
-import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
-import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
-import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/settings-page-scoreshifts.component";
 import { CommandInputComponent } from "./command-input/command-input.component";
 import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
@@ -54,14 +50,8 @@ import { TopnavComponent } from "./topnav/topnav.component";
     TaskPageContentPaneChecklistComponent,
     TaskPageContentPaneRelationsComponent,
     TaskPageContentPaneControlComponent,
-    SettingsPageComponent,
-    SettingsPageTasklistsComponent,
     TaskPageHeaderTasklistSelectorComponent,
     TaskPageContentPaneChecklistItemComponent,
-    SettingsPageHeaderComponent,
-    SettingsPageTabScoringComponent,
-    SettingsPageTabTasklistsComponent,
-    SettingsPageScoreshiftsComponent,
     CommandInputComponent,
     CreateAccountPageComponent,
     LoginPageComponent,
@@ -72,6 +62,7 @@ import { TopnavComponent } from "./topnav/topnav.component";
     BrowserModule,
     FormsModule,
     HtmlDirectivesModule,
+    SettingsPageModule,
     ServicesModule,
     AppRoutingModule,
     AccountModule,

@@ -4,6 +4,7 @@ import { SessionEntity } from "./session.entity";
 import { TaskListEntity } from "./task-list.entity";
 import { ScoreShiftEntity } from ".";
 import { TaskTimeLapEntity } from "./task-time-lap.entity";
+import { TaskListRightEntity } from "./task-list-right.entity";
 
 @Entity("Account")
 export class AccountEntity {
@@ -23,8 +24,8 @@ export class AccountEntity {
     @OneToOne(type => AccountSettingsEntity, accountSettings => accountSettings.account, { cascadeAll: true, onDelete: "CASCADE" })
     accountSettings: AccountSettingsEntity;
 
-    @OneToMany(type => TaskListEntity, taskList => taskList.owner, { cascadeInsert: true })
-    taskLists: TaskListEntity[];
+    @OneToMany(type => TaskListRightEntity, taskList => taskList.account, { cascadeInsert: true })
+    rights: TaskListRightEntity[];
 
     @OneToMany(type => SessionEntity, session => session.account)
     sessions: SessionEntity[];

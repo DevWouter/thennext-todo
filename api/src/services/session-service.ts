@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { Connection } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import * as moment from "moment";
@@ -11,12 +11,12 @@ import { Session } from "../route/session/session.model";
 @injectable()
 export class SessionService {
     constructor(
-        private readonly db: Connection,
+        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>,
         private readonly accountService: AccountService,
     ) { }
 
     async byToken(token: string): Promise<SessionEntity> {
-        return this.db
+        return (await this.db())
             .createQueryBuilder(SessionEntity, "session")
             .where("session.token = :token", { token: token })
             .getOne();
@@ -39,7 +39,7 @@ export class SessionService {
         session.expire_on = moment().add({ weeks: 3 }).toDate();
         session.created_on = moment().toDate();
 
-        return this.db.createEntityManager().save(session);
+        return (await this.db()).createEntityManager().save(session);
     }
 
     async extend(token: string): Promise<SessionEntity> {
@@ -47,11 +47,11 @@ export class SessionService {
 
         session.expire_on = moment().add({ weeks: 3 }).toDate();
 
-        return this.db.createEntityManager().save(session);
+        return (await this.db()).createEntityManager().save(session);
     }
 
-    destroy(session: SessionEntity): Promise<SessionEntity> {
-        const entityManager = this.db.createEntityManager();
+    async destroy(session: SessionEntity): Promise<SessionEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.remove(session);
     }
 }

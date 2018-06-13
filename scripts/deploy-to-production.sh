@@ -29,12 +29,15 @@ rsync -avPz ${DIR}/../docker-compose.prod-run.yml core@${SERVER}:/home/core/dock
 
 # Run this command manually on the server: sudo ./scripts/backup.sh
 echo ">>> Loading docker images"
-ssh core@$SERVER "
+ssh -t core@$SERVER "
 # Load the images
 docker load -i /home/core/docks/pa_db.tar
 docker load -i /home/core/docks/pa_api.tar
 docker load -i /home/core/docks/pa_web.tar
 docker load -i /home/core/docks/pa_proxy.tar
+
+# Create backup
+./scripts/backup.sh
 
 # Restart docker-compose
 /opt/bin/docker-compose up -d --no-build

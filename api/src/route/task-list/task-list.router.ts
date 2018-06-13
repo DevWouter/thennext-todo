@@ -1,15 +1,14 @@
 import * as express from "express";
-
-import { TaskListList } from "./task-list-list";
-import { taskListCreate } from "./task-list-create";
-import { TaskListDelete } from "./task-list-delete";
+import container from "../../inversify.config";
 import { asyncMiddleware } from "../../helpers/async-helper";
+import { TaskListController } from "./task-list.controller";
+
+const controller = container.resolve(TaskListController);
 
 const taskListRouter = express.Router();
 
-taskListRouter.get("/index", asyncMiddleware(TaskListList));
-taskListRouter.post("/create", taskListCreate);
-taskListRouter.post("/create", taskListCreate);
-taskListRouter.delete("/:uuid", TaskListDelete);
+taskListRouter.get("/index", asyncMiddleware(controller.index.bind(controller)));
+taskListRouter.post("/create", asyncMiddleware(controller.create.bind(controller)));
+taskListRouter.delete("/:uuid", asyncMiddleware(controller.delete.bind(controller)));
 
 export { taskListRouter };

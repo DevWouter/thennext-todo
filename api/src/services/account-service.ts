@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { Request } from "express";
 import { AccountEntity } from "../db/entities";
 import { Connection } from "typeorm";
@@ -7,47 +7,35 @@ import { Connection } from "typeorm";
 export class AccountService {
 
     constructor(
-        private readonly db: Connection
-    ) { }
+        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
+    ) {
+    }
 
-    byToken(token: string): Promise<AccountEntity> {
-        return this.db
+    async byToken(token: string): Promise<AccountEntity> {
+        return (await this.db())
             .createQueryBuilder(AccountEntity, "account")
             .innerJoin("account.sessions", "session", "session.token = :token", { token })
             .getOne();
     }
 
-    byUuid(uuid: string): Promise<AccountEntity> {
-        return this.db
-            .createQueryBuilder(AccountEntity, "account")
-            .where("account.uuid = :uuid", { uuid: uuid })
-            .getOne();
-    }
-
-    byId(id: number): Promise<AccountEntity> {
-        return this.db
-            .createQueryBuilder(AccountEntity, "account")
-            .where("account.id = :id", { id: id })
-            .getOne();
-    }
-
-    byEmail(email: string): Promise<AccountEntity> {
-        return this.db
+    async byEmail(email: string): Promise<AccountEntity> {
+        return (await this.db())
             .createQueryBuilder(AccountEntity, "account")
             .where("account.email = :email", { email: email })
             .getOne();
     }
 
-    update(entity: AccountEntity): Promise<AccountEntity> {
-        const entityManager = this.db.createEntityManager();
+    async update(entity: AccountEntity): Promise<AccountEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.save(AccountEntity, entity);
     }
-    create(entity: AccountEntity): Promise<AccountEntity> {
-        const entityManager = this.db.createEntityManager();
+
+    async create(entity: AccountEntity): Promise<AccountEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.save(entity);
     }
-    destroy(entity: AccountEntity): Promise<AccountEntity> {
-        const entityManager = this.db.createEntityManager();
+    async destroy(entity: AccountEntity): Promise<AccountEntity> {
+        const entityManager = (await this.db()).createEntityManager();
         return entityManager.remove(AccountEntity, entity);
     }
 }

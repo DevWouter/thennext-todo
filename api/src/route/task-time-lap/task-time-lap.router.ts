@@ -1,16 +1,15 @@
 import * as express from "express";
+import container from "../../inversify.config";
 import { asyncMiddleware } from "../../helpers/async-helper";
+import { TaskTimeLapController } from "./task-time-lap.controller";
 
-import { TaskTimeLapCreate } from "./task-time-lap-create";
-import { TaskTimeLapDelete } from "./task-time-lap-delete";
-import { TaskTimeLapUpdate } from "./task-time-lap-update";
-import { TaskTimeLapIndex } from "./task-time-lap-index";
+const controller = container.resolve(TaskTimeLapController);
 
 const router = express.Router();
 
-router.get("/index", asyncMiddleware(TaskTimeLapIndex));
-router.post("/create", asyncMiddleware(TaskTimeLapCreate));
-router.patch("/:uuid", asyncMiddleware(TaskTimeLapUpdate));
-router.delete("/:uuid", asyncMiddleware(TaskTimeLapDelete));
+router.get("/index", asyncMiddleware(controller.index.bind(controller)));
+router.post("/create", asyncMiddleware(controller.create.bind(controller)));
+router.patch("/:uuid", asyncMiddleware(controller.update.bind(controller)));
+router.delete("/:uuid", asyncMiddleware(controller.delete.bind(controller)));
 
 export { router as taskTimeLapRouter };
