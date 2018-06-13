@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import { Router } from "@angular/router";
 import { SessionService } from "../services/session.service";
+import { AccountService } from "../services/account.service";
 
 @Component({
   selector: "app-topnav",
@@ -25,11 +26,14 @@ export class TopnavComponent implements OnInit {
   public get onlyPositive(): boolean { return this._onlyPositive; }
   public set onlyPositive(v: boolean) { this.navigation.toTaskPage({ onlyPositive: v }); }
 
+  public displayName = "";
+
   expand = false;
   constructor(
     private readonly navigation: NavigationService,
     private readonly router: Router,
     private readonly sessionService: SessionService,
+    private readonly accountService: AccountService,
   ) { }
 
   ngOnInit() {
@@ -37,6 +41,14 @@ export class TopnavComponent implements OnInit {
     this.navigation.showDelayed.subscribe(x => { this._showDelayed = x; });
     this.navigation.onlyPositive.subscribe(x => { this._onlyPositive = x; });
     this.navigation.onlyUnblocked.subscribe(x => { this._onlyUnblocked = x; });
+    this.accountService.myAccount.subscribe(x => {
+      if (x) {
+        this.displayName = x.displayName;
+      } else {
+        this.displayName = "";
+      }
+    }
+    );
   }
 
   close() {

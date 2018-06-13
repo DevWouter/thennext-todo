@@ -11,6 +11,8 @@ import { TaskListRightService } from "../../services/task-list-right-service";
 import { AccountSettingsService } from "../../services/account-settings-service";
 import { TaskListService } from "../../services/task-list-service";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
+import { AuthenticationService } from "../../services/authentication-service";
+import { MyAccount } from "./my-account.model";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -24,7 +26,19 @@ export class AccountController {
         private readonly accountSettingsService: AccountSettingsService,
         private readonly taskListService: TaskListService,
         private readonly taskListRightService: TaskListRightService,
+        private readonly authenticationService: AuthenticationService,
     ) {
+    }
+
+    async me(req: Request, res: Response): Promise<void> {
+        const token = this.authenticationService.getAuthenticationToken(req);
+        const account = await this.accountService.byToken(token);
+
+        const response: MyAccount = {
+            displayName: account.displayName,
+        };
+
+        res.send(response);
     }
 
     async create(req: Request, res: Response): Promise<void> {
