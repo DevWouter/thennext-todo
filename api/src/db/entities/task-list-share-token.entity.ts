@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
-import { AccountEntity } from "./account.entity";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, Generated } from "typeorm";
 import { TaskListEntity } from "./task-list.entity";
 
 @Entity("TaskListShareToken")
@@ -15,7 +14,6 @@ export class TaskListShareTokenEntity {
      * The token that can be given to a user so it can granted access.
      */
     @Column("varchar")
-    @Generated("uuid")
     token: string;
 
     @ManyToOne(type => TaskListEntity)

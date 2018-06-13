@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 
-import { BehaviorSubject ,  Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { ApiRepository } from "./repositories/api-repository";
-import { Entity } from "./repositories/entity";
 import { Repository } from "./repositories/repository";
 
 import { TaskList } from "./models/task-list.dto";
@@ -19,7 +18,7 @@ export class TaskListService implements Repository<TaskList> {
   }
 
   constructor(
-    private apiService: ApiService,
+    apiService: ApiService,
   ) {
     this._repository = new ApiRepository(apiService, "/api/task-list");
   }

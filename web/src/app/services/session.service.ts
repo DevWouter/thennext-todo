@@ -25,6 +25,6 @@ export class SessionService {
       .toPromise()
       .catch((reason) => console.error(reason));
 
-    this.apiService.setSessionToken(undefined, undefined);
+    this.apiService.setSessionToken(undefined);
   }
 }

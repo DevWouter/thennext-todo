@@ -21,6 +21,7 @@ export class SettingsTasklistComponent implements OnInit {
   taskList: TaskList;
   rights: TaskListRight[] = undefined;
   tokens: TaskListShareToken[] = undefined;
+  newToken = "";
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -58,14 +59,21 @@ export class SettingsTasklistComponent implements OnInit {
     this.tasklistShareTokenService.delete(token);
   }
 
-  addShareToken(amount: number) {
-    for (let i = 0; i < amount; ++i) {
-      const newToken = <TaskListShareToken>{
-        taskListUuid: this.taskList.uuid,
-      };
-
-      this.tasklistShareTokenService.add(newToken);
+  addShareToken() {
+    this.newToken = this.newToken.trim();
+    // Don't allow empty tokens.
+    if (this.newToken.length === 0) {
+      return;
     }
+
+    const newToken = <TaskListShareToken>{
+      taskListUuid: this.taskList.uuid,
+      token: this.newToken,
+    };
+
+    this.newToken = "";
+
+    this.tasklistShareTokenService.add(newToken);
   }
 
 }

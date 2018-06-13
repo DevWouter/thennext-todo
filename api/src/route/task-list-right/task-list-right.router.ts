@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get("/index", asyncMiddleware(controller.index.bind(controller)));
 router.post("/create", asyncMiddleware(controller.create.bind(controller)));
+router.post("/accept", asyncMiddleware(controller.create.bind(controller)));
 router.delete("/:uuid", asyncMiddleware(controller.delete.bind(controller)));
 
 export { router as taskListRightRouter };

@@ -43,10 +43,9 @@ export class ApiService {
       .delete<T>(url, this.options());
   }
 
-  setSessionToken(token: string, expireAt: string) {
+  setSessionToken(token: string) {
     // Store session token first and then also store it so we can retrieve it later.
     this.storageService.set(StorageKey.SESSION_TOKEN, token);
-    this.storageService.set(StorageKey.SESSION_EXPIRE, expireAt);
     this._sessionTokenSubject.next(token);
   }
 

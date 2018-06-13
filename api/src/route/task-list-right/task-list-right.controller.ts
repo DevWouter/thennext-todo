@@ -46,6 +46,7 @@ export class TaskListRightController {
         const shareToken = await this.taskListShareTokenService.byTokenAndListUuid(input.shareToken, input.tasklistUuid);
         if (!shareToken) {
             res.status(403).send({ error: `The token or tasklist is invalid` });
+            return;
         }
 
         const tasklist = shareToken.taskList;
@@ -56,6 +57,7 @@ export class TaskListRightController {
             right.account.id === account.id &&
             right.taskList.id === tasklist.id)) {
             res.status(403).send({ error: `You already have access to the tasklist` });
+            return;
         }
 
         // No access and everything valid? Then add a new right and delete the token.

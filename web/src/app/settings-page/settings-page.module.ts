@@ -9,6 +9,7 @@ import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/se
 import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
 import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
+import { AcceptShareTokenComponent } from "./accept-share-token/accept-share-token.component";
 
 import { TabTitlesComponent } from "./tab-titles/tab-titles.component";
 import { AppSettingsRoutingModule } from "./settings.routing";
@@ -30,6 +31,7 @@ import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist
     SettingsPageTasklistsComponent,
     SettingsPageScoreshiftsComponent,
     SettingsTasklistComponent,
+    AcceptShareTokenComponent,
   ],
   exports: [TabTitlesComponent]
 })

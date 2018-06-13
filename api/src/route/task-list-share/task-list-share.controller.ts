@@ -10,6 +10,7 @@ import { TaskListShareTokenService } from "../../services/task-list-share-token-
 
 export interface TaskListShareInput {
     taskListUuid: string;
+    token: string;
 }
 
 @injectable()
@@ -34,8 +35,19 @@ export class TaskListShareController {
             return;
         }
 
+        if (!input.token) {
+            res.status(403).send({ error: `Missing a token` });
+            return;
+        }
+
+        if (await this.taskListShareTokenService.byTokenAndListUuid(input.token, input.taskListUuid)) {
+            res.status(403).send({ error: `A token for that list already exists.` });
+            return;
+        }
+
         const entity = new TaskListShareTokenEntity();
         entity.taskList = taskList;
+        entity.token = input.token;
 
         const savePromise = this.taskListShareTokenService.create(entity);
         // Also create the right

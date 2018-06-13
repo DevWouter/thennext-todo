@@ -34,7 +34,7 @@ export class LoginFormComponent implements OnInit {
     try {
       this.working = true;
       const session = await this.sessionService.createSession(this.username, this.password);
-      this.apiService.setSessionToken(session.token, session.expireAt);
+      this.apiService.setSessionToken(session.token);
       this.success.emit();
       this.working = false;
     } catch (reason) {

@@ -30,7 +30,7 @@ export class CreateAccountFormComponent implements OnInit {
       console.log(`Account was create for ${account}`);
       try {
         const session = await this.sessionService.createSession(this.username, this.password);
-        this.apiService.setSessionToken(session.token, session.expireAt);
+        this.apiService.setSessionToken(session.token);
         this.success.emit(true);
       } catch (reason) {
         console.error("Unable to create session", reason);
