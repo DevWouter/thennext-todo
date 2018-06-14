@@ -33,6 +33,7 @@ import { CommandInputComponent } from "./command-input/command-input.component";
 import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
 import { TopnavComponent } from "./topnav/topnav.component";
+import { WarningModalDialogComponent } from './warning-modal-dialog/warning-modal-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { TopnavComponent } from "./topnav/topnav.component";
     CreateAccountPageComponent,
     LoginPageComponent,
     TopnavComponent,
+    WarningModalDialogComponent,
   ],
   imports: [
     AnimationModule,

@@ -1,0 +1,38 @@
+.overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: transparentize($color: black, $amount: 0.2);
+    z-index: 1000;
+}
+
+.dialog-container {
+    position: fixed;
+    top: 20vh;
+    left: 5vh;
+    right: 5vh;
+    z-index: 1001;
+    text-align: center;
+    width: 100%;
+}
+
+.dialog {
+    max-width: 700px;
+    display: inline-block;
+    text-align: left;
+    .title {
+        padding: 10px 20px;
+        background-color: lighten($color: red, $amount: 40);
+        border-radius: 5px 5px 0px 0px;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center;
+    }
+    .content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 0px 0px 5px 5px;
+    }
+}
