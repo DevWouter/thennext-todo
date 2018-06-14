@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ApiEventService } from "../services/api-event.service";
 
 @Component({
   selector: "app-warning-modal-dialog",
@@ -8,9 +9,18 @@ import { Component, OnInit } from "@angular/core";
 export class WarningModalDialogComponent implements OnInit {
 
   showDialog = false;
-  constructor() { }
+  lastError = undefined;
+  constructor(
+    private readonly apiEventService: ApiEventService,
+  ) { }
 
   ngOnInit() {
+    console.log("Hello, people!");
+    this.apiEventService.recentEvents.subscribe((reason) => {
+      console.log("Received error");
+      this.showDialog = true;
+      this.lastError = reason;
+    });
   }
 
 }

@@ -14,6 +14,7 @@ import { AcceptShareTokenComponent } from "./accept-share-token/accept-share-tok
 import { TabTitlesComponent } from "./tab-titles/tab-titles.component";
 import { AppSettingsRoutingModule } from "./settings.routing";
 import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist.component";
+import { DialogsModule } from "../dialogs/dialogs.module";
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist
     FormsModule,
     ServicesModule,
     AppSettingsRoutingModule,
+    DialogsModule,
   ],
   declarations: [
     TabTitlesComponent,
