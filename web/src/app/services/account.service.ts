@@ -9,6 +9,7 @@ interface Account {
 }
 
 interface MyAccount {
+  uuid: string;
   displayName: string;
 }
 
