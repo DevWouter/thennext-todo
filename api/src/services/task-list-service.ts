@@ -36,6 +36,7 @@ export class TaskListService {
     async for(account: AccountEntity): Promise<TaskListEntity[]> {
         return (await this.db()).createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.rights", "right")
+            .innerJoinAndSelect("taskList.owner", "owner")
             .innerJoinAndSelect("right.account", "account")
             .where("account.id = :id", { id: account.id })
             .getMany();
