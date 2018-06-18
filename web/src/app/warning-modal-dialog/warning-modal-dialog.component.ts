@@ -23,4 +23,8 @@ export class WarningModalDialogComponent implements OnInit {
     });
   }
 
+  reload() {
+    window.location.reload(true);
+  }
+
 }
