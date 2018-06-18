@@ -15,7 +15,6 @@ export class SettingsPageTasklistsComponent implements OnInit {
   tasklists: TaskList[];
   ownedTasklists: TaskList[];
   otherTasklists: TaskList[];
-  newTaskListName: string;
   myUuid: string;
 
   constructor(
@@ -45,23 +44,5 @@ export class SettingsPageTasklistsComponent implements OnInit {
     this.tasklistService.entries
       .subscribe(tasklists => this.tasklists = tasklists);
   }
-
-  delete(tasklist: TaskList) {
-    this.tasklistService.delete(tasklist);
-  }
-
-  create() {
-    const name = (this.newTaskListName || "").trim();
-    this.newTaskListName = "";
-    if (name.length === 0) {
-      return;
-    }
-
-    this.tasklistService.add(<TaskList>{
-      ownerUuid: this.myUuid,
-      name: name,
-    });
-  }
-
 
 }

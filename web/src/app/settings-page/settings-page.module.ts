@@ -12,6 +12,7 @@ import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settin
 import { SettingsContentTiltleComponent } from "./settings-content-title/settings-content-title.component";
 import { AcceptShareTokenComponent } from "./accept-share-token/accept-share-token.component";
 
+import { SettingsPageTasklistCreatorComponent } from "./settings-page-tasklist-creator/settings-page-tasklist-creator.component";
 import { SettingsPageTasklistItemComponent } from "./settings-page-tasklist-item/settings-page-tasklist-item.component";
 
 import { TabTitlesComponent } from "./tab-titles/tab-titles.component";
@@ -39,6 +40,7 @@ import { DialogsModule } from "../dialogs/dialogs.module";
     AcceptShareTokenComponent,
     SettingsContentTiltleComponent,
     SettingsPageTasklistItemComponent,
+    SettingsPageTasklistCreatorComponent,
   ],
   exports: [TabTitlesComponent]
 })
