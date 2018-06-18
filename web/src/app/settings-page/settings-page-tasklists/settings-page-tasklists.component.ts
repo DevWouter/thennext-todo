@@ -4,7 +4,7 @@ import { TaskList } from "../../services/models/task-list.dto";
 import { TaskListService } from "../../services/task-list.service";
 import { AccountService } from "../../services/account.service";
 import { combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, filter } from "rxjs/operators";
 
 @Component({
   selector: "app-settings-page-tasklists",
@@ -24,7 +24,10 @@ export class SettingsPageTasklistsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const entriesWithAccount = combineLatest(this.tasklistService.entries, this.accountService.myAccount)
+    const entriesWithAccount = combineLatest(
+      this.tasklistService.entries.pipe(filter(x => !!x)),
+      this.accountService.myAccount.pipe(filter(x => !!x))
+    )
       .pipe(
         map(([tasklists, myAccount]) => ({
           tasklists: tasklists,
