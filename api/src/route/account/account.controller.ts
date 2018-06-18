@@ -35,6 +35,7 @@ export class AccountController {
         const account = await this.accountService.byToken(token);
 
         const response: MyAccount = {
+            uuid: account.uuid,
             displayName: account.displayName,
         };
 
