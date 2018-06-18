@@ -36,8 +36,12 @@ export class TaskListRightService {
             .innerJoinAndSelect("right.account", "account")
             .innerJoinAndSelect("right.taskList", "taskList")
             .innerJoinAndSelect("taskList.owner", "owner")
-            .where("account.id = :id", { id: account.id })
-            .orWhere("owner.id = :id", { id: account.id })
+            .where("account.id = :accountId")
+            .orWhere("owner.id = :ownerId")
+            .setParameters({
+                accountId: account.id,
+                ownerId: account.id
+            })
             .getMany();
     }
 
@@ -48,9 +52,14 @@ export class TaskListRightService {
             .innerJoinAndSelect("right.taskList", "taskList")
             .innerJoinAndSelect("taskList.owner", "owner")
             .where(new Brackets(qb => qb
-                .where("account.id = :id", { id: account.id })
-                .orWhere("owner.id = :id", { id: account.id })))
-            .andWhere("right.uuid = :uuid", { uuid: uuid })
+                .where("account.id = :accountId")
+                .orWhere("owner.id = :ownerId")))
+            .andWhere("right.uuid = :uuid")
+            .setParameters({
+                uuid: uuid,
+                accountId: account.id,
+                ownerId: account.id
+            })
             .getOne();
     }
 }
