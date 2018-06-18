@@ -16,6 +16,7 @@ export class SettingsPageTasklistsComponent implements OnInit {
   ownedTasklists: TaskList[];
   otherTasklists: TaskList[];
   newTaskListName: string;
+  myUuid: string;
 
   constructor(
     private accountService: AccountService,
@@ -36,10 +37,9 @@ export class SettingsPageTasklistsComponent implements OnInit {
       );
 
     entriesWithAccount.subscribe(combo => {
-      console.log(combo);
-      const myUuid = combo.myAccount.uuid;
-      this.ownedTasklists = combo.tasklists.filter(x => x.ownerUuid === myUuid);
-      this.otherTasklists = combo.tasklists.filter(x => x.ownerUuid !== myUuid);
+      this.myUuid = combo.myAccount.uuid;
+      this.ownedTasklists = combo.tasklists.filter(x => x.ownerUuid === this.myUuid);
+      this.otherTasklists = combo.tasklists.filter(x => x.ownerUuid !== this.myUuid);
     });
 
     this.tasklistService.entries
@@ -57,7 +57,10 @@ export class SettingsPageTasklistsComponent implements OnInit {
       return;
     }
 
-    this.tasklistService.add(<TaskList>{ name: name });
+    this.tasklistService.add(<TaskList>{
+      ownerUuid: this.myUuid,
+      name: name,
+    });
   }
 
 
