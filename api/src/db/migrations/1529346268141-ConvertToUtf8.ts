@@ -3,7 +3,9 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 export class ConvertToUtf81529346268141 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query("ALTER DATABASE `test` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
+
+        const databaseName = queryRunner.connection.options.database;
+        await queryRunner.query(`ALTER DATABASE \`${databaseName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`)
 
         const allTables = [
             "Account",
