@@ -12,12 +12,9 @@
     </tr>
     <tr *ngFor="let tasklist of otherTasklists">
       <td>
-        {{tasklist.name}}
+        {{tasklist.name}} <i>(Owned by someone else)</i>
       </td>
       <td>
-        <button (click)="delete(tasklist)">
-          <i class="fas fa-trash fa-fw"></i>
-        </button>
       </td>
     </tr>
   </tbody>
