@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { TaskList } from "../../services/models/task-list.dto";
 import { TaskListService } from "../../services/task-list.service";
+import { AccountService } from "../../services/account.service";
+import { combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-settings-page-tasklists",
@@ -10,14 +13,32 @@ import { TaskListService } from "../../services/task-list.service";
 })
 export class SettingsPageTasklistsComponent implements OnInit {
   tasklists: TaskList[];
+  ownedTasklists: TaskList[];
+  otherTasklists: TaskList[];
   newTaskListName: string;
 
   constructor(
+    private accountService: AccountService,
     private tasklistService: TaskListService,
     private router: Router,
   ) { }
 
   ngOnInit() {
+    const entriesWithAccount = combineLatest(this.tasklistService.entries, this.accountService.myAccount)
+      .pipe(
+        map(([tasklists, myAccount]) => ({
+          tasklists: tasklists,
+          myAccount: myAccount
+        }))
+      );
+
+    entriesWithAccount.subscribe(combo => {
+      console.log(combo);
+      const myUuid = combo.myAccount.uuid;
+      this.ownedTasklists = combo.tasklists.filter(x => x.ownerUuid === myUuid);
+      this.otherTasklists = combo.tasklists.filter(x => x.ownerUuid !== myUuid);
+    });
+
     this.tasklistService.entries
       .subscribe(tasklists => this.tasklists = tasklists);
   }
