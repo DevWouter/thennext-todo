@@ -9,7 +9,6 @@ const routes: Routes = [
   {
     path: "settings", children: [
       { path: "tasklists", component: SettingsPageTabTasklistsComponent },
-      { path: "tasklists", component: SettingsPageTabTasklistsComponent },
       { path: "tasklists/:uuid", component: SettingsTasklistComponent },
       { path: "scoring", component: SettingsPageTabScoringComponent },
       // By default set the outlet to generic-settings-tab
