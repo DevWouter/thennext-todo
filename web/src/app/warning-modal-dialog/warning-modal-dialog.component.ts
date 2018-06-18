@@ -15,7 +15,6 @@ export class WarningModalDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("Hello, people!");
     this.apiEventService.recentEvents.subscribe((reason) => {
       console.log("Received error");
       this.showDialog = true;
