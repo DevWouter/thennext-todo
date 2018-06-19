@@ -30,7 +30,7 @@ export class TaskPageContentPaneComponent implements OnInit {
   }
 
   delete() {
-    if (confirm(`Are you sure you "${this.task.title}" want to delete?`)) {
+    if (confirm(`Are you sure you want to delete "${this.task.title}"?`)) {
       this.taskService.delete(this.task);
       this.navigation.toTaskPage({ taskUuid: null });
     }

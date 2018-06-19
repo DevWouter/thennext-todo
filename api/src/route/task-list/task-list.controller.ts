@@ -55,6 +55,7 @@ export class TaskListController {
             name: dst.name,
             uuid: dst.uuid,
             primary: dst.id === accountSettings.primaryList.id, // TO BE REMOVED
+            ownerUuid: dst.owner.uuid
         });
     }
 
@@ -65,10 +66,11 @@ export class TaskListController {
 
         const src = await this.taskListService.for(account);
 
-        const dst = src.map(x => ({
+        const dst = src.map(x => (<TaskList>{
             uuid: x.uuid,
             name: x.name,
             primary: x.id === accountSettings.primaryList.id, // TO BE REMOVED
+            ownerUuid: x.owner.uuid
         }));
 
         res.send(dst);

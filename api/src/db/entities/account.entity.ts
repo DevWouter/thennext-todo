@@ -18,6 +18,12 @@ export class AccountEntity {
     @Column({ length: 500 })
     email: string;
 
+    /**
+     * Each user has a display name with which it identifies.
+     */
+    @Column({ length: 120 })
+    displayName: string;
+
     @Column({ length: 500 })
     password_hash: string;
 

@@ -1,5 +1,6 @@
 export interface TaskList {
-    uuid: string;
-    name: string;
-    primary: boolean;
+    readonly uuid: string;
+    readonly name: string;
+    readonly primary: boolean;
+    readonly ownerUuid: string;
 }

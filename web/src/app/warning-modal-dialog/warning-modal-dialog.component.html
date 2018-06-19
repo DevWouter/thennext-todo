@@ -1,0 +1,15 @@
+<div class="overlay" *ngIf="showDialog"></div>
+<div class="dialog-container" *ngIf="showDialog">
+  <div class="dialog">
+    <div class="title">An error has occured</div>
+    <div class="content">
+      Something went wrong while try to processing your last instruction. Please reload the page and try again.
+      <code>
+        <pre>{{lastError | json}}</pre>
+      </code>
+      <div class="center">
+        <button (click)="reload()">Reload the page</button>
+      </div>
+    </div>
+  </div>
+</div>

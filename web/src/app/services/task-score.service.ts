@@ -25,6 +25,18 @@ export class TaskScoreView {
   modifiers: Modifier[] = [];
 }
 
+class UrgencyLap {
+  /**
+   * The amount of hours that needs to be passed before the new urgencyPerDay is applied.
+   */
+  durationInHours: number;
+
+  /**
+   * THe amount of urgency a task is increased.
+   */
+  urgencyPerDay: number;
+}
+
 @Injectable()
 export class TaskScoreService {
 
@@ -45,6 +57,11 @@ export class TaskScoreService {
   ) { this.setup(); }
 
   private setup() {
+    const urgencyCheckpoints: UrgencyLap[] = [];
+    urgencyCheckpoints.push({ durationInHours: 7 * 24, urgencyPerDay: 1.5 });
+    urgencyCheckpoints.push({ durationInHours: 7 * 24, urgencyPerDay: 1 });
+    urgencyCheckpoints.push({ durationInHours: 7 * 24, urgencyPerDay: 0.5 });
+
     // Whenever the values of a dependcy change, we need to emit a changed event.
     // That way listeners now they should perform a recalculation.
     this._timeSubject.pipe(
@@ -69,7 +86,7 @@ export class TaskScoreService {
               r.modifiers.push(...this.getTermScore(task, scoreShifts));
               r.modifiers.push(...this.getActiveScore(task));
               r.modifiers.push(...this.getDescriptionScore(task));
-              r.modifiers.push(...this.getAgeScore(task, now));
+              r.modifiers.push(...this.getAgeScore(task, now, urgencyCheckpoints));
             } else {
               r.modifiers.push(...this.getCompletionScore(task, now));
             }
@@ -127,10 +144,36 @@ export class TaskScoreService {
     return r;
   }
 
-  private getAgeScore(task: Task, now: DateTime): Modifier[] {
+  private getAgeScore(
+    task: Task,
+    now: DateTime,
+    urgencyLaps: UrgencyLap[]
+  ): Modifier[] {
     const createdOn = DateTime.fromJSDate(task.createdOn);
-    const age_created = now.diff(createdOn).as("days");
-    return [{ description: "Days since creation", score: age_created }];
+    let hoursExisting = now.diff(createdOn).as("hours");
+    const result: Modifier[] = [];
+    let from = 0;
+    urgencyLaps.forEach(lap => {
+      if (hoursExisting <= 0) {
+        // We can't apply it.
+        return;
+      }
+
+      // Remove the hours in the current lap.
+      const amountInCurrentLap = Math.min(hoursExisting, lap.durationInHours);
+      hoursExisting -= amountInCurrentLap;
+
+      result.push({
+        description: `Add ${Math.floor((lap.urgencyPerDay) * 10) / 10} per day after after ${Math.floor(from)} hours`,
+        score: amountInCurrentLap * (lap.urgencyPerDay / 24)
+      });
+
+      from += lap.durationInHours;
+    });
+
+    // return [{ description: "Days since creation", score: hoursExisting }];
+
+    return result;
   }
 
   private getCompletionScore(task: Task, now: DateTime): Modifier[] {

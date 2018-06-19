@@ -33,6 +33,7 @@ import { CommandInputComponent } from "./command-input/command-input.component";
 import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
 import { TopnavComponent } from "./topnav/topnav.component";
+import { DialogsModule } from "./dialogs/dialogs.module";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { TopnavComponent } from "./topnav/topnav.component";
     ServicesModule,
     AppRoutingModule,
     AccountModule,
+    DialogsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -20,9 +20,14 @@ export class TaskRelationService {
             .innerJoin("targetTask.taskList", "targetTaskList")
             .innerJoin("targetTaskList.rights", "targetRight")
             .innerJoin("targetRight.account", "targetAccount")
-            .where("relation.uuid = :uuid", { uuid: uuid })
-            .andWhere("sourceAccount.id = :id", { id: account.id })
-            .andWhere("targetAccount.id = :id", { id: account.id })
+            .where("relation.uuid = :uuid")
+            .where("sourceAccount.id = :sourceAccountId")
+            .andWhere("targetAccount.id = :targetAccountId")
+            .setParameters({
+                uuid: uuid,
+                sourceAccountId: account.id,
+                targetAccountId: account.id
+            })
             .getOne();
     }
 
@@ -46,8 +51,12 @@ export class TaskRelationService {
             .innerJoin("targetTask.taskList", "targetTaskList")
             .innerJoin("targetTaskList.rights", "targetRight")
             .innerJoin("targetRight.account", "targetAccount")
-            .where("sourceAccount.id = :id", { id: account.id })
-            .andWhere("targetAccount.id = :id", { id: account.id })
+            .where("sourceAccount.id = :sourceAccountId")
+            .andWhere("targetAccount.id = :targetAccountId")
+            .setParameters({
+                sourceAccountId: account.id,
+                targetAccountId: account.id
+            })
             .getMany();
     }
 

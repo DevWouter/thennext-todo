@@ -22,6 +22,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TaskTimeLapService } from "./task-time-lap.service";
 import { TaskViewService } from "./task-view.service";
+import { ApiEventService } from "./api-event.service";
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { TaskViewService } from "./task-view.service";
   providers: [
     AccountService,
     ApiService,
+    ApiEventService,
     ChecklistItemService,
     ContextService,
     NavigationService,

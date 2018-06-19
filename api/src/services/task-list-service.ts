@@ -14,8 +14,12 @@ export class TaskListService {
             .createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.rights", "right")
             .innerJoin("right.account", "account")
-            .where("taskList.uuid = :uuid", { uuid: uuid })
-            .andWhere("account.id = :id", { id: account.id })
+            .where("taskList.uuid = :uuid")
+            .andWhere("account.id = :accountId")
+            .setParameters({
+                uuid: uuid,
+                accountId: account.id
+            })
             .getOne();
     }
 
@@ -23,8 +27,12 @@ export class TaskListService {
         return (await this.db())
             .createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.owner", "owner")
-            .where("taskList.id = :id", { id: taskList.id })
-            .andWhere("owner.id = :id", { id: account.id })
+            .where("taskList.id = :taskListId")
+            .andWhere("owner.id = :accountId")
+            .setParameters({
+                taskListId: taskList.id,
+                accountId: account.id
+            })
             .getCount()
             .then(x => x === 1);
     }
@@ -36,8 +44,12 @@ export class TaskListService {
     async for(account: AccountEntity): Promise<TaskListEntity[]> {
         return (await this.db()).createQueryBuilder(TaskListEntity, "taskList")
             .innerJoin("taskList.rights", "right")
+            .innerJoinAndSelect("taskList.owner", "owner")
             .innerJoinAndSelect("right.account", "account")
-            .where("account.id = :id", { id: account.id })
+            .where("account.id = :accountId")
+            .setParameters({
+                accountId: account.id
+            })
             .getMany();
     }
 

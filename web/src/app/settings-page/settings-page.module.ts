@@ -9,11 +9,16 @@ import { SettingsPageScoreshiftsComponent } from "./settings-page-scoreshifts/se
 import { SettingsPageTabScoringComponent } from "./settings-page-tab-scoring/settings-page-tab-scoring.component";
 import { SettingsPageTabTasklistsComponent } from "./settings-page-tab-tasklists/settings-page-tab-tasklists.component";
 import { SettingsPageTasklistsComponent } from "./settings-page-tasklists/settings-page-tasklists.component";
+import { SettingsContentTiltleComponent } from "./settings-content-title/settings-content-title.component";
 import { AcceptShareTokenComponent } from "./accept-share-token/accept-share-token.component";
+
+import { SettingsPageTasklistCreatorComponent } from "./settings-page-tasklist-creator/settings-page-tasklist-creator.component";
+import { SettingsPageTasklistItemComponent } from "./settings-page-tasklist-item/settings-page-tasklist-item.component";
 
 import { TabTitlesComponent } from "./tab-titles/tab-titles.component";
 import { AppSettingsRoutingModule } from "./settings.routing";
 import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist.component";
+import { DialogsModule } from "../dialogs/dialogs.module";
 
 @NgModule({
   imports: [
@@ -22,6 +27,7 @@ import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist
     FormsModule,
     ServicesModule,
     AppSettingsRoutingModule,
+    DialogsModule,
   ],
   declarations: [
     TabTitlesComponent,
@@ -32,6 +38,9 @@ import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist
     SettingsPageScoreshiftsComponent,
     SettingsTasklistComponent,
     AcceptShareTokenComponent,
+    SettingsContentTiltleComponent,
+    SettingsPageTasklistItemComponent,
+    SettingsPageTasklistCreatorComponent,
   ],
   exports: [TabTitlesComponent]
 })

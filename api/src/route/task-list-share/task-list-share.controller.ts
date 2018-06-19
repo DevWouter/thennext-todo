@@ -30,7 +30,7 @@ export class TaskListShareController {
         const input = req.body as TaskListShareInput;
         const taskList = await this.taskListService.byUuid(input.taskListUuid, account);
 
-        if (!this.taskListService.hasOwnership(account, taskList)) {
+        if (!await this.taskListService.hasOwnership(account, taskList)) {
             res.status(403).send({ error: `You have no ownership for tasklist: ${taskList.uuid}` });
             return;
         }
