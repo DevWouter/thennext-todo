@@ -6,6 +6,18 @@ $animation-speed: 0.1s;
     color: white;
 }
 
+.container {
+    display: flex;
+    width: 100%;
+    .title {
+        padding: 8px;
+        margin: auto;
+        color: white;
+        width: 100%;
+        background: transparent;
+    }
+}
+
 .menu-btn {
     width: 48px;
     height: 48px;
@@ -24,7 +36,7 @@ $animation-speed: 0.1s;
 }
 
 app-task-page-header-tasklist-selector {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .item {

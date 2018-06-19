@@ -3,6 +3,8 @@ import { NavigationService } from "../services/navigation.service";
 import { Router } from "@angular/router";
 import { SessionService } from "../services/session.service";
 import { AccountService } from "../services/account.service";
+import { ContextService } from "../services/context.service";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: "app-topnav",
@@ -27,6 +29,7 @@ export class TopnavComponent implements OnInit {
   public set onlyPositive(v: boolean) { this.navigation.toTaskPage({ onlyPositive: v }); }
 
   public displayName = "";
+  public listName = "";
 
   expand = false;
   constructor(
@@ -34,9 +37,14 @@ export class TopnavComponent implements OnInit {
     private readonly router: Router,
     private readonly sessionService: SessionService,
     private readonly accountService: AccountService,
+    private readonly contextService: ContextService,
   ) { }
 
   ngOnInit() {
+    this.contextService.activeTaskList
+      .pipe(filter(x => !!x))
+      .subscribe(x => this.listName = x.name);
+
     this.navigation.showCompleted.subscribe(x => { this._showCompleted = x; });
     this.navigation.showDelayed.subscribe(x => { this._showDelayed = x; });
     this.navigation.onlyPositive.subscribe(x => { this._onlyPositive = x; });
