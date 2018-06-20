@@ -1,5 +1,6 @@
 .tab-titles {
     display: flex;
+    min-width: 150px;
     a {
         box-sizing: content-box;
         border: 1px solid black;

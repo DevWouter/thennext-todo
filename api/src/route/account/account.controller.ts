@@ -13,6 +13,8 @@ import { TaskListService } from "../../services/task-list-service";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
 import { AuthenticationService } from "../../services/authentication-service";
 import { MyAccount } from "./my-account.model";
+import { UrgencyLapService } from "../../services/urgency-lap-service";
+import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -27,6 +29,7 @@ export class AccountController {
         private readonly taskListService: TaskListService,
         private readonly taskListRightService: TaskListRightService,
         private readonly authenticationService: AuthenticationService,
+        private readonly urgencyLapService: UrgencyLapService,
     ) {
     }
 
@@ -73,6 +76,23 @@ export class AccountController {
             accountSettings.primaryList = taskListResult;
 
             await this.accountSettingsService.update(accountSettings);
+
+            // Create the default urgency laps
+            const options = [
+                { from: 0, score: 1.5 },
+                { from: 7, score: 1.0 },
+                { from: 14, score: 0.5 },
+                { from: 21, score: 0.0 }
+            ];
+
+            options.forEach(async (x) => {
+                const entity = new UrgencyLapEntity();
+                entity.fromDay = x.from;
+                entity.urgencyModifier = x.score;
+                entity.owner = accountResult;
+                await this.urgencyLapService.create(entity);
+            });
+
 
             const dst = TransformAccount(accountResult);
             res.send(dst);

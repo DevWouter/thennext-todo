@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 
 import { AccountService } from "./account.service";
+import { ApiEventService } from "./api-event.service";
 import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { ContextService } from "./context.service";
@@ -22,7 +23,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TaskTimeLapService } from "./task-time-lap.service";
 import { TaskViewService } from "./task-view.service";
-import { ApiEventService } from "./api-event.service";
+import { UrgencyLapService } from "./urgency-lap.service";
 
 @NgModule({
   imports: [
@@ -32,8 +33,8 @@ import { ApiEventService } from "./api-event.service";
   declarations: [],
   providers: [
     AccountService,
-    ApiService,
     ApiEventService,
+    ApiService,
     ChecklistItemService,
     ContextService,
     NavigationService,
@@ -52,6 +53,7 @@ import { ApiEventService } from "./api-event.service";
     TaskService,
     TaskTimeLapService,
     TaskViewService,
+    UrgencyLapService,
   ]
 })
 export class ServicesModule {

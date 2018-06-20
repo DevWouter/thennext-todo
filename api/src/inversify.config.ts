@@ -13,6 +13,7 @@ import { TaskListShareTokenService } from "./services/task-list-share-token-serv
 import { TaskRelationService } from "./services/task-relation-service";
 import { TaskService } from "./services/task-service";
 import { TaskTimeLapService } from "./services/task-time-lap-service";
+import { UrgencyLapService } from "./services/urgency-lap-service";
 
 decorate(injectable(), Connection);
 decorate(unmanaged(), Connection, 1);
@@ -42,5 +43,6 @@ container.bind<TaskListShareTokenService>(TaskListShareTokenService).toSelf();
 container.bind<TaskRelationService>(TaskRelationService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();
 container.bind<TaskTimeLapService>(TaskTimeLapService).toSelf();
+container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
 
 export default container;

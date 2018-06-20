@@ -65,15 +65,28 @@ export class TaskPageContentPaneChecklistItemComponent implements OnInit {
     }
 
     if (e.keyCode === 74) { // 'k'
-      this.move.emit("down");
+      this.moveDown();
       e.preventDefault();
     }
 
     if (e.keyCode === 75) { // 'j'
-      this.move.emit("up");
+      this.moveUp();
       e.preventDefault();
     }
   }
+
+  moveUp() {
+    this.move.emit("up");
+  }
+
+  moveDown() {
+    this.move.emit("down");
+  }
+
+  select(action: "prev" | "next", e: Event) {
+    e.preventDefault();
+  }
+
 
   ngOnInit() {
   }
