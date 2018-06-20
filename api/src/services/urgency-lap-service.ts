@@ -17,7 +17,7 @@ export class UrgencyLapService {
             .createQueryBuilder(UrgencyLapEntity, "urgencyLap")
             .innerJoinAndSelect("urgencyLap.owner", "owner")
             .where("urgencyLap.uuid = :uuid")
-            .andWhere("account.id = :accountId")
+            .andWhere("owner.id = :accountId")
             .setParameters({
                 accountId: account.id,
                 uuid: uuid

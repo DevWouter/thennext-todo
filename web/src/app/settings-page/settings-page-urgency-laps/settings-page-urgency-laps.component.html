@@ -1,0 +1,35 @@
+<table>
+  <thead>
+    <tr>
+      <th>From day</th>
+      <th>Urgency Modifier</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <td>{{item.fromDay}}</td>
+      <td>{{item.urgencyModifier}}</td>
+      <td>
+        <button (click)="delete(item)">
+          <i class="fas fa-trash fa-fw"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>
+        <input type="number" [(ngModel)]="newFromDay" />
+      </td>
+      <td>
+        <input type="number" [(ngModel)]="newUrgencyModifier" />
+      </td>
+      <td>
+        <button (click)="create()">
+          <i class="fas fa-plus fa-fw"></i>
+        </button>
+      </td>
+    </tr>
+  </tfoot>
+</table>
