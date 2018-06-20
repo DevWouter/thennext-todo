@@ -29,7 +29,7 @@ export class UrgencyLapService {
         return (await this.db)
             .createQueryBuilder(UrgencyLapEntity, "urgencyLap")
             .innerJoin("urgencyLap.owner", "owner")
-            .andWhere("account.id = :accountId")
+            .andWhere("owner.id = :accountId")
             .setParameters({
                 accountId: account.id,
             }).getMany();

@@ -22,12 +22,18 @@ export class UrgencyLapEntity {
     /**
      * From which day should this urgency modifier be in effect.
      */
-    @Column()
+    @Column({
+        type: "decimal",
+        precision: 7, scale: 3
+    })
     fromDay: number;
 
     /**
      * How much urgency will each day generate.
      */
-    @Column()
+    @Column({
+        type: "decimal",
+        precision: 7, scale: 3
+    })
     urgencyModifier: number;
 }

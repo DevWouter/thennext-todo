@@ -1,17 +1,18 @@
 import { Injectable } from "@angular/core";
 import { DateTime } from "luxon";
 
-import { ContextService } from "./context.service";
-import { TaskService } from "./task.service";
-import { Task, TaskStatus } from "./models/task.dto";
 import { BehaviorSubject, Observable } from "rxjs";
-import { interval } from "rxjs";
-import { ScoreShiftService } from "./score-shift.service";
-import { ScoreShift } from "./models/score-shift.dto";
-import { TaskRelation } from "./models/task-relation.dto";
-import { TaskRelationService } from "./task-relation.service";
-import { RelationViewService } from "./relation-view.service";
 import { map, combineLatest, distinctUntilChanged, filter } from "rxjs/operators";
+
+import { RelationViewService } from "./relation-view.service";
+import { ScoreShiftService } from "./score-shift.service";
+import { TaskRelationService } from "./task-relation.service";
+import { TaskService } from "./task.service";
+import { UrgencyLapService } from "./urgency-lap.service";
+
+import { ScoreShift } from "./models/score-shift.dto";
+import { Task, TaskStatus } from "./models/task.dto";
+import { UrgencyLap } from "./models/urgency-lap.dto";
 
 export interface Modifier {
   description: string;
@@ -23,18 +24,6 @@ export class TaskScoreView {
   score: number;        // The exact score of the task (used for sorting).
   roundedScore: number; // The rounded score of the task (which is used for invalidating the list)
   modifiers: Modifier[] = [];
-}
-
-class UrgencyLap {
-  /**
-   * The amount of hours that needs to be passed before the new urgencyPerDay is applied.
-   */
-  durationInHours: number;
-
-  /**
-   * THe amount of urgency a task is increased.
-   */
-  urgencyPerDay: number;
 }
 
 @Injectable()
@@ -54,14 +43,10 @@ export class TaskScoreService {
     private readonly scoreShiftService: ScoreShiftService,
     private readonly taskRelationService: TaskRelationService,
     private readonly relationViewService: RelationViewService,
+    private readonly urgencyLapService: UrgencyLapService,
   ) { this.setup(); }
 
   private setup() {
-    const urgencyCheckpoints: UrgencyLap[] = [];
-    urgencyCheckpoints.push({ durationInHours: 7 * 24, urgencyPerDay: 1.5 });
-    urgencyCheckpoints.push({ durationInHours: 7 * 24, urgencyPerDay: 1 });
-    urgencyCheckpoints.push({ durationInHours: 7 * 24, urgencyPerDay: 0.5 });
-
     // Whenever the values of a dependcy change, we need to emit a changed event.
     // That way listeners now they should perform a recalculation.
     this._timeSubject.pipe(
@@ -71,13 +56,18 @@ export class TaskScoreService {
         this.scoreShiftService.entries,
         this.relationViewService.blockedTaskUuids,
         this.relationViewService.blockingTaskUuids,
+        this.urgencyLapService.entries,
         (
           now,
           tasks,
           scoreShifts,
           blockedTaskUuids,
-          blockingTaskUuids
+          blockingTaskUuids,
+          urgencyLaps,
         ) => {
+          // Pre sort the urgency laps
+          urgencyLaps = urgencyLaps.sort((a, b) => a.fromDay - b.fromDay);
+
           return tasks.map(task => {
             const r = new TaskScoreView();
             r.taskUuid = task.uuid;
@@ -86,7 +76,7 @@ export class TaskScoreService {
               r.modifiers.push(...this.getTermScore(task, scoreShifts));
               r.modifiers.push(...this.getActiveScore(task));
               r.modifiers.push(...this.getDescriptionScore(task));
-              r.modifiers.push(...this.getAgeScore(task, now, urgencyCheckpoints));
+              r.modifiers.push(...this.getAgeScore(task, now, urgencyLaps));
             } else {
               r.modifiers.push(...this.getCompletionScore(task, now));
             }
@@ -150,28 +140,33 @@ export class TaskScoreService {
     urgencyLaps: UrgencyLap[]
   ): Modifier[] {
     const createdOn = DateTime.fromJSDate(task.createdOn);
-    let hoursExisting = now.diff(createdOn).as("hours");
+    const daysExisting = now.diff(createdOn).as("days");
     const result: Modifier[] = [];
-    let from = 0;
-    urgencyLaps.forEach(lap => {
-      if (hoursExisting <= 0) {
-        // We can't apply it.
-        return;
+
+    // Find the initial from day
+    for (let i = 0; i < urgencyLaps.length; ++i) {
+      const lap = urgencyLaps[i];
+      if (lap.fromDay > daysExisting) {
+        continue; // We have had all the days.
       }
 
-      // Remove the hours in the current lap.
-      const amountInCurrentLap = Math.min(hoursExisting, lap.durationInHours);
-      hoursExisting -= amountInCurrentLap;
+      if (lap.urgencyModifier === 0) {
+        continue; // Ignore since this lap won't affect the score
+      }
+
+      const endOfPeriod = ((i + 1) < urgencyLaps.length) ? urgencyLaps[i + 1].fromDay : Number.MAX_SAFE_INTEGER;
+      const maxDaysInPeriod = endOfPeriod - lap.fromDay;
+      const daysInPeriodLeft = daysExisting - lap.fromDay;
+      const daysAllowedInPeriod = Math.min(daysInPeriodLeft, maxDaysInPeriod);
+
+      const fromDay = Math.floor((lap.fromDay) * 10) / 10;
+      const roundedScore = Math.floor((lap.urgencyModifier) * 10) / 10;
 
       result.push({
-        description: `Add ${Math.floor((lap.urgencyPerDay) * 10) / 10} per day after after ${Math.floor(from)} hours`,
-        score: amountInCurrentLap * (lap.urgencyPerDay / 24)
+        description: `Increase per day ${roundedScore.toFixed(1)} (from day ${fromDay})`,
+        score: daysAllowedInPeriod * (lap.urgencyModifier)
       });
-
-      from += lap.durationInHours;
-    });
-
-    // return [{ description: "Days since creation", score: hoursExisting }];
+    }
 
     return result;
   }
