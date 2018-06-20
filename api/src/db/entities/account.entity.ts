@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
 import { AccountSettingsEntity } from "./account-settings.entity";
 import { SessionEntity } from "./session.entity";
-import { TaskListEntity } from "./task-list.entity";
 import { ScoreShiftEntity } from ".";
 import { TaskTimeLapEntity } from "./task-time-lap.entity";
 import { TaskListRightEntity } from "./task-list-right.entity";
+import { UrgencyLapEntity } from "./urgency-lap.entity";
 
 @Entity("Account")
 export class AccountEntity {
@@ -41,4 +41,7 @@ export class AccountEntity {
 
     @OneToMany(type => TaskTimeLapEntity, timeLap => timeLap.task)
     timeLaps: TaskTimeLapEntity[];
+
+    @OneToMany(type => UrgencyLapEntity, urgencyLap => urgencyLap.owner)
+    urgencyLaps: UrgencyLapEntity[];
 }
