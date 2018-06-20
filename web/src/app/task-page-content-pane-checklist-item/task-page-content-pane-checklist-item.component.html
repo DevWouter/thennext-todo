@@ -5,5 +5,5 @@
   </span>
 </div>
 <div class="text">
-  <textarea rows="1" appTextareaResize="" placeholder="What should we not forget?" [(ngModel)]="title" (blur)="updateTitle()"></textarea>
+  <textarea rows="1" appTextareaResize="" placeholder="What should we not forget?" (keydown.enter)="select('next', $event)" (keydown.shift.enter)="select('prev', $event)" [(ngModel)]="title" (blur)="updateTitle()"></textarea>
 </div>
