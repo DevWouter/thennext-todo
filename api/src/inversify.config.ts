@@ -14,6 +14,7 @@ import { TaskRelationService } from "./services/task-relation-service";
 import { TaskService } from "./services/task-service";
 import { TaskTimeLapService } from "./services/task-time-lap-service";
 import { UrgencyLapService } from "./services/urgency-lap-service";
+import { WebSocketService } from "./services/web-socket-service";
 
 decorate(injectable(), Connection);
 decorate(unmanaged(), Connection, 1);
@@ -44,5 +45,6 @@ container.bind<TaskRelationService>(TaskRelationService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();
 container.bind<TaskTimeLapService>(TaskTimeLapService).toSelf();
 container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
+container.bind<WebSocketService>(WebSocketService).toSelf();
 
 export default container;

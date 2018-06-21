@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationService } from "../services/navigation.service";
 import { Router } from "@angular/router";
-import { SessionService } from "../services/session.service";
+import { filter } from "rxjs/operators";
+
 import { AccountService } from "../services/account.service";
 import { ContextService } from "../services/context.service";
-import { filter } from "rxjs/operators";
+import { NavigationService } from "../services/navigation.service";
+import { SessionService } from "../services/session.service";
+import { WebSocketService } from "../services/web-socket.service";
 
 @Component({
   selector: "app-topnav",
@@ -31,6 +33,8 @@ export class TopnavComponent implements OnInit {
   public displayName = "";
   public listName = "";
 
+  public connectionStatus = "";
+
   expand = false;
   constructor(
     private readonly navigation: NavigationService,
@@ -38,9 +42,12 @@ export class TopnavComponent implements OnInit {
     private readonly sessionService: SessionService,
     private readonly accountService: AccountService,
     private readonly contextService: ContextService,
+    private readonly websocketService: WebSocketService,
   ) { }
 
   ngOnInit() {
+    this.websocketService.status.subscribe(state => this.connectionStatus = state);
+
     this.contextService.activeTaskList
       .pipe(filter(x => !!x))
       .subscribe(x => this.listName = x.name);
