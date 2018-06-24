@@ -13,7 +13,7 @@ export class WebSocketService implements OnDestroy {
   private _lastMessage = new BehaviorSubject<IWebSocketMessage>(undefined);
   private _status = new BehaviorSubject<WebSocketStatus>("unknown");
 
-  get status(): Observable<string> { return this._status; }
+  get status(): Observable<WebSocketStatus> { return this._status; }
   get lastMessage(): Observable<IWebSocketMessage> {
     return this._lastMessage.pipe(filter(x => !!x));
   }
