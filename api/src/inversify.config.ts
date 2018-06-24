@@ -45,6 +45,6 @@ container.bind<TaskRelationService>(TaskRelationService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();
 container.bind<TaskTimeLapService>(TaskTimeLapService).toSelf();
 container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
-container.bind<WebSocketService>(WebSocketService).toSelf();
+container.bind<WebSocketService>("WebSocketService").to(WebSocketService).inSingletonScope();
 
 export default container;

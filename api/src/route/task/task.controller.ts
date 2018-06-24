@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { TaskListService } from "../../services/task-list-service";
@@ -7,14 +7,17 @@ import { TaskService } from "../../services/task-service";
 import { Task } from "./task.model";
 import { TaskEntity } from "../../db/entities";
 import { TaskStatus } from "../../db/entities/task.entity";
+import { WebSocketService } from "../../services/web-socket-service";
+import { EntityWebSocketMessage } from "../../services/models/web-socket-messages";
 
 @injectable()
 export class TaskController {
     constructor(
-        private readonly authService: AuthenticationService,
         private readonly accountService: AccountService,
+        private readonly authService: AuthenticationService,
         private readonly taskListService: TaskListService,
         private readonly taskService: TaskService,
+        @inject("WebSocketService") private readonly webSocketService: WebSocketService,
     ) {
     }
 
@@ -68,6 +71,8 @@ export class TaskController {
         };
 
         res.send(result);
+
+        this.webSocketService.sendEntityChange("create", "task", result, token);
     }
 
     async index(req: Request, res: Response): Promise<void> {
@@ -115,7 +120,7 @@ export class TaskController {
         // Wait until reload has been completed.
         const dst = await loadPromise;
 
-        res.send(<Task>{
+        const result = <Task>{
             uuid: dst.uuid,
             taskListUuid: model.taskListUuid,
             nextChecklistOrder: model.nextChecklistOrder,
@@ -126,7 +131,13 @@ export class TaskController {
             createdOn: dst.createdAt,
             updatedOn: dst.updatedAt,
             completedOn: dst.completedAt,
-        });
+        };
+
+        this.webSocketService.sendEntityChange("update", "task", result, token);
+
+        res.send(result);
+
+
     }
 
     async delete(req: Request, res: Response): Promise<void> {
@@ -136,6 +147,7 @@ export class TaskController {
         const task = await this.taskService.byUuid(<string>(req.params.uuid), account);
 
         this.taskService.destroy(task);
+        this.webSocketService.sendEntityChange("delete", "task", task.uuid, token);
 
         // Reply that task was deleted.
         res.send({});

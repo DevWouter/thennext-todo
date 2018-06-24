@@ -47,8 +47,8 @@ export class WarningModalDialogComponent implements OnInit {
     this._autoReloadCheck = JSON.parse(this.storageService.get("AUTO_RELOAD_ON_ERROR") || "false");
 
     // Remove all events that occured more then 5 seconds ago.
-    this.container.events = this.container.events.filter(x => x.date > Date.now() - 5000);
-
+    this.container.events = this.container.events.filter(x => x.date > (Date.now() - 5000));
+    this.storageService.set("ERROR_STATUS", JSON.stringify(this.container));
 
     this.apiEventService.recentEvents.subscribe((reason) => {
       // Store a new error event
@@ -71,7 +71,7 @@ export class WarningModalDialogComponent implements OnInit {
   }
 
   checkAutoReload() {
-    this.container.events = this.container.events.filter(x => x.date > Date.now() - 10000);
+    this.container.events = this.container.events.filter(x => x.date > (Date.now() - 5000));
     this.storageService.set("ERROR_STATUS", JSON.stringify(this.container));
 
     if (!this.autoReloadCheck) { return; }

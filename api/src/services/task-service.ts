@@ -1,12 +1,12 @@
 import { injectable, inject } from "inversify";
-import { TaskEntity, AccountEntity, TaskListEntity } from "../db/entities";
+import { TaskEntity, AccountEntity } from "../db/entities";
 import { Connection } from "typeorm";
 
 @injectable()
 export class TaskService {
 
     constructor(
-        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
+        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>,
     ) { }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskEntity> {

@@ -1,10 +1,16 @@
 import { injectable } from "inversify";
 import * as http from "http";
 import * as WebSocket from "ws";
+import {
+    IWebSocketMessage,
+    WebSocketMessageType,
+    ClientRegisterMessage,
+    EntityWebSocketMessage
+} from "./models/web-socket-messages";
 
-
-export interface IWebSocketMessage {
-    type: string;
+class ClientSocket {
+    socket: WebSocket;
+    token: string;
 }
 
 /**
@@ -20,31 +26,74 @@ export interface IWebSocketMessage {
 @injectable()
 export class WebSocketService {
     private _server: WebSocket.Server = undefined;
+    private _clients: ClientSocket[] = [];
     constructor() {
-    }
-
-    broadcastRaw(message: IWebSocketMessage) {
-        this._server.clients.forEach(client => {
-            client.send(JSON.stringify(message));
-        });
+        console.log("WebSocketService");
     }
 
     init(httpServer: http.Server) {
         this._server = new WebSocket.Server({
             server: httpServer
         });
-        this._server.on("connection", (ws: WebSocket) => {
+        this._server.on("connection", (ws: WebSocket, req: http.IncomingMessage) => {
             // connection is up, let's add a simple simple event
-            ws.on("message", (message: string) => {
-                // log the received message and send it back to the client
-                console.log("received: %s", message);
-                ws.send(`Hello, you sent -> ${message}`);
+            ws.on("message", (message_data: string) => {
+                // The only message we expect is a client-register.
+                const message = JSON.parse(message_data) as IWebSocketMessage;
+                if (message.type === WebSocketMessageType.clientRegister) {
+                    this.handleClientRegister(ws, message as ClientRegisterMessage);
+                }
             });
-            // send immediatly a feedback to the incoming connection
+
+            // On connect ask the client to identify it self.
+            // If a client doesn't identify itself we ignore it.
+            // Client registration request is always initiated by the server.
+            // That way the server can pass extra information.
             ws.send(JSON.stringify(<IWebSocketMessage>{
-                type: "connected",
-                message: "This is the first message from the server telling you are now connected through the websocket"
+                type: "client-registration-request",
             }));
         });
+    }
+
+    public sendEntityChange(
+        action: "create" | "update" | "delete",
+        entityName: "task" | "tasklist" | "checklist" | "relation",
+        entity,
+        originalToken: string,
+    ) {
+        console.log(`Sending a message to ${this._clients.length} clients`);
+        this._clients.forEach(client => {
+            console.log("Sending a message to " + client.token);
+            const message = new EntityWebSocketMessage();
+
+            message.action = action;
+            message.entityName = entityName;
+            message.entity = entity;
+            message.isEcho = client.token === originalToken;
+
+            const json_message = JSON.stringify(message);
+            client.socket.send(json_message);
+        });
+    }
+
+    private handleClientRegister(ws: WebSocket, message: ClientRegisterMessage) {
+        this.closeClientWithToken(message.token);
+
+        console.log("Register a new WebSocketClient");
+        // Create a new client and store it to the list.
+        const newClient = new ClientSocket();
+        newClient.socket = ws;
+        newClient.token = message.token;
+        this._clients.push(newClient);
+        console.log(`We have ${this._clients.length} clients`);
+    }
+
+    private closeClientWithToken(token: string) {
+        console.log("Delete a client");
+        const i = this._clients.findIndex(c => c.token === token);
+        if (i !== -1) {
+            const oldClients = this._clients.splice(i, 1);
+            oldClients[0].socket.close();
+        }
     }
 }
