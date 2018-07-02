@@ -1,5 +1,3 @@
-import { TaskRelation } from "../task-relation/task-relation.model";
-
 export enum TaskStatus {
     todo = "todo",
     active = "active",

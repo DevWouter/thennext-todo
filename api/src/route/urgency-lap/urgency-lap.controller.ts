@@ -5,7 +5,7 @@ import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { UrgencyLapService } from "../../services/urgency-lap-service";
 
-import { UrgencyLap } from "./urgency-lap.model";
+import { UrgencyLap } from "../../models/urgency-lap.model";
 import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
 
 @injectable()

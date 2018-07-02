@@ -4,7 +4,7 @@ import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { ScoreShiftService } from "../../services/score-shift-service";
 import { ScoreShiftEntity } from "../../db/entities";
-import { ScoreShift } from "./score-shift.model";
+import { ScoreShift } from "../../models/score-shift.model";
 import { toModel } from "./helpers";
 
 @injectable()

@@ -4,12 +4,11 @@ import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { TaskListService } from "../../services/task-list-service";
 import { TaskService } from "../../services/task-service";
-import { TaskEntity, TaskListEntity } from "../../db/entities";
-import { TaskStatus } from "../../db/entities/task.entity";
+import { TaskListEntity } from "../../db/entities";
 import { AccountSettingsService } from "../../services/account-settings-service";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
 import { TaskListRightService } from "../../services/task-list-right-service";
-import { TaskList } from "./task-list.model";
+import { TaskList } from "../../models/task-list.model";
 
 
 export interface TaskListInput {

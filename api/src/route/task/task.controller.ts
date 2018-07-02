@@ -4,7 +4,7 @@ import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { TaskListService } from "../../services/task-list-service";
 import { TaskService } from "../../services/task-service";
-import { Task } from "./task.model";
+import { Task } from "../../models/task.model";
 import { TaskEntity } from "../../db/entities";
 import { TaskStatus } from "../../db/entities/task.entity";
 import { WebSocketService } from "../../services/web-socket-service";

@@ -2,7 +2,7 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { SessionService } from "../../services/session-service";
-import { Session } from "./session.model";
+import { Session } from "../../models/session.model";
 
 
 interface SessionCreateInput {

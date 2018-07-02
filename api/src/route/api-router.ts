@@ -12,7 +12,7 @@ import { taskListShareRouter } from "./task-list-share";
 import { taskRelationRouter } from "./task-relation";
 import { taskRouter } from "./task";
 import { taskTimeLapRouter } from "./task-time-lap";
-import { urgencyLapRouter } from "./urgency-lap/task-time-lap.router";
+import { urgencyLapRouter } from "./urgency-lap/urgency-lap.router";
 
 const apiRouter = express.Router();
 

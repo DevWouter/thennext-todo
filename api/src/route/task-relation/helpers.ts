@@ -1,5 +1,5 @@
 import { TaskRelationEntity } from "../../db/entities";
-import { TaskRelation } from "./task-relation.model";
+import { TaskRelation } from "../../models/task-relation.model";
 
 export function toModel(entity: TaskRelationEntity): TaskRelation {
     return {

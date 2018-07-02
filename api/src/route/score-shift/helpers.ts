@@ -1,4 +1,4 @@
-import { ScoreShift } from "./score-shift.model";
+import { ScoreShift } from "../../models/score-shift.model";
 import { ScoreShiftEntity } from "../../db/entities";
 
 export function toModel(src: ScoreShiftEntity): ScoreShift {

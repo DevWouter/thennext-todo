@@ -6,10 +6,9 @@ import { AccountService } from "../../services/account-service";
 import { TaskRelationService } from "../../services/task-relation-service";
 import { TaskService } from "../../services/task-service";
 
-import { TaskStatus } from "../../db/entities/task.entity";
 import { TaskRelationEntity } from "../../db/entities/task-relation.entity";
 
-import { TaskRelation } from "./task-relation.model";
+import { TaskRelation } from "../../models/task-relation.model";
 import { toModel } from "./helpers";
 
 

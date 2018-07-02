@@ -2,11 +2,10 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
-import { ScoreShiftService } from "../../services/score-shift-service";
-import { ScoreShiftEntity, ChecklistItemEntity } from "../../db/entities";
+import { ChecklistItemEntity } from "../../db/entities";
 import { ChecklistItemService } from "../../services/checklist-item-service";
 import { TaskService } from "../../services/task-service";
-import { ChecklistItem } from "./checklist-item.model";
+import { ChecklistItem } from "../../models/checklist-item.model";
 
 @injectable()
 export class ChecklistItemController {

@@ -7,8 +7,7 @@ import { TaskRelationService } from "../../services/task-relation-service";
 import { TaskService } from "../../services/task-service";
 import { TaskTimeLapService } from "../../services/task-time-lap-service";
 
-import { TaskStatus } from "../../db/entities/task.entity";
-import { TaskTimeLap } from "./task-time-lap.model";
+import { TaskTimeLap } from "../../models/task-time-lap.model";
 import { TaskTimeLapEntity } from "../../db/entities/task-time-lap.entity";
 
 

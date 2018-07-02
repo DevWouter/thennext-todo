@@ -2,7 +2,7 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
-import { TaskListRight } from "./task-list-right.model";
+import { TaskListRight } from "../../models/task-list-right.model";
 import { TaskListShareTokenService } from "../../services/task-list-share-token-service";
 import { TaskListRightService } from "../../services/task-list-right-service";
 import { AccessRight, TaskListRightEntity } from "../../db/entities/task-list-right.entity";

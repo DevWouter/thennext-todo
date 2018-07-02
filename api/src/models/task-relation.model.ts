@@ -1,4 +1,4 @@
-import { TaskRelationType } from "../../db/entities/task-relation.entity";
+import { TaskRelationType } from "../db/entities/task-relation.entity";
 
 export interface TaskRelation {
     readonly uuid: string;

@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { AccountService } from "../../services/account-service";
 import { TaskListService } from "../../services/task-list-service";
-import { TaskListShare } from "./task-list-share.model";
+import { TaskListShare } from "../../models/task-list-share.model";
 import { TaskListShareTokenEntity } from "../../db/entities/task-list-share-token.entity";
 import { TaskListShareTokenService } from "../../services/task-list-share-token-service";
 
