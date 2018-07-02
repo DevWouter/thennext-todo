@@ -27,6 +27,7 @@ class ClientSocket {
 export class WebSocketService {
     private _server: WebSocket.Server = undefined;
     private _clients: ClientSocket[] = [];
+
     constructor() {
         console.log("WebSocketService");
     }
@@ -37,6 +38,30 @@ export class WebSocketService {
         });
         this._server.on("connection", (ws: WebSocket, req: http.IncomingMessage) => {
             // connection is up, let's add a simple simple event
+            let allowPing = true;
+            function performPing() {
+                try {
+                    if (!allowPing) {
+                        return;
+                    }
+                    ws.ping();
+                    scheduleNextPing();
+                } catch (reason) {
+                    console.error(reason);
+                }
+            }
+            function scheduleNextPing() {
+                setTimeout(() => {
+                    performPing();
+                }, 1000);
+            }
+
+            ws.on("close", () => {
+                allowPing = false;
+            });
+
+            performPing();
+
             ws.on("message", (message_data: string) => {
                 // The only message we expect is a client-register.
                 const message = JSON.parse(message_data) as IWebSocketMessage;
