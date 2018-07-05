@@ -43,9 +43,23 @@ export class WsService {
 
         this._server.on("connection", (ws: WebSocket, req: http.IncomingMessage) => {
             const client = this.addClient(ws);
+            const pingInterval = setInterval(() => {
+                try {
+                    ws.ping();
+                } catch (reason) {
+                    this.onError(client, reason);
+                    clearInterval(pingInterval);
+                }
+            }, 15000);
             ws.on("message", (data) => { this.onMessage(client, data as string); });
-            ws.on("close", (code, reason) => { this.onClose(client, code, reason); });
-            ws.on("error", (err) => { this.onError(client, err); });
+            ws.on("close", (code, reason) => {
+                this.onClose(client, code, reason);
+                clearInterval(pingInterval);
+            });
+            ws.on("error", (err) => {
+                this.onError(client, err);
+                clearInterval(pingInterval);
+            });
         });
     }
 
@@ -118,6 +132,7 @@ export class WsService {
         };
 
         this._clients.push(client);
+        console.log(`Client ${client.id} was added`);
         return client;
     }
 
