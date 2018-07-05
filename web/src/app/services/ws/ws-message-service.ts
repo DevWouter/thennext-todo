@@ -2,9 +2,10 @@ import { Observable, BehaviorSubject, Subscription, combineLatest } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { WsService, WsConnectionStatus, WsServiceConfig } from "./ws-service";
+import { TokenService } from "../token.service";
+
 import { WsCommandMap } from "./commands";
 import { WsEventMap, WsEvent, TokenRejectedEvent } from "./events";
-import { TokenService } from "../token.service";
 
 export class WsMessageService {
   private _wsService: WsService = undefined;
