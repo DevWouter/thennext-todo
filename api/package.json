@@ -27,6 +27,7 @@
     "mysql": "^2.15.0",
     "nodemon": "^1.17.1",
     "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.2.1",
     "ts-node": "^5.0.1",
     "typeorm": "^0.1.16",
     "typescript": "^2.7.2",
