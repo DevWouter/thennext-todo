@@ -4,9 +4,7 @@ import * as bcrypt from "bcryptjs";
 import * as moment from "moment";
 
 import { AccountService } from "./account-service";
-
 import { SessionEntity } from "../db/entities";
-import { Session } from "../route/session/session.model";
 
 @injectable()
 export class SessionService {
