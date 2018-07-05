@@ -7,8 +7,6 @@ import { TaskService } from "../../services/task-service";
 import { Task } from "../../models/task.model";
 import { TaskEntity } from "../../db/entities";
 import { TaskStatus } from "../../db/entities/task.entity";
-import { WebSocketService } from "../../services/web-socket-service";
-import { EntityWebSocketMessage } from "../../services/models/web-socket-messages";
 
 @injectable()
 export class TaskController {
@@ -17,7 +15,6 @@ export class TaskController {
         private readonly authService: AuthenticationService,
         private readonly taskListService: TaskListService,
         private readonly taskService: TaskService,
-        @inject("WebSocketService") private readonly webSocketService: WebSocketService,
     ) {
     }
 
@@ -71,8 +68,6 @@ export class TaskController {
         };
 
         res.send(result);
-
-        this.webSocketService.sendEntityChange("create", "task", result, token);
     }
 
     async index(req: Request, res: Response): Promise<void> {
@@ -133,11 +128,7 @@ export class TaskController {
             completedOn: dst.completedAt,
         };
 
-        this.webSocketService.sendEntityChange("update", "task", result, token);
-
         res.send(result);
-
-
     }
 
     async delete(req: Request, res: Response): Promise<void> {
@@ -147,7 +138,6 @@ export class TaskController {
         const task = await this.taskService.byUuid(<string>(req.params.uuid), account);
 
         this.taskService.destroy(task);
-        this.webSocketService.sendEntityChange("delete", "task", task.uuid, token);
 
         // Reply that task was deleted.
         res.send({});
