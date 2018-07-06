@@ -112,9 +112,9 @@ export class WsService {
     private removeClient(client: WsClient, tryClose = false, removeReason?: string) {
         const index = this._clients.indexOf(client);
         if (index === -1) {
-            console.error(`Trying to remove a client that is not listed. Id: ${client.id}`);
             return;
         }
+
         this._clients.splice(index, 1);
         if (tryClose) {
             try {

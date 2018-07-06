@@ -72,13 +72,17 @@ export class WsMessageService {
         });
 
         this.wsService.message.subscribe(async (ev) => {
-            const msgObject = JSON.parse(ev.message) as { command: string, data: object };
-            const command = <keyof WsCommandMap>(msgObject.command);
-            const commandData = <WsCommandMap[keyof WsCommandMap]>(msgObject.data);
             try {
-                await this.handleCommand(ev.clientId, { command: command, data: commandData });
+                const msgObject = JSON.parse(ev.message) as { command: string, data: object };
+                const command = <keyof WsCommandMap>(msgObject.command);
+                const commandData = <WsCommandMap[keyof WsCommandMap]>(msgObject.data);
+                try {
+                    await this.handleCommand(ev.clientId, { command: command, data: commandData });
+                } catch (err) {
+                    console.warn(`Command "${command}" was not handled`, err);
+                }
             } catch (err) {
-                console.warn(`Command "${command}" was not handled`, err);
+                console.error(err);
             }
         });
     }
@@ -99,11 +103,12 @@ export class WsMessageService {
         // In all other cases, we check for message handlers.
         const trustedClient = this._trustedClients.find(x => x.clientId === clientId);
         if (!trustedClient) {
+            this.wsService.close(clientId, 4000, "Send set-token command before any other commands");
             throw new Error(`No trusted client could be found with clientId ${clientId}`);
         }
 
         if (this._handlerCounter[commandObject.command as string] <= 0) {
-            throw new Error(`No trusted client could be found with clientId ${clientId}`);
+            throw new Error(`No message handler found for ${commandObject.command}`);
         }
 
         this.$commandMessage.next({
