@@ -10,8 +10,6 @@ import { ApiService } from "./api.service";
 
 import { Task, TaskStatus } from "./models/task.dto";
 import { TaskEventService } from "./task-event.service";
-import { WebSocketService } from "./web-socket.service";
-import { filter, map } from "rxjs/operators";
 
 class TaskEventHandler implements RepositoryEventHandler<Task> {
   onItemLoad(entry: Task): void {
@@ -46,26 +44,8 @@ export class TaskService {
   constructor(
     private apiService: ApiService,
     private taskEventService: TaskEventService,
-    private webSocketService: WebSocketService,
   ) {
     this._repository = new ApiRepository(apiService, "/api/task", new TaskEventHandler());
-    const updateMessage = this.webSocketService.$taskMessage.pipe(filter(x => x.action === "update"));
-    combineLatest(updateMessage, this.entries).pipe(
-      map(([msg, entries]) => {
-        const src = msg.entity as Task;
-        new TaskEventHandler().onItemLoad(src);
-        const dst = entries.find(x => x.uuid === src.uuid);
-        dst.title = src.title;
-        dst.status = src.status;
-        dst.description = src.description;
-        dst.nextChecklistOrder = src.nextChecklistOrder;
-        dst.sleepUntil = src.sleepUntil;
-        dst.completedOn = src.completedOn;
-        dst.createdOn = src.createdOn;
-        dst.taskListUuid = src.taskListUuid;
-        dst.updatedOn = src.updatedOn;
-      })).subscribe();
-
   }
 
   add(value: Task): Promise<Task> {

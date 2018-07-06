@@ -24,7 +24,6 @@ import { TaskService } from "./task.service";
 import { TaskTimeLapService } from "./task-time-lap.service";
 import { TaskViewService } from "./task-view.service";
 import { UrgencyLapService } from "./urgency-lap.service";
-import { WebSocketService } from "./web-socket.service";
 
 @NgModule({
   imports: [
@@ -55,7 +54,6 @@ import { WebSocketService } from "./web-socket.service";
     TaskTimeLapService,
     TaskViewService,
     UrgencyLapService,
-    WebSocketService,
   ]
 })
 export class ServicesModule {

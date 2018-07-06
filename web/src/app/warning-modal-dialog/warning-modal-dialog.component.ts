@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { ApiEventService } from "../services/api-event.service";
-import { WebSocketService } from "../services/web-socket.service";
 import { StorageService } from "../services/storage.service";
 
 class ErrorEvent {
@@ -37,7 +36,6 @@ export class WarningModalDialogComponent implements OnInit {
   private container = new ErrorEventContainer();
   constructor(
     private readonly apiEventService: ApiEventService,
-    private readonly webSocketService: WebSocketService,
     private readonly storageService: StorageService,
   ) { }
 
@@ -55,18 +53,6 @@ export class WarningModalDialogComponent implements OnInit {
       this.container.events.push(new ErrorEvent());
       this.showDialog = true;
       this.lastError = reason;
-    });
-
-    this.webSocketService.status.subscribe((status) => {
-      if (status === "error" || status === "offline") {
-        // Store a new error event
-        this.container.events.push(new ErrorEvent());
-        this.showDialog = true;
-        this.lastError = {
-          source: "websocket",
-          status: status,
-        };
-      }
     });
   }
 
