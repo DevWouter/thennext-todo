@@ -7,6 +7,7 @@ import { ApiEventService } from "./api-event.service";
 import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { ContextService } from "./context.service";
+import { MessageService } from "./message.service";
 import { NavigationService } from "./navigation.service";
 import { RelationViewService } from "./relation-view.service";
 import { ScoreShiftService } from "./score-shift.service";
@@ -23,6 +24,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TaskTimeLapService } from "./task-time-lap.service";
 import { TaskViewService } from "./task-view.service";
+import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
 
 @NgModule({
@@ -37,6 +39,7 @@ import { UrgencyLapService } from "./urgency-lap.service";
     ApiService,
     ChecklistItemService,
     ContextService,
+    MessageService,
     NavigationService,
     RelationViewService,
     ScoreShiftService,
@@ -53,6 +56,7 @@ import { UrgencyLapService } from "./urgency-lap.service";
     TaskService,
     TaskTimeLapService,
     TaskViewService,
+    TokenService,
     UrgencyLapService,
   ]
 })

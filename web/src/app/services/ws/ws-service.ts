@@ -54,10 +54,10 @@ export class WsService {
    */
   constructor(config: WsServiceConfig) {
     this._ws = new WebSocket(config.url, config.protocols);
-    this._ws.addEventListener("open", this.onOpen);
-    this._ws.addEventListener("message", this.onMessage);
-    this._ws.addEventListener("close", this.onClose);
-    this._ws.addEventListener("error", this.onError);
+    this._ws.addEventListener("open", (ev) => this.onOpen(ev));
+    this._ws.addEventListener("message", (ev) => this.onMessage(ev));
+    this._ws.addEventListener("close", (ev) => this.onClose(ev));
+    this._ws.addEventListener("error", (ev) => this.onError(ev));
   }
 
   /**
