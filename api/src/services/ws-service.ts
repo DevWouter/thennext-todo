@@ -87,7 +87,10 @@ export class WsService {
         }
 
         client.socket.send(message, (err) => {
-            console.error(`Error while sending message to client ${clientId}`, err);
+            // Report if an error has occured.
+            if (err) {
+                console.error(`Error while sending message to client ${clientId}`, err);
+            }
         });
     }
 
@@ -116,6 +119,7 @@ export class WsService {
         }
 
         this._clients.splice(index, 1);
+        this.$closedClientEvent.next(client.id);
         if (tryClose) {
             try {
                 client.socket.close(4000, removeReason);
@@ -133,6 +137,7 @@ export class WsService {
 
         this._clients.push(client);
         console.log(`Client ${client.id} was added`);
+        this.$newClientEvent.next(client.id);
         return client;
     }
 

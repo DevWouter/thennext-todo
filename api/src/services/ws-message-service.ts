@@ -128,6 +128,7 @@ export class WsMessageService {
             this.removeClient(clientId, this._newClients, this._trustedClients);
             this.send(clientId, "token-rejected", new TokenRejectedEvent("No account associated with the given token"));
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (token-invalid)");
+            return;
         }
 
         // Ensure the client is *not* in the trusted list
@@ -135,6 +136,7 @@ export class WsMessageService {
             this.removeClient(clientId, this._newClients, this._trustedClients);
             this.send(clientId, "token-rejected", new TokenRejectedEvent("Connection is already associated with a token"));
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (already-trusted)");
+            return;
         }
 
         const messageClient = this._newClients.find(x => x.clientId === clientId);
@@ -143,6 +145,7 @@ export class WsMessageService {
             this.removeClient(clientId, this._newClients, this._trustedClients);
             this.send(clientId, "token-rejected", new TokenRejectedEvent("Connection is not in the new list"));
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (not-in-new)");
+            return;
         }
 
         // Everything is OK, move the client to the trusted list.
