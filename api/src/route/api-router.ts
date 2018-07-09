@@ -4,7 +4,6 @@ import { isAuthenticated } from "../helpers/is-authenticated";
 
 import { accountRouter } from "./account";
 import { checklistItemRouter } from "./checklist-item";
-import { scoreShiftRouter } from "./score-shift/score-shift.router";
 import { sessionRouter } from "./session";
 import { taskListRightRouter } from "./task-list-right/task-list-right.router";
 import { taskListShareRouter } from "./task-list-share";
@@ -16,7 +15,6 @@ const apiRouter = express.Router();
 
 apiRouter.use("/account", accountRouter);
 apiRouter.use("/checklist-item", [isAuthenticated, checklistItemRouter]);
-apiRouter.use("/score-shift", [isAuthenticated, scoreShiftRouter]);
 apiRouter.use("/session", sessionRouter);
 apiRouter.use("/task-list-right", [isAuthenticated, taskListRightRouter]);
 apiRouter.use("/task-list-share", [isAuthenticated, taskListShareRouter]);

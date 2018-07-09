@@ -1,12 +1,9 @@
 import { Container, injectable, decorate, unmanaged } from "inversify";
 import { Connection, createConnection } from "typeorm";
 
-
-
 import { AuthenticationService } from "./services/authentication-service";
 import { WsMessageService } from "./services/ws-message-service";
 import { WsService } from "./services/ws-service";
-import { TaskListService } from "./services/task-list-service";
 import { ServerApp } from "./server/server-app";
 
 import {
@@ -22,6 +19,11 @@ import {
     TaskRelationRepository,
     UrgencyLapRepository,
 } from "./repositories";
+
+import {
+    ScoreShiftService,
+    TaskListService,
+} from "./services";
 
 
 decorate(injectable(), Connection);
@@ -57,6 +59,7 @@ container.bind<AuthenticationService>(AuthenticationService).toSelf();
 container.bind<WsMessageService>(WsMessageService).to(WsMessageService).inSingletonScope();
 container.bind<WsService>(WsService).to(WsService).inSingletonScope();
 
+container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
 
 container.bind<ServerApp>(ServerApp).toSelf();
