@@ -3,14 +3,14 @@ import { Connection } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import * as moment from "moment";
 
-import { AccountService } from "./account-service";
 import { SessionEntity } from "../db/entities";
+import { AccountRepository } from "../repositories/account-repository";
 
 @injectable()
 export class SessionService {
     constructor(
         @inject("ConnectionProvider") private readonly db: () => Promise<Connection>,
-        private readonly accountService: AccountService,
+        private readonly accountService: AccountRepository,
     ) { }
 
     async byToken(token: string): Promise<SessionEntity> {

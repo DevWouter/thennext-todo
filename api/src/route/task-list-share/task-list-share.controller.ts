@@ -1,11 +1,13 @@
 import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
-import { AccountService } from "../../services/account-service";
-import { TaskListService } from "../../services/task-list-service";
 import { TaskListShare } from "../../models/task-list-share.model";
 import { TaskListShareTokenEntity } from "../../db/entities/task-list-share-token.entity";
 import { TaskListShareTokenService } from "../../services/task-list-share-token-service";
+import {
+    AccountRepository,
+    TaskListRepository
+} from "../../repositories";
 
 
 export interface TaskListShareInput {
@@ -17,8 +19,8 @@ export interface TaskListShareInput {
 export class TaskListShareController {
     constructor(
         private readonly authService: AuthenticationService,
-        private readonly accountService: AccountService,
-        private readonly taskListService: TaskListService,
+        private readonly accountService: AccountRepository,
+        private readonly taskListService: TaskListRepository,
         private readonly taskListShareTokenService: TaskListShareTokenService,
     ) {
     }

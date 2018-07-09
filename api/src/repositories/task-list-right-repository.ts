@@ -5,7 +5,7 @@ import { AccountEntity, TaskListEntity } from "../db/entities";
 import { TaskListRightEntity } from "../db/entities/task-list-right.entity";
 
 @injectable()
-export class TaskListRightService {
+export class TaskListRightRepository {
 
     private readonly db: Promise<Connection>;
     constructor(
@@ -43,6 +43,17 @@ export class TaskListRightService {
                 ownerId: account.id
             })
             .getMany();
+    }
+
+    async getRightsFor(taskList: TaskListEntity): Promise<TaskListRightEntity[]> {
+        return (await this.db)
+            .createQueryBuilder(TaskListRightEntity, "right")
+            .innerJoinAndSelect("right.account", "account")
+            .innerJoinAndSelect("right.taskList", "taskList")
+            .where("taskList.id = :taskListId")
+            .setParameters({
+                taskListId: taskList.id,
+            }).getMany();
     }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListRightEntity> {

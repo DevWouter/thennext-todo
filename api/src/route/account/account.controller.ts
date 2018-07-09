@@ -7,14 +7,12 @@ import { MyAccount } from "../../models/my-account.model";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
-import { AccountService } from "../../services/account-service";
-import { TaskListRightService } from "../../services/task-list-right-service";
 import { AccountSettingsService } from "../../services/account-settings-service";
-import { TaskListService } from "../../services/task-list-service";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
 import { AuthenticationService } from "../../services/authentication-service";
 import { UrgencyLapService } from "../../services/urgency-lap-service";
 import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
+import { AccountRepository, TaskListRepository, TaskListRightRepository } from "../../repositories";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -32,10 +30,10 @@ export function TransformAccount(src: AccountEntity): Account {
 @injectable()
 export class AccountController {
     constructor(
-        private readonly accountService: AccountService,
+        private readonly accountService: AccountRepository,
         private readonly accountSettingsService: AccountSettingsService,
-        private readonly taskListService: TaskListService,
-        private readonly taskListRightService: TaskListRightService,
+        private readonly taskListService: TaskListRepository,
+        private readonly taskListRightService: TaskListRightRepository,
         private readonly authenticationService: AuthenticationService,
         private readonly urgencyLapService: UrgencyLapService,
     ) {

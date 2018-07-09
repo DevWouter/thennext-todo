@@ -1,17 +1,30 @@
 import { injectable } from "inversify";
-import { Subscription, Subject } from "rxjs";
-import { filter } from "rxjs/operators";
+import { Subscription, Subject, Observable } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 import { WsService } from "./ws-service";
 import { WsCommandMap } from "./ws/commands";
-import { AccountService } from "./account-service";
-import { TokenRejectedEvent, WsEventMap } from "./ws/events";
+import { WsEventMap } from "./ws/events";
 import { WsMessageClient, TrustedClient } from "./ws/message-client";
+import { AccountRepository } from "../repositories/account-repository";
 
 interface CommandMessage {
     client: TrustedClient;
     type: keyof WsCommandMap;
     message: object;
+}
+
+interface SendOptions {
+    /**
+     * The client to which the message should be send as echo.
+     */
+    clientId?: number;
+
+    /**
+     * The accounts to which the message should be send.
+     */
+    accounts?: number[];
+    refId?: string;
 }
 
 @injectable()
@@ -20,42 +33,26 @@ export class WsMessageService {
     private readonly _trustedClients: TrustedClient[] = [];
 
     private readonly $commandMessage = new Subject<CommandMessage>();
-    private readonly _handlerCounter = {};
 
     constructor(
         private readonly wsService: WsService,
-        private readonly accountService: AccountService,
+        private readonly accountService: AccountRepository,
     ) {
         this.setup();
     }
 
-    public addCommandHandler<K extends keyof WsCommandMap>(
+    public commandsOf<K extends keyof WsCommandMap>(
         type: K,
-        handler: (client: TrustedClient, message: WsCommandMap[K]) => void,
-    ): Subscription {
+    ): Observable<{ client: TrustedClient, event: WsCommandMap[K] }> {
         if (type === "set-token") {
             throw new Error(`The command ${type} is handled internal`);
         }
 
-        const subscription = this.$commandMessage
-            .pipe(filter(x => x.type === type))
-            .subscribe(
-                ((command) => {
-                    handler(command.client, command.message as WsCommandMap[K]);
-                })
+        return this.$commandMessage
+            .pipe(
+                filter(x => x.type === type),
+                map(x => ({ client: x.client, event: x.message as WsCommandMap[K] }))
             );
-
-        this._handlerCounter[type as string] = (this._handlerCounter[type as string] || 0) + 1;
-        console.log(`Add handler for ${type}. Increased handlers to ${this._handlerCounter[type as string]}`);
-
-        // When the subscription is removed reduce the counter by one.
-        subscription.add(() => {
-            // Reduce the counter by one.
-            (this._handlerCounter[type as string]) = (this._handlerCounter[type as string]) - 1;
-            console.log(`Remove handler for ${type}. Reduced handlers to ${this._handlerCounter[type as string]}`);
-        });
-
-        return subscription;
     }
 
     private setup(): void {
@@ -107,10 +104,6 @@ export class WsMessageService {
             throw new Error(`No trusted client could be found with clientId ${clientId}`);
         }
 
-        if (this._handlerCounter[commandObject.command as string] <= 0) {
-            throw new Error(`No message handler found for ${commandObject.command}`);
-        }
-
         this.$commandMessage.next({
             client: trustedClient,
             message: commandObject.data,
@@ -126,7 +119,7 @@ export class WsMessageService {
         if (!account) {
             // Validation fails, send token rejected and remove from the list.
             this.removeClient(clientId, this._newClients, this._trustedClients);
-            this.send(clientId, "token-rejected", new TokenRejectedEvent("No account associated with the given token"));
+            this.send("token-rejected", { reason: "No account associated with the given token" }, { clientId: clientId });
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (token-invalid)");
             return;
         }
@@ -134,7 +127,7 @@ export class WsMessageService {
         // Ensure the client is *not* in the trusted list
         if (this._trustedClients.find(x => x.clientId === clientId)) {
             this.removeClient(clientId, this._newClients, this._trustedClients);
-            this.send(clientId, "token-rejected", new TokenRejectedEvent("Connection is already associated with a token"));
+            this.send("token-rejected", { reason: "Connection is already associated with a token" }, { clientId: clientId });
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (already-trusted)");
             return;
         }
@@ -143,7 +136,7 @@ export class WsMessageService {
         if (!messageClient) {
             // The client is not listed in the new list (this should never happen)
             this.removeClient(clientId, this._newClients, this._trustedClients);
-            this.send(clientId, "token-rejected", new TokenRejectedEvent("Connection is not in the new list"));
+            this.send("token-rejected", { reason: "Connection is not in the new list" }, { clientId: clientId });
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (not-in-new)");
             return;
         }
@@ -156,15 +149,43 @@ export class WsMessageService {
 
         this.removeClient(clientId, this._newClients);
         this._trustedClients.push(trustedClient);
-        this.send(clientId, "token-accepted", { type: "token-accepted" });
+        this.send("token-accepted", {}, { clientId: clientId });
     }
 
-    private send<K extends keyof WsEventMap>(clientId, type: K, event: WsEventMap[K]) {
-        if (event.type !== type) {
-            throw new Error("Type of the event is mismatching");
-        }
+    public send<K extends keyof WsEventMap>(type: K, event: WsEventMap[K], options: SendOptions) {
+        const processedClients: WsMessageClient[] = [];
+        const sendCommand = (client: WsMessageClient, content: WsEventMap[K]) => {
+            // Only perform th check once.
+            if (processedClients.includes(client)) {
+                return;
+            }
 
-        this.wsService.send(clientId, JSON.stringify(event));
+            processedClients.push(client);
+            const msgString = JSON.stringify({
+                type: type,
+                echo: client.clientId === options.clientId,
+                refId: options.refId,
+                data: content,
+            });
+            this.wsService.send(client.clientId, msgString);
+        };
+
+        // Go over all clients
+        this._newClients.forEach(client => {
+            if (client.clientId === options.clientId) {
+                sendCommand(client, event);
+            }
+        });
+
+        this._trustedClients.forEach(client => {
+            if (client.clientId === options.clientId) {
+                sendCommand(client, event);
+            }
+
+            if (options.accounts && options.accounts.includes(client.accountId)) {
+                sendCommand(client, event);
+            }
+        });
     }
 
     private removeClient(clientId: number, ...lists: WsMessageClient[][]) {

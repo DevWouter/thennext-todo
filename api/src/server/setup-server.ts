@@ -6,8 +6,8 @@ import { Connection } from "typeorm";
 import { apiRouter } from "../route";
 
 import container from "../inversify.config";
-import { WsMessageService } from "../services/ws-message-service";
 import { WsService } from "../services/ws-service";
+import { ServerApp } from "./server-app";
 
 export function startServer(port: number) {
     console.log("Server is starting");
@@ -15,17 +15,11 @@ export function startServer(port: number) {
     const app = express();
     app.use("/api", bodyParser.json(), apiRouter);
     const server = http.createServer(app);
-    const wsMessageService = container.get(WsMessageService);
     const wsService = container.get(WsService);
     const databaseProvider = container.get("ConnectionProvider") as (() => Promise<Connection>);
 
-    // Setup the message handlers.
-    wsMessageService.addCommandHandler("sync-entities", (client, message) => {
-        console.log("sync-entities", { client, message });
-    });
-
-
     wsService.init(server);
+    const serverApp = container.get(ServerApp);
 
     server.listen(port, async () => {
         console.log("Server is ready");

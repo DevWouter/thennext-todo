@@ -13,50 +13,38 @@ export interface WsCommandMap {
   "sync-entities": EntityCommand;
 }
 
-interface SetTokenCommand {
+export interface SetTokenCommand {
   token: string;
 }
 
-interface EntityCommand {
-  /**
-   * The type of entity.
-   */
-  entityKind: EntityKind;
-}
-
-interface DeleteEntityCommand extends EntityCommand {
-  /**
-   * The uuid of the entity that needs to be deleted.
-   */
-  uuid: string;
-}
-
-interface DeleteEntityCommand extends EntityCommand {
+export interface EntityCommand {
   /**
    * The type of entity.
    */
   entityKind: EntityKind;
 
   /**
+   * A referenceId which the server will use to inform the invoking socket (and only the invoking socket) which createEvent.
+   * Then that event can be mapped to the calling entity.
+   */
+  refId: string;
+}
+
+export interface DeleteEntityCommand extends EntityCommand {
+  /**
    * The uuid of the entity that needs to be deleted.
    */
   uuid: string;
 }
 
-interface UpdateEntityCommand extends EntityCommand {
+export interface UpdateEntityCommand extends EntityCommand {
   /**
    * The entity that needs to be updated. All entities that need to update have an uuid.
    */
   entity: { uuid: string };
 }
 
-interface CreateEntityCommand extends EntityCommand {
-  /**
-   * A referenceId which the server will use to inform the invoking socket (and only the invoking socket) which createEvent.
-   * Then that event can be mapped to the calling entity.
-   */
-  refId: string;
-
+export interface CreateEntityCommand extends EntityCommand {
   /**
    * What kind of entity are we talking about?
    */

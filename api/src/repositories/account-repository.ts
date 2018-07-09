@@ -4,7 +4,7 @@ import { AccountEntity } from "../db/entities";
 import { Connection } from "typeorm";
 
 @injectable()
-export class AccountService {
+export class AccountRepository {
 
     constructor(
         @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
@@ -22,6 +22,14 @@ export class AccountService {
         return (await this.db())
             .createQueryBuilder(AccountEntity, "account")
             .where("account.email = :email", { email: email })
+            .getOne();
+    }
+
+    async byId(id: number): Promise<AccountEntity> {
+        return (await this.db())
+            .createQueryBuilder(AccountEntity, "account")
+            .where("account.id = :id")
+            .setParameters({ id: id })
             .getOne();
     }
 

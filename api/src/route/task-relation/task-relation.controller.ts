@@ -2,14 +2,16 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 
 import { AuthenticationService } from "../../services/authentication-service";
-import { AccountService } from "../../services/account-service";
 import { TaskRelationService } from "../../services/task-relation-service";
-import { TaskService } from "../../services/task-service";
 
 import { TaskRelationEntity } from "../../db/entities/task-relation.entity";
 
 import { TaskRelation } from "../../models/task-relation.model";
 import { toModel } from "./helpers";
+import {
+    AccountRepository,
+    TaskRepository
+} from "../../repositories";
 
 
 export interface TaskListInput {
@@ -20,8 +22,8 @@ export interface TaskListInput {
 export class TaskRelationController {
     constructor(
         private readonly authService: AuthenticationService,
-        private readonly accountService: AccountService,
-        private readonly taskService: TaskService,
+        private readonly accountService: AccountRepository,
+        private readonly taskService: TaskRepository,
         private readonly taskRelationService: TaskRelationService,
     ) {
     }

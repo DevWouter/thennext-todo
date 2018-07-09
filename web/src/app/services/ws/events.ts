@@ -1,7 +1,8 @@
 import { EntityKind } from "./entity-kind";
 
+
 export interface WsEventMap {
-  "token-accepted": WsEvent;
+  "token-accepted": {}; // Empty clas
   "token-rejected": TokenRejectedEvent;
   "entity-created": EntityCreatedEvent;
   "entity-updated": EntityUpdatedEvent;
@@ -9,37 +10,46 @@ export interface WsEventMap {
   "entities-synced": EntitiesSyncedEvent;
 }
 
-export interface WsEvent {
+export interface WsEventBasic {
   type: keyof WsEventMap;
-}
-
-interface IEntityEvent extends WsEvent {
-  entityKind: EntityKind;
-}
-
-interface IReferenceEntityEvent extends IEntityEvent {
   /**
-   * A reference id is provided if the event was a result of your actions.
-   * Use it to find the unknown entity on your side and set the uuid.
-   * In the event none is provided the value shall be null.
-   * In the event another socket was responsible for the event it shall be undefined (and as such missing)
+   * This event was caused by a client with your id.
    */
+  echo: boolean;
+
   refId?: string;
 }
 
-export interface TokenRejectedEvent extends WsEvent {
-  reason: string;
+// All events should derive from this.
+export interface WsEvent<K extends keyof WsEventMap> extends WsEventBasic {
+  type: K;
+  /**
+   * This event was caused by a client with your id.
+   */
+  echo: boolean;
+
+  refId?: string;
+
+  data: WsEventMap[K];
 }
 
-export interface EntityCreatedEvent extends IReferenceEntityEvent {
+export interface TokenRejectedEvent {
+  readonly reason: string;
+}
+
+interface IEntityEvent {
+  entityKind: EntityKind;
+}
+
+export interface EntityCreatedEvent extends IEntityEvent {
   entity: { uuid: string };
 }
 
-export interface EntityUpdatedEvent extends IReferenceEntityEvent {
+export interface EntityUpdatedEvent extends IEntityEvent {
   entity: { uuid: string };
 }
 
-export interface EntityDeletedEvent extends IReferenceEntityEvent {
+export interface EntityDeletedEvent extends IEntityEvent {
   uuid: string;
 }
 

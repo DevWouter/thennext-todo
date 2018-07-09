@@ -1,20 +1,22 @@
 import { Response, Request } from "express";
 import { injectable, inject } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
-import { AccountService } from "../../services/account-service";
-import { TaskListService } from "../../services/task-list-service";
-import { TaskService } from "../../services/task-service";
 import { Task } from "../../models/task.model";
 import { TaskEntity } from "../../db/entities";
 import { TaskStatus } from "../../db/entities/task.entity";
+import {
+    AccountRepository,
+    TaskListRepository,
+    TaskRepository
+} from "../../repositories";
 
 @injectable()
 export class TaskController {
     constructor(
-        private readonly accountService: AccountService,
+        private readonly accountService: AccountRepository,
         private readonly authService: AuthenticationService,
-        private readonly taskListService: TaskListService,
-        private readonly taskService: TaskService,
+        private readonly taskListService: TaskListRepository,
+        private readonly taskService: TaskRepository,
     ) {
     }
 

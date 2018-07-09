@@ -1,11 +1,11 @@
-import { Observable, BehaviorSubject, Subscription, combineLatest } from "rxjs";
+import { Observable, BehaviorSubject, Subscription, combineLatest, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { WsService, WsConnectionStatus, WsServiceConfig } from "./ws-service";
 import { TokenService } from "../token.service";
 
 import { WsCommandMap } from "./commands";
-import { WsEventMap, WsEvent, TokenRejectedEvent } from "./events";
+import { WsEventMap, WsEvent, WsEventBasic } from "./events";
 
 export class WsMessageService {
   private _wsService: WsService = undefined;
@@ -15,8 +15,10 @@ export class WsMessageService {
 
   private readonly $msgQueue = new BehaviorSubject<string[]>(this._msgQueue);
   private readonly $status = new BehaviorSubject<"up" | "down">("down");
+  private readonly $event = new Subject<WsEventBasic>();
 
   get status(): Observable<"up" | "down"> { return this.$status; }
+  get event(): Observable<WsEventBasic> { return this.$event; }
 
   constructor(
     private readonly wsServiceConfig: WsServiceConfig,
@@ -61,7 +63,7 @@ export class WsMessageService {
     this._wsService = new WsService(this.wsServiceConfig);
 
     this._msgSub = this._wsService.message.subscribe((data) => {
-      const event = JSON.parse(data) as WsEvent;
+      const event = JSON.parse(data) as WsEventBasic;
       this.onEvent(event);
     });
 
@@ -107,7 +109,7 @@ export class WsMessageService {
     this.addToCommandQueue(rawCommandJson);
   }
 
-  private onEvent<K extends keyof WsEventMap>(data: WsEventMap[K]): void {
+  private onEvent<K extends keyof WsEventMap>(data: WsEventBasic): void {
     switch (data.type) {
       case "token-accepted": {
         // Token was accepted. Simply set the status to up.
@@ -116,12 +118,12 @@ export class WsMessageService {
       } break;
       case "token-rejected": {
         // Log the reason for the rejection and then perform a disconnect.
-        console.error(`Token was rejected: ${(data as TokenRejectedEvent).reason}`);
+        console.error(`Token was rejected: ${(data as WsEvent<"token-rejected">).data.reason}`);
         this.disconnect();
       } break;
       default: {
-        console.error(`Unknown response type: ${data.type}`, data);
-      }
+        this.$event.next(data);
+      } break;
     }
   }
 

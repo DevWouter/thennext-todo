@@ -2,17 +2,19 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 
 import { AuthenticationService } from "../../services/authentication-service";
-import { AccountService } from "../../services/account-service";
 import { UrgencyLapService } from "../../services/urgency-lap-service";
 
 import { UrgencyLap } from "../../models/urgency-lap.model";
 import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
+import {
+    AccountRepository
+} from "../../repositories";
 
 @injectable()
 export class UrgencyLapController {
     constructor(
         private readonly authService: AuthenticationService,
-        private readonly accountService: AccountService,
+        private readonly accountService: AccountRepository,
         private readonly urgencyLapService: UrgencyLapService,
     ) {
     }

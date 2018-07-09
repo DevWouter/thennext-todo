@@ -2,15 +2,13 @@ import * as moment from "moment";
 import * as express from "express";
 import container from "../inversify.config";
 
-import { SessionEntity } from "../db/entities";
-import { getConnection, Connection } from "typeorm";
 import { AuthenticationService } from "../services/authentication-service";
 import { SessionService } from "../services/session-service";
-import { AccountService } from "../services/account-service";
+import { AccountRepository } from "../repositories";
 
 export async function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
     const authService = container.resolve(AuthenticationService);
-    const accountService = container.resolve(AccountService);
+    const accountService = container.resolve(AccountRepository);
     const sessionService = container.resolve(SessionService);
 
     const token = authService.getAuthenticationToken(req);

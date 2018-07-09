@@ -1,18 +1,17 @@
 import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
-import { AccountService } from "../../services/account-service";
 import { ChecklistItemEntity } from "../../db/entities";
 import { ChecklistItemService } from "../../services/checklist-item-service";
-import { TaskService } from "../../services/task-service";
 import { ChecklistItem } from "../../models/checklist-item.model";
+import { AccountRepository, TaskRepository } from "../../repositories";
 
 @injectable()
 export class ChecklistItemController {
     constructor(
         private readonly authService: AuthenticationService,
-        private readonly accountService: AccountService,
-        private readonly taskService: TaskService,
+        private readonly accountService: AccountRepository,
+        private readonly taskService: TaskRepository,
         private readonly checklistItemService: ChecklistItemService,
     ) {
     }
