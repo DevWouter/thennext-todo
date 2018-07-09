@@ -4,7 +4,7 @@ import { UrgencyLapEntity } from "../db/entities/urgency-lap.entity";
 import { AccountEntity } from "../db/entities/account.entity";
 
 @injectable()
-export class UrgencyLapService {
+export class UrgencyLapRepository {
     private readonly db: Promise<Connection>;
     constructor(
         @inject("ConnectionProvider") dbPromise: () => Promise<Connection>

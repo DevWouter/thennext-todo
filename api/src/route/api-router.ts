@@ -10,7 +10,6 @@ import { taskListRightRouter } from "./task-list-right/task-list-right.router";
 import { taskListShareRouter } from "./task-list-share";
 import { taskRelationRouter } from "./task-relation";
 import { taskRouter } from "./task";
-import { taskTimeLapRouter } from "./task-time-lap";
 import { urgencyLapRouter } from "./urgency-lap/urgency-lap.router";
 
 const apiRouter = express.Router();
@@ -22,7 +21,6 @@ apiRouter.use("/session", sessionRouter);
 apiRouter.use("/task-list-right", [isAuthenticated, taskListRightRouter]);
 apiRouter.use("/task-list-share", [isAuthenticated, taskListShareRouter]);
 apiRouter.use("/task-relation", [isAuthenticated, taskRelationRouter]);
-apiRouter.use("/task-time-lap", [isAuthenticated, taskTimeLapRouter]);
 apiRouter.use("/task", [isAuthenticated, taskRouter]);
 apiRouter.use("/urgency-lap", [isAuthenticated, urgencyLapRouter]);
 

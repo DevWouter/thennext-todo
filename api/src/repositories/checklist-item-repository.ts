@@ -4,7 +4,7 @@ import { Connection } from "typeorm";
 import { AccountEntity, ChecklistItemEntity } from "../db/entities";
 
 @injectable()
-export class ChecklistItemService {
+export class ChecklistItemRepository {
     constructor(
         @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
     ) { }

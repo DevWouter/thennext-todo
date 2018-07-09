@@ -3,13 +3,12 @@ import * as express from "express";
 import container from "../inversify.config";
 
 import { AuthenticationService } from "../services/authentication-service";
-import { SessionService } from "../services/session-service";
-import { AccountRepository } from "../repositories";
+import { AccountRepository, SessionRepository } from "../repositories";
 
 export async function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
     const authService = container.resolve(AuthenticationService);
     const accountService = container.resolve(AccountRepository);
-    const sessionService = container.resolve(SessionService);
+    const sessionService = container.resolve(SessionRepository);
 
     const token = authService.getAuthenticationToken(req);
     if (token == null) {

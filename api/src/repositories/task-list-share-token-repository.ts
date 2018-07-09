@@ -6,7 +6,7 @@ import { TaskListShareTokenEntity } from "../db/entities/task-list-share-token.e
 
 
 @injectable()
-export class TaskListShareTokenService {
+export class TaskListShareTokenRepository {
     private readonly db: Promise<Connection>;
     constructor(
         @inject("ConnectionProvider") dbPromise: () => Promise<Connection>

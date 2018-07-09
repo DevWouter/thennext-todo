@@ -4,7 +4,7 @@ import { Connection } from "typeorm";
 import { AccountEntity, TaskRelationEntity } from "../db/entities";
 
 @injectable()
-export class TaskRelationService {
+export class TaskRelationRepository {
     constructor(
         @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
     ) { }

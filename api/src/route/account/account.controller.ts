@@ -7,12 +7,16 @@ import { MyAccount } from "../../models/my-account.model";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
-import { AccountSettingsService } from "../../services/account-settings-service";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
 import { AuthenticationService } from "../../services/authentication-service";
-import { UrgencyLapService } from "../../services/urgency-lap-service";
 import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
-import { AccountRepository, TaskListRepository, TaskListRightRepository } from "../../repositories";
+import {
+    AccountRepository,
+    TaskListRepository,
+    TaskListRightRepository,
+    AccountSettingsRepository,
+    UrgencyLapRepository
+} from "../../repositories";
 
 export interface CreateAccountInput {
     readonly email: string;
@@ -31,11 +35,11 @@ export function TransformAccount(src: AccountEntity): Account {
 export class AccountController {
     constructor(
         private readonly accountService: AccountRepository,
-        private readonly accountSettingsService: AccountSettingsService,
+        private readonly accountSettingsService: AccountSettingsRepository,
         private readonly taskListService: TaskListRepository,
         private readonly taskListRightService: TaskListRightRepository,
         private readonly authenticationService: AuthenticationService,
-        private readonly urgencyLapService: UrgencyLapService,
+        private readonly urgencyLapService: UrgencyLapRepository,
     ) {
     }
 

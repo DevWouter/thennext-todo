@@ -4,16 +4,14 @@ import { filter } from "rxjs/operators";
 import { WsMessageService } from "./ws-message-service";
 import { TaskList } from "../models/task-list.model";
 import { TaskListEntity, AccountSettingsEntity } from "../db/entities";
-import { AccountSettingsService } from "./account-settings-service";
 import { TrustedClient } from "./ws/message-client";
 import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
-
-import { CreateEntityCommand } from "./ws/commands";
 
 import {
     AccountRepository,
     TaskListRepository,
     TaskListRightRepository,
+    AccountSettingsRepository,
 } from "../repositories";
 
 @injectable()
@@ -21,7 +19,7 @@ export class TaskListService {
     constructor(
         private readonly taskListrepository: TaskListRepository,
         private readonly accountRepository: AccountRepository,
-        private readonly accountSettingsRepository: AccountSettingsService,
+        private readonly accountSettingsRepository: AccountSettingsRepository,
         private readonly messageService: WsMessageService,
         private readonly taskListRightService: TaskListRightRepository,
     ) {

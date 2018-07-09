@@ -2,9 +2,10 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { ChecklistItemEntity } from "../../db/entities";
-import { ChecklistItemService } from "../../services/checklist-item-service";
 import { ChecklistItem } from "../../models/checklist-item.model";
-import { AccountRepository, TaskRepository } from "../../repositories";
+import {
+    AccountRepository, TaskRepository, ChecklistItemRepository
+} from "../../repositories";
 
 @injectable()
 export class ChecklistItemController {
@@ -12,7 +13,7 @@ export class ChecklistItemController {
         private readonly authService: AuthenticationService,
         private readonly accountService: AccountRepository,
         private readonly taskService: TaskRepository,
-        private readonly checklistItemService: ChecklistItemService,
+        private readonly checklistItemService: ChecklistItemRepository,
     ) {
     }
 

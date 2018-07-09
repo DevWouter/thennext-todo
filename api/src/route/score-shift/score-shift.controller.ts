@@ -1,18 +1,20 @@
 import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
-import { ScoreShiftService } from "../../services/score-shift-service";
 import { ScoreShiftEntity } from "../../db/entities";
 import { ScoreShift } from "../../models/score-shift.model";
 import { toModel } from "./helpers";
-import { AccountRepository } from "../../repositories";
+import {
+    AccountRepository,
+    ScoreShiftRepository
+} from "../../repositories";
 
 @injectable()
 export class ScoreShiftController {
     constructor(
         private readonly authService: AuthenticationService,
         private readonly accountService: AccountRepository,
-        private readonly scoreShiftService: ScoreShiftService,
+        private readonly scoreShiftService: ScoreShiftRepository,
     ) {
     }
 

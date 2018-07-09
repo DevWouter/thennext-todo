@@ -2,7 +2,6 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 
 import { AuthenticationService } from "../../services/authentication-service";
-import { TaskRelationService } from "../../services/task-relation-service";
 
 import { TaskRelationEntity } from "../../db/entities/task-relation.entity";
 
@@ -10,7 +9,8 @@ import { TaskRelation } from "../../models/task-relation.model";
 import { toModel } from "./helpers";
 import {
     AccountRepository,
-    TaskRepository
+    TaskRepository,
+    TaskRelationRepository
 } from "../../repositories";
 
 
@@ -24,7 +24,7 @@ export class TaskRelationController {
         private readonly authService: AuthenticationService,
         private readonly accountService: AccountRepository,
         private readonly taskService: TaskRepository,
-        private readonly taskRelationService: TaskRelationService,
+        private readonly taskRelationService: TaskRelationRepository,
     ) {
     }
 

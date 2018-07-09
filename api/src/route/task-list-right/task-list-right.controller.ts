@@ -2,11 +2,11 @@ import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { TaskListRight } from "../../models/task-list-right.model";
-import { TaskListShareTokenService } from "../../services/task-list-share-token-service";
 import { AccessRight, TaskListRightEntity } from "../../db/entities/task-list-right.entity";
 import {
     AccountRepository,
-    TaskListRightRepository
+    TaskListRightRepository,
+    TaskListShareTokenRepository
 } from "../../repositories";
 
 
@@ -21,7 +21,7 @@ export class TaskListRightController {
         private readonly authService: AuthenticationService,
         private readonly accountService: AccountRepository,
         private readonly taskListRightService: TaskListRightRepository,
-        private readonly taskListShareTokenService: TaskListShareTokenService,
+        private readonly taskListShareTokenService: TaskListShareTokenRepository,
     ) {
     }
 

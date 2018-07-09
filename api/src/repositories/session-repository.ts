@@ -7,7 +7,7 @@ import { SessionEntity } from "../db/entities";
 import { AccountRepository } from "../repositories/account-repository";
 
 @injectable()
-export class SessionService {
+export class SessionRepository {
     constructor(
         @inject("ConnectionProvider") private readonly db: () => Promise<Connection>,
         private readonly accountService: AccountRepository,

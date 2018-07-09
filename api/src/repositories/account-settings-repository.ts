@@ -4,7 +4,7 @@ import { AccountEntity, AccountSettingsEntity } from "../db/entities";
 import { Connection } from "typeorm";
 
 @injectable()
-export class AccountSettingsService {
+export class AccountSettingsRepository {
 
     constructor(
         @inject("ConnectionProvider") private readonly db: () => Promise<Connection>

@@ -1,8 +1,9 @@
 import { Response, Request } from "express";
 import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
-import { SessionService } from "../../services/session-service";
 import { Session } from "../../models/session.model";
+
+import { SessionRepository } from "../../repositories";
 
 
 interface SessionCreateInput {
@@ -14,7 +15,7 @@ interface SessionCreateInput {
 export class SessionController {
     constructor(
         private readonly authService: AuthenticationService,
-        private readonly sessionService: SessionService,
+        private readonly sessionService: SessionRepository,
     ) {
     }
 

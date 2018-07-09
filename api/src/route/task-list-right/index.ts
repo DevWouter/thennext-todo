@@ -1,1 +1,1 @@
-export { taskListShareRouter } from "./task-list-share.router";
+export { taskListRightRouter } from "./task-list-right.router";

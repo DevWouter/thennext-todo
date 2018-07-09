@@ -3,10 +3,10 @@ import { injectable } from "inversify";
 import { AuthenticationService } from "../../services/authentication-service";
 import { TaskListShare } from "../../models/task-list-share.model";
 import { TaskListShareTokenEntity } from "../../db/entities/task-list-share-token.entity";
-import { TaskListShareTokenService } from "../../services/task-list-share-token-service";
 import {
     AccountRepository,
-    TaskListRepository
+    TaskListRepository,
+    TaskListShareTokenRepository
 } from "../../repositories";
 
 
@@ -21,7 +21,7 @@ export class TaskListShareController {
         private readonly authService: AuthenticationService,
         private readonly accountService: AccountRepository,
         private readonly taskListService: TaskListRepository,
-        private readonly taskListShareTokenService: TaskListShareTokenService,
+        private readonly taskListShareTokenService: TaskListShareTokenRepository,
     ) {
     }
 
