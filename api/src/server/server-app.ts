@@ -7,6 +7,7 @@ import {
     TaskRelationService,
     TaskService,
     UrgencyLapService,
+    TaskListRightService,
 } from "../services";
 
 
@@ -16,6 +17,7 @@ export class ServerApp {
         private readonly checklistItemService: ChecklistItemService,
         private readonly tagScoringService: ScoreShiftService,
         private readonly taskListService: TaskListService,
+        private readonly taskListRightService: TaskListRightService,
         private readonly taskListShareService: TaskListShareService,
         private readonly taskRelationService: TaskRelationService,
         private readonly taskService: TaskService,
