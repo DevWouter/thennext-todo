@@ -53,7 +53,6 @@ export class MessageService implements OnDestroy {
 
 
   send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void {
-    console.log("Sending messages");
     this._wsMessageService.send(type, data);
   }
 
