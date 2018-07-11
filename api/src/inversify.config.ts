@@ -25,6 +25,7 @@ import {
     ScoreShiftService,
     TaskListService,
     TaskRelationService,
+    TaskService,
     UrgencyLapService,
 } from "./services";
 
@@ -66,6 +67,7 @@ container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
 container.bind<TaskRelationService>(TaskRelationService).toSelf();
+container.bind<TaskService>(TaskService).toSelf();
 container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
 
 container.bind<ServerApp>(ServerApp).toSelf();

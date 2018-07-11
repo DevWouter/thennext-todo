@@ -6,4 +6,5 @@
 export const environment = {
   production: false,
   wsEndPoint: "ws://localhost/api",
+  maxTimoutEntityCommandMs: 5 * 1000,
 };

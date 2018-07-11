@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from "rxjs";
-import { filter, map, timeout } from "rxjs/operators";
+import { filter, map, timeout, tap } from "rxjs/operators";
 
 import { Repository, RemoveOptions } from "./repository";
 import { Entity } from "./entity";
@@ -7,6 +7,7 @@ import { RepositoryEventHandler } from "./repository-event-handler";
 import { EntityKind } from "../ws/entity-kind";
 import { MessageService } from "../message.service";
 import { CreateEntityCommand, UpdateEntityCommand, DeleteEntityCommand } from "../ws/commands";
+import { environment } from "../../../environments/environment";
 
 export class WsRepository<T extends Entity> implements Repository<T> {
   private _entries: T[] = [];
@@ -23,11 +24,16 @@ export class WsRepository<T extends Entity> implements Repository<T> {
       .eventsOf("entities-synced")
       .pipe(
         filter(x => x.data.entityKind === entityKind),
-        map(x => x.data.entities),
-    ).subscribe((entities) => {
-      this._entries = entities as T[];
-      this.$entriesSubject.next(this._entries);
-    });
+        map(x => x.data.entities as T[]),
+        tap(x => {
+          if (eventHandler) {
+            x.forEach(y => eventHandler.onItemLoad(y));
+          }
+        })
+      ).subscribe((entities) => {
+        this._entries = entities;
+        this.$entriesSubject.next(this._entries);
+      });
 
     this.messageService.eventsOf("entity-updated")
       .pipe(
@@ -104,16 +110,13 @@ export class WsRepository<T extends Entity> implements Repository<T> {
   private handleSelfCreatedEvent(
     data: T,
     success: (data: T) => void,
-    failure: (reason) => void,
-    options = {
-      timeout: 20 * 1000,
-    }
+    failure: (reason) => void
   ) {
     const refId = this.generateRefId();
     const sub = this.messageService
       .eventsOf("entity-created")
       .pipe(
-        timeout(options.timeout),
+        timeout(environment.maxTimoutEntityCommandMs),
         filter(x => x.refId === refId),
         filter(x => x.data.entityKind === this.entityKind),
         map(x => x.data.entity as T),
@@ -137,15 +140,12 @@ export class WsRepository<T extends Entity> implements Repository<T> {
     data: T,
     success: (data: T) => void,
     failure: (reason) => void,
-    options = {
-      timeout: 20 * 1000,
-    }
   ) {
     const refId = this.generateRefId();
     const sub = this.messageService
       .eventsOf("entity-updated")
       .pipe(
-        timeout(options.timeout),
+        timeout(environment.maxTimoutEntityCommandMs),
         filter(x => x.refId === refId),
         filter(x => x.data.entityKind === this.entityKind),
         map(x => x.data.entity as T),
@@ -169,15 +169,12 @@ export class WsRepository<T extends Entity> implements Repository<T> {
     data: T,
     success: (data: T) => void,
     failure: (reason) => void,
-    options = {
-      timeout: 20 * 1000,
-    }
   ) {
     const refId = this.generateRefId();
     const sub = this.messageService
       .eventsOf("entity-deleted")
       .pipe(
-        timeout(options.timeout),
+        timeout(environment.maxTimoutEntityCommandMs),
         filter(x => x.refId === refId),
         filter(x => x.data.entityKind === this.entityKind),
         filter(x => x.data.uuid === data.uuid),
@@ -208,6 +205,7 @@ export class WsRepository<T extends Entity> implements Repository<T> {
       };
 
       const onFailure = (reason) => {
+        console.log("I got an error");
         reject(reason);
       };
 

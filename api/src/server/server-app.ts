@@ -4,6 +4,7 @@ import {
     ScoreShiftService,
     TaskListService,
     TaskRelationService,
+    TaskService,
     UrgencyLapService,
 } from "../services";
 
@@ -15,6 +16,7 @@ export class ServerApp {
         private readonly tagScoringService: ScoreShiftService,
         private readonly taskListService: TaskListService,
         private readonly taskRelationService: TaskRelationService,
+        private readonly taskService: TaskService,
         private readonly urgencyLapService: UrgencyLapService,
     ) {
     }
