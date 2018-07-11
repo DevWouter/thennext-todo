@@ -2,15 +2,17 @@ import { injectable } from "inversify";
 import {
     TaskListService,
     ScoreShiftService,
-    UrgencyLapService
+    UrgencyLapService,
+    TaskRelationService
 } from "../services";
 
 
 @injectable()
 export class ServerApp {
     constructor(
-        private readonly taskListService: TaskListService,
         private readonly tagScoringService: ScoreShiftService,
+        private readonly taskListService: TaskListService,
+        private readonly taskRelationService: TaskRelationService,
         private readonly urgencyLapService: UrgencyLapService,
     ) {
     }
