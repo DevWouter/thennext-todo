@@ -23,6 +23,7 @@ import {
 import {
     ScoreShiftService,
     TaskListService,
+    UrgencyLapService,
 } from "./services";
 
 
@@ -61,6 +62,7 @@ container.bind<WsService>(WsService).to(WsService).inSingletonScope();
 
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
+container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
 
 container.bind<ServerApp>(ServerApp).toSelf();
 

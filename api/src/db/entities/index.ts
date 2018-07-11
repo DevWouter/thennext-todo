@@ -9,3 +9,4 @@ export { TaskEntity } from "./task.entity";
 export { TaskListEntity } from "./task-list.entity";
 export { TaskRelationEntity } from "./task-relation.entity";
 export { TaskTimeLapEntity } from "./task-time-lap.entity";
+export { UrgencyLapEntity } from "./urgency-lap.entity";
