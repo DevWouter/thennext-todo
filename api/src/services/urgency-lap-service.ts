@@ -48,20 +48,20 @@ export class UrgencyLapService {
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
             entities: scoreShifts.map(x => this.toDTO(x)),
-        }, { clientId: client.clientId });
+        }, { clientId: client.clientId, refId: refId });
     }
 
-    private async create(client: TrustedClient, entity: UrgencyLap, refId: string) {
+    private async create(client: TrustedClient, src: UrgencyLap, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const newEntity = new UrgencyLapEntity();
-        newEntity.fromDay = entity.fromDay;
-        newEntity.urgencyModifier = entity.urgencyModifier;
-        newEntity.owner = account;
+        const dst = new UrgencyLapEntity();
+        dst.fromDay = src.fromDay;
+        dst.urgencyModifier = src.urgencyModifier;
+        dst.owner = account;
 
-        const urgencyLap = await this.urgencyLapRepository.create(newEntity);
+        const finalEntity = await this.urgencyLapRepository.create(dst);
         this.messageService.send("entity-created",
             {
-                entity: this.toDTO(urgencyLap),
+                entity: this.toDTO(finalEntity),
                 entityKind: this.KIND,
             }, {
                 clientId: client.clientId,

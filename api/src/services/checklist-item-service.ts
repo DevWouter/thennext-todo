@@ -3,22 +3,22 @@ import { filter } from "rxjs/operators";
 
 import {
     AccountRepository,
-    TaskRelationRepository,
+    ChecklistItemRepository,
     TaskRepository,
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
-import { TaskRelationEntity } from "../db/entities";
+import { ChecklistItemEntity } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
-import { TaskRelation } from "../models/task-relation.model";
+import { ChecklistItem } from "../models/checklist-item.model";
 
 
 @injectable()
-export class TaskRelationService {
-    private readonly KIND = "task-relation";
+export class ChecklistItemService {
+    private readonly KIND = "checklist-item";
     constructor(
         private readonly taskRepository: TaskRepository,
-        private readonly taskRelationRepository: TaskRelationRepository,
+        private readonly checklistItemRepository: ChecklistItemRepository,
         private readonly accountRepository: AccountRepository,
         private readonly messageService: WsMessageService,
     ) {
@@ -35,7 +35,12 @@ export class TaskRelationService {
         this.messageService
             .commandsOf("create-entity")
             .pipe(filter(x => x.event.entityKind === this.KIND))
-            .subscribe(x => this.create(x.client, x.event.entity as TaskRelation, x.event.refId));
+            .subscribe(x => this.create(x.client, x.event.entity as ChecklistItem, x.event.refId));
+
+        this.messageService
+            .commandsOf("update-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.update(x.client, x.event.entity as ChecklistItem, x.event.refId));
 
         this.messageService
             .commandsOf("delete-entity")
@@ -45,7 +50,7 @@ export class TaskRelationService {
 
     private async sync(client: TrustedClient, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const scoreShifts = await this.taskRelationRepository.of(account);
+        const scoreShifts = await this.checklistItemRepository.of(account);
 
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
@@ -53,17 +58,36 @@ export class TaskRelationService {
         }, { clientId: client.clientId, refId: refId });
     }
 
-    private async create(client: TrustedClient, src: TaskRelation, refId: string) {
+    private async create(client: TrustedClient, src: ChecklistItem, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const sourceTaskPromise = this.taskRepository.byUuid(src.sourceTaskUuid, account);
-        const targetTaskPromise = this.taskRepository.byUuid(src.targetTaskUuid, account);
-        const dst = new TaskRelationEntity();
-        dst.sourceTask = await sourceTaskPromise;
-        dst.targetTask = await targetTaskPromise;
-        dst.relationType = src.relationType;
+        const taskPromise = this.taskRepository.byUuid(src.taskUuid, account);
+        const dst = new ChecklistItemEntity();
+        dst.checked = src.checked;
+        dst.order = src.order;
+        dst.title = src.title;
+        dst.task = await taskPromise;
 
-        const finalEntity = await this.taskRelationRepository.create(dst);
+        const finalEntity = await this.checklistItemRepository.create(dst);
         this.messageService.send("entity-created",
+            {
+                entity: this.toDTO(finalEntity),
+                entityKind: this.KIND,
+            }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId
+            });
+    }
+
+    private async update(client: TrustedClient, src: ChecklistItem, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const dst = await this.checklistItemRepository.byUuid(src.uuid, account);
+        dst.checked = src.checked;
+        dst.order = src.order;
+        dst.title = src.title;
+
+        const finalEntity = await this.checklistItemRepository.update(dst);
+        this.messageService.send("entity-updated",
             {
                 entity: this.toDTO(finalEntity),
                 entityKind: this.KIND,
@@ -76,9 +100,9 @@ export class TaskRelationService {
 
     private async delete(client: TrustedClient, uuid: string, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const entity = await this.taskRelationRepository.byUuid(uuid, account);
+        const entity = await this.checklistItemRepository.byUuid(uuid, account);
 
-        this.taskRelationRepository.destroy(entity);
+        this.checklistItemRepository.destroy(entity);
         this.messageService.send("entity-deleted", {
             entityKind: this.KIND,
             uuid: uuid,
@@ -89,12 +113,14 @@ export class TaskRelationService {
             });
     }
 
-    private toDTO(src: TaskRelationEntity): TaskRelation {
-        return <TaskRelation>{
+    private toDTO(src: ChecklistItemEntity): ChecklistItem {
+        return <ChecklistItem>{
             uuid: src.uuid,
-            relationType: src.relationType,
-            sourceTaskUuid: src.sourceTask.uuid,
-            targetTaskUuid: src.targetTask.uuid,
+            checked: src.checked,
+            order: src.order,
+            title: src.title,
+            taskUuid: src.task.uuid,
+
         };
     }
 }

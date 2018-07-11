@@ -3,10 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
-
-import { ApiService } from "./api.service";
 
 import { UrgencyLap } from "./models/urgency-lap.dto";
 import { WsRepository } from "./repositories/ws-repository";

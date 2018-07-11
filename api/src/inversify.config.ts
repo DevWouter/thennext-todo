@@ -21,6 +21,7 @@ import {
 } from "./repositories";
 
 import {
+    ChecklistItemService,
     ScoreShiftService,
     TaskListService,
     TaskRelationService,
@@ -61,6 +62,7 @@ container.bind<AuthenticationService>(AuthenticationService).toSelf();
 container.bind<WsMessageService>(WsMessageService).to(WsMessageService).inSingletonScope();
 container.bind<WsService>(WsService).to(WsService).inSingletonScope();
 
+container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
 container.bind<TaskRelationService>(TaskRelationService).toSelf();

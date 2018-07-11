@@ -48,22 +48,22 @@ export class ScoreShiftService {
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
             entities: scoreShifts.map(x => this.toDTO(x)),
-        }, { clientId: client.clientId });
+        }, { clientId: client.clientId, refId: refId });
     }
 
-    private async create(client: TrustedClient, entity: ScoreShift, refId: string) {
+    private async create(client: TrustedClient, src: ScoreShift, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const scoreShiftEntity = new ScoreShiftEntity();
-        scoreShiftEntity.phrase = entity.phrase;
-        scoreShiftEntity.score = entity.score;
-        scoreShiftEntity.created_on = entity.createdOn;
-        scoreShiftEntity.updated_on = entity.updatedOn;
-        scoreShiftEntity.owner = account;
+        const dst = new ScoreShiftEntity();
+        dst.phrase = src.phrase;
+        dst.score = src.score;
+        dst.created_on = src.createdOn;
+        dst.updated_on = src.updatedOn;
+        dst.owner = account;
 
-        const scoreShift = await this.scoreShiftRepository.create(scoreShiftEntity);
+        const finalEntity = await this.scoreShiftRepository.create(dst);
         this.messageService.send("entity-created",
             {
-                entity: this.toDTO(scoreShift),
+                entity: this.toDTO(finalEntity),
                 entityKind: this.KIND,
             }, {
                 clientId: client.clientId,

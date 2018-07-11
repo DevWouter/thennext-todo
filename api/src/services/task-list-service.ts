@@ -52,29 +52,29 @@ export class TaskListService {
         this.messageService.send("entities-synced", {
             entityKind: "task-list",
             entities: <TaskList[]>taskLists.map(x => this.toDTO(x, accountSettings)),
-        }, { clientId: client.clientId });
+        }, { clientId: client.clientId, refId: refId });
     }
 
-    private async create(client: TrustedClient, entity: TaskList, refId: string) {
+    private async create(client: TrustedClient, src: TaskList, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const accountSettings = await this.accountSettingsRepository.of(account);
-        const taskListEntity = new TaskListEntity();
-        taskListEntity.name = entity.name;
-        taskListEntity.owner = account;
+        const dst = new TaskListEntity();
+        dst.name = src.name;
+        dst.owner = account;
 
-        const tasklist = await this.taskListrepository.create(taskListEntity);
+        const finalEntity = await this.taskListrepository.create(dst);
 
         const ownerRight = new TaskListRightEntity();
         ownerRight.access = AccessRight.owner;
         ownerRight.account = account;
-        ownerRight.taskList = tasklist;
+        ownerRight.taskList = finalEntity;
         await this.taskListRightService.create(ownerRight);
 
-        const rights = await this.taskListRightService.getRightsFor(tasklist);
+        const rights = await this.taskListRightService.getRightsFor(finalEntity);
 
         this.messageService.send("entity-created",
             {
-                entity: this.toDTO(tasklist, accountSettings),
+                entity: this.toDTO(finalEntity, accountSettings),
                 entityKind: "task-list",
             }, {
                 clientId: client.clientId,
