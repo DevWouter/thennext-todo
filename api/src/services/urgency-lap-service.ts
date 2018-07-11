@@ -1,52 +1,95 @@
-import { injectable, inject } from "inversify";
-import { Connection } from "typeorm";
-import { UrgencyLapEntity } from "../db/entities/urgency-lap.entity";
-import { AccountEntity } from "../db/entities/account.entity";
+import { injectable } from "inversify";
+import { filter } from "rxjs/operators";
+
+import {
+    AccountRepository,
+    UrgencyLapRepository,
+} from "../repositories";
+
+import { WsMessageService } from "./ws-message-service";
+import { UrgencyLapEntity } from "../db/entities";
+import { TrustedClient } from "./ws/message-client";
+import { UrgencyLap } from "../models/urgency-lap.model";
+
 
 @injectable()
 export class UrgencyLapService {
-    private readonly db: Promise<Connection>;
+    private readonly KIND = "urgency-lap";
     constructor(
-        @inject("ConnectionProvider") dbPromise: () => Promise<Connection>
+        private readonly urgencyLapRepository: UrgencyLapRepository,
+        private readonly accountRepository: AccountRepository,
+        private readonly messageService: WsMessageService,
     ) {
-        this.db = dbPromise();
+        // Setup
+        this.setup();
     }
 
-    async byUuid(uuid: string, account: AccountEntity): Promise<UrgencyLapEntity> {
-        return (await this.db)
-            .createQueryBuilder(UrgencyLapEntity, "urgencyLap")
-            .innerJoinAndSelect("urgencyLap.owner", "owner")
-            .where("urgencyLap.uuid = :uuid")
-            .andWhere("owner.id = :accountId")
-            .setParameters({
-                accountId: account.id,
-                uuid: uuid
-            })
-            .getOne();
+    private setup(): void {
+        this.messageService
+            .commandsOf("sync-entities")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.sync(x.client, x.event.refId));
+
+        this.messageService
+            .commandsOf("create-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.create(x.client, x.event.entity as UrgencyLap, x.event.refId));
+
+        this.messageService
+            .commandsOf("delete-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.delete(x.client, x.event.uuid, x.event.refId));
     }
 
-    async of(account: AccountEntity): Promise<UrgencyLapEntity[]> {
-        return (await this.db)
-            .createQueryBuilder(UrgencyLapEntity, "urgencyLap")
-            .innerJoin("urgencyLap.owner", "owner")
-            .andWhere("owner.id = :accountId")
-            .setParameters({
-                accountId: account.id,
-            }).getMany();
+    private async sync(client: TrustedClient, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const scoreShifts = await this.urgencyLapRepository.of(account);
+
+        this.messageService.send("entities-synced", {
+            entityKind: this.KIND,
+            entities: scoreShifts.map(x => this.toDTO(x)),
+        }, { clientId: client.clientId, refId: refId });
     }
 
-    async update(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(UrgencyLapEntity, entity);
+    private async create(client: TrustedClient, src: UrgencyLap, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const dst = new UrgencyLapEntity();
+        dst.fromDay = src.fromDay;
+        dst.urgencyModifier = src.urgencyModifier;
+        dst.owner = account;
+
+        const finalEntity = await this.urgencyLapRepository.create(dst);
+        this.messageService.send("entity-created",
+            {
+                entity: this.toDTO(finalEntity),
+                entityKind: this.KIND,
+            }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId
+            });
     }
 
-    async create(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(UrgencyLapEntity, entity);
+    private async delete(client: TrustedClient, uuid: string, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const entity = await this.urgencyLapRepository.byUuid(uuid, account);
+
+        this.urgencyLapRepository.destroy(entity);
+        this.messageService.send("entity-deleted", {
+            entityKind: this.KIND,
+            uuid: uuid,
+        }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId,
+            });
     }
 
-    async destroy(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.remove(UrgencyLapEntity, entity);
+    private toDTO(src: UrgencyLapEntity): UrgencyLap {
+        return <UrgencyLap>{
+            uuid: src.uuid,
+            fromDay: src.fromDay,
+            urgencyModifier: src.urgencyModifier,
+        };
     }
 }

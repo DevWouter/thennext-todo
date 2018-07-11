@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
 
-import { BehaviorSubject ,  Observable } from "rxjs";
+import { Observable } from "rxjs";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
 
-import { ApiService } from "./api.service";
 import { TaskEventService } from "./task-event.service";
 
 import { TaskRelation, TaskRelationType } from "./models/task-relation.dto";
+import { WsRepository } from "./repositories/ws-repository";
+import { MessageService } from "./message.service";
 
 @Injectable()
 export class TaskRelationService {
@@ -19,10 +19,10 @@ export class TaskRelationService {
   }
 
   constructor(
-    private apiService: ApiService,
+    messageService: MessageService,
     private taskEventService: TaskEventService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task-relation");
+    this._repository = new WsRepository("task-relation", messageService);
     this._repository.entries.subscribe(x => this._internalList = x);
 
     this.taskEventService.deletedTask.subscribe(task => {

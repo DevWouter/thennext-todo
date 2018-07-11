@@ -1,15 +1,13 @@
 import { Injectable } from "@angular/core";
 
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
-
-import { ApiService } from "./api.service";
-
 import { ChecklistItem } from "./models/checklist-item.dto";
 import { TaskEventService } from "./task-event.service";
 import { combineLatest, map } from "rxjs/operators";
+import { MessageService } from "./message.service";
+import { WsRepository } from "./repositories/ws-repository";
 
 @Injectable()
 export class ChecklistItemService {
@@ -19,10 +17,10 @@ export class ChecklistItemService {
   }
 
   constructor(
-    private apiService: ApiService,
+    messageService: MessageService,
     private taskEventService: TaskEventService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/checklist-item");
+    this._repository = new WsRepository("checklist-item", messageService);
     this.taskEventService.deletedTask
       .pipe(
         combineLatest(this._repository.entries, (task, checklistItems) => {

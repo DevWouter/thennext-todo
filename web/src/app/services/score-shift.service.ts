@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 
-import { BehaviorSubject ,  Observable } from "rxjs";
+import { Observable } from "rxjs";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
 import { RepositoryEventHandler } from "./repositories/repository-event-handler";
 
-import { ApiService } from "./api.service";
-
 import { ScoreShift } from "./models/score-shift.dto";
+import { WsRepository } from "./repositories/ws-repository";
+import { MessageService } from "./message.service";
 
 class ScoreShiftRestoreTranslator implements RepositoryEventHandler<ScoreShift> {
   onItemLoad(entry: ScoreShift): void {
@@ -39,9 +38,9 @@ export class ScoreShiftService {
   }
 
   constructor(
-    private apiService: ApiService,
+    messageService: MessageService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/score-shift", new ScoreShiftRestoreTranslator());
+    this._repository = new WsRepository<ScoreShift>("score-shift", messageService, new ScoreShiftRestoreTranslator());
   }
 
   add(value: ScoreShift): Promise<ScoreShift> {

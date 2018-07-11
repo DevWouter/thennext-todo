@@ -6,6 +6,14 @@ $animation-speed: 0.1s;
     color: white;
 }
 
+@keyframes blink {
+  from {
+     opacity: 1;
+  }
+  to {
+     opacity: 0;
+  }
+}
 .container {
     display: flex;
     width: 100%;
@@ -15,6 +23,23 @@ $animation-speed: 0.1s;
         color: white;
         width: 100%;
         background: transparent;
+    }
+    .connection-status {
+        flex-shrink: 1;
+        padding: 8px;
+        color: white;
+        margin: auto;
+        background: transparent;
+        .error {
+          color: red;
+          animation-duration: 400ms;
+          animation-name: blink;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+        }
+        .warn {
+          color: yellow;
+        }
     }
 }
 

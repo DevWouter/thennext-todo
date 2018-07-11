@@ -2,34 +2,44 @@ import { Request, Response } from "express";
 
 import * as bcrypt from "bcryptjs";
 import { injectable } from "inversify";
-import { Account, TransformAccount } from "./account.model";
+import { Account } from "../../models/account.model";
+import { MyAccount } from "../../models/my-account.model";
 
 import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
-import { AccountService } from "../../services/account-service";
-import { TaskListRightService } from "../../services/task-list-right-service";
-import { AccountSettingsService } from "../../services/account-settings-service";
-import { TaskListService } from "../../services/task-list-service";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
 import { AuthenticationService } from "../../services/authentication-service";
-import { MyAccount } from "./my-account.model";
-import { UrgencyLapService } from "../../services/urgency-lap-service";
 import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
+import {
+    AccountRepository,
+    TaskListRepository,
+    TaskListRightRepository,
+    AccountSettingsRepository,
+    UrgencyLapRepository
+} from "../../repositories";
 
 export interface CreateAccountInput {
     readonly email: string;
     readonly password: string;
 }
 
+
+export function TransformAccount(src: AccountEntity): Account {
+    return <Account>{
+        uuid: src.uuid,
+        email: src.email,
+    };
+}
+
 @injectable()
 export class AccountController {
     constructor(
-        private readonly accountService: AccountService,
-        private readonly accountSettingsService: AccountSettingsService,
-        private readonly taskListService: TaskListService,
-        private readonly taskListRightService: TaskListRightService,
+        private readonly accountService: AccountRepository,
+        private readonly accountSettingsService: AccountSettingsRepository,
+        private readonly taskListService: TaskListRepository,
+        private readonly taskListRightService: TaskListRightRepository,
         private readonly authenticationService: AuthenticationService,
-        private readonly urgencyLapService: UrgencyLapService,
+        private readonly urgencyLapService: UrgencyLapRepository,
     ) {
     }
 

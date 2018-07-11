@@ -2,12 +2,11 @@ import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
 
-import { ApiService } from "./api.service";
-
 import { TaskListShareToken } from "./models/task-list-share-token.dto";
+import { MessageService } from "./message.service";
+import { WsRepository } from "./repositories/ws-repository";
 
 
 @Injectable()
@@ -18,9 +17,9 @@ export class TaskListShareTokenService {
   }
 
   constructor(
-    apiService: ApiService,
+    messageService: MessageService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task-list-share");
+    this._repository = new WsRepository("task-list-share", messageService);
   }
 
   async add(value: TaskListShareToken): Promise<TaskListShareToken> {

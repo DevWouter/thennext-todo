@@ -49,6 +49,9 @@ export interface RepositoryView<T> {
 }
 
 export interface RemoveOptions {
+  /**
+   * If set to `true` it will **not** send remove commands to the server.
+   */
   readonly onlyInternal?: boolean;
 }
 

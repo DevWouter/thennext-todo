@@ -27,13 +27,16 @@
     "mysql": "^2.15.0",
     "nodemon": "^1.17.1",
     "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.2.1",
     "ts-node": "^5.0.1",
     "typeorm": "^0.1.16",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "ws": "^5.2.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
     "@types/express": "^4.11.1",
+    "@types/ws": "^5.1.2",
     "tslint": "^5.9.1"
   }
 }

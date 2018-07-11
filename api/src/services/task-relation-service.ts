@@ -1,77 +1,100 @@
-import { injectable, inject } from "inversify";
-import { Connection } from "typeorm";
+import { injectable } from "inversify";
+import { filter } from "rxjs/operators";
 
-import { AccountEntity, TaskRelationEntity } from "../db/entities";
+import {
+    AccountRepository,
+    TaskRelationRepository,
+    TaskRepository,
+} from "../repositories";
+
+import { WsMessageService } from "./ws-message-service";
+import { TaskRelationEntity } from "../db/entities";
+import { TrustedClient } from "./ws/message-client";
+import { TaskRelation } from "../models/task-relation.model";
+
 
 @injectable()
 export class TaskRelationService {
+    private readonly KIND = "task-relation";
     constructor(
-        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
-    ) { }
-
-    async byUuid(uuid: string, account: AccountEntity): Promise<TaskRelationEntity> {
-        return (await this.db())
-            .createQueryBuilder(TaskRelationEntity, "relation")
-            .innerJoinAndSelect("relation.sourceTask", "sourceTask")
-            .innerJoinAndSelect("relation.targetTask", "targetTask")
-            .innerJoin("sourceTask.taskList", "sourceTaskList")
-            .innerJoin("sourceTaskList.rights", "sourceRight")
-            .innerJoin("sourceRight.account", "sourceAccount")
-            .innerJoin("targetTask.taskList", "targetTaskList")
-            .innerJoin("targetTaskList.rights", "targetRight")
-            .innerJoin("targetRight.account", "targetAccount")
-            .where("relation.uuid = :uuid")
-            .where("sourceAccount.id = :sourceAccountId")
-            .andWhere("targetAccount.id = :targetAccountId")
-            .setParameters({
-                uuid: uuid,
-                sourceAccountId: account.id,
-                targetAccountId: account.id
-            })
-            .getOne();
+        private readonly taskRepository: TaskRepository,
+        private readonly taskRelationRepository: TaskRelationRepository,
+        private readonly accountRepository: AccountRepository,
+        private readonly messageService: WsMessageService,
+    ) {
+        // Setup
+        this.setup();
     }
 
-    async byId(id: number): Promise<TaskRelationEntity> {
-        return (await this.db())
-            .createQueryBuilder(TaskRelationEntity, "relation")
-            .innerJoinAndSelect("relation.sourceTask", "sourceTask")
-            .innerJoinAndSelect("relation.targetTask", "targetTask")
-            .where("relation.id = :id", { uuid: id })
-            .getOne();
+    private setup(): void {
+        this.messageService
+            .commandsOf("sync-entities")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.sync(x.client, x.event.refId));
+
+        this.messageService
+            .commandsOf("create-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.create(x.client, x.event.entity as TaskRelation, x.event.refId));
+
+        this.messageService
+            .commandsOf("delete-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.delete(x.client, x.event.uuid, x.event.refId));
     }
 
-    async of(account: AccountEntity): Promise<TaskRelationEntity[]> {
-        return (await this.db())
-            .createQueryBuilder(TaskRelationEntity, "relation")
-            .innerJoinAndSelect("relation.sourceTask", "sourceTask")
-            .innerJoinAndSelect("relation.targetTask", "targetTask")
-            .innerJoin("sourceTask.taskList", "sourceTaskList")
-            .innerJoin("sourceTaskList.rights", "sourceRight")
-            .innerJoin("sourceRight.account", "sourceAccount")
-            .innerJoin("targetTask.taskList", "targetTaskList")
-            .innerJoin("targetTaskList.rights", "targetRight")
-            .innerJoin("targetRight.account", "targetAccount")
-            .where("sourceAccount.id = :sourceAccountId")
-            .andWhere("targetAccount.id = :targetAccountId")
-            .setParameters({
-                sourceAccountId: account.id,
-                targetAccountId: account.id
-            })
-            .getMany();
+    private async sync(client: TrustedClient, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const scoreShifts = await this.taskRelationRepository.of(account);
+
+        this.messageService.send("entities-synced", {
+            entityKind: this.KIND,
+            entities: scoreShifts.map(x => this.toDTO(x)),
+        }, { clientId: client.clientId, refId: refId });
     }
 
-    async update(entity: TaskRelationEntity): Promise<TaskRelationEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(TaskRelationEntity, entity);
+    private async create(client: TrustedClient, src: TaskRelation, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const sourceTaskPromise = this.taskRepository.byUuid(src.sourceTaskUuid, account);
+        const targetTaskPromise = this.taskRepository.byUuid(src.targetTaskUuid, account);
+        const dst = new TaskRelationEntity();
+        dst.sourceTask = await sourceTaskPromise;
+        dst.targetTask = await targetTaskPromise;
+        dst.relationType = src.relationType;
+
+        const finalEntity = await this.taskRelationRepository.create(dst);
+        this.messageService.send("entity-created",
+            {
+                entity: this.toDTO(finalEntity),
+                entityKind: this.KIND,
+            }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId
+            });
     }
 
-    async create(entity: TaskRelationEntity): Promise<TaskRelationEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(TaskRelationEntity, entity);
+    private async delete(client: TrustedClient, uuid: string, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const entity = await this.taskRelationRepository.byUuid(uuid, account);
+
+        this.taskRelationRepository.destroy(entity);
+        this.messageService.send("entity-deleted", {
+            entityKind: this.KIND,
+            uuid: uuid,
+        }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId,
+            });
     }
 
-    async destroy(entity: TaskRelationEntity): Promise<TaskRelationEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.remove(TaskRelationEntity, entity);
+    private toDTO(src: TaskRelationEntity): TaskRelation {
+        return <TaskRelation>{
+            uuid: src.uuid,
+            relationType: src.relationType,
+            sourceTaskUuid: src.sourceTask.uuid,
+            targetTaskUuid: src.targetTask.uuid,
+        };
     }
 }

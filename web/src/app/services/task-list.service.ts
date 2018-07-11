@@ -2,12 +2,10 @@ import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { ApiRepository } from "./repositories/api-repository";
+import { MessageService } from "./message.service";
 import { Repository } from "./repositories/repository";
-
+import { WsRepository } from "./repositories/ws-repository";
 import { TaskList } from "./models/task-list.dto";
-
-import { ApiService } from "./api.service";
 
 @Injectable()
 export class TaskListService implements Repository<TaskList> {
@@ -18,9 +16,9 @@ export class TaskListService implements Repository<TaskList> {
   }
 
   constructor(
-    apiService: ApiService,
+    readonly messageService: MessageService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task-list");
+    this._repository = new WsRepository("task-list", messageService);
   }
 
   add(value: TaskList): Promise<TaskList> {

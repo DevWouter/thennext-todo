@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationService } from "../services/navigation.service";
 import { Router } from "@angular/router";
-import { SessionService } from "../services/session.service";
+import { filter } from "rxjs/operators";
+
 import { AccountService } from "../services/account.service";
 import { ContextService } from "../services/context.service";
-import { filter } from "rxjs/operators";
+import { NavigationService } from "../services/navigation.service";
+import { SessionService } from "../services/session.service";
 
 @Component({
   selector: "app-topnav",
@@ -30,6 +31,8 @@ export class TopnavComponent implements OnInit {
 
   public displayName = "";
   public listName = "";
+
+  public connectionStatus = "";
 
   expand = false;
   constructor(

@@ -1,56 +1,126 @@
-import { injectable, inject } from "inversify";
-import { Connection } from "typeorm";
+import { injectable } from "inversify";
+import { filter } from "rxjs/operators";
 
-import { AccountEntity, ChecklistItemEntity } from "../db/entities";
+import {
+    AccountRepository,
+    ChecklistItemRepository,
+    TaskRepository,
+} from "../repositories";
+
+import { WsMessageService } from "./ws-message-service";
+import { ChecklistItemEntity } from "../db/entities";
+import { TrustedClient } from "./ws/message-client";
+import { ChecklistItem } from "../models/checklist-item.model";
+
 
 @injectable()
 export class ChecklistItemService {
+    private readonly KIND = "checklist-item";
     constructor(
-        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
-    ) { }
-
-    async byUuid(uuid: string, account: AccountEntity): Promise<ChecklistItemEntity> {
-        return (await this.db())
-            .createQueryBuilder(ChecklistItemEntity, "checklistItem")
-            .innerJoinAndSelect("checklistItem.task", "task")
-            .innerJoin("task.taskList", "taskList")
-            .innerJoin("taskList.rights", "right")
-            .innerJoin("right.account", "account")
-            .where("checklistItem.uuid = :uuid", { uuid: uuid })
-            .andWhere("account.id = :id", { id: account.id })
-            .getOne();
+        private readonly taskRepository: TaskRepository,
+        private readonly checklistItemRepository: ChecklistItemRepository,
+        private readonly accountRepository: AccountRepository,
+        private readonly messageService: WsMessageService,
+    ) {
+        // Setup
+        this.setup();
     }
 
-    async byId(id: number): Promise<ChecklistItemEntity> {
-        return (await this.db())
-            .createQueryBuilder(ChecklistItemEntity, "checklistItem")
-            .where("checklistItem.id = :id", { id: id })
-            .getOne();
+    private setup(): void {
+        this.messageService
+            .commandsOf("sync-entities")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.sync(x.client, x.event.refId));
+
+        this.messageService
+            .commandsOf("create-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.create(x.client, x.event.entity as ChecklistItem, x.event.refId));
+
+        this.messageService
+            .commandsOf("update-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.update(x.client, x.event.entity as ChecklistItem, x.event.refId));
+
+        this.messageService
+            .commandsOf("delete-entity")
+            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .subscribe(x => this.delete(x.client, x.event.uuid, x.event.refId));
     }
 
-    async of(account: AccountEntity): Promise<ChecklistItemEntity[]> {
-        return (await this.db())
-            .createQueryBuilder(ChecklistItemEntity, "checklistItem")
-            .leftJoinAndSelect("checklistItem.task", "task")
-            .innerJoin("task.taskList", "taskList")
-            .innerJoin("taskList.rights", "right")
-            .innerJoin("right.account", "account")
-            .andWhere("account.id = :id", { id: account.id })
-            .getMany();
+    private async sync(client: TrustedClient, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const scoreShifts = await this.checklistItemRepository.of(account);
+
+        this.messageService.send("entities-synced", {
+            entityKind: this.KIND,
+            entities: scoreShifts.map(x => this.toDTO(x)),
+        }, { clientId: client.clientId, refId: refId });
     }
 
-    async update(entity: ChecklistItemEntity): Promise<ChecklistItemEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(ChecklistItemEntity, entity);
+    private async create(client: TrustedClient, src: ChecklistItem, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const taskPromise = this.taskRepository.byUuid(src.taskUuid, account);
+        const dst = new ChecklistItemEntity();
+        dst.checked = src.checked;
+        dst.order = src.order;
+        dst.title = src.title;
+        dst.task = await taskPromise;
+
+        const finalEntity = await this.checklistItemRepository.create(dst);
+        this.messageService.send("entity-created",
+            {
+                entity: this.toDTO(finalEntity),
+                entityKind: this.KIND,
+            }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId
+            });
     }
 
-    async create(entity: ChecklistItemEntity): Promise<ChecklistItemEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(ChecklistItemEntity, entity);
+    private async update(client: TrustedClient, src: ChecklistItem, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const dst = await this.checklistItemRepository.byUuid(src.uuid, account);
+        dst.checked = src.checked;
+        dst.order = src.order;
+        dst.title = src.title;
+
+        const finalEntity = await this.checklistItemRepository.update(dst);
+        this.messageService.send("entity-updated",
+            {
+                entity: this.toDTO(finalEntity),
+                entityKind: this.KIND,
+            }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId
+            });
     }
 
-    async destroy(entity: ChecklistItemEntity): Promise<ChecklistItemEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.remove(ChecklistItemEntity, entity);
+    private async delete(client: TrustedClient, uuid: string, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const entity = await this.checklistItemRepository.byUuid(uuid, account);
+
+        this.checklistItemRepository.destroy(entity);
+        this.messageService.send("entity-deleted", {
+            entityKind: this.KIND,
+            uuid: uuid,
+        }, {
+                clientId: client.clientId,
+                accounts: [account.id],
+                refId: refId,
+            });
+    }
+
+    private toDTO(src: ChecklistItemEntity): ChecklistItem {
+        return <ChecklistItem>{
+            uuid: src.uuid,
+            checked: src.checked,
+            order: src.order,
+            title: src.title,
+            taskUuid: src.task.uuid,
+
+        };
     }
 }

@@ -3,12 +3,11 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
 
-import { ApiService } from "./api.service";
-
 import { UrgencyLap } from "./models/urgency-lap.dto";
+import { WsRepository } from "./repositories/ws-repository";
+import { MessageService } from "./message.service";
 
 
 @Injectable()
@@ -20,9 +19,9 @@ export class UrgencyLapService {
   }
 
   constructor(
-    apiService: ApiService,
+    messageService: MessageService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/urgency-lap");
+    this._repository = new WsRepository("urgency-lap", messageService);
   }
 
   add(value: UrgencyLap): Promise<UrgencyLap> {

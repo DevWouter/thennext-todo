@@ -1,15 +1,14 @@
 import { Injectable } from "@angular/core";
 
-import { BehaviorSubject ,  Observable } from "rxjs";
+import { Observable } from "rxjs";
 
-import { ApiRepository } from "./repositories/api-repository";
 import { Repository } from "./repositories/repository";
 import { RepositoryEventHandler } from "./repositories/repository-event-handler";
 
-import { ApiService } from "./api.service";
-
 import { Task, TaskStatus } from "./models/task.dto";
 import { TaskEventService } from "./task-event.service";
+import { MessageService } from "./message.service";
+import { WsRepository } from "./repositories/ws-repository";
 
 class TaskEventHandler implements RepositoryEventHandler<Task> {
   onItemLoad(entry: Task): void {
@@ -42,10 +41,10 @@ export class TaskService {
   }
 
   constructor(
-    private apiService: ApiService,
+    messageService: MessageService,
     private taskEventService: TaskEventService,
   ) {
-    this._repository = new ApiRepository(apiService, "/api/task", new TaskEventHandler());
+    this._repository = new WsRepository("task", messageService, new TaskEventHandler());
   }
 
   add(value: Task): Promise<Task> {
