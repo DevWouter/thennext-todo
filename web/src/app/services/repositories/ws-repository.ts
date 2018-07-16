@@ -37,6 +37,7 @@ export class WsRepository<T extends Entity> implements Repository<T> {
 
     this.messageService.eventsOf("entity-updated")
       .pipe(
+        filter(x => !x.echo),
         filter(x => x.data.entityKind === this.entityKind),
         map(x => {
           const t = x.data.entity as T;
@@ -58,7 +59,6 @@ export class WsRepository<T extends Entity> implements Repository<T> {
         dst[prop] = src[prop];
       });
 
-      // TODO: Not sure if we should do this.
       this.$entriesSubject.next(this._entries);
     });
 
@@ -224,6 +224,9 @@ export class WsRepository<T extends Entity> implements Repository<T> {
       };
 
       this.handleSelfUpdatedEvent(value, onSuccess, onFailure);
+
+      // Fire entries subject to ensure that all components detect the updated entry
+      this.$entriesSubject.next(this._entries);
     });
   }
 
