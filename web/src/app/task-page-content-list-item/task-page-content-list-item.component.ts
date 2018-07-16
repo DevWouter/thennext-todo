@@ -22,7 +22,6 @@ interface State {
   styleUrls: ["./task-page-content-list-item.component.scss"],
 })
 export class TaskPageContentListItemComponent implements OnInit {
-  private _delayedUuids: string[] = [];
   private _blockedUuids: string[] = [];
   score = 0;
 
@@ -43,9 +42,6 @@ export class TaskPageContentListItemComponent implements OnInit {
     return this.task.title;
   }
 
-  get showSleepIcon(): boolean {
-    return !this._delayedUuids.includes(this._task.uuid) && this._task.status !== TaskStatus.active;
-  }
   get showPlayIcon(): boolean {
     return this._task.status === TaskStatus.todo;
   }
@@ -89,7 +85,6 @@ export class TaskPageContentListItemComponent implements OnInit {
       }
     });
 
-    this.taskScoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
     this.relationViewService.blockedTaskUuids.subscribe(x => this._blockedUuids = x);
 
     this.navigation.taskUuid.pipe(
@@ -151,21 +146,6 @@ export class TaskPageContentListItemComponent implements OnInit {
     this.checked = false;
     this.task.status = TaskStatus.todo;
     this.taskService.update(this.task);
-  }
-
-  delay() {
-    let local = DateTime.local().set({
-      hour: 7,
-      minute: 0,
-      second: 0,
-      millisecond: 0
-    });
-
-    if (local < DateTime.local()) {
-      local = local.plus({ days: 1 });
-    }
-
-    this.taskService.delay(this.task, local.toJSDate());
   }
 
   dragStart(event: DragEvent) {

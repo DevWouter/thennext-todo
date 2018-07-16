@@ -31,9 +31,6 @@ export class TaskEntity {
     @Column()
     status: TaskStatus;
 
-    @Column("datetime", { nullable: true })
-    sleepUntil: Date;
-
     @Column({ default: 1 })
     nextChecklistOrder: number;
 

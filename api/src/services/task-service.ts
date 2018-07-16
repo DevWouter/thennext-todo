@@ -75,7 +75,6 @@ export class TaskService {
         dst.createdAt = src.createdOn || new Date();
         dst.updatedAt = src.updatedOn || new Date();
         dst.completedAt = src.completedOn;
-        dst.sleepUntil = src.sleepUntil;
 
         if (!await taskListPromise) {
             throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
@@ -107,7 +106,6 @@ export class TaskService {
         dst.createdAt = src.createdOn || new Date();
         dst.updatedAt = src.updatedOn || new Date();
         dst.completedAt = src.completedOn;
-        dst.sleepUntil = src.sleepUntil;
 
         const finalEntity = await this.taskRepository.update(dst);
         this.messageService.send("entity-updated",
@@ -144,7 +142,6 @@ export class TaskService {
             title: src.title,
             status: src.status,
             description: src.description,
-            sleepUntil: src.sleepUntil,
             createdOn: src.createdAt,
             updatedOn: src.updatedAt,
             completedOn: src.completedAt,

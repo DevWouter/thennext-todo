@@ -15,7 +15,6 @@ class TaskEventHandler implements RepositoryEventHandler<Task> {
     entry.createdOn = this.fixDate(entry.createdOn);
     entry.updatedOn = this.fixDate(entry.updatedOn);
     entry.completedOn = this.fixDate(entry.completedOn);
-    entry.sleepUntil = this.fixDate(entry.sleepUntil);
   }
 
   fixDate(v: string | Date): Date {
@@ -70,15 +69,5 @@ export class TaskService {
         this.taskEventService.deleted(value);
         return x;
       });
-  }
-
-  delay(value: Task, sleepUntil: Date): Promise<Task> {
-    value.sleepUntil = sleepUntil;
-    return this.update(value);
-  }
-
-  wakeup(value: Task): Promise<Task> {
-    value.sleepUntil = null;
-    return this.update(value);
   }
 }

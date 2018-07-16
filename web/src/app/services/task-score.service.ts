@@ -101,7 +101,7 @@ export class TaskScoreService {
         map(x => DateTime.fromJSDate(x)),
         combineLatest(this.taskService.entries, (now, tasks) => {
           return tasks
-            .filter(x => x.sleepUntil && DateTime.fromJSDate(x.sleepUntil) > now)
+            .filter(x => false) // TODO: Use the know per-user-sleep service to check if it's sleeping.
             .map(x => x.uuid);
         }),
         distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i]))

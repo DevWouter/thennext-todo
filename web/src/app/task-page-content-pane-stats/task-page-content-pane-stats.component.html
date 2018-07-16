@@ -1,10 +1,5 @@
 <div class="stats">
   <div *ngIf="showCompleted">Completed on: {{completedOn | date:'yyyy-MM-dd HH:mm:ss'}}</div>
-  <div *ngIf="showDelay">Delay until: {{sleepUntil | date:'yyyy-MM-dd HH:mm:ss'}}
-    <button (click)="wakeup()">
-      <i class="fas fa-trash"></i>
-    </button>
-  </div>
   <div>
     <span (click)="toggleUrgencyBreakdown()" class="breakdown-toggle">
       <i class="fas fa-fw" [class.fa-chevron-right]="!showUrgencyBreakdown" [class.fa-chevron-down]="showUrgencyBreakdown"></i>
