@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { distinctUntilChanged, map } from "rxjs/operators";
+
 import { TaskService } from "./task.service";
 import { TaskRelationService } from "./task-relation.service";
 import { TaskStatus } from "./models/task.dto";
-import { BehaviorSubject, Observable } from "rxjs";
 import { TaskRelation } from "./models/task-relation.dto";
-import { distinctUntilChanged, combineLatest, map } from "rxjs/operators";
 
 @Injectable()
 export class RelationViewService {
@@ -29,18 +30,18 @@ export class RelationViewService {
   }
 
   private setupActiveRelations() {
-    this.taskService.entries
-      .pipe(combineLatest(this.taskRelationService.entries, (tasks, relations) => {
+    combineLatest(this.taskService.entries, this.taskRelationService.entries).pipe(
+      map(([tasks, relations]) => {
         return relations.filter(r => {
           return tasks
             .filter(t => t.uuid === r.sourceTaskUuid) // Find the source task
             .some(t => t.status !== TaskStatus.done); // and see if the source task is done or not
         });
       }),
-        distinctUntilChanged((x, y) =>
-          x.length === y.length &&                      // If length differs then we have change
-          x.every((v, i) => v.uuid === y[i].uuid)       // If length does differ check if the relations are the same
-        ))
+      distinctUntilChanged((x, y) =>
+        x.length === y.length &&                      // If length differs then we have change
+        x.every((v, i) => v.uuid === y[i].uuid)       // If length does differ check if the relations are the same
+      ))
       .subscribe(relations => {
         this._blockingRelations.next(relations);      // Update the list of relations that causes blocking.
       });

@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 
-import { Observable } from "rxjs";
+import { Observable, combineLatest } from "rxjs";
 
 import { Repository } from "./repositories/repository";
 import { ChecklistItem } from "./models/checklist-item.dto";
 import { TaskEventService } from "./task-event.service";
-import { combineLatest, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { MessageService } from "./message.service";
 import { WsRepository } from "./repositories/ws-repository";
 
@@ -21,14 +21,13 @@ export class ChecklistItemService {
     private taskEventService: TaskEventService,
   ) {
     this._repository = new WsRepository("checklist-item", messageService);
-    this.taskEventService.deletedTask
-      .pipe(
-        combineLatest(this._repository.entries, (task, checklistItems) => {
-          // Find all relations beloning to the task and delete them.
-          const items = checklistItems
-            .filter(x => x.taskUuid === task.uuid);
-          this._repository.removeMany(items, { onlyInternal: true });
-        })).subscribe();
+    combineLatest(this.taskEventService.deletedTask, this._repository.entries)
+      .subscribe(([task, checklistItems]) => {
+        // Find all relations beloning to the task and delete them.
+        const items = checklistItems
+          .filter(x => x.taskUuid === task.uuid);
+        this._repository.removeMany(items, { onlyInternal: true });
+      });
   }
 
   add(value: ChecklistItem): Promise<ChecklistItem> {

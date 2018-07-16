@@ -1,20 +1,15 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+
 
 import { ChecklistItem } from "./models/checklist-item.dto";
-import { Task, TaskStatus } from "./models/task.dto";
+import { Task } from "./models/task.dto";
 import { TaskList } from "./models/task-list.dto";
 
 import { ChecklistItemService } from "./checklist-item.service";
 import { NavigationService } from "./navigation.service";
-import { SearchService } from "./search.service";
 import { TaskListService } from "./task-list.service";
 import { TaskService } from "./task.service";
-import { TaskViewService } from "./task-view.service";
-import { TaskRelationService } from "./task-relation.service";
-import { RelationViewService } from "./relation-view.service";
-import { TaskScoreService } from "./task-score.service";
-import { combineLatest } from "rxjs/operators";
 
 @Injectable()
 export class ContextService {
@@ -37,12 +32,8 @@ export class ContextService {
   constructor(
     private checklistItemService: ChecklistItemService,
     private navigationService: NavigationService,
-    private searchService: SearchService,
     private taskListService: TaskListService,
     private taskService: TaskService,
-    private taskViewService: TaskViewService,
-    private relationViewService: RelationViewService,
-    private taskScoreService: TaskScoreService,
   ) {
     this.setupActiveTaskList();
     this.setupActiveTask();
@@ -50,30 +41,31 @@ export class ContextService {
   }
 
   private setupActiveTaskList() {
-    this.navigationService.taskListUuid.pipe(combineLatest(this.taskListService.entries,
-      (uuid, tasklists) => {
+    combineLatest(this.navigationService.taskListUuid, this.taskListService.entries)
+      .subscribe(([uuid, tasklists]) => {
         this._activeTaskList.next(
           tasklists.find(x => x.uuid === uuid || x.primary && uuid === undefined));
-      })).subscribe();
+      });
   }
 
   private setupActiveTask() {
-    this.navigationService.taskUuid.pipe(combineLatest(this.taskService.entries, (uuid, tasks) => {
-      if (!uuid) {
-        // No task is selected.
-        this._activeTask.next(undefined);
-        return;
-      }
+    combineLatest(this.navigationService.taskUuid, this.taskService.entries)
+      .subscribe(([uuid, tasks]) => {
+        if (!uuid) {
+          // No task is selected.
+          this._activeTask.next(undefined);
+          return;
+        }
 
-      this._activeTask.next(tasks.find(task => task.uuid === uuid));
-    })).subscribe();
+        this._activeTask.next(tasks.find(task => task.uuid === uuid));
+      });
   }
 
   private setupActiveChecklistItems(): void {
-    this.navigationService.taskUuid.pipe(combineLatest(this.checklistItemService.entries,
-      (uuid, items) => {
+    combineLatest(this.navigationService.taskUuid, this.checklistItemService.entries)
+      .subscribe(([uuid, items]) => {
         this._activeTaskChecklistItems.next(items.filter(x => x.taskUuid === uuid));
-      })).subscribe();
+      });
   }
 
   public setDragStatus(v: boolean, taskUuid: string) {
