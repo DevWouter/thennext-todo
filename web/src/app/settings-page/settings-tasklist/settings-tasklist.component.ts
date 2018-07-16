@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { combineLatest, Observable } from "rxjs";
+import { combineLatest, Observable, pipe } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { TaskList } from "../../services/models/task-list.dto";
@@ -31,23 +31,18 @@ export class SettingsTasklistComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const taskListObservable = combineLatest(
-      this.tasklistService.entries,
-      this.activatedRoute.params.pipe(map(p => p.uuid)),
-      (entries, uuid) => entries.find(e => e.uuid === uuid));
+    const $currentTaskListId = this.activatedRoute.params.pipe(map(p => p.uuid));
+    const $currentTaskList = combineLatest(this.tasklistService.entries, $currentTaskListId)
+      .pipe(map(([entries, uuid]) => entries.find(e => e.uuid === uuid)));
 
-    taskListObservable.subscribe(t => this.taskList = t);
+    $currentTaskList.subscribe(t => this.taskList = t);
 
-    combineLatest(
-      taskListObservable,
-      this.tasklistRightService.entries,
-      (list, rights) => rights.filter(r => r.taskListUuid === list.uuid))
+    combineLatest($currentTaskList, this.tasklistRightService.entries)
+      .pipe(map(([list, rights]) => rights.filter(r => r.taskListUuid === list.uuid)))
       .subscribe(t => this.rights = t);
 
-    combineLatest(
-      taskListObservable,
-      this.tasklistShareTokenService.entries,
-      (list, tokens) => tokens.filter(r => r.taskListUuid === list.uuid))
+    combineLatest($currentTaskList, this.tasklistShareTokenService.entries)
+      .pipe(map(([list, tokens]) => tokens.filter(r => r.taskListUuid === list.uuid)))
       .subscribe(x => this.tokens = x)
       ;
   }

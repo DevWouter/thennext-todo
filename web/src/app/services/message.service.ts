@@ -1,13 +1,14 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { Subscription, Subject, Observable } from "rxjs";
+import { Subject, Observable, BehaviorSubject } from "rxjs";
+import { filter, map, skipUntil } from "rxjs/operators";
+
 import { WsMessageService } from "./ws/ws-message-service";
-import { WsServiceConfig } from "./ws/ws-service";
+import { WsServiceConfig, WsConnectionStatus } from "./ws/ws-service";
 import { TokenService } from "./token.service";
 import { environment } from "../../environments/environment";
 import { WsCommandMap } from "./ws/commands";
 import { StorageService, StorageKey } from "./storage.service";
-import { WsEventMap,  WsEventBasic, WsEvent } from "./ws/events";
-import { filter, map } from "rxjs/operators";
+import { WsEventMap, WsEventBasic, WsEvent } from "./ws/events";
 
 
 /**
@@ -18,6 +19,9 @@ export class MessageService implements OnDestroy {
   private _wsMessageService: WsMessageService;
   private readonly wsServiceConfig: WsServiceConfig = { url: environment.wsEndPoint };
   private readonly $event = new Subject<WsEventBasic>();
+  private readonly $status = new BehaviorSubject<"up" | "down">(undefined);
+
+  get status(): Observable<"up" | "down"> { return this.$status.pipe(filter(x => !!x)); }
 
   constructor(
     private readonly tokenService: TokenService,
@@ -42,6 +46,16 @@ export class MessageService implements OnDestroy {
       }
     });
 
+    const $firstUpMessage = this._wsMessageService.status.pipe(
+      filter(x => x == "up"),
+    );
+
+    this._wsMessageService.status.pipe(
+      skipUntil($firstUpMessage),
+    ).subscribe(x => {
+      this.$status.next(x);
+    });
+
     // Start the service
     this._wsMessageService.connect();
 
@@ -53,7 +67,6 @@ export class MessageService implements OnDestroy {
 
 
   send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void {
-    console.log("Sending messages");
     this._wsMessageService.send(type, data);
   }
 

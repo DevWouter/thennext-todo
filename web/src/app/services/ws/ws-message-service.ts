@@ -67,6 +67,11 @@ export class WsMessageService {
       this.onEvent(event);
     });
 
+    // When the status becomes closed, set status to down.
+    this._wsService.connectionStatus
+      .pipe(filter(x => x === WsConnectionStatus.CLOSED))
+      .subscribe(() => this.$status.next("down"));
+
     this._conSub = combineLatest(
       this._wsService.connectionStatus,
       this.tokenService.token.pipe(filter(x => !!x))).subscribe(([status, token]) => {

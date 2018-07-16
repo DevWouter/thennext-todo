@@ -11,6 +11,7 @@ export interface WsCommandMap {
   "update-entity": UpdateEntityCommand;
   "delete-entity": DeleteEntityCommand;
   "sync-entities": EntityCommand;
+  "sync-my-account": SyncMyAccountCommand;
 }
 
 export interface SetTokenCommand {
@@ -49,4 +50,7 @@ export interface CreateEntityCommand extends EntityCommand {
    * What kind of entity are we talking about?
    */
   entity: object;
+}
+
+export interface SyncMyAccountCommand {
 }

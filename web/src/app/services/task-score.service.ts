@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { DateTime } from "luxon";
 
-import { BehaviorSubject, Observable } from "rxjs";
-import { map, combineLatest, distinctUntilChanged, filter } from "rxjs/operators";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { map, distinctUntilChanged, filter } from "rxjs/operators";
 
 import { RelationViewService } from "./relation-view.service";
 import { ScoreShiftService } from "./score-shift.service";
@@ -49,22 +49,22 @@ export class TaskScoreService {
   private setup() {
     // Whenever the values of a dependcy change, we need to emit a changed event.
     // That way listeners now they should perform a recalculation.
-    this._timeSubject.pipe(
-      map(x => DateTime.fromJSDate(x))
-      , combineLatest(
-        this.taskService.entries,
-        this.scoreShiftService.entries,
-        this.relationViewService.blockedTaskUuids,
-        this.relationViewService.blockingTaskUuids,
-        this.urgencyLapService.entries,
-        (
-          now,
+    const $time = this._timeSubject.pipe(map(x => DateTime.fromJSDate(x)));
+    combineLatest(
+      $time,
+      this.taskService.entries,
+      this.scoreShiftService.entries,
+      this.relationViewService.blockedTaskUuids,
+      this.relationViewService.blockingTaskUuids,
+      this.urgencyLapService.entries)
+      .pipe(
+        map(([now,
           tasks,
           scoreShifts,
           blockedTaskUuids,
           blockingTaskUuids,
           urgencyLaps,
-        ) => {
+        ]) => {
           // Pre sort the urgency laps
           urgencyLaps = urgencyLaps.sort((a, b) => a.fromDay - b.fromDay);
 
@@ -86,28 +86,28 @@ export class TaskScoreService {
 
             return r;
           });
-        })
-      , map(x => x.sort((a, b) => b.score - a.score))
-      , distinctUntilChanged((x, y) =>
-        x.length === y.length &&
-        x.every((v, i) =>
-          v.taskUuid === y[i].taskUuid &&            // Check if the order is the same
-          v.roundedScore === y[i].roundedScore)      // Check if the visual score has changed.
-      ))
+        }),
+        map(x => x.sort((a, b) => b.score - a.score)),
+        distinctUntilChanged((x, y) =>
+          x.length === y.length &&
+          x.every((v, i) =>
+            v.taskUuid === y[i].taskUuid &&            // Check if the order is the same
+            v.roundedScore === y[i].roundedScore)      // Check if the visual score has changed.
+        ))
       .subscribe(scores => this._taskScores.next(scores));
 
-    this._timeSubject
+
+    combineLatest($time, this.taskService.entries)
       .pipe(
-        map(x => DateTime.fromJSDate(x)),
-        combineLatest(this.taskService.entries, (now, tasks) => {
+        map(([time, tasks]) => {
           return tasks
-            .filter(x => x.sleepUntil && DateTime.fromJSDate(x.sleepUntil) > now)
+            .filter(x => false) // TODO: Use the know per-user-sleep service to check if it's sleeping.
             .map(x => x.uuid);
         }),
-        distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i]))
-      ).subscribe(x => {
-        this._delayedTaskUuids.next(x);
-      });
+        distinctUntilChanged((x, y) => x.length === y.length && x.every((v, i) => v === y[i])),
+    ).subscribe(x => {
+      this._delayedTaskUuids.next(x);
+    });
   }
 
   private getBlockScore(task: Task, blockedTaskUuids: string[], blockingTaskUuids: string[]): Modifier[] {

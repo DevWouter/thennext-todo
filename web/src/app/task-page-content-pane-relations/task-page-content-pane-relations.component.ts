@@ -5,8 +5,8 @@ import { TaskService } from "../services/task.service";
 import { TaskRelation } from "../services/models/task-relation.dto";
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { NavigationService } from "../services/navigation.service";
-import { BehaviorSubject } from "rxjs";
-import { filter, combineLatest } from "rxjs/operators";
+import { BehaviorSubject, combineLatest } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 class RemoteTask {
   relationUuid: string;
@@ -81,11 +81,9 @@ export class TaskPageContentPaneRelationsComponent implements OnInit {
       this.afterAllow = this.taskRelationService.checkAllow({ after: x, before: this.taskUuid });
     });
 
-    this.taskRelationService.entries
-      .pipe(combineLatest(
-        this.taskService.entries,
-        this._taskSubject.pipe(filter(x => !!x)),
-        (relations, tasks, task) => {
+    combineLatest(this.taskRelationService.entries, this.taskService.entries, this._taskSubject.pipe(filter(x => !!x)))
+      .pipe(map(
+        ([relations, tasks, task]) => {
           const blockedTasks = relations
             .filter(x => x.sourceTaskUuid === task.uuid)
             .map(relation => {

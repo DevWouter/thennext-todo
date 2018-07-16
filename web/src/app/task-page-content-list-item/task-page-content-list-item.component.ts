@@ -1,13 +1,15 @@
 import { Component, OnInit, Input, HostListener } from "@angular/core";
+import { combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
+import { DateTime, Interval, Duration } from "luxon";
+
 import { Task, TaskStatus } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
 import { ContextService } from "../services/context.service";
 import { NavigationService } from "../services/navigation.service";
 
-import { DateTime, Interval, Duration } from "luxon";
 import { TaskScoreService } from "../services/task-score.service";
 import { RelationViewService } from "../services/relation-view.service";
-import { combineLatest } from "rxjs/operators";
 
 interface State {
   active: boolean;
@@ -22,7 +24,6 @@ interface State {
   styleUrls: ["./task-page-content-list-item.component.scss"],
 })
 export class TaskPageContentListItemComponent implements OnInit {
-  private _delayedUuids: string[] = [];
   private _blockedUuids: string[] = [];
   score = 0;
 
@@ -43,9 +44,6 @@ export class TaskPageContentListItemComponent implements OnInit {
     return this.task.title;
   }
 
-  get showSleepIcon(): boolean {
-    return !this._delayedUuids.includes(this._task.uuid) && this._task.status !== TaskStatus.active;
-  }
   get showPlayIcon(): boolean {
     return this._task.status === TaskStatus.todo;
   }
@@ -89,24 +87,17 @@ export class TaskPageContentListItemComponent implements OnInit {
       }
     });
 
-    this.taskScoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
     this.relationViewService.blockedTaskUuids.subscribe(x => this._blockedUuids = x);
 
-    this.navigation.taskUuid.pipe(
-      combineLatest(
-        this.taskScoreService.delayedTaskUuids,
-        this.relationViewService.blockedTaskUuids,
-        (taskUuid, delayedTaskUuids, blockedTaskUuids) => ({
-          taskUuid,
-          delayedTaskUuids,
-          blockedTaskUuids,
-        })))
-      .subscribe(combo => {
-        const taskUuid = combo.taskUuid;
+    combineLatest(
+      this.navigation.taskUuid,
+      this.taskScoreService.delayedTaskUuids,
+      this.relationViewService.blockedTaskUuids,
+    ).subscribe(([taskUuid, delayedTaskUuids, blockedTaskUuids]) => {
         this.state = <State>{
           active: (this.task.status === TaskStatus.active),
-          blocked: combo.blockedTaskUuids.includes(this.task.uuid),
-          delayed: combo.delayedTaskUuids.includes(this.task.uuid),
+          blocked: blockedTaskUuids.includes(this.task.uuid),
+          delayed: delayedTaskUuids.includes(this.task.uuid),
           selected: this.task.uuid === taskUuid
         };
       });
@@ -140,32 +131,15 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   play() {
-    console.log("play");
     this.checked = false;
     this.task.status = TaskStatus.active;
     this.taskService.update(this.task);
   }
 
   pause() {
-    console.log("pause");
     this.checked = false;
     this.task.status = TaskStatus.todo;
     this.taskService.update(this.task);
-  }
-
-  delay() {
-    let local = DateTime.local().set({
-      hour: 7,
-      minute: 0,
-      second: 0,
-      millisecond: 0
-    });
-
-    if (local < DateTime.local()) {
-      local = local.plus({ days: 1 });
-    }
-
-    this.taskService.delay(this.task, local.toJSDate());
   }
 
   dragStart(event: DragEvent) {

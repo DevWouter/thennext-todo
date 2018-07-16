@@ -12,7 +12,7 @@ import { WsMessageService } from "./ws-message-service";
 import { TrustedClient } from "./ws/message-client";
 import { TaskListShare } from "../models/task-list-share.model";
 import { TaskListRight } from "../models/task-list-right.model";
-import { TaskListRightEntity } from "../db/entities/task-list-right.entity";
+import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
 
 
 @injectable()
@@ -97,6 +97,9 @@ export class TaskListRightService {
     private async delete(client: TrustedClient, uuid: string, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const entity = await this.taskListRightRepository.byUuid(uuid, account);
+        if (entity.access === AccessRight.owner) {
+            throw new Error("You can't delete owning rights");
+        }
 
         this.taskListRightRepository.destroy(entity);
         this.messageService.send("entity-deleted", {

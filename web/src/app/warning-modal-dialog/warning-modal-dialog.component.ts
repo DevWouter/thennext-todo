@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { filter } from "rxjs/operators";
+
 import { ApiEventService } from "../services/api-event.service";
 import { StorageService } from "../services/storage.service";
+import { MessageService } from "../services/message.service";
 
 class ErrorEvent {
   // Milliseconds
@@ -37,6 +40,7 @@ export class WarningModalDialogComponent implements OnInit {
   constructor(
     private readonly apiEventService: ApiEventService,
     private readonly storageService: StorageService,
+    private readonly messageService: MessageService,
   ) { }
 
   ngOnInit() {
@@ -54,6 +58,14 @@ export class WarningModalDialogComponent implements OnInit {
       this.showDialog = true;
       this.lastError = reason;
     });
+
+    this.messageService.status
+      .pipe(filter(x => x === "down"))
+      .subscribe(() => {
+        this.container.events.push(new ErrorEvent());
+        this.showDialog = true;
+        this.lastError = "Connection was closed";
+      });
   }
 
   checkAutoReload() {

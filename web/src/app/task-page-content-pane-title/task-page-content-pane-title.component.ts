@@ -1,8 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { Subject } from "rxjs";
 import { Task } from "../services/models/task.dto";
 import { TaskService } from "../services/task.service";
-import { debounceTime } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-content-pane-title",
@@ -10,32 +8,26 @@ import { debounceTime } from "rxjs/operators";
   styleUrls: ["./task-page-content-pane-title.component.scss"],
 })
 export class TaskPageContentPaneTitleComponent implements OnInit {
-  private _taskTitle: string;
-  private _nextTaskTitle = new Subject<string>();
+  private _task: Task;
 
   @Input()
   set task(task: Task) {
-    this._nextTaskTitle.complete();
-    this._taskTitle = task.title;
-
-    // Create a new subjec to follow.
-    this._nextTaskTitle = new Subject<string>();
-    this._nextTaskTitle.subscribe(t => task.title = t);
-    this._nextTaskTitle.pipe(
-      debounceTime(350))
-      .subscribe(title => {
-        task.title = this._taskTitle;
-        this.taskService.update(task);
-      });
+    this._task = task;
   }
 
   public get taskTitle(): string {
-    return this._taskTitle;
+    return this._task && this._task.title;
   }
 
   public set taskTitle(v: string) {
-    this._taskTitle = v;
-    this._nextTaskTitle.next(v);
+    if (this._task) {
+      if (this._task.title === v) {
+        return;
+      }
+
+      this._task.title = v;
+      this.taskService.update(this._task);
+    }
   }
 
   constructor(

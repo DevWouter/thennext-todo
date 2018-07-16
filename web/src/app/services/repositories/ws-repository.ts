@@ -37,7 +37,6 @@ export class WsRepository<T extends Entity> implements Repository<T> {
 
     this.messageService.eventsOf("entity-updated")
       .pipe(
-        filter(x => !x.echo),
         filter(x => x.data.entityKind === this.entityKind),
         map(x => {
           const t = x.data.entity as T;

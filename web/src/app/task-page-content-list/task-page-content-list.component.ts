@@ -8,8 +8,8 @@ import { TaskScoreService } from "../services/task-score.service";
 import { NavigationService } from "../services/navigation.service";
 import { SearchService } from "../services/search.service";
 import { RelationViewService } from "../services/relation-view.service";
-import { Observable } from "rxjs";
-import { filter, combineLatest, map } from "rxjs/operators";
+import { combineLatest } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 @Component({
   selector: "app-task-page-content-list",
@@ -43,82 +43,117 @@ export class TaskPageContentListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.contextService.activeTaskList
+    const $activeTaskListId = this.contextService.activeTaskList.pipe(filter(x => !!x));
+    const $tasks = this.taskService.entries;
+    const $currentTasks = combineLatest($activeTaskListId, $tasks)
       .pipe(
-        filter(x => !!x),
-        combineLatest(this.taskService.entries, (list, tasks) => tasks.filter(x => x.taskListUuid === list.uuid)),
-        combineLatest(this.taskScoreService.taskScores, (tasks, scores) => {
-          return scores.map(s => tasks.find(t => t.uuid === s.taskUuid)).filter(y => !!y);
-        }),
-        combineLatest(this.navigationService.showCompleted, (tasks, showCompleted) => {
+        map(([list, tasks]) => tasks.filter(x => x.taskListUuid === list.uuid))
+      );
+
+    const $tasksWithScore = combineLatest($currentTasks, this.taskScoreService.taskScores)
+      .pipe(
+        map(([tasks, scores]) => scores.map(s => tasks.find(t => t.uuid === s.taskUuid)).filter(y => !!y))
+      );
+
+    const $tasksAfterCompletionFilter = combineLatest($tasksWithScore, this.navigationService.showCompleted)
+      .pipe(
+        map(([tasks, showCompleted]) => {
           if (!showCompleted) {
             return tasks.filter(y => y.status !== TaskStatus.done);
           }
           return tasks;
         }),
-        map(x => {
-          const activeTasks: Task[] = [];
-          const todoTasks: Task[] = [];
-          const doneTasks: Task[] = [];
-          x.forEach(y => {
-            switch (y.status) {
-              case TaskStatus.done: { doneTasks.push(y); break; }
-              case TaskStatus.active: { activeTasks.push(y); break; }
-              case TaskStatus.todo: { todoTasks.push(y); break; }
-              default: { throw new Error(`Unsupported task status: ${y.status}`); }
-            }
-          });
+    );
 
-          return [...activeTasks, ...todoTasks, ...doneTasks.reverse()];
-        }),
-        combineLatest(
-          this.navigationService.search,
-          this.navigationService.showDelayed,
-          this.navigationService.onlyUnblocked,
-          this.navigationService.onlyPositive,
-          this.taskScoreService.delayedTaskUuids,
-          (tasks, search, showDelayed, onlyUnblocked, onlyPositive) => {
-            return {
-              tasks,
-              search,
-              showDelayed,
-              onlyUnblocked,
-              onlyPositive
-            };
-          }),
-        combineLatest(
-          this.taskScoreService.delayedTaskUuids,
-          this.relationViewService.blockedTaskUuids,
-          this.taskScoreService.taskScores,
-          (combo, delayedUuids, blockedUuids, scores) => {
-            let tasks = combo.tasks;
-
-            if (combo.search && combo.search.trim() !== "") {
-              tasks = tasks.filter(x => this.searchService.isResult(x, combo.search));
-            } else {
-              // No search, so use the filters.
-              if (!combo.showDelayed) {
-                tasks = tasks.filter(y => !delayedUuids.includes(y.uuid));
-              }
-
-              if (combo.onlyUnblocked) {
-                tasks = tasks.filter(y => !blockedUuids.includes(y.uuid));
-              }
-
-              if (combo.onlyPositive) {
-                tasks = tasks.filter(task => {
-                  const taskScore = scores.find(s => s.taskUuid === task.uuid);
-                  if (taskScore) {
-                    return taskScore.score >= 0;
-                  }
-                  return true; // No score, so we can assume 0.
-                });
-              }
-            }
-
-            return tasks;
+    const $tasksGroupedByStatus = $tasksAfterCompletionFilter
+      .pipe(map(x => {
+        const activeTasks: Task[] = [];
+        const todoTasks: Task[] = [];
+        const doneTasks: Task[] = [];
+        x.forEach(y => {
+          switch (y.status) {
+            case TaskStatus.done: { doneTasks.push(y); break; }
+            case TaskStatus.active: { activeTasks.push(y); break; }
+            case TaskStatus.todo: { todoTasks.push(y); break; }
+            default: { throw new Error(`Unsupported task status: ${y.status}`); }
           }
-        ))
+        });
+
+        const result = [...activeTasks, ...todoTasks, ...doneTasks.reverse()];
+        return result;
+      }));
+
+    // NOTE
+    // Due to the limtation of combineLatest we can only combine 5 different observables.
+
+    const $navigationView = combineLatest(
+      this.navigationService.showDelayed,
+      this.navigationService.onlyUnblocked,
+      this.navigationService.onlyPositive);
+
+    const $scoreView = combineLatest(
+      this.taskScoreService.delayedTaskUuids,
+      this.taskScoreService.taskScores);
+
+    const $search = this.navigationService.search;
+
+    const $relationView = combineLatest(
+      this.relationViewService.blockedTaskUuids
+    );
+
+    const $filterB = combineLatest(
+      $tasksGroupedByStatus,
+      $search,
+      $navigationView,
+      $scoreView,
+      $relationView,
+    );
+
+    const $final = $filterB.pipe(
+      map(([
+        tasks,
+        search,
+        [ // Navigations
+          showDelayed,
+          onlyUnblocked,
+          onlyPositive,
+        ],
+        [ // Score
+          delayedUuids,
+          scores
+        ],
+        [ // Relation
+          blockedUuids,
+        ],
+      ]) => {
+        if (search && search.trim() !== "") {
+          tasks = tasks.filter(x => this.searchService.isResult(x, search));
+        } else {
+          // No search, so use the filters.
+          if (!showDelayed) {
+            tasks = tasks.filter(y => !delayedUuids.includes(y.uuid));
+          }
+
+          if (onlyUnblocked) {
+            tasks = tasks.filter(y => !blockedUuids.includes(y.uuid));
+          }
+
+          if (onlyPositive) {
+            tasks = tasks.filter(task => {
+              const taskScore = scores.find(s => s.taskUuid === task.uuid);
+              if (taskScore) {
+                return taskScore.score >= 0;
+              }
+              return true; // No score, so we can assume 0.
+            });
+          }
+        }
+
+        return tasks;
+      })
+    );
+
+    $final
       .subscribe(tasks => {
         this.showEmptyListMessage = tasks.length <= 0;
         this.showTasks = tasks.length > 0;
