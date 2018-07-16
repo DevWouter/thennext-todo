@@ -1,6 +1,5 @@
 import { EntityKind } from "./entity-kind";
 
-
 export interface WsEventMap {
   "token-accepted": {}; // Empty clas
   "token-rejected": TokenRejectedEvent;
@@ -8,6 +7,7 @@ export interface WsEventMap {
   "entity-updated": EntityUpdatedEvent;
   "entity-deleted": EntityDeletedEvent;
   "entities-synced": EntitiesSyncedEvent;
+  "my-account-synced": MyAccountSyncedEvent;
 }
 
 export interface WsEventBasic {
@@ -31,6 +31,11 @@ export interface WsEvent<K extends keyof WsEventMap> extends WsEventBasic {
   refId?: string;
 
   data: WsEventMap[K];
+}
+
+export interface MyAccountSyncedEvent {
+  uuid: string;
+  displayName: string;
 }
 
 export interface TokenRejectedEvent {

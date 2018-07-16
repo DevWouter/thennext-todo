@@ -29,6 +29,7 @@ import {
     TaskService,
     UrgencyLapService,
     TaskListRightService,
+    AccountService,
 } from "./services";
 
 
@@ -66,6 +67,7 @@ container.bind<AuthenticationService>(AuthenticationService).toSelf();
 container.bind<WsMessageService>(WsMessageService).to(WsMessageService).inSingletonScope();
 container.bind<WsService>(WsService).to(WsService).inSingletonScope();
 
+container.bind<AccountService>(AccountService).toSelf();
 container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();

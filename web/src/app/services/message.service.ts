@@ -1,13 +1,14 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { Subscription, Subject, Observable } from "rxjs";
+import { Subject, Observable } from "rxjs";
+import { filter, map } from "rxjs/operators";
+
 import { WsMessageService } from "./ws/ws-message-service";
 import { WsServiceConfig } from "./ws/ws-service";
 import { TokenService } from "./token.service";
 import { environment } from "../../environments/environment";
 import { WsCommandMap } from "./ws/commands";
 import { StorageService, StorageKey } from "./storage.service";
-import { WsEventMap,  WsEventBasic, WsEvent } from "./ws/events";
-import { filter, map } from "rxjs/operators";
+import { WsEventMap, WsEventBasic, WsEvent } from "./ws/events";
 
 
 /**

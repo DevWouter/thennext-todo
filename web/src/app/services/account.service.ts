@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 
 import { ApiService } from "./api.service";
 import { BehaviorSubject, Observable } from "rxjs";
+import { MessageService } from "./message.service";
+import { TokenService } from "./token.service";
+import { filter } from "rxjs/operators";
 
 interface Account {
   uuid: string;
@@ -20,17 +23,27 @@ export class AccountService {
 
   constructor(
     private apiService: ApiService,
+    private messageSerivce: MessageService,
+    private tokenService: TokenService,
   ) {
-    this.apiService.sessionToken.subscribe(token => {
-      if (token) {
-        // Try and restore the token
-        this.apiService.get<MyAccount>("/api/account/me")
-          .subscribe(account => this._myAccount.next(account));
-      } else {
-        // We no longer know our own account.
-        this._myAccount.next(undefined);
-      }
-    });
+
+    this.messageSerivce.eventsOf("my-account-synced")
+      .subscribe(ev => {
+        this._myAccount.next({
+          uuid: ev.data.uuid,
+          displayName: ev.data.displayName,
+        });
+      });
+
+    this.tokenService.token
+      .subscribe((token) => {
+        if (!token) {
+          this._myAccount.next(undefined);
+        } else {
+          // Send a message that we want the account synced.
+          this.messageSerivce.send("sync-my-account", {});
+        }
+      });
   }
 
   async createAccount(email: string, password: string): Promise<Account> {
