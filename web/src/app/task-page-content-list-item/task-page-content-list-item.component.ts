@@ -131,14 +131,12 @@ export class TaskPageContentListItemComponent implements OnInit {
   }
 
   play() {
-    console.log("play");
     this.checked = false;
     this.task.status = TaskStatus.active;
     this.taskService.update(this.task);
   }
 
   pause() {
-    console.log("pause");
     this.checked = false;
     this.task.status = TaskStatus.todo;
     this.taskService.update(this.task);
