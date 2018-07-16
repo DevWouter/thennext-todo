@@ -85,10 +85,19 @@ export class TaskListService {
 
     private async delete(client: TrustedClient, uuid: string, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
+        const settings = await this.accountSettingsRepository.of(account);
         const entity = await this.taskListrepository.byUuid(uuid, account);
         const rights = await this.taskListRightService.getRightsFor(entity);
 
         const accounts = rights.map(x => x.account.id);
+
+        if (entity.uuid === settings.primaryList.uuid) {
+            throw new Error("You can't delete your own primaryList");
+        }
+
+        if (entity.owner.id !== account.id) {
+            throw new Error("You are not the owner of the list.");
+        }
 
         this.taskListrepository.destroy(entity);
         this.messageService.send("entity-deleted", {
