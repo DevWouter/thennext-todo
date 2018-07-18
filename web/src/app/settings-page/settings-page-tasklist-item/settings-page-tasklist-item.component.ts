@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { TaskList } from "../../services/models/task-list.dto";
-import { TaskListService } from "../../services/task-list.service";
+import { TaskList } from "../../models";
+import { TaskListService } from "../../services";
 
 @Component({
   selector: "app-settings-page-tasklist-item",

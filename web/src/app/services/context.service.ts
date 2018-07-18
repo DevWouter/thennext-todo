@@ -1,10 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
-
-
-import { ChecklistItem } from "./models/checklist-item.dto";
-import { Task } from "./models/task.dto";
-import { TaskList } from "./models/task-list.dto";
+import { TaskList, Task, ChecklistItem } from "../models";
 
 import { ChecklistItemService } from "./checklist-item.service";
 import { NavigationService } from "./navigation.service";

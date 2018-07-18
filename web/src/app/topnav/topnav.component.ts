@@ -1,11 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { filter } from "rxjs/operators";
+import { NavigationService, SessionService, AccountService, ContextService } from "../services";
 
-import { AccountService } from "../services/account.service";
-import { ContextService } from "../services/context.service";
-import { NavigationService } from "../services/navigation.service";
-import { SessionService } from "../services/session.service";
 
 @Component({
   selector: "app-topnav",
@@ -36,8 +33,8 @@ export class TopnavComponent implements OnInit {
 
   expand = false;
   constructor(
-    private readonly navigation: NavigationService,
     private readonly router: Router,
+    private readonly navigation: NavigationService,
     private readonly sessionService: SessionService,
     private readonly accountService: AccountService,
     private readonly contextService: ContextService,

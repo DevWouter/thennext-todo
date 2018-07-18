@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationService } from "../services/navigation.service";
-import { TaskPageNavigation } from "../services/models/task-page-navigation";
 import { Router } from "@angular/router";
 
 @Component({

@@ -1,9 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ScoreShift } from "../../services/models/score-shift.dto";
-import { ScoreShiftService } from "../../services/score-shift.service";
 import { map } from "rxjs/operators";
-import { UrgencyLapService } from "../../services/urgency-lap.service";
-import { UrgencyLap } from "../../services/models/urgency-lap.dto";
+import { UrgencyLap } from "../../models";
+import { UrgencyLapService } from "../../services";
 
 @Component({
   selector: "app-settings-page-urgency-laps",

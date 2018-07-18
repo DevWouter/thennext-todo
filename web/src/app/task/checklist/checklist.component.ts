@@ -1,17 +1,16 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { BehaviorSubject, combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
-import { ChecklistItem } from "../services/models/checklist-item.dto";
-import { ChecklistItemService } from "../services/checklist-item.service";
-import { Task } from "../services/models/task.dto";
-import { TaskService } from "../services/task.service";
+import { ChecklistItem, Task } from "../../models";
+import { ChecklistItemService, TaskService } from "../../services";
+
 
 @Component({
-  selector: "app-task-page-content-pane-checklist",
-  templateUrl: "./task-page-content-pane-checklist.component.html",
-  styleUrls: ["./task-page-content-pane-checklist.component.scss"]
+  selector: "task-checklist",
+  templateUrl: "./checklist.component.html",
+  styleUrls: ["./checklist.component.scss"]
 })
-export class TaskPageContentPaneChecklistComponent implements OnInit {
+export class ChecklistComponent implements OnInit {
   items: ChecklistItem[] = [];
   newValue = "";
 

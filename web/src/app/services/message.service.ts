@@ -3,13 +3,14 @@ import { Subject, Observable, BehaviorSubject } from "rxjs";
 import { filter, map, skipUntil } from "rxjs/operators";
 
 import { WsMessageService } from "./ws/ws-message-service";
-import { WsServiceConfig, WsConnectionStatus } from "./ws/ws-service";
-import { TokenService } from "./token.service";
-import { environment } from "../../environments/environment";
+import { WsServiceConfig } from "./ws/ws-service";
 import { WsCommandMap } from "./ws/commands";
-import { StorageService, StorageKey } from "./storage.service";
 import { WsEventMap, WsEventBasic, WsEvent } from "./ws/events";
 
+import { TokenService } from "./token.service";
+import { StorageService, StorageKey } from "./storage.service";
+
+import { environment } from "../../environments/environment";
 
 /**
  * The generic version of the WsMessageService.

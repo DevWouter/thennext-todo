@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { combineLatest } from "rxjs";
-import { TaskListService } from "../services/task-list.service";
-import { TaskList } from "../services/models/task-list.dto";
-import { NavigationService } from "../services/navigation.service";
+import { TaskList } from "../models";
+import { TaskListService, NavigationService } from "../services";
 
 @Component({
   selector: "app-task-page-header-tasklist-selector",

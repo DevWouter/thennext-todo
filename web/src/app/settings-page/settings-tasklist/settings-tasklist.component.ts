@@ -1,16 +1,19 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-
-import { combineLatest, Observable, pipe } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
+import { combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { TaskList } from "../../services/models/task-list.dto";
-import { TaskListRight } from "../../services/models/task-list-right.dto";
+import {
+  TaskList,
+  TaskListRight,
+  TaskListShareToken
+} from "../../models";
+import {
+  TaskListService,
+  TaskListRightService,
+  TaskListShareTokenService
+} from "../../services";
 
-import { TaskListService } from "../../services/task-list.service";
-import { TaskListRightService } from "../../services/task-list-right.service";
-import { TaskListShareTokenService } from "../../services/task-list-share-token.service";
-import { TaskListShareToken } from "../../services/models/task-list-share-token.dto";
 
 @Component({
   selector: "app-settings-tasklist",

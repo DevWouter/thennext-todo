@@ -10,14 +10,13 @@ import { TaskRelationService } from "./task-relation.service";
 import { TaskService } from "./task.service";
 import { UrgencyLapService } from "./urgency-lap.service";
 
-import { ScoreShift } from "./models/score-shift.dto";
-import { Task, TaskStatus } from "./models/task.dto";
-import { UrgencyLap } from "./models/urgency-lap.dto";
+import { Task, TaskStatus, ScoreShift, UrgencyLap } from "../models";
 
 export interface Modifier {
   description: string;
   score: number;
 }
+export type TaskScoreModifier = Modifier;
 
 export class TaskScoreView {
   taskUuid: string;     // The uuid of the task.

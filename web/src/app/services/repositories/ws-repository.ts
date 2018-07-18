@@ -2,12 +2,12 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { filter, map, timeout, tap } from "rxjs/operators";
 
 import { Repository, RemoveOptions } from "./repository";
-import { Entity } from "./entity";
 import { RepositoryEventHandler } from "./repository-event-handler";
 import { EntityKind } from "../ws/entity-kind";
 import { MessageService } from "../message.service";
 import { CreateEntityCommand, UpdateEntityCommand, DeleteEntityCommand } from "../ws/commands";
 import { environment } from "../../../environments/environment";
+import { Entity } from "../../models/entity";
 
 export class WsRepository<T extends Entity> implements Repository<T> {
   private _entries: T[] = [];

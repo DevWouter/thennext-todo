@@ -1,4 +1,4 @@
-import { Entity } from "../repositories/entity";
+import { Entity } from "./entity";
 
 export interface TaskList extends Entity {
   uuid: string;

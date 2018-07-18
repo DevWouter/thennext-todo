@@ -1,18 +1,22 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { ContextService } from "../services/context.service";
-import { Task, TaskStatus } from "../services/models/task.dto";
-import { TaskService } from "../services/task.service";
-import { NavigationService } from "../services/navigation.service";
-import { TaskScoreService, Modifier as TaskScoreModifier } from "../services/task-score.service";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 
+import {
+  TaskScoreService,
+  TaskScoreModifier,
+} from "../../services";
+import {
+  Task,
+  TaskStatus,
+} from "../../models";
+
 @Component({
-  selector: "app-task-page-content-pane-stats",
-  templateUrl: "./task-page-content-pane-stats.component.html",
-  styleUrls: ["./task-page-content-pane-stats.component.scss"]
+  selector: "task-stats-view",
+  templateUrl: "./stats-view.component.html",
+  styleUrls: ["./stats-view.component.scss"]
 })
-export class TaskPageContentPaneStatsComponent implements OnInit {
+export class StatsViewComponent implements OnInit {
   private _task: Task;
   private _delayedUuids: string[] = [];
   public get completedOn(): Date { return this._task && this._task.completedOn; }
@@ -54,8 +58,6 @@ export class TaskPageContentPaneStatsComponent implements OnInit {
   }
 
   constructor(
-    private taskService: TaskService,
-    private navigation: NavigationService,
     private scoreService: TaskScoreService,
   ) { }
 

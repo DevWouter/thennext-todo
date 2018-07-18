@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { Task } from "../services/models/task.dto";
-import { TaskService } from "../services/task.service";
+import { Task } from "../../models";
+import { TaskService } from "../../services";
 
 @Component({
-  selector: "app-task-page-content-pane-title",
-  templateUrl: "./task-page-content-pane-title.component.html",
-  styleUrls: ["./task-page-content-pane-title.component.scss"],
+  selector: "task-title-input",
+  templateUrl: "./title-input.component.html",
+  styleUrls: ["./title-input.component.scss"],
 })
-export class TaskPageContentPaneTitleComponent implements OnInit {
+export class TitleInputComponent implements OnInit {
   private _task: Task;
 
   @Input()

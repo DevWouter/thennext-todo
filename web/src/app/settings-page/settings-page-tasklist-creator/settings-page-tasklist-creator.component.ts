@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { TaskList } from "../../services/models/task-list.dto";
-import { TaskListService } from "../../services/task-list.service";
-import { AccountService } from "../../services/account.service";
 import { filter } from "rxjs/operators";
+
+import { TaskList } from "../../models";
+
+import { TaskListService, AccountService } from "../../services";
 
 @Component({
   selector: "app-settings-page-tasklist-creator",

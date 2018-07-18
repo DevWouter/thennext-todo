@@ -1,14 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener, Host } from "@angular/core";
-import { ChecklistItem } from "../services/models/checklist-item.dto";
-import { ChecklistItemService } from "../services/checklist-item.service";
-import { BehaviorSubject, Subject } from "rxjs";
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from "@angular/core";
+import { ChecklistItem } from "../../models";
+import { ChecklistItemService } from "../../services";
 
 @Component({
-  selector: "app-task-page-content-pane-checklist-item",
-  templateUrl: "./task-page-content-pane-checklist-item.component.html",
-  styleUrls: ["./task-page-content-pane-checklist-item.component.scss"]
+  selector: "task-checklist-item",
+  templateUrl: "./checklist-item.component.html",
+  styleUrls: ["./checklist-item.component.scss"]
 })
-export class TaskPageContentPaneChecklistItemComponent implements OnInit {
+export class ChecklistItemComponent implements OnInit {
   public get title(): string { return this._item && this._item.title; }
   public set title(v: string) {
     if (!this._item) { return; }

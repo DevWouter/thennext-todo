@@ -1,8 +1,11 @@
 import { Component, OnInit, Input, HostBinding } from "@angular/core";
-import { TaskService } from "../services/task.service";
-import { ContextService } from "../services/context.service";
-import { Task } from "../services/models/task.dto";
-import { NavigationService } from "../services/navigation.service";
+import { Task } from "../models";
+
+import {
+  ContextService,
+  TaskService,
+  NavigationService
+} from "../services";
 
 @Component({
   selector: "app-task-page-content-pane",

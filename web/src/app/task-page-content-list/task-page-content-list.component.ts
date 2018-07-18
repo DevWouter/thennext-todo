@@ -1,15 +1,20 @@
 import { Component, OnInit, Input, HostBinding } from "@angular/core";
-
-import { TaskService } from "../services/task.service";
-import { ContextService } from "../services/context.service";
-
-import { Task, TaskStatus } from "../services/models/task.dto";
-import { TaskScoreService } from "../services/task-score.service";
-import { NavigationService } from "../services/navigation.service";
-import { SearchService } from "../services/search.service";
-import { RelationViewService } from "../services/relation-view.service";
 import { combineLatest } from "rxjs";
 import { filter, map } from "rxjs/operators";
+
+import {
+  Task,
+  TaskStatus
+} from "../models";
+
+import {
+  TaskService,
+  ContextService,
+  TaskScoreService,
+  NavigationService,
+  SearchService,
+  RelationViewService
+} from "../services";
 
 @Component({
   selector: "app-task-page-content-list",

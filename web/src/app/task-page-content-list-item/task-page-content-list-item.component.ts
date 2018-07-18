@@ -1,15 +1,18 @@
 import { Component, OnInit, Input, HostListener } from "@angular/core";
 import { combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
-import { DateTime, Interval, Duration } from "luxon";
 
-import { Task, TaskStatus } from "../services/models/task.dto";
-import { TaskService } from "../services/task.service";
-import { ContextService } from "../services/context.service";
-import { NavigationService } from "../services/navigation.service";
+import {
+  TaskStatus,
+  Task
+} from "../models";
 
-import { TaskScoreService } from "../services/task-score.service";
-import { RelationViewService } from "../services/relation-view.service";
+import {
+  NavigationService,
+  TaskService,
+  RelationViewService,
+  ContextService,
+  TaskScoreService
+} from "../services";
 
 interface State {
   active: boolean;
@@ -94,13 +97,13 @@ export class TaskPageContentListItemComponent implements OnInit {
       this.taskScoreService.delayedTaskUuids,
       this.relationViewService.blockedTaskUuids,
     ).subscribe(([taskUuid, delayedTaskUuids, blockedTaskUuids]) => {
-        this.state = <State>{
-          active: (this.task.status === TaskStatus.active),
-          blocked: blockedTaskUuids.includes(this.task.uuid),
-          delayed: delayedTaskUuids.includes(this.task.uuid),
-          selected: this.task.uuid === taskUuid
-        };
-      });
+      this.state = <State>{
+        active: (this.task.status === TaskStatus.active),
+        blocked: blockedTaskUuids.includes(this.task.uuid),
+        delayed: delayedTaskUuids.includes(this.task.uuid),
+        selected: this.task.uuid === taskUuid
+      };
+    });
   }
 
   check() {

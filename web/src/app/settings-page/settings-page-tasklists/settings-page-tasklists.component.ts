@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { TaskList } from "../../services/models/task-list.dto";
-import { TaskListService } from "../../services/task-list.service";
-import { AccountService } from "../../services/account.service";
 import { combineLatest } from "rxjs";
 import { map, filter } from "rxjs/operators";
+
+import { TaskList } from "../../models";
+import { AccountService, TaskListService } from "../../services";
 
 @Component({
   selector: "app-settings-page-tasklists",

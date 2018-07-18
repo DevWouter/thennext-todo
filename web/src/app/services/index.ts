@@ -18,7 +18,6 @@ export * from './task-list.service';
 export * from './task-parse.service';
 export * from './task-relation.service';
 export * from './task-score.service';
-export * from './task-view.service';
 export * from './task.service';
 export * from './token.service';
 export * from './urgency-lap.service';

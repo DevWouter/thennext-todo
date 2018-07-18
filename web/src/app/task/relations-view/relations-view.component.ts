@@ -1,12 +1,20 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { ContextService } from "../services/context.service";
-import { TaskRelationService } from "../services/task-relation.service";
-import { TaskService } from "../services/task.service";
-import { TaskRelation } from "../services/models/task-relation.dto";
-import { Task, TaskStatus } from "../services/models/task.dto";
-import { NavigationService } from "../services/navigation.service";
 import { BehaviorSubject, combineLatest } from "rxjs";
 import { filter, map } from "rxjs/operators";
+
+import {
+  Task,
+  TaskStatus,
+  TaskRelation
+} from "../../models";
+
+import {
+  ContextService,
+  TaskRelationService,
+  NavigationService,
+  TaskService
+} from "../../services";
+
 
 class RemoteTask {
   relationUuid: string;
@@ -23,11 +31,11 @@ class RemoteTask {
 }
 
 @Component({
-  selector: "app-task-page-content-pane-relations",
-  templateUrl: "./task-page-content-pane-relations.component.html",
-  styleUrls: ["./task-page-content-pane-relations.component.scss"]
+  selector: "task-relations-view",
+  templateUrl: "./relations-view.component.html",
+  styleUrls: ["./relations-view.component.scss"]
 })
-export class TaskPageContentPaneRelationsComponent implements OnInit {
+export class RelationsViewComponent implements OnInit {
 
   get taskname(): string {
     return this._task.title;

@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { TaskService } from "../services/task.service";
-import { Task } from "../services/models/task.dto";
+import { TaskService } from "../../services";
+import { Task } from "../../models";
 
 @Component({
-  selector: "app-task-page-content-pane-description",
-  templateUrl: "./task-page-content-pane-description.component.html",
-  styleUrls: ["./task-page-content-pane-description.component.scss"]
+  selector: "task-description-input",
+  templateUrl: "./description-input.component.html",
+  styleUrls: ["./description-input.component.scss"]
 })
-export class TaskPageContentPaneDescriptionComponent implements OnInit {
+export class DescriptionInputComponent implements OnInit {
   private _task: Task;
 
   public get value(): string { return this._task && this._task.description; }
