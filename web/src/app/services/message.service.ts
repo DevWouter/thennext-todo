@@ -48,7 +48,7 @@ export class MessageService implements OnDestroy {
     });
 
     const $firstUpMessage = this._wsMessageService.status.pipe(
-      filter(x => x == "up"),
+      filter(x => x === "up"),
     );
 
     this._wsMessageService.status.pipe(
