@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { filter } from "rxjs/operators";
 
-import { ApiEventService } from "../services/api-event.service";
-import { StorageService } from "../services/storage.service";
-import { MessageService } from "../services/message.service";
+import {
+  StorageService,
+  ApiEventService,
+  MessageService,
+} from "../../services";
 
 class ErrorEvent {
   // Milliseconds
