@@ -8,7 +8,6 @@ import { DialogsModule } from "../dialogs/dialogs.module";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
-import { TaskPageComponent } from "./task-page/task-page.component";
 
 // Routing module
 import { PagesRoutingModule } from "./pages-routing.module";
