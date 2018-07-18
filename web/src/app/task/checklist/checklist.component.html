@@ -1,0 +1,11 @@
+<task-checklist-item *ngFor="let item of items" [item]="item" (move)="move(item, $event)">
+</task-checklist-item>
+
+<div class="item">
+  <div class="status">
+    <i class="far fa-empty"></i>
+  </div>
+  <div class="text">
+    <textarea rows="1" appTextareaResize="" [(ngModel)]="newValue" (keydown.enter)="create($event)" placeholder="What should we not forget?"></textarea>
+  </div>
+</div>

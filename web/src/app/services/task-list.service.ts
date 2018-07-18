@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-
 import { Observable } from "rxjs";
 
-import { MessageService } from "./message.service";
 import { Repository } from "./repositories/repository";
 import { WsRepository } from "./repositories/ws-repository";
-import { TaskList } from "./models/task-list.dto";
+
+import { MessageService } from "./message.service";
+import { TaskList } from "../models";
 
 @Injectable()
 export class TaskListService implements Repository<TaskList> {

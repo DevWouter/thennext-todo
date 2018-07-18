@@ -52,5 +52,5 @@ export interface CreateEntityCommand extends EntityCommand {
   entity: object;
 }
 
-export interface SyncMyAccountCommand {
-}
+// tslint:disable-next-line no-empty-interface
+export interface SyncMyAccountCommand {}

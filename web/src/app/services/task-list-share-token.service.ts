@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-
 import { Observable } from "rxjs";
 
 import { Repository } from "./repositories/repository";
-
-import { TaskListShareToken } from "./models/task-list-share-token.dto";
-import { MessageService } from "./message.service";
 import { WsRepository } from "./repositories/ws-repository";
+
+import { MessageService } from "./message.service";
+import { TaskListShareToken } from "../models";
 
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ApiService } from "./api.service";
-import { Session } from "./models/session.dto";
+import { Session } from "../models";
 
 @Injectable()
 export class SessionService {

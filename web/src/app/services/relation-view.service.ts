@@ -4,8 +4,11 @@ import { distinctUntilChanged, map } from "rxjs/operators";
 
 import { TaskService } from "./task.service";
 import { TaskRelationService } from "./task-relation.service";
-import { TaskStatus } from "./models/task.dto";
-import { TaskRelation } from "./models/task-relation.dto";
+
+import {
+  TaskRelation,
+  TaskStatus
+} from "../models";
 
 @Injectable()
 export class RelationViewService {

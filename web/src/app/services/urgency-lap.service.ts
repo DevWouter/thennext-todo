@@ -1,14 +1,12 @@
 import { Injectable } from "@angular/core";
-
 import { Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { Repository } from "./repositories/repository";
-
-import { UrgencyLap } from "./models/urgency-lap.dto";
 import { WsRepository } from "./repositories/ws-repository";
-import { MessageService } from "./message.service";
 
+import { MessageService } from "./message.service";
+import { UrgencyLap } from "../models";
 
 @Injectable()
 export class UrgencyLapService {

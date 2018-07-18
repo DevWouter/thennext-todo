@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Task, TaskStatus } from "./models/task.dto";
+import { Task, TaskStatus } from "../models";
 
 @Injectable()
 export class SearchService {

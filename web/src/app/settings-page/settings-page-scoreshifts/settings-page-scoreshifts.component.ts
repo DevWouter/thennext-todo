@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ScoreShift } from "../../services/models/score-shift.dto";
-import { ScoreShiftService } from "../../services/score-shift.service";
 import { map } from "rxjs/operators";
+import { ScoreShift } from "../../models";
+import { ScoreShiftService } from "../../services";
 
 @Component({
   selector: "app-settings-page-scoreshifts",

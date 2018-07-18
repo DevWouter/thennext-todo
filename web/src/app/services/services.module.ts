@@ -22,7 +22,6 @@ import { TaskParseService } from "./task-parse.service";
 import { TaskRelationService } from "./task-relation.service";
 import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
-import { TaskViewService } from "./task-view.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
 
@@ -53,7 +52,6 @@ import { UrgencyLapService } from "./urgency-lap.service";
     TaskRelationService,
     TaskScoreService,
     TaskService,
-    TaskViewService,
     TokenService,
     UrgencyLapService,
   ]

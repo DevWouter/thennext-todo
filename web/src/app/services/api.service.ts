@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient, HttpErrorResponse } from "@angular/common/http";
-
 import { Observable, BehaviorSubject, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
 
 import { StorageService, StorageKey } from "./storage.service";
 import { ApiEventService } from "./api-event.service";
-import { catchError } from "rxjs/operators";
 
 enum ActionEnum {
   GET = "GET",
@@ -13,7 +12,6 @@ enum ActionEnum {
   PATCH = "PATCH",
   DELETE = "DELETE"
 }
-
 
 @Injectable()
 export class ApiService {

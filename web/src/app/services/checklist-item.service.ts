@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 
 import { Observable, combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
 
 import { Repository } from "./repositories/repository";
-import { ChecklistItem } from "./models/checklist-item.dto";
-import { TaskEventService } from "./task-event.service";
-import { map } from "rxjs/operators";
-import { MessageService } from "./message.service";
 import { WsRepository } from "./repositories/ws-repository";
+
+import { TaskEventService } from "./task-event.service";
+import { MessageService } from "./message.service";
+
+import { ChecklistItem } from "../models";
 
 @Injectable()
 export class ChecklistItemService {
