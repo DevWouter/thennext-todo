@@ -1,18 +1,3 @@
-<div class="container">
-  <div class="checkbox">
-    <i class="fas fa-plus add-8px-right-margin"></i>
-  </div>
-  <app-command-input></app-command-input>
-</div>
-
-<div class="task-list" *ngIf="showTasks">
-  <app-tasklist-item *ngFor="let task of activeTasks" [task]="task"></app-tasklist-item>
-  <div class="spacer" *ngIf="activeTasks.length != 0"></div>
-  <app-tasklist-item *ngFor="let task of nonActiveTasks" [task]="task"></app-tasklist-item>
-</div>
-
-<div class="empty-message" *ngIf="showEmptyListMessage">
-  <div class="content">
-    No tasks could be found
-  </div>
-</div>
+<app-tasklist-item *ngFor="let task of activeTasks" [task]="task"></app-tasklist-item>
+<div class="spacer" *ngIf="activeTasks.length != 0"></div>
+<app-tasklist-item *ngFor="let task of nonActiveTasks" [task]="task"></app-tasklist-item>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { skip, map, filter, distinctUntilChanged, debounceTime, first } from "rxjs/operators";
-import { TaskParseService, NavigationService } from "../../services";
+import { TaskParseService, NavigationService } from "../../../services";
 
 const SEARCH_DELAY = 300;
 

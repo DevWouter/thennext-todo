@@ -1,12 +1,11 @@
 import { Component, OnInit, ElementRef, Output, EventEmitter } from "@angular/core";
-import { Observable, BehaviorSubject } from "rxjs";
 
 @Component({
-  selector: "app-task-page-content-divider",
-  templateUrl: "./task-page-content-divider.component.html",
-  styleUrls: ["./task-page-content-divider.component.scss"]
+  selector: "task-page-divider",
+  templateUrl: "./task-page-divider.component.html",
+  styleUrls: ["./task-page-divider.component.scss"]
 })
-export class TaskPageContentDividerComponent implements OnInit {
+export class TaskPageDividerComponent implements OnInit {
 
   private isCapturing = false;
 

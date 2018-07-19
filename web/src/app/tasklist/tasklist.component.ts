@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { combineLatest } from "rxjs";
 import { filter, map } from "rxjs/operators";
 
@@ -26,16 +26,8 @@ export class TasklistComponent implements OnInit {
   public activeTasks: Task[] = [];
   public nonActiveTasks: Task[] = [];
 
-  public showEmptyListMessage = false;
-  public showTasks = true;
-
-  @Input()
-  set width(value: number) {
-    this._width = window.innerWidth - (value + 6);
-  }
-
-  @HostBinding("style.width.px")
-  private _width: number = undefined;
+  @Output()
+  public taskFoundCount = new EventEmitter<number>();
 
   constructor(
     private readonly taskService: TaskService,
@@ -160,9 +152,7 @@ export class TasklistComponent implements OnInit {
 
     $final
       .subscribe(tasks => {
-        this.showEmptyListMessage = tasks.length <= 0;
-        this.showTasks = tasks.length > 0;
-
+        this.taskFoundCount.emit(tasks.length);
         this.tasks = tasks;
         this.activeTasks = tasks.filter(x => x.status === TaskStatus.active);
         this.nonActiveTasks = tasks.filter(x => x.status !== TaskStatus.active);

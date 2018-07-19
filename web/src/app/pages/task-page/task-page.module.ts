@@ -2,13 +2,21 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { TaskPageComponent } from "./task-page.component";
+
+// External modules
 import { DialogsModule } from "../../dialogs/dialogs.module";
-import { TaskPageMenuComponent } from "./task-page-menu/task-page-menu.component";
 import { TasklistModule } from "../../tasklist/tasklist.module";
 import { ServicesModule } from "../../services/services.module";
-import { TaskPageContentDividerComponent } from "./task-page-content-divider/task-page-content-divider.component";
+
+// Internal modules
 import { TaskPaneModule } from "./task-pane/task-pane.module";
+
+// Components
+import { TaskPageComponent } from "./task-page.component";
+import { CommandInputComponent } from "./command-input/command-input.component";
+import { TaskPageLeftComponent } from "./task-page-left/task-page-left.component";
+import { TaskPageDividerComponent } from "./task-page-divider/task-page-divider.component";
+import { TaskPageMenuComponent } from "./task-page-menu/task-page-menu.component";
 
 
 @NgModule({
@@ -22,9 +30,11 @@ import { TaskPaneModule } from "./task-pane/task-pane.module";
     TaskPaneModule
   ],
   declarations: [
+    CommandInputComponent,
     TaskPageComponent,
+    TaskPageDividerComponent,
+    TaskPageLeftComponent,
     TaskPageMenuComponent,
-    TaskPageContentDividerComponent,
   ],
   exports: [TaskPageComponent]
 })

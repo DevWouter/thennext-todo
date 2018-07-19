@@ -7,7 +7,6 @@ import { ServicesModule } from "../services/services.module";
 
 import { TasklistComponent } from "./tasklist.component";
 import { TasklistItemComponent } from "./tasklist-item/tasklist-item.component";
-import { CommandInputComponent } from "./command-input/command-input.component";
 
 
 @NgModule({
@@ -19,8 +18,6 @@ import { CommandInputComponent } from "./command-input/command-input.component";
   ],
   declarations: [
     TasklistComponent,
-
-    CommandInputComponent,
     TasklistItemComponent,
   ],
   exports: [TasklistComponent]

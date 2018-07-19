@@ -1,8 +1,8 @@
 <app-warning-modal-dialog></app-warning-modal-dialog>
-
 <app-task-page-menu></app-task-page-menu>
+
 <div class="content">
-  <app-tasklist [width]="size"></app-tasklist>
-  <app-task-page-content-divider *ngIf="showPane" (rightWidth)="setPaneWidth($event)"></app-task-page-content-divider>
+  <task-page-left [width]="size"></task-page-left>
+  <task-page-divider *ngIf="showPane" (rightWidth)="setPaneWidth($event)"></task-page-divider>
   <task-pane *ngIf="showPane" [width]="size"></task-pane>
 </div>
