@@ -8,5 +8,7 @@
         ".vscode": true,
         "**/node_modules": true,
         "**/docker_volume": true,
+        "docks": true,
+        "db/backups": true,
     }
 }
