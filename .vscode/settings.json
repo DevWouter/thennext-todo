@@ -5,7 +5,7 @@
         "**/.hg": true,
         "**/CVS": true,
         "**/.DS_Store": true,
-        ".vscode": true,
+        "**/.vscode": true,
         "**/node_modules": true,
         "**/docker_volume": true,
         "docks": true,
