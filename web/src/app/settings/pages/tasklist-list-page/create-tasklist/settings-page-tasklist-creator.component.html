@@ -1,0 +1,18 @@
+<settings-page-title>New tasklists</settings-page-title>
+<p>To create a new tasklist simply enter the name and press the button</p>
+<div class="container">
+  <div class="row">
+    <label>Tasklist Name:</label>
+    <div class="field">
+      <input [(ngModel)]="newTaskListName" (keydown.enter)="create()">
+    </div>
+  </div>
+  <div class="row">
+    <label></label>
+    <div class="field">
+      <button (click)="create()">
+        Create new tasklist
+      </button>
+    </div>
+  </div>
+</div>

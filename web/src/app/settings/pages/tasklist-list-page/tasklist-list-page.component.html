@@ -1,0 +1,18 @@
+<settings-page-header></settings-page-header>
+
+<div class="content">
+  <div class="tab-container tab-container--vertical">
+    <app-tab-titles></app-tab-titles>
+    <div class="tab-content">
+      <settings-page-title>Tasklists</settings-page-title>
+      <div class="container">
+        <p>Below you all the tasklists known to you. The ones you created yourself, but also the ones that are shared with you.</p>
+        <settings-tasklist-item *ngFor="let item of ownedTasklists" [tasklist]="item" [owned]="true"></settings-tasklist-item>
+        <settings-tasklist-item *ngFor="let item of otherTasklists" [tasklist]="item" [owned]="false"></settings-tasklist-item>
+      </div>
+
+      <settings-create-tasklist></settings-create-tasklist>
+      <app-accept-share-token></app-accept-share-token>
+    </div>
+  </div>
+</div>

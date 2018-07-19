@@ -8,7 +8,6 @@ import { FormsModule } from "@angular/forms";
 import { HtmlDirectivesModule } from "./html-directives/html-directives.module";
 import { ServicesModule } from "./services/services.module";
 
-import { SettingsPageModule } from "./settings-page/settings-page.module";
 
 import { AppComponent } from "./app.component";
 
@@ -16,6 +15,8 @@ import { AppComponent } from "./app.component";
 import { DialogsModule } from "./dialogs/dialogs.module";
 import { TaskModule } from "./task/task.module";
 import { PagesModule } from "./pages/pages.module";
+import { SettingsModule } from "./settings/settings.module";
+
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { PagesModule } from "./pages/pages.module";
     BrowserModule,
     FormsModule,
     HtmlDirectivesModule,
-    SettingsPageModule,
+    SettingsModule,
     ServicesModule,
     DialogsModule,
     TaskModule,

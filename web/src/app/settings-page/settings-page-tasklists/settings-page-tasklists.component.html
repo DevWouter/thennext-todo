@@ -1,6 +1,0 @@
-<div class="container">
-  <p>Below you all the tasklists known to you. The ones you created yourself, but also the ones that are shared with you.</p>
-  <app-settings-page-tasklist-item *ngFor="let item of ownedTasklists" [tasklist]="item" [owned]="true"></app-settings-page-tasklist-item>
-  <app-settings-page-tasklist-item *ngFor="let item of otherTasklists" [tasklist]="item" [owned]="false"></app-settings-page-tasklist-item>
-</div>
-
