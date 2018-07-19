@@ -17,11 +17,11 @@ import { AcceptShareTokenComponent } from "./accept-share-token/accept-share-tok
 import { SettingsPageTasklistCreatorComponent } from "./settings-page-tasklist-creator/settings-page-tasklist-creator.component";
 import { SettingsPageTasklistItemComponent } from "./settings-page-tasklist-item/settings-page-tasklist-item.component";
 
-import { TabTitlesComponent } from "./tab-titles/tab-titles.component";
 import { AppSettingsRoutingModule } from "./settings.routing";
 import { SettingsTasklistComponent } from "./settings-tasklist/settings-tasklist.component";
 import { DialogsModule } from "../dialogs/dialogs.module";
 import { SettingsPageUrgencyLapsComponent } from "./settings-page-urgency-laps/settings-page-urgency-laps.component";
+import { SettingsSharedModule } from "./shared/settings-shared.module";
 
 @NgModule({
   imports: [
@@ -31,9 +31,9 @@ import { SettingsPageUrgencyLapsComponent } from "./settings-page-urgency-laps/s
     ServicesModule,
     AppSettingsRoutingModule,
     DialogsModule,
+    SettingsSharedModule,
   ],
   declarations: [
-    TabTitlesComponent,
     SettingsPageTabTasklistsComponent,
     SettingsPageTabScoringTagsComponent,
     SettingsPageHeaderComponent,
@@ -47,6 +47,6 @@ import { SettingsPageUrgencyLapsComponent } from "./settings-page-urgency-laps/s
     SettingsPageTabScoringUrgencyLapsComponent,
     SettingsPageUrgencyLapsComponent,
   ],
-  exports: [TabTitlesComponent]
+  exports: []
 })
 export class SettingsPageModule { }
