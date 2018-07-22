@@ -3,12 +3,13 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { Repository } from "./repositories/repository";
+import { WsRepository } from "./repositories/ws-repository";
 
 import { TaskEventService } from "./task-event.service";
-
-import { TaskRelation, TaskRelationType } from "./models/task-relation.dto";
-import { WsRepository } from "./repositories/ws-repository";
 import { MessageService } from "./message.service";
+
+import { TaskRelation, TaskRelationType } from "../models";
+
 
 @Injectable()
 export class TaskRelationService {

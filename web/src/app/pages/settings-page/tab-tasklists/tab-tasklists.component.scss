@@ -1,0 +1,22 @@
+
+
+.item {
+  display: flex;
+
+  .spanner {
+    flex-grow: 1;
+  }
+
+  .actions {
+    flex-grow: 0;
+    width: 100px;
+    text-align: right;
+    .btn {
+        cursor: pointer;
+        &:hover {
+            color: red;
+        }
+    }
+}
+}
+

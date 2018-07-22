@@ -1,0 +1,26 @@
+<div class="container" [ngClass]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
+  <div *ngIf="checked == false" class="checkbox unchecked" (click)="check()">
+    <span class="fa-stack">
+      <i class="far fa-circle fa-stack-2x"></i>
+      <i class="fas fa-check fa-stack-1x checkbox__check"></i>
+      <i class="fas fa-lock fa-stack-1x checkbox__locked" *ngIf="isBlocked"></i>
+    </span>
+  </div>
+  <div *ngIf="checked == true" class="checkbox checked" (click)="uncheck()">
+    <span class="fa-stack">
+      <i class="far fa-circle fa-stack-2x"></i>
+      <i class="fas fa-check fa-stack-1x checkbox__check"></i>
+    </span>
+  </div>
+  <div class="title" [class.title--single-line]="singleline">{{title}}</div>
+  <div class="buttons">
+    <div *ngIf="showPlayIcon" class="button button--play" (click)="play()">
+      <i class="fas fa-angle-double-up fa-fw"></i>
+    </div>
+    <div *ngIf="showPauseIcon" class="button button--pause" (click)="pause()">
+      <i class="fas fa-angle-double-down fa-fw"></i>
+    </div>
+  </div>
+  <div class="score" [class.done]="isDone">{{score | number:'1.1-1'}}
+  </div>
+</div>

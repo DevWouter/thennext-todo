@@ -1,12 +1,14 @@
 import { Injectable } from "@angular/core";
 import { ApiService } from "./api.service";
-import { Session } from "./models/session.dto";
+import { Session } from "../models";
+import { TokenService } from "./token.service";
 
 @Injectable()
 export class SessionService {
 
   constructor(
     private apiService: ApiService,
+    private tokenService: TokenService,
   ) { }
 
   async extendSession(): Promise<Session> {
@@ -25,6 +27,6 @@ export class SessionService {
       .toPromise()
       .catch((reason) => console.error(reason));
 
-    this.apiService.setSessionToken(undefined);
+    this.tokenService.clear();
   }
 }

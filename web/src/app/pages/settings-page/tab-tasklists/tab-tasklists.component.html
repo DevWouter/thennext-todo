@@ -1,0 +1,31 @@
+<h1>Tasklists</h1>
+
+<div *ngFor="let item of tasklists" class="item">
+  <a [routerLink]="[item.uuid]">
+    {{item.name}}
+  </a>
+  <div class="spanner"></div>
+  <div class="actions">
+    <button class="btn btn-delete" (click)="delete(item)">
+      <i class="fas fa-trash fa-fw"></i>
+    </button>
+  </div>
+</div>
+
+<p>To create a new tasklist simply enter the name and press the button</p>
+<div class="container">
+  <div class="row">
+    <label>Tasklist Name:</label>
+    <div class="field">
+      <input [(ngModel)]="newTaskListName" (keydown.enter)="create()">
+    </div>
+  </div>
+  <div class="row">
+    <label></label>
+    <div class="field">
+      <button (click)="create()">
+        Create new tasklist
+      </button>
+    </div>
+  </div>
+</div>

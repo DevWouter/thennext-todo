@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
-
 import { Observable } from "rxjs";
 
 import { Repository } from "./repositories/repository";
 import { RepositoryEventHandler } from "./repositories/repository-event-handler";
 
-import { Task, TaskStatus } from "./models/task.dto";
 import { TaskEventService } from "./task-event.service";
 import { MessageService } from "./message.service";
 import { WsRepository } from "./repositories/ws-repository";
+
+import { Task } from "../models";
 
 class TaskEventHandler implements RepositoryEventHandler<Task> {
   onItemLoad(entry: Task): void {

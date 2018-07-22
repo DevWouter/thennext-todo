@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient, HttpErrorResponse } from "@angular/common/http";
-
 import { Observable, BehaviorSubject, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
 
 import { StorageService, StorageKey } from "./storage.service";
 import { ApiEventService } from "./api-event.service";
-import { catchError } from "rxjs/operators";
+import { TokenService } from "./token.service";
 
 enum ActionEnum {
   GET = "GET",
@@ -14,23 +14,17 @@ enum ActionEnum {
   DELETE = "DELETE"
 }
 
-
 @Injectable()
 export class ApiService {
   private _sessionToken: string = undefined;
-  private _sessionTokenSubject = new BehaviorSubject<string>(null);
-
-  public get sessionToken(): Observable<string> {
-    return this._sessionTokenSubject;
-  }
 
   constructor(
     private readonly apiEventService: ApiEventService,
     private client: HttpClient,
-    private storageService: StorageService,
+    private tokenService: TokenService,
   ) {
     // On load always retrieve the session key.
-    this._sessionTokenSubject.next(this.storageService.get(StorageKey.SESSION_TOKEN));
+    this.tokenService.token.subscribe(x => this._sessionToken = x);
   }
 
   private handleError(action: ActionEnum, error: HttpErrorResponse) {
@@ -71,20 +65,13 @@ export class ApiService {
       .pipe(catchError(x => this.handleError(ActionEnum.DELETE, x)));
   }
 
-  setSessionToken(token: string) {
-    // Store session token first and then also store it so we can retrieve it later.
-    this.storageService.set(StorageKey.SESSION_TOKEN, token);
-    this._sessionTokenSubject.next(token);
-  }
-
   private options(): { headers?: HttpHeaders } {
-    const sessionTokenValue = this._sessionTokenSubject.value;
-    if (sessionTokenValue === undefined || sessionTokenValue === null) {
+    if (this._sessionToken === undefined || this._sessionToken === null) {
       return undefined;
     }
 
     let headers = new HttpHeaders();
-    headers = headers.set("Authorization", `Bearer ${sessionTokenValue}`);
+    headers = headers.set("Authorization", `Bearer ${this._sessionToken}`);
 
     return {
       headers: headers

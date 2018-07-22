@@ -1,0 +1,120 @@
+.container {
+    min-height: 36px;
+    display: flex;
+    padding: 8px;
+    &.delayed {
+        font-style: italic;
+        color: grey;
+    }
+    &.blocked {
+        font-style: italic;
+    }
+    &.selected {
+        background-color: #e1f2fe;
+    }
+}
+
+.checkbox {
+    font-size: 12px; // Should be halve the size due to stacking.
+    margin: auto;
+    cursor: pointer;
+    .checkbox__locked {
+        color: #666;
+    }
+    &.unchecked {
+        .checkbox__check {
+            opacity: 0;
+            &:hover {
+                opacity: 0.5;
+            }
+        }
+    }
+    &.checked {
+        .checkbox__check {
+            opacity: 1;
+            &:hover {
+                opacity: 0.3;
+            }
+        }
+    }
+}
+
+.title {
+    margin: auto;
+    margin-left: 8px;
+    margin-right: 8px;
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+.title--single-line {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.buttons {
+    display: flex;
+    .button {
+        cursor: pointer;
+        font-size: 24px;
+        color: #4f4f4f;
+        transition: color 500ms;
+        &:hover {
+            color: inherit;
+            transition: color 500ms;
+        }
+    }
+    margin: auto;
+}
+
+.button--pause:hover {
+    i {
+        animation: jumpdown steps(4) 500ms infinite;
+    }
+}
+
+.button--play:hover {
+    i {
+        animation: jumpup steps(4) 500ms infinite;
+    }
+}
+
+.score {
+    display: inline-block;
+    width: 50px;
+    flex-shrink: 0;
+    text-align: right;
+    margin: auto;
+    &.done {
+        font-style: italic;
+        text-decoration: line-through;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+@keyframes jumpup {
+    0% {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes jumpdown {
+    0% {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(2px);
+    }
+}

@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
-
 import { Observable } from "rxjs";
 
 import { Repository } from "./repositories/repository";
 import { RepositoryEventHandler } from "./repositories/repository-event-handler";
-
-import { ScoreShift } from "./models/score-shift.dto";
 import { WsRepository } from "./repositories/ws-repository";
+
 import { MessageService } from "./message.service";
+
+import { ScoreShift } from "../models";
 
 class ScoreShiftRestoreTranslator implements RepositoryEventHandler<ScoreShift> {
   onItemLoad(entry: ScoreShift): void {

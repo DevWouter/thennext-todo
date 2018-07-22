@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="menu-btn" (click)="toggle()">
+    <div class="icon">
+      <i class="fas fa-cog fa-fw"></i>
+    </div>
+  </div>
+  <div class="title">Settings</div>
+  <div class="connection-status">
+    <i class="fas fa-lg fa-circle" *ngIf="connectionStatus === 'online'"></i>
+    <i class="fas fa-lg fa-exclamation-circle warn" *ngIf="connectionStatus === 'offline'"></i>
+    <i class="fas fa-lg fa-times-circle error" *ngIf="connectionStatus === 'error'"></i>
+    <i class="fas fa-lg fa-question-circle warn" *ngIf="connectionStatus === 'unknown'"></i>
+  </div>
+</div>
+
+<div class="background" [class.expand]="expand" (click)="close()"></div>
+<div class="panel" [class.expand]="expand">
+  <div class="title">{{displayName}}</div>
+
+  <a class="item" [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" (click)="close()">
+    <div class="icon">
+      <i class="fas fa-fw fa-list"></i>
+    </div>
+    <div class="text">Tasklists</div>
+  </a>
+
+  <a class="item" [routerLink]="[{ outlets: { tab: ['tags'] } }]" routerLinkActive="active" (click)="close()">
+    <div class="icon">
+      <i class="fas fa-fw fa-tag"></i>
+    </div>
+    <div class="text">Tags</div>
+  </a>
+
+  <a class="item" [routerLink]="[{ outlets: { tab: ['urgency'] } }]" routerLinkActive="active" (click)="close()">
+    <div class="icon">
+      <i class="fas fa-fw fa-weight-hanging"></i>
+    </div>
+    <div class="text">Urgency</div>
+  </a>
+
+  <div class="spacer"></div>
+
+  <div class="item" (click)="goToTasks()">
+    <div class="icon">
+      <i class="fas fa-list fa-fw"></i>
+    </div>
+    <div class="text">Back to tasks</div>
+  </div>
+
+  <div class="item" (click)="logout()">
+    <div class="icon">
+      <i class="fas fa-sign-out-alt fa-fw"></i>
+    </div>
+    <div class="text">Logout</div>
+  </div>
+</div>
+
+<p>This is the settings page menu</p>

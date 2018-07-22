@@ -1,0 +1,28 @@
+<div class="header" *ngIf="actionsAtTop">
+  <task-pane-action [task]="task"></task-pane-action>
+</div>
+
+<task-pane-region>
+  <task-title-input [task]="task"></task-title-input>
+</task-pane-region>
+
+<task-pane-region>
+  <task-stats-view [task]="task"></task-stats-view>
+</task-pane-region>
+
+<task-pane-region header="Description">
+  <task-description-input [task]="task"></task-description-input>
+</task-pane-region>
+
+<task-pane-region header="Checklist">
+  <task-checklist [task]="task"></task-checklist>
+</task-pane-region>
+
+<task-pane-region>
+  <task-relations-view [task]="task"></task-relations-view>
+</task-pane-region>
+
+<div class="spacer" *ngIf="!actionsAtTop"></div>
+<div class="footer" *ngIf="!actionsAtTop">
+  <task-pane-action [task]="task"></task-pane-action>
+</div>

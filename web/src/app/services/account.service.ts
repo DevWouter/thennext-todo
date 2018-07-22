@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { ApiService } from "./api.service";
-import { BehaviorSubject, Observable } from "rxjs";
 import { MessageService } from "./message.service";
 import { TokenService } from "./token.service";
-import { filter } from "rxjs/operators";
 
 interface Account {
   uuid: string;
