@@ -4,8 +4,11 @@ import { Task } from "../../../models";
 import {
   ContextService,
   TaskService,
-  NavigationService
+  NavigationService,
+  MediaViewService,
+  MAX_MOBILE_WIDTH,
 } from "../../../services";
+import { filter, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
   selector: "task-pane",
@@ -14,7 +17,12 @@ import {
 })
 export class TaskPaneComponent implements OnInit {
   @Input()
-  set width(value: number) { this._width = +value; }
+  set width(value: number) {
+    this._originalWidth = this._width = +value;
+  }
+
+
+  _originalWidth: number = undefined;
 
   @HostBinding("style.width.px")
   private _width: number = undefined;
@@ -25,11 +33,21 @@ export class TaskPaneComponent implements OnInit {
     private readonly contextService: ContextService,
     private readonly taskService: TaskService,
     private readonly navigation: NavigationService,
+    private readonly mediaViewService: MediaViewService,
   ) {
   }
 
   ngOnInit() {
     this.contextService.activeTask.subscribe(x => this.task = x);
+    this.mediaViewService.extraSmall.pipe(
+      distinctUntilChanged((x, y) => x === y),
+    ).subscribe((isSmall) => {
+      if (isSmall) {
+        this._width = MAX_MOBILE_WIDTH;
+      } else {
+        this._width = this._originalWidth;
+      }
+    });
   }
 
   delete() {
