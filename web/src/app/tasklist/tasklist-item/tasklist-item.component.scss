@@ -43,11 +43,14 @@
     margin: auto;
     margin-left: 8px;
     margin-right: 8px;
-    white-space: nowrap;
-    overflow: hidden;
     flex-shrink: 1;
     flex-grow: 1;
+}
+
+.title--single-line {
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .buttons {
@@ -64,7 +67,6 @@
     }
     margin: auto;
 }
-
 
 .button--pause:hover {
     i {

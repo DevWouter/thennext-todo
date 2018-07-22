@@ -68,6 +68,17 @@ export class TasklistItemComponent implements OnInit {
   set task(v: Task) { this._task = v; this.updateTask(); }
   get task(): Task { return this._task; }
 
+
+  private _singleline = true;
+  @Input()
+  public get singleline(): boolean {
+    return this._singleline;
+  }
+  public set singleline(v: boolean) {
+    this._singleline = v;
+  }
+
+
   @HostListener("click") onClick() {
     this.navigation.toTaskPage({ taskUuid: this.task.uuid });
   }
