@@ -2,10 +2,16 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
-import { TaskPaneComponent } from "./task-pane.component";
-import { TaskPaneRegionComponent } from "./task-pane-region/task-pane-region.component";
+// External modules
 import { ServicesModule } from "../../../services/services.module";
 import { TaskModule } from "../../../task/task.module";
+
+// Main Component
+import { TaskPaneComponent } from "./task-pane.component";
+
+// Sub Components
+import { TaskPaneRegionComponent } from "./task-pane-region/task-pane-region.component";
+import { TaskPaneActionComponent } from "./task-pane-action/task-pane-action.component";
 
 
 @NgModule({
@@ -17,6 +23,7 @@ import { TaskModule } from "../../../task/task.module";
   ],
   declarations: [
     TaskPaneComponent,
+    TaskPaneActionComponent,
 
     // Never need to be exported
     TaskPaneRegionComponent,

@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  margin: 8px;
+}
+.btn-delete {
+    margin-right: 8px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 14px;
+    box-shadow: 0 0 1px silver;
+    &:hover {
+        box-shadow: 0 0 2px silver;
+        background-color: darken(red, 5);
+    }
+}
+
+.btn-hide {
+    margin-right: 8px;
+    background-color: #fafafa;
+    color: black;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 14px;
+    box-shadow: 0 0 1px silver;
+    &:hover {
+        box-shadow: 0 0 2px silver;
+        background-color: darken(#fafafa, 5);
+    }
+}
+
+.spacer {
+  flex-grow: 1;
+}
