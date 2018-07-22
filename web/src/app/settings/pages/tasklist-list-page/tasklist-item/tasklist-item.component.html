@@ -1,7 +1,0 @@
-<div *ngIf="!owned" class="name name--shared">{{name}} <i>(Shared with you)</i></div>
-<a *ngIf="owned" class="name name--owned" routerLinkActive='active' [routerLink]="['/settings', 'tasklists', tasklist.uuid]">{{name}}</a>
-<div class="actions">
-  <div class="btn btn-delete" *ngIf="canDelete" (click)="delete()">
-    <i class="fas fa-trash fa-fw"></i>
-  </div>
-</div>

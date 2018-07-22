@@ -10,9 +10,12 @@ import { HomePageComponent } from "./home-page/home-page.component";
 import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
 
-// Routing module
-import { PagesRoutingModule } from "./pages-routing.module";
+// Sub modules
 import { TaskPageModule } from "./task-page/task-page.module";
+
+// Routing module
+import { PagesRoutingModule } from "./pages.routing";
+import { SettingsPageModule } from "./settings-page/settings-page.module";
 
 @NgModule({
   imports: [
@@ -21,7 +24,8 @@ import { TaskPageModule } from "./task-page/task-page.module";
     FormsModule,
     ServicesModule,
     DialogsModule,
-    TaskPageModule
+    TaskPageModule,
+    SettingsPageModule,
   ],
   declarations: [
     HomePageComponent,

@@ -15,7 +15,6 @@ import { AppComponent } from "./app.component";
 import { DialogsModule } from "./dialogs/dialogs.module";
 import { TaskModule } from "./task/task.module";
 import { PagesModule } from "./pages/pages.module";
-import { SettingsModule } from "./settings/settings.module";
 
 
 @NgModule({
@@ -27,7 +26,6 @@ import { SettingsModule } from "./settings/settings.module";
     BrowserModule,
     FormsModule,
     HtmlDirectivesModule,
-    SettingsModule,
     ServicesModule,
     DialogsModule,
     TaskModule,
