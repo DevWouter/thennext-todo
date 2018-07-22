@@ -59,11 +59,6 @@ export class MessageService implements OnDestroy {
 
     // Start the service
     this._wsMessageService.connect();
-
-    // HACK: Manual retrieving the token.
-    // TODO: Maybe move it somewhere else? But where?
-    const token = this.storageService.get(StorageKey.SESSION_TOKEN);
-    this.tokenService.set(token);
   }
 
 

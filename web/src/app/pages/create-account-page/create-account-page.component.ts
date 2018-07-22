@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ApiService, AccountService, SessionService } from "../../services";
+import { AccountService, SessionService, TokenService } from "../../services";
 
 @Component({
   selector: "app-create-account-page",
@@ -12,9 +12,9 @@ export class CreateAccountPageComponent implements OnInit {
   password = "";
   constructor(
     private router: Router,
-    private apiService: ApiService,
     private accountService: AccountService,
     private sessionService: SessionService,
+    private tokenService: TokenService,
   ) { }
 
   ngOnInit() {
@@ -26,7 +26,7 @@ export class CreateAccountPageComponent implements OnInit {
       console.log(`Account was create for ${account}`);
       try {
         const session = await this.sessionService.createSession(this.username, this.password);
-        this.apiService.setSessionToken(session.token);
+        this.tokenService.set(session.token);
         this.router.navigate(["/tasks"]);
       } catch (reason) {
         console.error("Unable to create session", reason);
