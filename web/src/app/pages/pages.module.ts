@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 
 import { ServicesModule } from "../services/services.module";
 import { DialogsModule } from "../dialogs/dialogs.module";
@@ -16,6 +17,7 @@ import { TaskPageModule } from "./task-page/task-page.module";
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule, // Required for navigation links
     FormsModule,
     ServicesModule,
     DialogsModule,

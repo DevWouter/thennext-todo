@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { combineLatest } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { filter, map, distinctUntilChanged } from "rxjs/operators";
 
 import {
   Task,
@@ -13,7 +13,8 @@ import {
   TaskScoreService,
   NavigationService,
   SearchService,
-  RelationViewService
+  RelationViewService,
+  MediaViewService
 } from "../services";
 
 @Component({
@@ -22,6 +23,8 @@ import {
   styleUrls: ["./tasklist.component.scss"]
 })
 export class TasklistComponent implements OnInit {
+  public singleline = true;
+
   public tasks: Task[] = [];
   public activeTasks: Task[] = [];
   public nonActiveTasks: Task[] = [];
@@ -36,6 +39,7 @@ export class TasklistComponent implements OnInit {
     private readonly navigationService: NavigationService,
     private readonly searchService: SearchService,
     private readonly relationViewService: RelationViewService,
+    private readonly mediaViewService: MediaViewService,
   ) {
   }
 
@@ -156,6 +160,12 @@ export class TasklistComponent implements OnInit {
         this.tasks = tasks;
         this.activeTasks = tasks.filter(x => x.status === TaskStatus.active);
         this.nonActiveTasks = tasks.filter(x => x.status !== TaskStatus.active);
+      });
+
+    this.mediaViewService.extraSmall
+      .pipe(distinctUntilChanged())
+      .subscribe(isXS => {
+        this.singleline = !isXS;
       });
   }
 

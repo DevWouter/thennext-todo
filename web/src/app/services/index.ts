@@ -20,3 +20,4 @@ export * from "./task-score.service";
 export * from "./task.service";
 export * from "./token.service";
 export * from "./urgency-lap.service";
+export * from "./media-view.service";

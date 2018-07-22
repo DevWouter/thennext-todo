@@ -1,5 +1,4 @@
 :host {
-    max-width: 95vw;
     min-width: 300px;
     flex-shrink: 0;
     flex-grow: 0;
@@ -14,41 +13,12 @@
     flex-grow: 1;
 }
 
-.footer {
-  border-top: 1px solid silver;
+.header {
+    border-bottom: 1px solid silver;
     background-color: white;
-    padding: 8px;
-    display: flex;
-    .footer-spacer {
-        flex-grow: 1;
-    }
 }
 
-.btn-delete {
-  margin-left: 8px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    padding: 5px 14px;
-    box-shadow: 0 0 1px silver;
-    &:hover {
-        box-shadow: 0 0 2px silver;
-        background-color: darken(red, 5);
-    }
-}
-
-
-.btn-hide {
-  margin-left: 8px;
-  background-color: #fafafa;
-  color: black;
-  border: none;
-  border-radius: 3px;
-  padding: 5px 14px;
-  box-shadow: 0 0 1px silver;
-  &:hover {
-      box-shadow: 0 0 2px silver;
-      background-color: darken(#fafafa, 5);
-  }
+.footer {
+    border-top: 1px solid silver;
+    background-color: white;
 }

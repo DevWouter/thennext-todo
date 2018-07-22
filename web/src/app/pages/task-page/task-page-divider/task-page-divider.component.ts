@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, ElementRef, Output, EventEmitter, HostListener } from "@angular/core";
 
 @Component({
   selector: "task-page-divider",
@@ -9,8 +9,17 @@ export class TaskPageDividerComponent implements OnInit {
 
   private isCapturing = false;
 
+  private _lastClientX: number = undefined;
+
   @Output()
   rightWidth = new EventEmitter<number>();
+
+  @HostListener("window:resize")
+  onResize() {
+    if (this._lastClientX) {
+      this.setPosition(this._lastClientX);
+    }
+  }
 
   constructor(private hostElement: ElementRef) {
   }
@@ -29,8 +38,7 @@ export class TaskPageDividerComponent implements OnInit {
         return;
       }
 
-      const exact = window.innerWidth - ev.clientX;
-      this.rightWidth.emit(exact);
+      this.setPosition(ev.clientX);
     });
 
     document.addEventListener("mouseup", (ev) => {
@@ -39,10 +47,20 @@ export class TaskPageDividerComponent implements OnInit {
         return;
       }
 
-      const exact = window.innerWidth - ev.clientX;
-      this.rightWidth.emit(exact);
-
+      this.setPosition(ev.clientX);
       this.isCapturing = false;
     });
+  }
+
+  setPosition(clientX: number) {
+    this._lastClientX = clientX;
+
+    if (window.innerWidth < (clientX + 300)) {
+      clientX = window.innerWidth - 300;
+    }
+
+    const exact = window.innerWidth - clientX;
+
+    this.rightWidth.emit(exact);
   }
 }

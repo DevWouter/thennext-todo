@@ -12,7 +12,7 @@
       <i class="fas fa-check fa-stack-1x checkbox__check"></i>
     </span>
   </div>
-  <div class="title">{{title}}</div>
+  <div class="title" [class.title--single-line]="singleline">{{title}}</div>
   <div class="buttons">
     <div *ngIf="showPlayIcon" class="button button--play" (click)="play()">
       <i class="fas fa-angle-double-up fa-fw"></i>

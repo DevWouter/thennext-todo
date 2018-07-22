@@ -7,6 +7,7 @@ import { ApiEventService } from "./api-event.service";
 import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { ContextService } from "./context.service";
+import { MediaViewService } from "./media-view.service";
 import { MessageService } from "./message.service";
 import { NavigationService } from "./navigation.service";
 import { RelationViewService } from "./relation-view.service";
@@ -37,6 +38,7 @@ import { UrgencyLapService } from "./urgency-lap.service";
     ApiService,
     ChecklistItemService,
     ContextService,
+    MediaViewService,
     MessageService,
     NavigationService,
     RelationViewService,

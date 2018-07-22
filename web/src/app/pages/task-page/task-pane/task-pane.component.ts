@@ -1,10 +1,13 @@
 import { Component, OnInit, Input, HostBinding } from "@angular/core";
+
+import { distinctUntilChanged } from "rxjs/operators";
+
 import { Task } from "../../../models";
 
 import {
   ContextService,
-  TaskService,
-  NavigationService
+  MediaViewService,
+  MAX_MOBILE_WIDTH,
 } from "../../../services";
 
 @Component({
@@ -14,34 +17,39 @@ import {
 })
 export class TaskPaneComponent implements OnInit {
   @Input()
-  set width(value: number) { this._width = +value; }
+  set width(value: number) {
+    this._originalWidth = this._width = +value;
+  }
+
+  _originalWidth: number = undefined;
 
   @HostBinding("style.width.px")
   private _width: number = undefined;
 
   task: Task = undefined;
+  actionsAtTop = false;
 
   constructor(
     private readonly contextService: ContextService,
-    private readonly taskService: TaskService,
-    private readonly navigation: NavigationService,
+    private readonly mediaViewService: MediaViewService,
   ) {
   }
 
   ngOnInit() {
     this.contextService.activeTask.subscribe(x => this.task = x);
+    this.mediaViewService.extraSmall.pipe(
+      distinctUntilChanged((x, y) => x === y),
+    ).subscribe((isSmall) => {
+      if (isSmall) {
+        this.actionsAtTop = true;
+        this._width = MAX_MOBILE_WIDTH;
+      } else {
+        this.actionsAtTop = false;
+        this._width = this._originalWidth;
+      }
+    });
   }
 
-  delete() {
-    if (confirm(`Are you sure you want to delete "${this.task.title}"?`)) {
-      this.taskService.delete(this.task);
-      this.navigation.toTaskPage({ taskUuid: null });
-    }
-  }
-
-  hide() {
-    this.navigation.toTaskPage({ taskUuid: null });
-  }
 
 
 }

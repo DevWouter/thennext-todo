@@ -22,18 +22,6 @@ export class TaskListRightService {
 
   async accept(taskListUuid: string, token: string): Promise<boolean> {
     throw new Error("Not yet implemented.");
-    // const acceptPromise = this._directApi.post("create", {
-    //   tasklistUuid: taskListUuid,
-    //   shareToken: token
-    // }).toPromise();
-
-    // await acceptPromise;
-
-    // // Dirty hack to reload the token.
-    // const sessionToken = await this.apiService.sessionToken.toPromise();
-    // this.apiService.setSessionToken(sessionToken);
-
-    // return Promise.resolve(true);
   }
 
   add(value: TaskListRight): Promise<TaskListRight> {
