@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "api"
+		},
+		{
+			"path": "web"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			".vscode": true,
+			"**/node_modules": true,
+			"**/docker_volume": true,
+			"docks": true,
+			"db/backups": true,
+		}
+	}
+}
