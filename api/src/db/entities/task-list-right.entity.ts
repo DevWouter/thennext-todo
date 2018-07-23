@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, Generated } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, Generated } from "typeorm";
 import { AccountEntity } from "./account.entity";
 import { TaskListEntity } from "./task-list.entity";
 
@@ -24,7 +24,7 @@ export class TaskListRightEntity {
     @JoinColumn()
     account: AccountEntity;
 
-    @ManyToOne(type => TaskListEntity, tasklist => tasklist.rights)
+    @ManyToOne(type => TaskListEntity, tasklist => tasklist.rights, { onDelete: "CASCADE" })
     @JoinColumn()
     taskList: TaskListEntity;
 }
