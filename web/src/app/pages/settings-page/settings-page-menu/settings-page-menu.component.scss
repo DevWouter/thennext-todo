@@ -2,44 +2,29 @@ $animation-speed: 0.1s;
 :host {
     height: 48px;
     flex-grow: 0;
-    background-color: #71af8c;
     color: white;
 }
 
 @keyframes blink {
-  from {
-     opacity: 1;
-  }
-  to {
-     opacity: 0;
-  }
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
+
 .container {
     display: flex;
     width: 100%;
+    background-color: #71af8c;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
     .title {
         padding: 8px;
         margin: auto;
         color: white;
         width: 100%;
         background: transparent;
-    }
-    .connection-status {
-        flex-shrink: 1;
-        padding: 8px;
-        color: white;
-        margin: auto;
-        background: transparent;
-        .error {
-          color: red;
-          animation-duration: 400ms;
-          animation-name: blink;
-          animation-iteration-count: infinite;
-          animation-direction: alternate;
-        }
-        .warn {
-          color: yellow;
-        }
     }
 }
 
@@ -135,12 +120,28 @@ app-task-page-header-tasklist-selector {
 }
 
 select {
-  width: 100%;
+    width: 100%;
 }
 
 a {
-  text-decoration: none;
-  &.active{
-    font-weight: bold;
-  }
+    text-decoration: none;
+    &.active {
+        font-weight: bold;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        display: none;
+    }
+    .background {
+        display: none;
+    }
+    .panel {
+        position: relative;
+        height: 100vh;
+        left: 0;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+        border-right: none;
+    }
 }

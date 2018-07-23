@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  AccountService,
   NavigationService,
   SessionService,
 } from '../../../services';
@@ -12,10 +11,6 @@ import {
   styleUrls: ['./settings-page-menu.component.scss']
 })
 export class SettingsPageMenuComponent implements OnInit {
-  public displayName = "";
-
-  public connectionStatus = "";
-
   private _currentListUuid: string = undefined;
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); }
@@ -26,19 +21,9 @@ export class SettingsPageMenuComponent implements OnInit {
     private readonly router: Router,
     private readonly navigation: NavigationService,
     private readonly sessionService: SessionService,
-    private readonly accountService: AccountService,
   ) { }
 
   ngOnInit() {
-
-    this.accountService.myAccount.subscribe(x => {
-      if (x) {
-        this.displayName = x.displayName;
-      } else {
-        this.displayName = "";
-      }
-    }
-    );
   }
 
   close() {
@@ -62,5 +47,4 @@ export class SettingsPageMenuComponent implements OnInit {
   updated() {
     this.navigation.toTaskPage({ taskListUuid: this._currentListUuid, taskUuid: null });
   }
-
 }

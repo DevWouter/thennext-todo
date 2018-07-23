@@ -5,17 +5,12 @@
     </div>
   </div>
   <div class="title">Settings</div>
-  <div class="connection-status">
-    <i class="fas fa-lg fa-circle" *ngIf="connectionStatus === 'online'"></i>
-    <i class="fas fa-lg fa-exclamation-circle warn" *ngIf="connectionStatus === 'offline'"></i>
-    <i class="fas fa-lg fa-times-circle error" *ngIf="connectionStatus === 'error'"></i>
-    <i class="fas fa-lg fa-question-circle warn" *ngIf="connectionStatus === 'unknown'"></i>
-  </div>
 </div>
 
 <div class="background" [class.expand]="expand" (click)="close()"></div>
 <div class="panel" [class.expand]="expand">
-  <div class="title">{{displayName}}</div>
+  <div class="title">
+    <i class="fa fa-fw fa-cog"></i>&nbsp;Settings</div>
 
   <a class="item" [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" (click)="close()">
     <div class="icon">
@@ -54,5 +49,3 @@
     <div class="text">Logout</div>
   </div>
 </div>
-
-<p>This is the settings page menu</p>
