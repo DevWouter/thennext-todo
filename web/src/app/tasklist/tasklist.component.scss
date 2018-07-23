@@ -3,38 +3,42 @@
     max-height: calc(100vh - (48px * 1));
     display: flex;
     flex-direction: column;
+
+    /* has to be scroll, not auto */
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 .container {
-  min-height: 36px;
-  display: flex;
-  padding: 8px;
-  border-bottom: 3px solid #71af8c;
+    min-height: 36px;
+    display: flex;
+    padding: 8px;
+    border-bottom: 3px solid #71af8c;
 }
 
 .checkbox {
-  font-size: 24px;
-  margin: auto;
+    font-size: 24px;
+    margin: auto;
 }
 
 .add-8px-right-margin {
-  margin-right: 8px;
+    margin-right: 8px;
 }
 
 .task-list {
-  height: 100%;
-  overflow-y: scroll;
+    height: 100%;
+    overflow-y: scroll;
 }
 
 .spacer {
-  border-bottom: 3px solid #71af8c;
+    border-bottom: 3px solid #71af8c;
 }
 
-.empty-message{
-  margin: auto;
-  text-align: center;
-  .content {
-    margin-bottom: 90px;
-    padding: 16px;
-  }
+.empty-message {
+    margin: auto;
+    text-align: center;
+    .content {
+        margin-bottom: 90px;
+        padding: 16px;
+    }
 }
