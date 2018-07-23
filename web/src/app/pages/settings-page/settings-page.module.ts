@@ -10,6 +10,7 @@ import { SettingsTasklistsComponent } from './tab-tasklists/tab-tasklists.compon
 import { SettingsTabTagsComponent } from './tab-tags/tab-tags.component';
 import { SettingsTabUrgencyComponent } from './tab-urgency/tab-urgency.component';
 import { SettingsTasklistDetailComponent } from './tab-tasklists-detail/tab-tasklist-detail.component';
+import { SettingsTabTitleComponent } from './settings-tab-title/settings-tab-title.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { SettingsTasklistDetailComponent } from './tab-tasklists-detail/tab-task
     SettingsPageComponent,
 
     SettingsPageMenuComponent,
+    SettingsTabTitleComponent,
 
     SettingsTasklistsComponent,
     SettingsTabTagsComponent,
