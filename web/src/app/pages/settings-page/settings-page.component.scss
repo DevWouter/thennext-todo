@@ -1,8 +1,12 @@
 :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     min-height: 100vh;
     background-color: lighten(#71af8c, 10);
+    @media (min-width: 1400px) {
+      flex-direction: row;
+    }
 }
 
 .container {

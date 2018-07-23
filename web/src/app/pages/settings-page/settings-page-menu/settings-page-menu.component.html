@@ -9,7 +9,8 @@
 
 <div class="background" [class.expand]="expand" (click)="close()"></div>
 <div class="panel" [class.expand]="expand">
-  <div class="title">{{displayName}}</div>
+  <div class="title">
+    <i class="fa fa-fw fa-cog"></i>&nbsp;Settings</div>
 
   <a class="item" [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" (click)="close()">
     <div class="icon">
