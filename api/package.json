@@ -10,11 +10,11 @@
     "start:watch": "npm run orm:run-migrations && nodemon",
     "start:prod": "npm run orm:run-migrations && node index.js",
     "orm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm",
-    "orm:run-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:run",
-    "orm:revert-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:revert",
+    "orm:run-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:run",
+    "orm:revert-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:revert",
     "orm:changes": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm schema:log",
-    "orm:create-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:create",
-    "orm:generate-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migrations:generate"
+    "orm:create-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:create",
+    "orm:generate-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:generate"
   },
   "author": "Wouter Lindenhof",
   "license": "ISC",
@@ -29,7 +29,7 @@
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.1",
     "ts-node": "^5.0.1",
-    "typeorm": "^0.1.16",
+    "typeorm": "^0.2.7",
     "typescript": "^2.7.2",
     "ws": "^5.2.0"
   },
