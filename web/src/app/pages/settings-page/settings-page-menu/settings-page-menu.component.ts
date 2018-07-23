@@ -14,8 +14,6 @@ import {
 export class SettingsPageMenuComponent implements OnInit {
   public displayName = "";
 
-  public connectionStatus = "";
-
   private _currentListUuid: string = undefined;
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); }

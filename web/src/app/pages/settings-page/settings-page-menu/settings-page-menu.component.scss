@@ -26,23 +26,6 @@ $animation-speed: 0.1s;
         width: 100%;
         background: transparent;
     }
-    .connection-status {
-        flex-shrink: 1;
-        padding: 8px;
-        color: white;
-        margin: auto;
-        background: transparent;
-        .error {
-            color: red;
-            animation-duration: 400ms;
-            animation-name: blink;
-            animation-iteration-count: infinite;
-            animation-direction: alternate;
-        }
-        .warn {
-            color: yellow;
-        }
-    }
 }
 
 .menu-btn {
