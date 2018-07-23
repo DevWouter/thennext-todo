@@ -12,6 +12,7 @@ export class TaskListRepository {
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListEntity> {
         return (await this.db())
             .createQueryBuilder(TaskListEntity, "taskList")
+            .innerJoinAndSelect("taskList.owner", "owner")
             .innerJoin("taskList.rights", "right")
             .innerJoin("right.account", "account")
             .where("taskList.uuid = :uuid")
