@@ -36,18 +36,6 @@ export class SessionController {
         }
     }
 
-    async extend(req: Request, res: Response): Promise<void> {
-
-        const token = this.authService.getAuthenticationToken(req);
-        const session = await this.sessionService.extend(token);
-
-        // Tell the client the session was deleted.
-        res.send(<Session>{
-            token: session.token,
-            expireAt: session.expire_on,
-        });
-    }
-
     async destroy(req: Request, res: Response): Promise<void> {
         const token = this.authService.getAuthenticationToken(req);
         const session = await this.sessionService.byToken(token);
