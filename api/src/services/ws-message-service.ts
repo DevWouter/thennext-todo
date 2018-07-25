@@ -7,6 +7,7 @@ import { WsCommandMap } from "./ws/commands";
 import { WsEventMap } from "./ws/events";
 import { WsMessageClient, TrustedClient } from "./ws/message-client";
 import { AccountRepository } from "../repositories/account-repository";
+import { SessionRepository } from "../repositories";
 
 interface CommandMessage {
     client: TrustedClient;
@@ -36,7 +37,8 @@ export class WsMessageService {
 
     constructor(
         private readonly wsService: WsService,
-        private readonly accountService: AccountRepository,
+        private readonly accountRepository: AccountRepository,
+        private readonly sessionRepository: SessionRepository,
     ) {
         this.setup();
     }
@@ -115,7 +117,7 @@ export class WsMessageService {
 
     private async handleSetToken(clientId: number, token: string) {
         // Find out to which this token belongs.
-        const account = await this.accountService.byToken(token);
+        const account = await this.accountRepository.byToken(token);
         if (!account) {
             // Validation fails, send token rejected and remove from the list.
             this.removeClient(clientId, this._newClients, this._trustedClients);
@@ -146,6 +148,9 @@ export class WsMessageService {
             clientId: messageClient.clientId,
             accountId: account.id
         };
+
+        // Extend the use of the token.
+        await this.sessionRepository.extend(token);
 
         this.removeClient(clientId, this._newClients);
         this._trustedClients.push(trustedClient);
