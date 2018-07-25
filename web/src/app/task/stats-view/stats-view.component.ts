@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 
@@ -16,7 +16,7 @@ import {
   templateUrl: "./stats-view.component.html",
   styleUrls: ["./stats-view.component.scss"]
 })
-export class StatsViewComponent implements OnInit {
+export class StatsViewComponent implements OnInit, OnDestroy {
   private _task: Task;
   private _delayedUuids: string[] = [];
   public get completedOn(): Date { return this._task && this._task.completedOn; }
@@ -63,6 +63,11 @@ export class StatsViewComponent implements OnInit {
 
   ngOnInit() {
     this.scoreService.delayedTaskUuids.subscribe(x => this._delayedUuids = x);
+  }
+
+  ngOnDestroy() {
+    this._scoreSubscription.unsubscribe();
+    this._scoreSubscription = Subscription.EMPTY;
   }
 
   toggleUrgencyBreakdown() {

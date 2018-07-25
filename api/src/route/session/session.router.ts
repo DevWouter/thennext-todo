@@ -9,6 +9,5 @@ const router = express.Router();
 
 router.post("/create", asyncMiddleware(controller.create.bind(controller)));
 router.delete("/destroy", [isAuthenticated, asyncMiddleware(controller.destroy.bind(controller))]);
-router.patch("/extend", [isAuthenticated, asyncMiddleware(controller.extend.bind(controller))]);
 
 export { router as sessionRouter };

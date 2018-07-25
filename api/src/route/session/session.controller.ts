@@ -25,27 +25,14 @@ export class SessionController {
         try {
             const session = await this.sessionService.create(input.email, input.password);
 
-            const result = <Session>{
+            const result: Session = {
                 token: session.token,
-                expireAt: session.expire_on,
             };
 
             res.send(result);
         } catch (ex) {
             res.status(401).send({});
         }
-    }
-
-    async extend(req: Request, res: Response): Promise<void> {
-
-        const token = this.authService.getAuthenticationToken(req);
-        const session = await this.sessionService.extend(token);
-
-        // Tell the client the session was deleted.
-        res.send(<Session>{
-            token: session.token,
-            expireAt: session.expire_on,
-        });
     }
 
     async destroy(req: Request, res: Response): Promise<void> {

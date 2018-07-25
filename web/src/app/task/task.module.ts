@@ -10,12 +10,14 @@ import { DescriptionInputComponent } from "./description-input/description-input
 import { RelationsViewComponent } from "./relations-view/relations-view.component";
 import { StatsViewComponent } from "./stats-view/stats-view.component";
 import { TitleInputComponent } from "./title-input/title-input.component";
+import { HtmlDirectivesModule } from "../html-directives/html-directives.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ServicesModule,
+    HtmlDirectivesModule,
   ],
   declarations: [
     ChecklistComponent,

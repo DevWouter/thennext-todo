@@ -9,7 +9,6 @@ import { TaskPageNavigation } from "../models";
 
 enum ShowValues {
   completed = "completed",
-  delayed = "delayed",
 }
 enum OnlyValues {
   unblocked = "unblocked",
@@ -23,13 +22,11 @@ export class NavigationService {
   private _taskUuidValue: string = undefined;
   private _searchValue: string = undefined;
   private _showCompletedValue = false;
-  private _showDelayedValue = false;
   private _onlyUnblockedValue = false;
   private _onlyPositiveValue = false;
   private _taskListUuid = new BehaviorSubject<string>(this._taskListUuidValue);
   private _taskUuid = new BehaviorSubject<string>(this._taskUuidValue);
   private _showCompleted = new BehaviorSubject<boolean>(this._showCompletedValue);
-  private _showDelayed = new BehaviorSubject<boolean>(this._showDelayedValue);
   private _onlyUnblocked = new BehaviorSubject<boolean>(this._onlyUnblockedValue);
   private _onlyPositive = new BehaviorSubject<boolean>(this._onlyPositiveValue);
   private _search = new BehaviorSubject<string>(this._searchValue);
@@ -37,7 +34,6 @@ export class NavigationService {
   public get taskListUuid(): Observable<string> { return this._taskListUuid; }
   public get taskUuid(): Observable<string> { return this._taskUuid; }
   public get showCompleted(): Observable<boolean> { return this._showCompleted; }
-  public get showDelayed(): Observable<boolean> { return this._showDelayed; }
   public get onlyUnblocked(): Observable<boolean> { return this._onlyUnblocked; }
   public get onlyPositive(): Observable<boolean> { return this._onlyPositive; }
   public get search(): Observable<string> { return this._search; }
@@ -80,10 +76,6 @@ export class NavigationService {
       this._showCompletedValue = params.showCompleted;
     }
 
-    if (params.showDelayed !== undefined) {
-      this._showDelayedValue = params.showDelayed;
-    }
-
     if (params.onlyPositive !== undefined) {
       this._onlyPositiveValue = params.onlyPositive;
     }
@@ -94,10 +86,6 @@ export class NavigationService {
 
     if (this._showCompletedValue) {
       showParams.push(ShowValues.completed);
-    }
-
-    if (this._showDelayedValue) {
-      showParams.push(ShowValues.delayed);
     }
 
     if (this._onlyPositiveValue) {
@@ -168,7 +156,6 @@ export class NavigationService {
       this._search.next(this._searchValue);
 
       this._showCompletedValue = false; // Set to default.
-      this._showDelayedValue = false;
 
       const showValue = pm.show as string;
       if (showValue) {
@@ -176,13 +163,9 @@ export class NavigationService {
         if (showParams.includes(ShowValues.completed)) {
           this._showCompletedValue = true;
         }
-        if (showParams.includes(ShowValues.delayed)) {
-          this._showDelayedValue = true;
-        }
       }
 
       this._showCompleted.next(this._showCompletedValue);
-      this._showDelayed.next(this._showDelayedValue);
 
       this._onlyPositiveValue = false; // Set to default.
       this._onlyUnblockedValue = false;

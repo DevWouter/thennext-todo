@@ -21,11 +21,6 @@ export class TaskPageNavigation {
   showCompleted?: boolean;
 
   /**
-   * Show delayed tasks.
-   */
-  showDelayed?: boolean;
-
-  /**
    * Only show unblocked tasks.
    */
   onlyUnblocked?: boolean;

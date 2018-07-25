@@ -11,10 +11,6 @@ export class SessionService {
     private tokenService: TokenService,
   ) { }
 
-  async extendSession(): Promise<Session> {
-    return this.apiService.patch<Session>("/api/session/extend", {}).toPromise();
-  }
-
   createSession(email: string, password: string): Promise<Session> {
     return this.apiService.post<Session>("/api/session/create", {
       email: email,
