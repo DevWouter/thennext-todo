@@ -73,8 +73,6 @@ export class TaskScoreService {
             if (task.status !== TaskStatus.done) {
               r.modifiers.push(...this.getBlockScore(task, blockedTaskUuids, blockingTaskUuids));
               r.modifiers.push(...this.getTermScore(task, scoreShifts));
-              r.modifiers.push(...this.getActiveScore(task));
-              r.modifiers.push(...this.getDescriptionScore(task));
               r.modifiers.push(...this.getAgeScore(task, now, urgencyLaps));
             } else {
               r.modifiers.push(...this.getCompletionScore(task, now));
@@ -174,21 +172,6 @@ export class TaskScoreService {
     const completedOn = DateTime.fromJSDate(task.completedOn);
     const age_completed = now.diff(completedOn).as("days");
     return [{ description: "Days since completion", score: age_completed }];
-  }
-
-  private getActiveScore(task: Task): Modifier[] {
-    if (task.status === TaskStatus.active) {
-      return [{ description: "Is active", score: 2 }];
-    }
-    return [];
-  }
-
-  private getDescriptionScore(task: Task): Modifier[] {
-    if ((task.description || "").trim().length > 0) {
-      return [{ description: "Contains description", score: 0.5 }];
-    }
-
-    return [];
   }
 
   /**
