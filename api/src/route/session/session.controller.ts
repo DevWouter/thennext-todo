@@ -25,9 +25,8 @@ export class SessionController {
         try {
             const session = await this.sessionService.create(input.email, input.password);
 
-            const result = <Session>{
+            const result: Session = {
                 token: session.token,
-                expireAt: session.expire_on,
             };
 
             res.send(result);
