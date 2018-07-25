@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { DateTime } from "luxon";
 
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest, timer } from "rxjs";
 import { map, distinctUntilChanged, filter } from "rxjs/operators";
 
 import { RelationViewService } from "./relation-view.service";
@@ -28,8 +28,8 @@ export class TaskScoreView {
 @Injectable()
 export class TaskScoreService {
 
-  // When set, this will cause the score to be calculated
-  private _timeSubject = new BehaviorSubject<Date>(new Date());
+  // When set, this will cause the score to be calculated every minute.
+  private _timeSubject = timer(0, 1_000 * 60 * 60);
 
   private _taskScores = new BehaviorSubject<TaskScoreView[]>(undefined);
   private _delayedTaskUuids = new BehaviorSubject<string[]>(undefined);
@@ -48,16 +48,15 @@ export class TaskScoreService {
   private setup() {
     // Whenever the values of a dependcy change, we need to emit a changed event.
     // That way listeners now they should perform a recalculation.
-    const $time = this._timeSubject.pipe(map(x => DateTime.fromJSDate(x)));
     combineLatest(
-      $time,
+      this._timeSubject,
       this.taskService.entries,
       this.scoreShiftService.entries,
       this.relationViewService.blockedTaskUuids,
       this.relationViewService.blockingTaskUuids,
       this.urgencyLapService.entries)
       .pipe(
-        map(([now,
+        map(([interval,
           tasks,
           scoreShifts,
           blockedTaskUuids,
@@ -65,6 +64,7 @@ export class TaskScoreService {
           urgencyLaps,
         ]) => {
           // Pre sort the urgency laps
+          const now = DateTime.fromJSDate(new Date());
           urgencyLaps = urgencyLaps.sort((a, b) => a.fromDay - b.fromDay);
 
           return tasks.map(task => {
@@ -94,9 +94,10 @@ export class TaskScoreService {
       .subscribe(scores => this._taskScores.next(scores));
 
 
-    combineLatest($time, this.taskService.entries)
+    combineLatest(this._timeSubject, this.taskService.entries)
       .pipe(
-        map(([time, tasks]) => {
+        map(([interval, tasks]) => {
+          const time = new Date();
           return tasks
             .filter(x => false) // TODO: Use the know per-user-sleep service to check if it's sleeping.
             .map(x => x.uuid);
@@ -172,13 +173,5 @@ export class TaskScoreService {
     const completedOn = DateTime.fromJSDate(task.completedOn);
     const age_completed = now.diff(completedOn).as("days");
     return [{ description: "Days since completion", score: age_completed }];
-  }
-
-  /**
-   * Call this function to update scorelist.
-   * @param date The date used to determine the score
-   */
-  public update(date: Date): void {
-    this._timeSubject.next(date);
   }
 }
