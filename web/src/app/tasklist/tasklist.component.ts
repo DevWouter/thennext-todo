@@ -88,7 +88,6 @@ export class TasklistComponent implements OnInit {
     // Due to the limtation of combineLatest we can only combine 5 different observables.
 
     const $navigationView = combineLatest(
-      this.navigationService.showDelayed,
       this.navigationService.onlyUnblocked,
       this.navigationService.onlyPositive);
 
@@ -115,7 +114,6 @@ export class TasklistComponent implements OnInit {
         tasks,
         search,
         [ // Navigations
-          showDelayed,
           onlyUnblocked,
           onlyPositive,
         ],
@@ -130,11 +128,6 @@ export class TasklistComponent implements OnInit {
         if (search && search.trim() !== "") {
           tasks = tasks.filter(x => this.searchService.isResult(x, search));
         } else {
-          // No search, so use the filters.
-          if (!showDelayed) {
-            tasks = tasks.filter(y => !delayedUuids.includes(y.uuid));
-          }
-
           if (onlyUnblocked) {
             tasks = tasks.filter(y => !blockedUuids.includes(y.uuid));
           }
