@@ -51,4 +51,14 @@ export class AccountService {
       .toPromise();
     return accountData;
   }
+
+  updatePersonal(change: Partial<MyAccount>) {
+    if (change.uuid !== undefined) {
+      throw new Error("You can't change your own uuid");
+    }
+
+    this.messageSerivce.send("update-my-account", {
+      displayName: change.displayName
+    });
+  }
 }
