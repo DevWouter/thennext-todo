@@ -120,16 +120,16 @@ export class WsMessageService {
         const account = await this.accountRepository.byToken(token);
         if (!account) {
             // Validation fails, send token rejected and remove from the list.
-            this.removeClient(clientId, this._newClients, this._trustedClients);
             this.send("token-rejected", { reason: "No account associated with the given token" }, { clientId: clientId });
+            this.removeClient(clientId, this._newClients, this._trustedClients);
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (token-invalid)");
             return;
         }
 
         // Ensure the client is *not* in the trusted list
         if (this._trustedClients.find(x => x.clientId === clientId)) {
-            this.removeClient(clientId, this._newClients, this._trustedClients);
             this.send("token-rejected", { reason: "Connection is already associated with a token" }, { clientId: clientId });
+            this.removeClient(clientId, this._newClients, this._trustedClients);
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (already-trusted)");
             return;
         }
@@ -137,8 +137,8 @@ export class WsMessageService {
         const messageClient = this._newClients.find(x => x.clientId === clientId);
         if (!messageClient) {
             // The client is not listed in the new list (this should never happen)
-            this.removeClient(clientId, this._newClients, this._trustedClients);
             this.send("token-rejected", { reason: "Connection is not in the new list" }, { clientId: clientId });
+            this.removeClient(clientId, this._newClients, this._trustedClients);
             this.wsService.close(clientId, 4000, "auto-disconnect due to token rejection (not-in-new)");
             return;
         }

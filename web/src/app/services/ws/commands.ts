@@ -12,6 +12,7 @@ export interface WsCommandMap {
   "delete-entity": DeleteEntityCommand;
   "sync-entities": EntityCommand;
   "sync-my-account": SyncMyAccountCommand;
+  "update-my-account": UpdateMyAccountCommand;
 }
 
 export interface SetTokenCommand {
@@ -54,3 +55,7 @@ export interface CreateEntityCommand extends EntityCommand {
 
 // tslint:disable-next-line no-empty-interface
 export interface SyncMyAccountCommand {}
+
+export interface UpdateMyAccountCommand {
+  displayName?: string;
+}

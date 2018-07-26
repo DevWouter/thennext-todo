@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 
 import {
   StorageService,
   ApiEventService,
   MessageService,
 } from "../../services";
+import { Router } from "@angular/router";
 
 class ErrorEvent {
   // Milliseconds
@@ -43,6 +44,7 @@ export class WarningModalDialogComponent implements OnInit {
     private readonly apiEventService: ApiEventService,
     private readonly storageService: StorageService,
     private readonly messageService: MessageService,
+    private readonly router: Router,
   ) { }
 
   ngOnInit() {
@@ -67,6 +69,19 @@ export class WarningModalDialogComponent implements OnInit {
         this.container.events.push(new ErrorEvent());
         this.showDialog = true;
         this.lastError = "Connection was closed";
+      });
+
+    // Listen to rejection messages
+    this.messageService
+      .$error
+      .pipe(tap(x => console.log(x)))
+      .subscribe(ev => {
+        this.container.events.push(new ErrorEvent());
+        if (ev.requireLogin) {
+          this.router.navigate(["/login"], { queryParams: { reason: ev.reason } });
+        }
+        this.showDialog = true;
+        this.lastError = ev.reason;
       });
   }
 

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { Subject, Observable, BehaviorSubject } from "rxjs";
 import { filter, map, skipUntil } from "rxjs/operators";
 
-import { WsMessageService } from "./ws/ws-message-service";
+import { WsMessageService, WsError } from "./ws/ws-message-service";
 import { WsServiceConfig } from "./ws/ws-service";
 import { WsCommandMap } from "./ws/commands";
 import { WsEventMap, WsEventBasic, WsEvent } from "./ws/events";
@@ -11,6 +11,7 @@ import { TokenService } from "./token.service";
 import { StorageService, StorageKey } from "./storage.service";
 
 import { environment } from "../../environments/environment";
+
 
 /**
  * The generic version of the WsMessageService.
@@ -21,6 +22,7 @@ export class MessageService implements OnDestroy {
   private readonly wsServiceConfig: WsServiceConfig = { url: environment.wsEndPoint };
   private readonly $event = new Subject<WsEventBasic>();
   private readonly $status = new BehaviorSubject<"up" | "down">(undefined);
+  public readonly $error = new Subject<WsError>();
 
   get status(): Observable<"up" | "down"> { return this.$status.pipe(filter(x => !!x)); }
 
@@ -33,6 +35,7 @@ export class MessageService implements OnDestroy {
 
   private setup() {
     this._wsMessageService = new WsMessageService(this.wsServiceConfig, this.tokenService);
+    this._wsMessageService.$error.subscribe(x => this.$error.next(x));
     this._wsMessageService.event.subscribe((message) => {
       try {
         if (!message.type) {

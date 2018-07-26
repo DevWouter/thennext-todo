@@ -31,6 +31,10 @@
       </button>
     </div>
 
+    <div *ngIf="loginReason">
+      <div class="input-splitter"></div>
+      <div class="row row--error">Please login again: {{loginReason}}</div>
+    </div>
 
     <div *ngIf="showError">
       <div class="input-splitter"></div>

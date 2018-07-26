@@ -12,6 +12,13 @@
   <div class="title">
     <i class="fa fa-fw fa-cog"></i>&nbsp;Settings</div>
 
+  <a class="item" [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()">
+    <div class="icon">
+      <i class="fas fa-fw fa-user"></i>
+    </div>
+    <div class="text">Personal</div>
+  </a>
+
   <a class="item" [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" (click)="close()">
     <div class="icon">
       <i class="fas fa-fw fa-list"></i>
