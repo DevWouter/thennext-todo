@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { Subject } from "rxjs";
-import { map, filter, distinctUntilChanged, debounceTime } from "rxjs/operators";
+import { BehaviorSubject } from "rxjs";
+import { skip, map, filter, distinctUntilChanged, debounceTime, first } from "rxjs/operators";
 import { TaskParseService, NavigationService } from "../../../services";
 
 const SEARCH_DELAY = 300;
@@ -12,7 +12,7 @@ const SEARCH_DELAY = 300;
 })
 export class CommandInputComponent implements OnInit {
   private _value = "";
-  private _searchSubject = new Subject<string>();
+  private _searchSubject = new BehaviorSubject("");
   public get value(): string {
     return this._value;
   }
@@ -34,8 +34,10 @@ export class CommandInputComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // TODO: Remove WORKAROUND for the skip and first.
     this._searchSubject
       .pipe(
+        skip(1),                                    // Skip the first one. <<-- WORKAROUND
         filter(v => v !== undefined && v !== null), // Ignore invalid values
         map(v => v.trim()),                         // Remove any space before/after
         distinctUntilChanged(),                     // Only listen for changes.
@@ -46,6 +48,7 @@ export class CommandInputComponent implements OnInit {
 
     // Only restore search on the first load.
     this.navigationService.search
+      .pipe(first())                                    // <<-- WORKAROUND
       .subscribe(x => this._value = x);
   }
 
