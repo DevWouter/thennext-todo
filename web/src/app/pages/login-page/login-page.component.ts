@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { AccountService, SessionService, TokenService, StorageService, StorageKey } from "../../services";
 
 @Component({
@@ -12,19 +12,23 @@ export class LoginPageComponent implements OnInit {
   password: string = "";
   working: boolean = false;
   showError: boolean = false;
+  loginReason: string = undefined;
 
   constructor(
     private readonly router: Router,
     private readonly sessionService: SessionService,
     private readonly tokenService: TokenService,
     private readonly storageService: StorageService,
+    private readonly activedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    this.activedRoute.queryParams.subscribe(x => this.loginReason = x.reason);
   }
 
   async login() {
     try {
+      this.loginReason = undefined; // Remove the login reason
       this.username = (this.username || "").trim();
       this.password = (this.password || "").trim();
       this.working = true;
