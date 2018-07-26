@@ -21,7 +21,7 @@
     <div class="icon">
       <i class="fas fa-fw fa-list"></i>
     </div>
-    <div>
+    <div class="text">
       <select [(ngModel)]="currentListUuid">
         <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
       </select>
