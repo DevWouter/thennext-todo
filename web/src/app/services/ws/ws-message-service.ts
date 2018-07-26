@@ -7,6 +7,11 @@ import { TokenService } from "../token.service";
 import { WsCommandMap } from "./commands";
 import { WsEventMap, WsEvent, WsEventBasic } from "./events";
 
+export interface WsError {
+  readonly reason: string;
+  readonly requireLogin: boolean;
+}
+
 export class WsMessageService {
   private _wsService: WsService = undefined;
   private _conSub: Subscription = undefined;
@@ -16,6 +21,8 @@ export class WsMessageService {
   private readonly $msgQueue = new BehaviorSubject<string[]>(this._msgQueue);
   private readonly $status = new BehaviorSubject<"up" | "down">("down");
   private readonly $event = new Subject<WsEventBasic>();
+
+  public readonly $error = new Subject<WsError>();
 
   get status(): Observable<"up" | "down"> { return this.$status; }
   get event(): Observable<WsEventBasic> { return this.$event; }
@@ -123,7 +130,9 @@ export class WsMessageService {
       } break;
       case "token-rejected": {
         // Log the reason for the rejection and then perform a disconnect.
-        console.error(`Token was rejected: ${(data as WsEvent<"token-rejected">).data.reason}`);
+        const reason = `Token was rejected: ${(data as WsEvent<"token-rejected">).data.reason}`;
+        console.error(reason);
+        this.$error.next({ reason: reason, requireLogin: true });
         this.disconnect();
       } break;
       default: {
