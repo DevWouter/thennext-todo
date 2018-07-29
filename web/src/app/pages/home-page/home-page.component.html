@@ -1,36 +1,47 @@
-<div class='header'>
-  <div class='__container'>
-    <div class='item logo'></div>
-    <div class='item'>theNNext</div>
-    <div class='item'>Assistent</div>
-    <div class='item'>What makes it special</div>
-    <div class='item'>Premium</div>
-    <div class='divider'></div>
-    <a routerLink="/create-account" class='item'>Sign up</a>
-  </div>
-</div>
-<div class="row--backgroundcolor content">
-  <div class='row'>
-    <div class='column'>
-      <div class='banner-title'>theNNext</div>
-      <div class='banner-sub-title'>... {{exampletask | async}}</div>
-      <div class='blurb'>
-        If every day you get more tasks then you can finish, it becomes hard to keep track of what is next. theNNext makes it easy
-        for you to stay on top what is urgent and what is not.
-        <br>
-        <br> You should keep the focus on the now.
-        <br>ThenNext will handle the rest.
-      </div>
-      <a class='actie-knop' routerLink="/login">Start now</a>
+<app-common-page-header></app-common-page-header>
+<div class="container">
+  <div class="row">
+    <div class="left up">
+      <p class="title">Always know what is next</p>
+      <p>
+        Ongeacht wat je gaat doen ThenNext zorgt ervoor dat het gaat gebeuren. ThenNext houdt taken bij en organiseert ze automatisch
+        voor je. Op elke moment kan je ThenNext raadplegen en weet je wat er gedaan moet worden. Zelfs als er meer taken
+        in staan dan sterren aan de hemel.
+      </p>
+      <p class="buttons">
+        <a class="button" [routerLink]="['/create-account']">Create a new account</a>
+        <!-- <a class="button" [routerLink]="['/download']">Download ThenNext</a> -->
+      </p>
     </div>
-    <div class='column'>
+    <div class="right down">
       <img src="/assets/jake-hills-389-unsplash-small.jpg">
+    </div>
+  </div>
+  <div class="row">
+    <div class="left down">
+      <img src="/assets/daria-nepriakhina-474036-unsplash-small.jpg">
+    </div>
+    <div class="right up">
+      <p class="title">No more overload</p>
+      <p>
+        Een takenlijst is leuk tot dat er te veel op staat. ThenNext is uniek in dat opzicht. Alles wat nu niet opgepakt kan worden
+        verdwijnt automatisch tot dat je er weer wat mee kan doen. Hierdoor ben je minder tijd kwijt met organiseren en kom
+        je sneller aan je taken toe.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left up">
+      <p class="title">Faster then real-time</p>
+      <p>
+        Of je nu alleen of samen werkt. ThenNext is snel, extreem snel. Elke aanpassing is meteen zichtbaar op andere apparaten.
+        Is de lijst gedeeld met je familie of collega's? Dan zien zij het verschijnen terwijl jij aan het schrijven ben.
+      </p>
+    </div>
+    <div class="right down">
+      <img src="/assets/saffu-456002-unsplash-small.jpg">
     </div>
   </div>
 </div>
 
-<div class="footer">
-  <div class="__container">
-    <i>theNNext is currently in alpha and not intended to be used</i>
-  </div>
-</div>
+<app-common-page-footer></app-common-page-footer>

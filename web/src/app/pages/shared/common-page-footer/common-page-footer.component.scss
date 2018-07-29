@@ -1,0 +1,15 @@
+@import "~scss/variables";
+
+$footer-height: 60px;
+
+.footer {
+    height: $footer-height;
+    background-color: $header-background-color-hover;
+    color: white;
+    .__container {
+        line-height: 48px;
+        width: $container-width;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
