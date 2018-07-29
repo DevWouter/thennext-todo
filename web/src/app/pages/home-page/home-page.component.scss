@@ -5,115 +5,83 @@ Notes about the design:
   - Hierdoor is het ook duidelijk je 2 n's nodig heb
 */
 
-$color-primary-0: #226861; // Main Primary color */
-$color-primary-1: #689D97;
-$color-primary-2: #40827B;
-$color-primary-3: #0D4E47;
-$color-primary-4: #00342E;
-$color-secondary-1-0: #343276; // Main Secondary color (1) */
-$color-secondary-1-1: #7E7DB1;
-$color-secondary-1-2: #545393;
-$color-secondary-1-3: #1A1958;
-$color-secondary-1-4: #09093A;
-$color-secondary-2-0: #6D9A33; // Main Secondary color (2) */
-$color-secondary-2-1: #C5E798;
-$color-secondary-2-2: #95BF5E;
-$color-secondary-2-3: #497313;
-$color-secondary-2-4: #2B4C00;
-$color-complement-0: #A86737; // Main Complement color */
-$color-complement-1: #FDCBA7;
-$color-complement-2: #D29467;
-$color-complement-3: #7E4115;
-$color-complement-4: #532300;
-$primary-green: #71af8c;
-$primary-color: #c2e1e6;
-$darker-green: darken($primary-green, 20);
-$footer-height: 60px;
-$header-height: 48px;
-.row--backgroundcolor {
-    background-color: lighten($color-secondary-2-1, 10);
-    background-color: lighten($color-primary-1, 10);
-    background-color: lighten($primary-green, 35); // background-color: $color-complement-1;
-    // color: $color-primary-0;
+@import '~scss/variables';
+:host {
+    display: flex;
+    background-color: $page-background-color;
+    width: 100%;
+    min-height: 100%;
+    flex-direction: column;
 }
 
-.x_container {
+.container {
+    width: $container-width;
     margin-left: auto;
     margin-right: auto;
-    width: 1024px;
+    padding-top: 8px;
+    background-color: white;
+    min-height: calc(100% - (60px + 48px));
+    box-sizing: border-box;
+    flex-grow: 1;
 }
 
-.header {
-    height: 48px;
-    box-shadow: 0 0 4px $darker-green;
-    .__container {
-        @extend .x_container;
-        display: flex;
-        align-items: center;
-        .divider {
-            flex-grow: 1;
-        }
-        .item {
-            height: 100%;
-            line-height: 48px;
-            text-align: center;
-            padding-left: 8px;
-            padding-right: 8px;
-        }
-    }
+.spacer {
+    flex-grow: 1;
 }
 
 .row {
-    margin-bottom: 20px;
-    @extend .x_container;
     display: flex;
-    align-items: center;
-    .column {
+    width: 100%;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.row {
+    display: flex;
+    .left,
+    .right,
+    .up,
+    .down {
+        padding: 16px 32px;
         width: 50%;
-        padding: 8px;
-        img {
-            width: 100%;
-            border-radius: 3px;
-        }
+        align-self: top;
     }
 }
 
-.banner-title {
-    font-size: 60px;
-    font-weight: bold;
+.row+.row {
+  border-top: 1px solid silver;
 }
 
-.banner-sub-title {
-    font-size: 25px;
-    margin-top: 8px;
-    margin-bottom: 16px;
+.row:nth-child(even) {
+    background-color: #f0f0f0;
 }
 
-.actie-knop {
-    display: inline-block;
-    background-color: $primary-color;
-    padding: 12px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 3px;
-    margin-top: 8px;
-}
-
-.blurb {
+p {
     margin-bottom: 8px;
+    line-height: 1.40;
 }
 
-.content {
-    // has a min-height\
-    min-height: calc(100vh - (#{$footer-height} + #{$header-height}));
+img {
+    width: 100%;
+    border-radius: 5px;
 }
 
-.footer {
-    height: $footer-height;
-    background-color: #00342E;
+.buttons {
+    margin-top: 64px;
+    text-align: center;
+}
+
+.button {
+    background-color: $header-background-color;
     color: white;
-    .__container {
-      line-height: 48px;
-        @extend .x_container;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 8px;
+    border-radius: 5px;
+    &:hover {
+        background-color: $header-background-color-hover;
     }
 }
