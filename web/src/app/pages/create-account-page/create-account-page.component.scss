@@ -1,0 +1,73 @@
+@import '~scss/variables';
+:host {
+    display: flex;
+    background-color: $page-background-color;
+    width: 100%;
+    min-height: 100%;
+    flex-direction: column;
+}
+
+.container {
+    width: $container-width;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 8px;
+    background-color: white;
+    min-height: calc(100vh - (60px + 48px));
+    box-sizing: border-box;
+    flex-grow: 1;
+    padding: 16px 32px;
+}
+
+$row-spacing: 16px;
+.form-container {
+    border: 1px solid silver;
+    box-shadow: 0 0 5px 0 silver;
+    border-radius: 3px;
+    width: 400px;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.row {
+    display: flex;
+}
+
+.icon {
+    color: $header-background-color-hover;
+    padding: $row-spacing;
+    padding-right: 8px;
+    text-align: center;
+}
+
+.input {
+    flex-grow: 1;
+    padding-top: $row-spacing;
+    padding-bottom: $row-spacing;
+    padding-right: $row-spacing;
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        border: none;
+        outline: none;
+    }
+}
+
+.input-splitter {
+    height: 1px;
+    border-bottom: 1px solid silver;
+}
+
+.login-button {
+    width: calc(100%);
+    display: block;
+    border: none;
+    cursor: pointer;
+    background-color: #71af8c;
+    border-radius: 3px;
+    color: white;
+    margin: $row-spacing;
+    padding: 12px 8px;
+    box-sizing: border-box;
+}
