@@ -1,0 +1,17 @@
+// This file contains the variables for the color styles.
+// Simply put the following at the top include the file.
+// ```
+//   @import '~scss/variables';
+// ```
+
+
+$header-background-color: #71af8c;
+$header-background-color-hover: #559872;
+$header-color: white;
+$menu-background-color: #ffffff;
+$menu-color: black;
+$menu-item-background-color-hover:#e1f2fe;
+$page-background-color: lighten(#71af8c, 10);
+$container-background-color: white;
+
+$container-width: 1140px;

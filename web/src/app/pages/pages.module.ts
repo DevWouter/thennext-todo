@@ -12,10 +12,11 @@ import { LoginPageComponent } from "./login-page/login-page.component";
 
 // Sub modules
 import { TaskPageModule } from "./task-page/task-page.module";
+import { SettingsPageModule } from "./settings-page/settings-page.module";
+import { SharedPagesModule } from "./shared/shared.module";
 
 // Routing module
 import { PagesRoutingModule } from "./pages.routing";
-import { SettingsPageModule } from "./settings-page/settings-page.module";
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { SettingsPageModule } from "./settings-page/settings-page.module";
     FormsModule,
     ServicesModule,
     DialogsModule,
+    SharedPagesModule,
     TaskPageModule,
     SettingsPageModule,
   ],
