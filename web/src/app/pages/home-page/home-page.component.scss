@@ -6,6 +6,7 @@ Notes about the design:
 */
 
 @import '~scss/variables';
+$two-column-width: 800px;
 :host {
     display: flex;
     background-color: $page-background-color;
@@ -15,7 +16,7 @@ Notes about the design:
 }
 
 .container {
-    width: $container-width;
+    max-width: $container-width;
     margin-left: auto;
     margin-right: auto;
     padding-top: 8px;
@@ -29,11 +30,6 @@ Notes about the design:
     flex-grow: 1;
 }
 
-.row {
-    display: flex;
-    width: 100%;
-}
-
 .title {
     font-weight: bold;
     font-size: 36px;
@@ -41,18 +37,45 @@ Notes about the design:
 
 .row {
     display: flex;
+    width: 100%;
+    @media (max-width: $two-column-width) {
+        flex-wrap: wrap;
+    }
     .left,
     .right,
     .up,
     .down {
         padding: 16px 32px;
-        width: 50%;
-        align-self: top;
+        width: 100%;
+        align-self: center;
+        @media (min-width: $two-column-width) {
+            width: 50%;
+            align-self: start;
+        }
+        img {
+            text-align: center;
+        }
+    }
+    @media (min-width: $two-column-width) {
+        .left {
+            order: 1;
+        }
+        .right {
+            order: 2;
+        }
+    }
+    @media (max-width: $two-column-width) {
+        .up {
+            order: 1;
+        }
+        .down {
+            order: 2;
+        }
     }
 }
 
 .row+.row {
-  border-top: 1px solid silver;
+    border-top: 1px solid silver;
 }
 
 .row:nth-child(even) {

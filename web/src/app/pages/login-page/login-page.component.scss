@@ -1,21 +1,19 @@
 @import '~scss/variables';
 :host {
-    display: flex;
+    display: block;
     background-color: $page-background-color;
     width: 100%;
     min-height: 100%;
-    flex-direction: column;
 }
 
 .container {
-    width: $container-width;
+    max-width: $container-width;
     margin-left: auto;
     margin-right: auto;
     padding-top: 8px;
     background-color: white;
     min-height: calc(100vh - (60px + 48px));
     box-sizing: border-box;
-    flex-grow: 1;
     padding: 16px 32px;
 }
 
@@ -24,7 +22,7 @@ $row-spacing: 16px;
     border: 1px solid silver;
     box-shadow: 0 0 5px 0 silver;
     border-radius: 3px;
-    width: 400px;
+    max-width: 400px;
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;

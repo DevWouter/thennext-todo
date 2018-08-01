@@ -4,7 +4,7 @@
     background-color: $header-background-color;
     color: $header-color;
     .__container {
-        width: $container-width;
+        max-width: $container-width;
         margin-left: auto;
         margin-right: auto;
         display: flex;

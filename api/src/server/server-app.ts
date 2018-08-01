@@ -9,6 +9,7 @@ import {
     TaskRelationService,
     TaskService,
     UrgencyLapService,
+    MailService,
 } from "../services";
 
 
@@ -24,6 +25,7 @@ export class ServerApp {
         private readonly taskRelationService: TaskRelationService,
         private readonly taskService: TaskService,
         private readonly urgencyLapService: UrgencyLapService,
+        private readonly mailService: MailService,
     ) {
     }
 }
