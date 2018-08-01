@@ -1,5 +1,6 @@
 export { AccountService } from "./account-service";
 export { ChecklistItemService } from "./checklist-item-service";
+export { MailService } from "./mail-service";
 export { ScoreShiftService } from "./score-shift-service";
 export { TaskListRightService } from "./task-list-right-service";
 export { TaskListService } from "./task-list-service";
