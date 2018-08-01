@@ -8,28 +8,29 @@ import { ServerApp } from "./server/server-app";
 
 import {
     AccountRepository,
-    TaskListRepository,
-    TaskRepository,
-    TaskListRightRepository,
     AccountSettingsRepository,
     ChecklistItemRepository,
     ScoreShiftRepository,
     SessionRepository,
+    TaskListRepository,
+    TaskListRightRepository,
     TaskListShareTokenRepository,
     TaskRelationRepository,
+    TaskRepository,
     UrgencyLapRepository,
 } from "./repositories";
 
 import {
+    AccountService,
     ChecklistItemService,
+    MailService,
     ScoreShiftService,
+    TaskListRightService,
     TaskListService,
     TaskListShareService,
     TaskRelationService,
     TaskService,
     UrgencyLapService,
-    TaskListRightService,
-    AccountService,
 } from "./services";
 
 
@@ -69,10 +70,11 @@ container.bind<WsService>(WsService).to(WsService).inSingletonScope();
 
 container.bind<AccountService>(AccountService).toSelf();
 container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
+container.bind<MailService>(MailService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
+container.bind<TaskListRightService>(TaskListRightService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
 container.bind<TaskListShareService>(TaskListShareService).toSelf();
-container.bind<TaskListRightService>(TaskListRightService).toSelf();
 container.bind<TaskRelationService>(TaskRelationService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();
 container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
