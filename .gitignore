@@ -3,3 +3,4 @@
 
 # Ignore the build images by docker
 docks
+development.env

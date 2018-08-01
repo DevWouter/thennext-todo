@@ -40,7 +40,7 @@ docker load -i /home/core/docks/pa_proxy.tar
 sudo ./scripts/backup.sh
 
 # Restart docker-compose
-/opt/bin/docker-compose up -d --no-build
+/opt/bin/docker-compose up -d --no-build --env-file=production.env
 
 # Clean up old images
 docker image prune -f
