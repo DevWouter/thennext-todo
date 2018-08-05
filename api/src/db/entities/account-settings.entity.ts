@@ -7,7 +7,7 @@ export class AccountSettingsEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(type => AccountEntity, accountEntity => accountEntity.accountSettings, { cascadeInsert: true, onDelete: "CASCADE" })
+    @OneToOne(type => AccountEntity, accountEntity => accountEntity.accountSettings, { nullable: false })
     @JoinColumn()
     account: AccountEntity;
 

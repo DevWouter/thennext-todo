@@ -27,16 +27,16 @@ export class AccountEntity {
     @Column({ length: 500 })
     password_hash: string;
 
-    @OneToOne(type => AccountSettingsEntity, accountSettings => accountSettings.account, { cascadeAll: true, onDelete: "CASCADE" })
+    @OneToOne(type => AccountSettingsEntity, accountSettings => accountSettings.account, { cascade: true, onDelete: "CASCADE" })
     accountSettings: AccountSettingsEntity;
 
-    @OneToMany(type => TaskListRightEntity, taskList => taskList.account, { cascadeInsert: true })
+    @OneToMany(type => TaskListRightEntity, taskList => taskList.account, { cascade: true })
     rights: TaskListRightEntity[];
 
     @OneToMany(type => SessionEntity, session => session.account)
     sessions: SessionEntity[];
 
-    @OneToMany(type => ScoreShiftEntity, scoreShift => scoreShift.owner, { cascadeInsert: true })
+    @OneToMany(type => ScoreShiftEntity, scoreShift => scoreShift.owner, { cascade: true })
     scoreShifts: ScoreShiftEntity[];
 
     @OneToMany(type => TaskTimeLapEntity, timeLap => timeLap.task)

@@ -18,7 +18,7 @@ export class TaskListEntity {
     @Column({ nullable: false })
     name: string;
 
-    @OneToMany(type => TaskListRightEntity, right => right.taskList, { cascadeInsert: true })
+    @OneToMany(type => TaskListRightEntity, right => right.taskList, { cascade: true })
     @JoinColumn()
     rights: TaskListRightEntity[];
 
