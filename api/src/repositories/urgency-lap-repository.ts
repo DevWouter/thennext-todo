@@ -29,15 +29,18 @@ export class UrgencyLapRepository {
     }
 
     async of(account: AccountEntity): Promise<UrgencyLapEntity[]> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        const { results } = await db.execute("SELECT `UrgencyLap`.* FROM `UrgencyLap`" +
+            " WHERE `UrgencyLap`.`ownerId` = ?"
+            , [account.id]);
 
-        // return (await this.db)
-        //     .createQueryBuilder(UrgencyLapEntity, "urgencyLap")
-        //     .innerJoin("urgencyLap.owner", "owner")
-        //     .andWhere("owner.id = :accountId")
-        //     .setParameters({
-        //         accountId: account.id,
-        //     }).getMany();
+        const result: UrgencyLapEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
     async update(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
@@ -59,5 +62,15 @@ export class UrgencyLapRepository {
 
         // const entityManager = (await this.db).createEntityManager();
         // return entityManager.remove(UrgencyLapEntity, entity);
+    }
+
+    private clone(src: UrgencyLapEntity): UrgencyLapEntity {
+        return {
+            fromDay: src.fromDay,
+            id: src.id,
+            ownerId: src.ownerId,
+            urgencyModifier: src.urgencyModifier,
+            uuid: src.uuid,
+        }
     }
 }

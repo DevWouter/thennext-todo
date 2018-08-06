@@ -5,6 +5,7 @@ import { Database } from "./database";
 
 @injectable()
 export class TaskListRepository {
+
     constructor(
         @inject("Database") private readonly database: () => Promise<Database>
     ) { }
@@ -68,6 +69,20 @@ export class TaskListRepository {
         //         accountId: account.id
         //     })
         //     .getMany();
+    }
+
+    async byId(id: number): Promise<TaskListEntity | null> {
+        const db = await this.database();
+        const { results } = await db.execute("SELECT `TaskList`.* FROM `TaskList`" +
+            " WHERE `TaskList`.`id` = ?" +
+            " LIMIT 1"
+            , [id]);
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async update(entity: TaskListEntity): Promise<TaskListEntity> {

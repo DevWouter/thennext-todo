@@ -53,10 +53,13 @@ export class UrgencyLapService {
 
     private async create(client: TrustedClient, src: UrgencyLap, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const dst = new UrgencyLapEntity();
-        dst.fromDay = src.fromDay;
-        dst.urgencyModifier = src.urgencyModifier;
-        dst.owner = account;
+        const dst: UrgencyLapEntity = {
+            fromDay: src.fromDay,
+            urgencyModifier: src.urgencyModifier,
+            ownerId: account.id,
+            id: undefined,
+            uuid: undefined,
+        };
 
         const finalEntity = await this.urgencyLapRepository.create(dst);
         this.messageService.send("entity-created",

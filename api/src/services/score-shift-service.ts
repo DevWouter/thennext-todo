@@ -58,7 +58,7 @@ export class ScoreShiftService {
         dst.score = src.score;
         dst.created_on = src.createdOn;
         dst.updated_on = src.updatedOn;
-        dst.owner = account;
+        dst.ownerId = account.id;
 
         const finalEntity = await this.scoreShiftRepository.create(dst);
         this.messageService.send("entity-created",

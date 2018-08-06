@@ -1,4 +1,4 @@
-export class UrgencyLapEntity {
+export interface UrgencyLapEntity {
     id: number;
     uuid: string;
     ownerId: number;

@@ -13,6 +13,7 @@ import { TrustedClient } from "./ws/message-client";
 import { TaskListShare } from "../models/task-list-share.model";
 import { TaskListRight } from "../models/task-list-right.model";
 import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
+import { TaskListEntity, AccountEntity } from "../db/entities";
 
 
 @injectable()
@@ -54,9 +55,16 @@ export class TaskListRightService {
         const account = await this.accountRepository.byId(client.accountId);
         const entities = await this.taskListRightRepository.visibleFor(account);
 
+        const results: TaskListRight[] = [];
+        for (let i = 0; i < entities.length; ++i) {
+            const element = entities[i];
+            const result = this.toDTO(element, await this.taskListRepository.byId(element.taskListId), account);
+            results.push(result);
+        }
+
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
-            entities: entities.map(x => this.toDTO(x)),
+            entities: results,
         }, { clientId: client.clientId, refId: refId });
     }
 
@@ -112,11 +120,11 @@ export class TaskListRightService {
             });
     }
 
-    private toDTO(src: TaskListRightEntity): TaskListRight {
+    private toDTO(src: TaskListRightEntity, tasklist: TaskListEntity, account: AccountEntity): TaskListRight {
         return <TaskListRight>{
             uuid: src.uuid,
-            taskListUuid: src.taskList.uuid,
-            name: src.account.email,
+            taskListUuid: tasklist.uuid,
+            name: account.email,
         };
     }
 }
