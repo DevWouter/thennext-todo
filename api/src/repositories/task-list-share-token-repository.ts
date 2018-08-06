@@ -1,32 +1,33 @@
 import { injectable, inject } from "inversify";
-import { Connection } from "typeorm";
-
 import { AccountEntity, TaskListEntity } from "../db/entities";
 import { TaskListShareTokenEntity } from "../db/entities/task-list-share-token.entity";
+import { Database } from "./database";
 
 
 @injectable()
 export class TaskListShareTokenRepository {
-    private readonly db: Promise<Connection>;
     constructor(
-        @inject("ConnectionProvider") dbPromise: () => Promise<Connection>
+        @inject("Database") private readonly database: () => Promise<Database>
     ) {
-        this.db = dbPromise();
+        // this.db = dbPromise();
     }
 
     async create(entity: TaskListShareTokenEntity): Promise<TaskListShareTokenEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(TaskListShareTokenEntity, entity);
+        throw new Error("Not yet implemented");
+        // const entityManager = (await this.db).createEntityManager();
+        // return entityManager.save(TaskListShareTokenEntity, entity);
     }
 
     async update(entity: TaskListShareTokenEntity): Promise<TaskListShareTokenEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(TaskListShareTokenEntity, entity);
+        throw new Error("Not yet implemented");
+        // const entityManager = (await this.db).createEntityManager();
+        // return entityManager.save(TaskListShareTokenEntity, entity);
     }
 
     async destroy(entity: TaskListShareTokenEntity): Promise<TaskListShareTokenEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.remove(TaskListShareTokenEntity, entity);
+        throw new Error("Not yet implemented");
+        // const entityManager = (await this.db).createEntityManager();
+        // return entityManager.remove(TaskListShareTokenEntity, entity);
     }
 
     /**
@@ -34,12 +35,13 @@ export class TaskListShareTokenRepository {
      * @param account The account that should own the tokens
      */
     async of(account: AccountEntity): Promise<TaskListShareTokenEntity[]> {
-        return (await this.db)
-            .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
-            .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
-            .where("account.id = :id", { id: account.id })
-            .getMany();
+        throw new Error("Not yet implemented");
+        // return (await this.db)
+        // .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
+        // .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
+        // .innerJoin("taskList.owner", "account")
+        // .where("account.id = :id", { id: account.id })
+        // .getMany();
     }
 
     /**
@@ -48,12 +50,14 @@ export class TaskListShareTokenRepository {
      * @param taskListUuid The tasklist for which it was intended.
      */
     async byTokenAndListUuid(token: string, taskListUuid: string): Promise<TaskListShareTokenEntity> {
-        return (await this.db)
-            .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
-            .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
-            .where("taskListShareToken.token = :token", { token: token })
-            .andWhere("taskList.uuid = :taskListUuid", { taskListUuid: taskListUuid })
-            .getOne();
+        throw new Error("Not yet implemented");
+
+        // return (await this.db)
+        //     .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
+        //     .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
+        //     .where("taskListShareToken.token = :token", { token: token })
+        //     .andWhere("taskList.uuid = :taskListUuid", { taskListUuid: taskListUuid })
+        //     .getOne();
     }
 
     /**
@@ -62,12 +66,14 @@ export class TaskListShareTokenRepository {
      * @param account The account that should own the tokens
      */
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListShareTokenEntity> {
-        return (await this.db)
-            .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
-            .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
-            .where("account.id = :id", { id: account.id })
-            .where("taskListShareToken.uuid = :uuid", { uuid: uuid })
-            .getOne();
+        throw new Error("Not yet implemented");
+
+        // return (await this.db)
+        //     .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
+        //     .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
+        //     .innerJoin("taskList.owner", "account")
+        //     .where("account.id = :id", { id: account.id })
+        //     .where("taskListShareToken.uuid = :uuid", { uuid: uuid })
+        //     .getOne();
     }
 }

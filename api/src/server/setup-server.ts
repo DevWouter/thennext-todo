@@ -2,7 +2,6 @@ import "reflect-metadata"; // Required so that typeorm can read the types.
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as http from "http";
-import { Connection } from "typeorm";
 import { apiRouter } from "../route";
 
 import container from "../inversify.config";
@@ -16,7 +15,6 @@ export function startServer(port: number) {
     app.use("/api", bodyParser.json(), apiRouter);
     const server = http.createServer(app);
     const wsService = container.get(WsService);
-    const databaseProvider = container.get("ConnectionProvider") as (() => Promise<Connection>);
 
     wsService.init(server);
     const serverApp = container.get(ServerApp);
@@ -25,8 +23,5 @@ export function startServer(port: number) {
         console.log("Server is ready");
     }).on("close", async () => {
         console.log("Server is closed");
-        // Get the database connection and try to close it.
-        const database = await databaseProvider();
-        database.close();
     });
 }

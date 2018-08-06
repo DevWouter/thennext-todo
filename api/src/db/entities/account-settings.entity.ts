@@ -1,42 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm";
-import { AccountEntity } from "./account.entity";
-import { TaskListEntity } from ".";
-
-@Entity("AccountSettings")
 export class AccountSettingsEntity {
-    @PrimaryGeneratedColumn()
     id: number;
-
-    @OneToOne(type => AccountEntity, accountEntity => accountEntity.accountSettings, { nullable: false })
-    @JoinColumn()
-    account: AccountEntity;
-
-    @ManyToOne(type => TaskListEntity)
-    @JoinColumn()
-    primaryList: TaskListEntity;
-
-    @Column()
+    accountId: number;
+    primaryListId: number;
     scrollToNewTasks: boolean;
-
-    @Column()
     hideScoreInTaskList: boolean;
-
-    @Column()
     defaultWaitUntil: string;
-
-    @Column("float")
     urgencyPerDay: number;
-
-    @Column("float")
     urgencyWhenActive: number;
-
-    @Column("float")
     urgencyWhenDescription: number;
-
-    @Column("float")
     urgencyWhenBlocking: number;
-
-    @Column("float")
     urgencyWhenBlocked: number;
 
     static setDefaultValues(settings: AccountSettingsEntity): void {
