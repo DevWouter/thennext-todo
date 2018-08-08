@@ -43,18 +43,6 @@ export class AccountController {
     ) {
     }
 
-    async me(req: Request, res: Response): Promise<void> {
-        const token = this.authenticationService.getAuthenticationToken(req);
-        const account = await this.accountService.byToken(token);
-
-        const response: MyAccount = {
-            uuid: account.uuid,
-            displayName: account.displayName,
-        };
-
-        res.send(response);
-    }
-
     async create(req: Request, res: Response): Promise<void> {
         try {
             const input = req.body as CreateAccountInput;
