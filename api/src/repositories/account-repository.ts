@@ -14,10 +14,12 @@ export class AccountRepository {
     async byToken(token: string): Promise<AccountEntity> {
         const db = await this.database();
         const { results, fields } = await db.execute(
-            "SELECT `Account`.* FROM `Account` " +
-            "INNER JOIN `Session` ON `Session`.`accountId`=`Account`.`id` " +
-            "WHERE `Session`.`token` = ? " +
-            "LIMIT 1 ",
+            [
+                "SELECT `Account`.* FROM `Account`",
+                "INNER JOIN `Session` ON `Session`.`accountId`=`Account`.`id`",
+                "WHERE `Session`.`token` = ?",
+                "LIMIT 1 "
+            ],
             [token]
         );
 

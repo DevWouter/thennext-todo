@@ -38,16 +38,19 @@ export class TaskRelationRepository {
     async byId(id: number): Promise<TaskRelationWithUuids> {
         const db = await this.database();
         const { results } = await db.execute(
-            " SELECT" +
-            "  `TaskRelation`.*," +
-            "  `SourceTask`.`uuid` AS `sourceTaskUuid`, " +
-            "  `TargetTask`.`uuid` AS `targetTaskUuid`" +
-            " FROM `TaskRelation`" +
-            " INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`" +
-            " INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`" +
-            " WHERE `TaskRelation`.`id` = ?" +
-            " LIMIT 1"
-            , [id]);
+            [
+                "SELECT",
+                " `TaskRelation`.*,",
+                " `SourceTask`.`uuid` AS `sourceTaskUuid`,",
+                " `TargetTask`.`uuid` AS `targetTaskUuid`",
+                "FROM `TaskRelation`",
+                "INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`",
+                "INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`",
+                "WHERE `TaskRelation`.`id` = ?",
+                "LIMIT 1"
+            ]
+            , [id]
+        );
 
 
         if (results.length === 0) {
@@ -59,25 +62,25 @@ export class TaskRelationRepository {
 
     async of(account: AccountEntity): Promise<TaskRelationWithUuids[]> {
         const db = await this.database();
-        const { results } = await db.execute(
-            " SELECT" +
-            "  `TaskRelation`.*," +
-            "  `SourceTask`.`uuid` AS `sourceTaskUuid`, " +
-            "  `TargetTask`.`uuid` AS `targetTaskUuid`" +
-            " FROM `TaskRelation`" +
+        const { results } = await db.execute([
+            "SELECT",
+            " `TaskRelation`.*,",
+            " `SourceTask`.`uuid` AS `sourceTaskUuid`, ",
+            " `TargetTask`.`uuid` AS `targetTaskUuid`",
+            "FROM `TaskRelation`",
             // Join for rights on source task
-            " INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`" +
-            " INNER JOIN `TaskList` AS `SourceTaskList` ON `SourceTask`.`taskListId`=`SourceTaskList`.`id`" +
-            " INNER JOIN `TaskListRight` AS `SourceTaskListRight` ON `SourceTaskList`.`id`=`SourceTaskListRight`.`taskListId`" +
+            "INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`",
+            "INNER JOIN `TaskList` AS `SourceTaskList` ON `SourceTask`.`taskListId`=`SourceTaskList`.`id`",
+            "INNER JOIN `TaskListRight` AS `SourceTaskListRight` ON `SourceTaskList`.`id`=`SourceTaskListRight`.`taskListId`",
             // Join for rights on target task
-            " INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`" +
-            " INNER JOIN `TaskList` AS `TargetTaskList` ON `TargetTask`.`taskListId`=`TargetTaskList`.`id`" +
-            " INNER JOIN `TaskListRight` AS `TargetTaskListRight` ON `TargetTaskList`.`id`=`TargetTaskListRight`.`taskListId`" +
+            "INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`",
+            "INNER JOIN `TaskList` AS `TargetTaskList` ON `TargetTask`.`taskListId`=`TargetTaskList`.`id`",
+            "INNER JOIN `TaskListRight` AS `TargetTaskListRight` ON `TargetTaskList`.`id`=`TargetTaskListRight`.`taskListId`",
             // Check if the account has access to both target and source tasklist
-            " WHERE 1=1 " +
-            " AND `SourceTaskListRight`.`accountId` = ?" +
-            " AND `TargetTaskListRight`.`accountId` = ?"
-            , [account.id, account.id]);
+            "WHERE 1=1 ",
+            "AND `SourceTaskListRight`.`accountId` = ?",
+            "AND `TargetTaskListRight`.`accountId` = ?"
+        ], [account.id, account.id]);
 
         const result: TaskRelationWithUuids[] = [];
         for (let index = 0; index < results.length; index++) {

@@ -20,10 +20,14 @@ export class AccountSettingsRepository {
 
     async of(account: AccountEntity): Promise<AccountSettingsEntity> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT `AccountSettings`.* FROM `AccountSettings`" +
-            " WHERE `AccountSettings`.`accountId` = ?" +
-            " LIMIT 1"
-            , [account.id]);
+        const { results } = await db.execute(
+            [
+                "SELECT `AccountSettings`.* FROM `AccountSettings`",
+                "WHERE `AccountSettings`.`accountId` = ?",
+                "LIMIT 1"
+            ],
+            [account.id]
+        );
 
         if (results.length === 0) {
             return null;

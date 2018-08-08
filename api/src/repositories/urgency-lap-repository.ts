@@ -30,8 +30,11 @@ export class UrgencyLapRepository {
 
     async of(account: AccountEntity): Promise<UrgencyLapEntity[]> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT `UrgencyLap`.* FROM `UrgencyLap`" +
-            " WHERE `UrgencyLap`.`ownerId` = ?"
+        const { results } = await db.execute(
+            [
+                "SELECT `UrgencyLap`.* FROM `UrgencyLap`",
+                "WHERE `UrgencyLap`.`ownerId` = ?"
+            ]
             , [account.id]);
 
         const result: UrgencyLapEntity[] = [];

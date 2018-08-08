@@ -30,9 +30,14 @@ export class ScoreShiftRepository {
 
     async of(account: AccountEntity): Promise<ScoreShiftEntity[]> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT `ScoreShift`.* FROM `ScoreShift`" +
-            " WHERE `ScoreShift`.`ownerId` = ?"
-            , [account.id]);
+        const { results } = await db.execute(
+            [
+                "SELECT `ScoreShift`.* FROM `ScoreShift`",
+                "WHERE `ScoreShift`.`ownerId` = ?",
+            ]
+            ,
+            [account.id]
+        );
 
         const result: ScoreShiftEntity[] = [];
         for (let index = 0; index < results.length; index++) {

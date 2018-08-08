@@ -15,7 +15,11 @@ export class SessionRepository {
 
     async byToken(token: string): Promise<SessionEntity | null> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT * FROM `Session` WHERE `token` = ?", [token]);
+        const { results } = await db.execute(
+            "SELECT * FROM `Session` WHERE `token` = ?",
+            [token]
+        );
+
         if (results.length === 0) {
             return null;
         }
@@ -52,7 +56,10 @@ export class SessionRepository {
         }
 
         const newExpireDate = moment().add({ weeks: 3 }).toDate();
-        const { results } = await db.execute("UPDATE `Session` SET `expire_on` = ? WHERE `token` = ?", [newExpireDate, token]);
+        const { results } = await db.execute(
+            "UPDATE `Session` SET `expire_on` = ? WHERE `token` = ?",
+            [newExpireDate, token]
+        );
         if (results.affectedRows === 0) {
             throw new Error(`No session was set a new expire date`);
         }

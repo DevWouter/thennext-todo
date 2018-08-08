@@ -48,10 +48,13 @@ export class TaskListRepository {
      */
     async for(account: AccountEntity): Promise<TaskListEntity[]> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT `TaskList`.* FROM `TaskList`" +
-            " INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`" +
-            " WHERE `TaskListRight`.`accountId` = ?"
-            , [account.id]);
+        const { results } = await db.execute(
+            [
+                "SELECT `TaskList`.* FROM `TaskList`",
+                "INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
+                "WHERE `TaskListRight`.`accountId` = ?"
+            ], [account.id]
+        );
 
         const result: TaskListEntity[] = [];
         for (let index = 0; index < results.length; index++) {
@@ -73,10 +76,14 @@ export class TaskListRepository {
 
     async byId(id: number): Promise<TaskListEntity | null> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT `TaskList`.* FROM `TaskList`" +
-            " WHERE `TaskList`.`id` = ?" +
-            " LIMIT 1"
-            , [id]);
+        const { results } = await db.execute(
+            [
+                "SELECT `TaskList`.* FROM `TaskList`",
+                "WHERE `TaskList`.`id` = ?",
+                "LIMIT 1"
+            ],
+            [id]
+        );
 
         if (results.length === 0) {
             return null;

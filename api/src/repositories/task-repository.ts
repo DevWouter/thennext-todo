@@ -38,13 +38,17 @@ export class TaskRepository {
 
     async of(account: AccountEntity): Promise<(TaskEntity & WithTasklistUuid)[]> {
         const db = await this.database();
-        const { results } = await db.execute("SELECT" +
-            " `Task`.*, `TaskList`.`uuid` as `taskListUuid`" +
-            " FROM `Task`" +
-            " INNER JOIN `TaskList` ON `Task`.`taskListId`=`TaskList`.`id`" +
-            " INNER JOIN `TaskListRight` ON `TaskList`.`id`=`TaskListRight`.`taskListId`" +
-            " WHERE `TaskListRight`.`accountId` = ?"
-            , [account.id]);
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                " `Task`.*, `TaskList`.`uuid` as `taskListUuid`",
+                "FROM `Task`",
+                "INNER JOIN `TaskList` ON `Task`.`taskListId`=`TaskList`.`id`",
+                "INNER JOIN `TaskListRight` ON `TaskList`.`id`=`TaskListRight`.`taskListId`",
+                "WHERE `TaskListRight`.`accountId` = ?"
+            ]
+            ,
+            [account.id]);
 
         const result: (TaskEntity & WithTasklistUuid)[] = [];
         for (let index = 0; index < results.length; index++) {
