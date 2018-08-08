@@ -1,5 +1,5 @@
 import { injectable, inject } from "inversify";
-import { AccountEntity, AccountSettingsEntity } from "../db/entities";
+import { AccountEntity, AccountSettingsEntity, TaskListEntity, DefaultAccountSettings } from "../db/entities";
 import { Database } from "./database";
 
 @injectable()
@@ -10,12 +10,21 @@ export class AccountSettingsRepository {
     ) { }
 
     async byId(id: number): Promise<AccountSettingsEntity> {
-        throw new Error("Not yet implemented");
-        // return (await this.db())
-        //     .createQueryBuilder(AccountSettingsEntity, "accountSettings")
-        //     .innerJoinAndSelect("accountSettings.primaryList", "primaryList")
-        //     .where("accountSettings.id = :id", { id: id })
-        //     .getOne();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `AccountSettings`.* FROM `AccountSettings`",
+                "WHERE `AccountSettings`.`id` = ?",
+                "LIMIT 1"
+            ],
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async of(account: AccountEntity): Promise<AccountSettingsEntity> {
@@ -48,11 +57,24 @@ export class AccountSettingsRepository {
         // return entityManager.save(AccountSettingsEntity, entity);
     }
 
-    async create(entity: AccountSettingsEntity): Promise<AccountSettingsEntity> {
-        throw new Error("Not yet implemented");
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(entity);
+    async create(account: AccountEntity, primaryTaskList: TaskListEntity): Promise<AccountSettingsEntity> {
+        const db = await this.database();
+        const id = await db.insert<AccountSettingsEntity>("AccountSettings", {
+            accountId: account.id,
+            primaryListId: primaryTaskList.id,
+            defaultWaitUntil: DefaultAccountSettings.defaultWaitUntil,
+            hideScoreInTaskList: DefaultAccountSettings.hideScoreInTaskList,
+            scrollToNewTasks: DefaultAccountSettings.scrollToNewTasks,
+            urgencyPerDay: DefaultAccountSettings.urgencyPerDay,
+            urgencyWhenActive: DefaultAccountSettings.urgencyWhenActive,
+            urgencyWhenBlocked: DefaultAccountSettings.urgencyWhenBlocked,
+            urgencyWhenBlocking: DefaultAccountSettings.urgencyWhenBlocking,
+            urgencyWhenDescription: DefaultAccountSettings.urgencyWhenDescription,
+        });
+
+        return this.byId(id);
     }
+
     async destroy(entity: AccountSettingsEntity): Promise<AccountSettingsEntity> {
         throw new Error("Not yet implemented");
         // const entityManager = (await this.db()).createEntityManager();

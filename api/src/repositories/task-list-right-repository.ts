@@ -1,15 +1,29 @@
 import { injectable, inject } from "inversify";
 
 import { AccountEntity, TaskListEntity } from "../db/entities";
-import { TaskListRightEntity } from "../db/entities/task-list-right.entity";
+import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
 import { Connection } from "mysql";
-import { Database } from "./database";
+import { Database, uuidv4 } from "./database";
 
 @injectable()
 export class TaskListRightRepository {
     constructor(
         @inject("Database") private readonly database: () => Promise<Database>
     ) {
+    }
+
+    async byId(id: number): Promise<TaskListRightEntity> {
+        const db = await this.database();
+        const { results } = await db.execute(
+            "SELECT * FROM `TaskListRight` WHERE `id`=? LIMIT 1",
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async update(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
@@ -19,8 +33,16 @@ export class TaskListRightRepository {
         // return entityManager.save(TaskListRightEntity, entity);
     }
 
-    async create(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
-        throw new Error("Not yet implemented");
+    async create(account: AccountEntity, tasklist: TaskListEntity, access: AccessRight): Promise<TaskListRightEntity> {
+        const db = await this.database();
+        const id = await db.insert<TaskListRightEntity>("TaskListRight", {
+            uuid: uuidv4(),
+            accountId: account.id,
+            taskListId: tasklist.id,
+            access: access,
+        });
+
+        return this.byId(id);
 
         // const entityManager = (await this.db).createEntityManager();
         // return entityManager.save(TaskListRightEntity, entity);
@@ -82,5 +104,15 @@ export class TaskListRightRepository {
         //         ownerId: account.id
         //     })
         //     .getOne();
+    }
+
+    private clone(src: TaskListRightEntity): TaskListRightEntity {
+        return {
+            access: src.access,
+            accountId: src.accountId,
+            id: src.id,
+            taskListId: src.taskListId,
+            uuid: src.uuid,
+        };
     }
 }

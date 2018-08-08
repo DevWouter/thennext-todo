@@ -5,7 +5,7 @@ import { injectable } from "inversify";
 import { Account } from "../../models/account.model";
 import { MyAccount } from "../../models/my-account.model";
 
-import { AccountEntity, AccountSettingsEntity, TaskListEntity } from "../../db/entities";
+import { AccountEntity, AccountSettingsEntity, TaskListEntity, DefaultAccountSettings } from "../../db/entities";
 import { SecurityConfig } from "../../config";
 import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
 import { AuthenticationService } from "../../services/authentication-service";
@@ -48,32 +48,24 @@ export class AccountController {
             const input = req.body as CreateAccountInput;
             this.throwIfInvalid(input);
 
-            const accountInput = new AccountEntity();
-            accountInput.email = input.email;
-            accountInput.password_hash = await bcrypt.hash(input.password, SecurityConfig.saltRounds);
-            accountInput.accountSettings = new AccountSettingsEntity();
-            AccountSettingsEntity.setDefaultValues(accountInput.accountSettings);
+            // Check if account exists
+            const isExisting = (await this.accountService.byEmail(input.email)) !== null;
+            if (isExisting) {
+                throw new Error("Account already exists");
+            }
 
             // Create account
-            const accountResult = await this.accountService.create(accountInput);
+            const account = await this.accountService.create(
+                input.email,
+                await bcrypt.hash(input.password, SecurityConfig.saltRounds)
+            );
 
-            const primaryTaskList = new TaskListEntity();
-            primaryTaskList.name = "Inbox";
-            primaryTaskList.owner = accountInput;
+            // Create tasklist and the right for the tasklist.
+            const primaryTaskList = await this.taskListService.create("Inbox", account);
+            await this.taskListRightService.create(account, primaryTaskList, AccessRight.owner);
 
-            const taskListResult = await this.taskListService.create(primaryTaskList);
-
-
-            const ownerRight = new TaskListRightEntity();
-            ownerRight.access = AccessRight.owner;
-            ownerRight.account = accountResult;
-            ownerRight.taskList = primaryTaskList;
-            await this.taskListRightService.create(ownerRight);
-
-            const accountSettings = accountResult.accountSettings;
-            accountSettings.primaryList = taskListResult;
-
-            await this.accountSettingsService.update(accountSettings);
+            // Create settings
+            await this.accountSettingsService.create(account, primaryTaskList);
 
             // Create the default urgency laps
             const options = [
@@ -84,15 +76,10 @@ export class AccountController {
             ];
 
             options.forEach(async (x) => {
-                const entity = new UrgencyLapEntity();
-                entity.fromDay = x.from;
-                entity.urgencyModifier = x.score;
-                entity.owner = accountResult;
-                await this.urgencyLapService.create(entity);
+                await this.urgencyLapService.create(account, x.from, x.score);
             });
 
-
-            const dst = TransformAccount(accountResult);
+            const dst = TransformAccount(account);
             res.send(dst);
         } catch (ex) {
             console.error(ex);

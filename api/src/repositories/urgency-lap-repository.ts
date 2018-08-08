@@ -2,7 +2,7 @@ import { injectable, inject } from "inversify";
 import { UrgencyLapEntity } from "../db/entities/urgency-lap.entity";
 import { AccountEntity } from "../db/entities/account.entity";
 import { Connection } from "mysql";
-import { Database } from "./database";
+import { Database, uuidv4 } from "./database";
 
 @injectable()
 export class UrgencyLapRepository {
@@ -11,6 +11,24 @@ export class UrgencyLapRepository {
         @inject("Database") private readonly database: () => Promise<Database>
     ) {
         // this.db = dbPromise();
+    }
+
+    async byId(id: number): Promise<UrgencyLapEntity> {
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `UrgencyLap`.* FROM `UrgencyLap`",
+                "WHERE `UrgencyLap`.`id` = ?",
+                "LIMIT 1"
+            ],
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<UrgencyLapEntity> {
@@ -53,11 +71,17 @@ export class UrgencyLapRepository {
         // return entityManager.save(UrgencyLapEntity, entity);
     }
 
-    async create(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
-        throw new Error("Not yet implemented");
+    async create(account: AccountEntity, fromDay: number, score: number): Promise<UrgencyLapEntity> {
 
-        // const entityManager = (await this.db).createEntityManager();
-        // return entityManager.save(UrgencyLapEntity, entity);
+        const db = await this.database();
+        const id = await db.insert<UrgencyLapEntity>("UrgencyLap", {
+            uuid: uuidv4(),
+            ownerId: account.id,
+            fromDay: fromDay,
+            urgencyModifier: score,
+        });
+
+        return this.byId(id);
     }
 
     async destroy(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {

@@ -1,7 +1,8 @@
 import { injectable, inject } from "inversify";
 import { AccountEntity } from "../db/entities";
+import { Database, uuidv4 } from "./database";
 
-import { Database } from "./database";
+
 
 @injectable()
 export class AccountRepository {
@@ -67,10 +68,16 @@ export class AccountRepository {
         // return entityManager.save(AccountEntity, entity);
     }
 
-    async create(entity: AccountEntity): Promise<AccountEntity> {
-        throw new Error("Not yet implemented");
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(entity);
+    async create(email: string, password_hash: string): Promise<AccountEntity> {
+        const db = await this.database();
+        const id = await db.insert<AccountEntity>("Account", {
+            uuid: uuidv4(),
+            email: email,
+            displayName: email,
+            password_hash: password_hash
+        });
+
+        return this.byId(id);
     }
 
     private clone(src: AccountEntity): AccountEntity {

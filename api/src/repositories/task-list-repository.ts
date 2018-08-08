@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 
 import { AccountEntity, TaskListEntity } from "../db/entities";
-import { Database } from "./database";
+import { Database, uuidv4 } from "./database";
 
 @injectable()
 export class TaskListRepository {
@@ -99,11 +99,17 @@ export class TaskListRepository {
         // return entityManager.save(TaskListEntity, entity);
     }
 
-    async create(entity: TaskListEntity): Promise<TaskListEntity> {
-        throw new Error("Not yet implemented");
+    async create(name: string, account: AccountEntity): Promise<TaskListEntity> {
+        const db = await this.database();
+        const id = await db.insert<TaskListEntity>("TaskList",
+            {
+                uuid: uuidv4(),
+                name: name,
+                ownerId: account.id
+            }
+        );
 
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(TaskListEntity, entity);
+        return this.byId(id);
     }
 
     async destroy(entity: TaskListEntity): Promise<TaskListEntity> {

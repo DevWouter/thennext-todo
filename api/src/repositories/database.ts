@@ -1,6 +1,7 @@
 import { Connection, FieldInfo } from "mysql";
 import { isArray } from "util";
 
+export const uuidv4: () => string = require('uuid/v4');
 
 export class Database {
 
