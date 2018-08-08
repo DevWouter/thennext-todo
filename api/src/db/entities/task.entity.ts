@@ -4,7 +4,7 @@ export enum TaskStatus {
     done = "done",
 }
 
-export class TaskEntity {
+export interface TaskEntity {
     id: number;
     uuid: string;
     taskListId: number;

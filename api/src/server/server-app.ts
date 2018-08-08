@@ -23,7 +23,7 @@ export class ServerApp {
         private readonly taskListService: TaskListService,
         private readonly taskListShareService: TaskListShareService,
         // private readonly taskRelationService: TaskRelationService,
-        // private readonly taskService: TaskService,
+        private readonly taskService: TaskService,
         private readonly urgencyLapService: UrgencyLapService,
         // private readonly mailService: MailService,
     ) {

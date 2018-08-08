@@ -4,3 +4,7 @@ export class TaskListEntity {
     name: string;
     ownerId: number;
 }
+
+export interface WithTasklistUuid {
+    taskListUuid: string;
+}

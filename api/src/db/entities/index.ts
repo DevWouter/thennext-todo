@@ -1,11 +1,11 @@
 // This file is used to export all other entities.
 
-export { AccountEntity } from "./account.entity";
-export { AccountSettingsEntity } from "./account-settings.entity";
-export { ChecklistItemEntity } from "./checklist-item.entity";
-export { ScoreShiftEntity } from "./score-shift.entity";
-export { SessionEntity } from "./session.entity";
-export { TaskEntity } from "./task.entity";
-export { TaskListEntity } from "./task-list.entity";
-export { TaskRelationEntity } from "./task-relation.entity";
-export { UrgencyLapEntity } from "./urgency-lap.entity";
+export * from "./account.entity";
+export * from "./account-settings.entity";
+export * from "./checklist-item.entity";
+export * from "./score-shift.entity";
+export * from "./session.entity";
+export * from "./task.entity";
+export * from "./task-list.entity";
+export * from "./task-relation.entity";
+export * from "./urgency-lap.entity";
