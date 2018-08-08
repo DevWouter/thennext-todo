@@ -16,3 +16,7 @@ export interface TaskEntity {
     updatedAt: Date;
     completedAt: Date;
 }
+
+export interface WithTaskUuid {
+    taskUuid: string;
+}

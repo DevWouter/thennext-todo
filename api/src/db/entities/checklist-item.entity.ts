@@ -1,4 +1,4 @@
-export class ChecklistItemEntity {
+export interface ChecklistItemEntity {
     id: number;
     uuid: string;
     order: number;
