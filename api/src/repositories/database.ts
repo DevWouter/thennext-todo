@@ -9,6 +9,41 @@ export class Database {
     ) {
     }
 
+    async insert<T>(tablename: string, row: Partial<T>): Promise<number> {
+        const propertyNames = Object.getOwnPropertyNames(row);
+        const query = `INSERT INTO \`${tablename}\` \n` +
+            `  (${propertyNames.reduce((prev, cur) => (prev ? prev + ", " : "") + "??", undefined)}) \n` +
+            `  VALUES (${propertyNames.reduce((prev, cur) => (prev ? prev + ", " : "") + "?", undefined)})`;
+
+        const { results, fields } = await this.execute(query, [
+            ...propertyNames,
+            ...Object.values(row),
+        ]);
+
+        return results.insertId;
+    }
+
+
+    async delete<T>(tablename: string, filter: Partial<T>, limit: number | "all"): Promise<number> {
+        const propertyNames = Object.getOwnPropertyNames(filter);
+
+        if (propertyNames.length === 0) {
+            // In theory we could allow unfiltered rows to be allowed, but that would result in `DELETE FROM table`
+            // Unless we want to delete all data, we shouldn't allow this.
+            // And if we do want to delete all data in a table, there are other ways of doing it.
+            throw new Error("You need to define a selector on which you delete rows");
+        }
+
+        const query = `DELETE FROM \`${tablename}\`` +
+            `\n  WHERE 1=1 AND (${propertyNames.reduce((prev, cur) => (prev ? prev + " AND " : "") + "?? = ?", undefined)})` +
+            `${limit !== "all" ? `\n  LIMIT ${limit as number}` : ''}`;
+
+        const { results, fields } = await this.execute(query, propertyNames.reduce((prev, cur) => [...prev, cur, filter[cur]], []));
+
+        // Rows deleted
+        return results.affectedRows;
+    }
+
     execute(query: string | string[], values?: any): Promise<{ results: any, fields: FieldInfo[] }> {
         return new Promise((resolve, reject) => {
             if (isArray(query)) {
