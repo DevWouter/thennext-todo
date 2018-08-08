@@ -13,6 +13,21 @@ export class SessionRepository {
         private readonly accountService: AccountRepository,
     ) { }
 
+
+    async byId(id: number): Promise<SessionEntity | null> {
+        const db = await this.database();
+        const { results } = await db.execute(
+            "SELECT * FROM `Session` WHERE `id` = ?",
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
+    }
+
     async byToken(token: string): Promise<SessionEntity | null> {
         const db = await this.database();
         const { results } = await db.execute(
@@ -28,24 +43,27 @@ export class SessionRepository {
     }
 
     async create(email: string, password: string): Promise<SessionEntity> {
-        throw new Error("Not yet implemented");
-        // const account = await this.accountService.byEmail(email);
-        // if (!account) {
-        //     throw new Error("No user found");
-        // }
+        const account = await this.accountService.byEmail(email);
+        if (!account) {
+            throw new Error("No user found");
+        }
 
-        // const validPassword = await bcrypt.compare(password, account.password_hash);
-        // if (!validPassword) {
-        //     throw new Error("Password is invalid");
-        // }
+        const validPassword = await bcrypt.compare(password, account.password_hash);
+        if (!validPassword) {
+            throw new Error("Password is invalid");
+        }
 
-        // const session = new SessionEntity();
-        // session.account = account;
-        // session.token = await bcrypt.genSalt();
-        // session.expire_on = moment().add({ weeks: 3 }).toDate();
-        // session.created_on = moment().toDate();
+        const session: Partial<SessionEntity> = {
+            accountId: account.id,
+            token: await bcrypt.genSalt(),
+            expire_on: moment().add({ weeks: 3 }).toDate(),
+            created_on: moment().toDate(),
+        };
 
-        // return (await this.db()).createEntityManager().save(session);
+        const db = await this.database();
+        const id = await db.insert<SessionEntity>("Session", session);
+
+        return this.byId(id);
     }
 
     async extend(token: string): Promise<SessionEntity> {
@@ -67,10 +85,14 @@ export class SessionRepository {
         return this.byToken(token);
     }
 
-    async destroy(session: SessionEntity): Promise<SessionEntity> {
-        throw new Error("Not yet implemented");
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.remove(session);
+    async destroy(session: SessionEntity): Promise<void> {
+        const db = await this.database();
+
+        const deletedRows = await db.delete<SessionEntity>("Session", { id: session.id }, 1);
+
+        if (deletedRows === 0) {
+            throw new Error("Session was not deleted");
+        }
     }
 
     private clone(src: SessionEntity): SessionEntity {
