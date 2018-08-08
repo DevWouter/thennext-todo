@@ -8,7 +8,7 @@ import {
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
-import { TaskRelationEntity } from "../db/entities";
+import { TaskRelationEntity, TaskRelationWithUuids } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
 import { TaskRelation } from "../models/task-relation.model";
 
@@ -57,10 +57,13 @@ export class TaskRelationService {
         const account = await this.accountRepository.byId(client.accountId);
         const sourceTaskPromise = this.taskRepository.byUuid(src.sourceTaskUuid, account);
         const targetTaskPromise = this.taskRepository.byUuid(src.targetTaskUuid, account);
-        const dst = new TaskRelationEntity();
-        dst.sourceTask = await sourceTaskPromise;
-        dst.targetTask = await targetTaskPromise;
-        dst.relationType = src.relationType;
+        const dst: TaskRelationEntity = {
+            id: undefined,
+            uuid: undefined,
+            sourceTaskId: (await sourceTaskPromise).id,
+            targetTaskId: (await targetTaskPromise).id,
+            relationType: src.relationType,
+        };
 
         const finalEntity = await this.taskRelationRepository.create(dst);
         this.messageService.send("entity-created",
@@ -89,12 +92,12 @@ export class TaskRelationService {
             });
     }
 
-    private toDTO(src: TaskRelationEntity): TaskRelation {
+    private toDTO(src: TaskRelationWithUuids): TaskRelation {
         return <TaskRelation>{
             uuid: src.uuid,
             relationType: src.relationType,
-            sourceTaskUuid: src.sourceTask.uuid,
-            targetTaskUuid: src.targetTask.uuid,
+            sourceTaskUuid: src.sourceTaskUuid,
+            targetTaskUuid: src.targetTaskUuid,
         };
     }
 }
