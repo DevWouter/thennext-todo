@@ -62,10 +62,17 @@ export class AccountRepository {
         return this.clone(results[0]);
     }
 
-    async update(entity: AccountEntity): Promise<AccountEntity> {
-        throw new Error("Not yet implemented");
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(AccountEntity, entity);
+    async update(entity: AccountEntity): Promise<void> {
+        const db = await this.database();
+        await db.update<AccountEntity>("Account"
+            , { // Update
+                displayName: entity.displayName,
+            }
+            , { // Filter
+                id: entity.id
+            }
+            , 1);
+
     }
 
     async create(email: string, password_hash: string): Promise<AccountEntity> {
