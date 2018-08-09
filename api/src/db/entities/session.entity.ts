@@ -1,20 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { AccountEntity } from "./account.entity";
-
-@Entity("Session")
-export class SessionEntity {
-    @PrimaryGeneratedColumn()
+export interface SessionEntity {
     id: number;
-
-    @ManyToOne(type => AccountEntity, account => account.sessions, { onDelete: "CASCADE" })
-    account: AccountEntity;
-
-    @Column({ nullable: false, unique: true })
+    accountId: number;
     token: string;
-
-    @Column("datetime")
     created_on: Date;
-
-    @Column("datetime")
     expire_on: Date;
 }

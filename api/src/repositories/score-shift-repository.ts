@@ -1,49 +1,100 @@
 import { injectable, inject } from "inversify";
-import { Connection } from "typeorm";
+
 
 import { AccountEntity, ScoreShiftEntity } from "../db/entities";
+import { Database, uuidv4 } from "./database";
 
 @injectable()
 export class ScoreShiftRepository {
     constructor(
-        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
+        @inject("Database") private readonly database: () => Promise<Database>
     ) { }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<ScoreShiftEntity> {
-        return (await this.db())
-            .createQueryBuilder(ScoreShiftEntity, "scoreShift")
-            .innerJoinAndSelect("scoreShift.owner", "account")
-            .where("scoreShift.uuid = :uuid", { uuid: uuid })
-            .andWhere("account.id = :id", { id: account.id })
-            .getOne();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `ScoreShift`.* FROM `ScoreShift`",
+                "WHERE 1=1",
+                "AND `ScoreShift`.`ownerId` = ?",
+                "AND `ScoreShift`.`uuid` = ?",
+            ],
+            [account.id, uuid]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async byId(id: number): Promise<ScoreShiftEntity> {
-        return (await this.db())
-            .createQueryBuilder(ScoreShiftEntity, "scoreShift")
-            .where("scoreShift.id = :id", { id: id })
-            .getOne();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `ScoreShift`.* FROM `ScoreShift`",
+                "WHERE `ScoreShift`.`id` = ?",
+            ],
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async of(account: AccountEntity): Promise<ScoreShiftEntity[]> {
-        return (await this.db()).createQueryBuilder(ScoreShiftEntity, "scoreShift")
-            .innerJoinAndSelect("scoreShift.owner", "account")
-            .where("account.id = :id", { id: account.id })
-            .getMany();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `ScoreShift`.* FROM `ScoreShift`",
+                "WHERE `ScoreShift`.`ownerId` = ?",
+            ]
+            ,
+            [account.id]
+        );
+
+        const result: ScoreShiftEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
-    async update(entity: ScoreShiftEntity): Promise<ScoreShiftEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(ScoreShiftEntity, entity);
+    async create(account: AccountEntity, phrase: string, score: number): Promise<ScoreShiftEntity> {
+        const db = await this.database();
+        const id = await db.insert<ScoreShiftEntity>("ScoreShift", {
+            phrase: phrase,
+            score: score,
+            ownerId: account.id,
+            uuid: uuidv4(),
+
+            created_on: new Date(),
+            updated_on: new Date(),
+        });
+
+        return this.byId(id);
     }
 
-    async create(entity: ScoreShiftEntity): Promise<ScoreShiftEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(ScoreShiftEntity, entity);
+    async destroy(entity: ScoreShiftEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<ScoreShiftEntity>("ScoreShift", { id: entity.id }, 1);
     }
 
-    async destroy(entity: ScoreShiftEntity): Promise<ScoreShiftEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.remove(ScoreShiftEntity, entity);
+    private clone(src: ScoreShiftEntity): ScoreShiftEntity {
+        return {
+            created_on: src.created_on,
+            id: src.id,
+            ownerId: src.ownerId,
+            phrase: src.phrase,
+            score: src.score,
+            updated_on: src.updated_on,
+            uuid: src.uuid,
+        }
     }
 }

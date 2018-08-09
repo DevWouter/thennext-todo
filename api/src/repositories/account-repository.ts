@@ -1,49 +1,99 @@
 import { injectable, inject } from "inversify";
-import { Request } from "express";
 import { AccountEntity } from "../db/entities";
-import { Connection } from "typeorm";
+import { Database, uuidv4 } from "./database";
+
+
 
 @injectable()
 export class AccountRepository {
 
     constructor(
-        @inject("ConnectionProvider") private readonly db: () => Promise<Connection>
+        @inject("Database") private readonly database: () => Promise<Database>
     ) {
     }
 
     async byToken(token: string): Promise<AccountEntity> {
-        return (await this.db())
-            .createQueryBuilder(AccountEntity, "account")
-            .innerJoin("account.sessions", "session", "session.token = :token", { token })
-            .getOne();
+        const db = await this.database();
+        const { results, fields } = await db.execute(
+            [
+                "SELECT `Account`.* FROM `Account`",
+                "INNER JOIN `Session` ON `Session`.`accountId`=`Account`.`id`",
+                "WHERE `Session`.`token` = ?",
+                "LIMIT 1 "
+            ],
+            [token]
+        );
+
+        if (results.length === 0) {
+            // No results were found
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
-    async byEmail(email: string): Promise<AccountEntity> {
-        return (await this.db())
-            .createQueryBuilder(AccountEntity, "account")
-            .where("account.email = :email", { email: email })
-            .getOne();
+    async byEmail(email: string): Promise<AccountEntity | null> {
+        const db = await this.database();
+        const { results } = await db.execute(
+            "SELECT * FROM ?? WHERE ?? = ? LIMIT 1",
+            ['Account', 'email', email]
+        );
+
+        if (results.length === 0) {
+            // No results were found
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async byId(id: number): Promise<AccountEntity> {
-        return (await this.db())
-            .createQueryBuilder(AccountEntity, "account")
-            .where("account.id = :id")
-            .setParameters({ id: id })
-            .getOne();
+        const db = await this.database();
+        const { results } = await db.execute(
+            "SELECT * FROM ?? WHERE ?? = ? LIMIT 1",
+            ['Account', 'id', id]
+        );
+
+        if (results.length === 0) {
+            // No results were found
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
-    async update(entity: AccountEntity): Promise<AccountEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(AccountEntity, entity);
+    async update(entity: AccountEntity): Promise<void> {
+        const db = await this.database();
+        await db.update<AccountEntity>("Account"
+            , { // Update
+                displayName: entity.displayName,
+            }
+            , { // Filter
+                id: entity.id
+            }
+            , 1);
+
     }
 
-    async create(entity: AccountEntity): Promise<AccountEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.save(entity);
+    async create(email: string, password_hash: string): Promise<AccountEntity> {
+        const db = await this.database();
+        const id = await db.insert<AccountEntity>("Account", {
+            uuid: uuidv4(),
+            email: email,
+            displayName: email,
+            password_hash: password_hash
+        });
+
+        return this.byId(id);
     }
-    async destroy(entity: AccountEntity): Promise<AccountEntity> {
-        const entityManager = (await this.db()).createEntityManager();
-        return entityManager.remove(AccountEntity, entity);
+
+    private clone(src: AccountEntity): AccountEntity {
+        return {
+            displayName: src.displayName,
+            email: src.email,
+            id: src.id,
+            password_hash: src.password_hash,
+            uuid: src.uuid
+        };
     }
 }

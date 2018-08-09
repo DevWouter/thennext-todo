@@ -5,10 +5,11 @@ import {
     AccountRepository,
     ChecklistItemRepository,
     TaskRepository,
+    TaskListRightRepository,
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
-import { ChecklistItemEntity } from "../db/entities";
+import { ChecklistItemEntity, WithTaskUuid } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
 import { ChecklistItem } from "../models/checklist-item.model";
 
@@ -18,6 +19,7 @@ export class ChecklistItemService {
     private readonly KIND = "checklist-item";
     constructor(
         private readonly taskRepository: TaskRepository,
+        private readonly taskListRightRepository: TaskListRightRepository,
         private readonly checklistItemRepository: ChecklistItemRepository,
         private readonly accountRepository: AccountRepository,
         private readonly messageService: WsMessageService,
@@ -61,11 +63,14 @@ export class ChecklistItemService {
     private async create(client: TrustedClient, src: ChecklistItem, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const taskPromise = this.taskRepository.byUuid(src.taskUuid, account);
-        const dst = new ChecklistItemEntity();
-        dst.checked = src.checked;
-        dst.order = src.order;
-        dst.title = src.title;
-        dst.task = await taskPromise;
+        const dst: ChecklistItemEntity = {
+            checked: src.checked,
+            order: src.order,
+            title: src.title,
+            taskId: (await taskPromise).id,
+            id: undefined,
+            uuid: undefined,
+        }
 
         const finalEntity = await this.checklistItemRepository.create(dst);
         this.messageService.send("entity-created",
@@ -85,7 +90,6 @@ export class ChecklistItemService {
         dst.checked = src.checked;
         dst.order = src.order;
         dst.title = src.title;
-
         const finalEntity = await this.checklistItemRepository.update(dst);
         this.messageService.send("entity-updated",
             {
@@ -101,7 +105,6 @@ export class ChecklistItemService {
     private async delete(client: TrustedClient, uuid: string, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const entity = await this.checklistItemRepository.byUuid(uuid, account);
-
         this.checklistItemRepository.destroy(entity);
         this.messageService.send("entity-deleted", {
             entityKind: this.KIND,
@@ -113,13 +116,13 @@ export class ChecklistItemService {
             });
     }
 
-    private toDTO(src: ChecklistItemEntity): ChecklistItem {
+    private toDTO(src: ChecklistItemEntity & WithTaskUuid): ChecklistItem {
         return <ChecklistItem>{
             uuid: src.uuid,
             checked: src.checked,
             order: src.order,
             title: src.title,
-            taskUuid: src.task.uuid,
+            taskUuid: src.taskUuid,
 
         };
     }

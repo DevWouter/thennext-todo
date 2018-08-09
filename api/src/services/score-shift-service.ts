@@ -53,14 +53,8 @@ export class ScoreShiftService {
 
     private async create(client: TrustedClient, src: ScoreShift, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const dst = new ScoreShiftEntity();
-        dst.phrase = src.phrase;
-        dst.score = src.score;
-        dst.created_on = src.createdOn;
-        dst.updated_on = src.updatedOn;
-        dst.owner = account;
 
-        const finalEntity = await this.scoreShiftRepository.create(dst);
+        const finalEntity = await this.scoreShiftRepository.create(account, src.phrase, src.score);
         this.messageService.send("entity-created",
             {
                 entity: this.toDTO(finalEntity),

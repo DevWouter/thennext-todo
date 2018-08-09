@@ -6,15 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "build": "tsc",
-    "prestart": "npm run orm:run-migrations",
-    "start:watch": "npm run orm:run-migrations && nodemon",
-    "start:prod": "npm run orm:run-migrations && node index.js",
-    "orm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm",
-    "orm:run-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:run",
-    "orm:revert-migrations": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:revert",
-    "orm:changes": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm schema:log",
-    "orm:create-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:create",
-    "orm:generate-migration": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:generate"
+    "start:watch": "nodemon",
+    "start:prod": "node index.js"
   },
   "author": "Wouter Lindenhof",
   "license": "ISC",
@@ -25,18 +18,19 @@
     "express": "^4.16.2",
     "inversify": "^4.13.0",
     "moment": "^2.21.0",
-    "mysql": "^2.15.0",
+    "mysql": "^2.16.0",
     "nodemon": "^1.17.1",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.1",
     "ts-node": "^5.0.1",
-    "typeorm": "^0.2.7",
     "typescript": "^2.7.2",
+    "uuid": "^3.3.2",
     "ws": "^5.2.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
     "@types/express": "^4.11.1",
+    "@types/mysql": "^2.15.5",
     "@types/ws": "^5.1.2",
     "tslint": "^5.9.1"
   }
