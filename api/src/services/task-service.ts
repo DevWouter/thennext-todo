@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 
 import {
     AccountRepository,
@@ -12,6 +12,13 @@ import { TaskEntity, WithTasklistUuid } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
 import { Task, TaskStatus } from "../models/task.model";
 
+function ensureDateTime(obj: Task, keys: string[]) {
+    keys.forEach(key => {
+        if (obj[key] && typeof obj[key] === "string") {
+            obj[key] = new Date(obj[key]);
+        }
+    });
+}
 
 @injectable()
 export class TaskService {
@@ -34,12 +41,18 @@ export class TaskService {
 
         this.messageService
             .commandsOf("create-entity")
-            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .pipe(
+                filter(x => x.event.entityKind === this.KIND),
+                tap(x => ensureDateTime(x.event.entity as Task, ["createdOn", "updatedOn", "completedOn"]))
+            )
             .subscribe(x => this.create(x.client, x.event.entity as Task, x.event.refId));
 
         this.messageService
             .commandsOf("update-entity")
-            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .pipe(
+                filter(x => x.event.entityKind === this.KIND),
+                tap(x => ensureDateTime(x.event.entity as Task, ["createdOn", "updatedOn", "completedOn"]))
+            )
             .subscribe(x => this.update(x.client, x.event.entity as Task, x.event.refId));
 
         this.messageService
@@ -83,7 +96,6 @@ export class TaskService {
         if (!await taskListPromise) {
             throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
         }
-
 
         const finalEntity = await this.taskRepository.create(dst);
         this.messageService.send("entity-created",
