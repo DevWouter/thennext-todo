@@ -24,6 +24,23 @@ export class Database {
         return results.insertId;
     }
 
+    async update<T>(tablename: string,
+        row: Partial<T>,
+        filter: Partial<T>,
+        limit: number | "all"): Promise<void> {
+        const rowProperties = Object.getOwnPropertyNames(row);
+        const filterProperties = Object.getOwnPropertyNames(filter);
+        const query = `UPDATE \`${tablename}\` \n` +
+            `\n  SET ${rowProperties.reduce((prev, cur) => (prev ? prev + ", " : "") + "?? = ?", undefined)} \n` +
+            `\n  WHERE 1=1 AND (${filterProperties.reduce((prev, cur) => (prev ? prev + " AND " : "") + "?? = ?", undefined)})` +
+            `${limit !== "all" ? `\n  LIMIT ${limit as number}` : ''}`;
+
+        const { results, fields } = await this.execute(query, [
+            ...rowProperties.reduce((prev, cur) => [...prev, cur, row[cur]], []),
+            ...filterProperties.reduce((prev, cur) => [...prev, cur, filter[cur]], [])
+        ]);
+    }
+
 
     async delete<T>(tablename: string, filter: Partial<T>, limit: number | "all"): Promise<number> {
         const propertyNames = Object.getOwnPropertyNames(filter);
@@ -56,6 +73,7 @@ export class Database {
                     console.error(`ERROR WHILE EXECUTING QUERY: ${error}`);
                     console.error("-------- START OF QUERY --------");
                     console.error(query);
+                    console.error(values);
                     console.error("-------- END OF QUERY --------");
 
                     reject(error);
