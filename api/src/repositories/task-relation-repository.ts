@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 
 import { AccountEntity, TaskRelationEntity, TaskRelationWithUuids } from "../db/entities";
-import { Database } from "./database";
+import { Database, uuidv4 } from "./database";
 import { TaskRelation } from "../models/task-relation.model";
 
 @injectable()
@@ -12,27 +12,36 @@ export class TaskRelationRepository {
     ) { }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskRelationWithUuids> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                " `TaskRelation`.*,",
+                " `SourceTask`.`uuid` AS `sourceTaskUuid`,",
+                " `TargetTask`.`uuid` AS `targetTaskUuid`",
+                " FROM `TaskRelation`",
+                // Join for rights on source task
+                " INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`",
+                " INNER JOIN `TaskList` AS `SourceTaskList` ON `SourceTask`.`taskListId`=`SourceTaskList`.`id`",
+                " INNER JOIN `TaskListRight` AS `SourceTaskListRight` ON `SourceTaskList`.`id`=`SourceTaskListRight`.`taskListId`",
+                // Join for rights on target task
+                " INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`",
+                " INNER JOIN `TaskList` AS `TargetTaskList` ON `TargetTask`.`taskListId`=`TargetTaskList`.`id`",
+                " INNER JOIN `TaskListRight` AS `TargetTaskListRight` ON `TargetTaskList`.`id`=`TargetTaskListRight`.`taskListId`",
+                // 
+                " WHERE `TaskRelation`.`uuid` = ?",
+                " AND `SourceTaskListRight`.`accountId` = ?",
+                " AND `TargetTaskListRight`.`accountId` = ?",
+                " LIMIT 1"
+            ]
+            , [uuid, account.id, account.id]
+        );
 
-        // return (await this.db())
-        //     .createQueryBuilder(TaskRelationEntity, "relation")
-        //     .innerJoinAndSelect("relation.sourceTask", "sourceTask")
-        //     .innerJoinAndSelect("relation.targetTask", "targetTask")
-        //     .innerJoin("sourceTask.taskList", "sourceTaskList")
-        //     .innerJoin("sourceTaskList.rights", "sourceRight")
-        //     .innerJoin("sourceRight.account", "sourceAccount")
-        //     .innerJoin("targetTask.taskList", "targetTaskList")
-        //     .innerJoin("targetTaskList.rights", "targetRight")
-        //     .innerJoin("targetRight.account", "targetAccount")
-        //     .where("relation.uuid = :uuid")
-        //     .where("sourceAccount.id = :sourceAccountId")
-        //     .andWhere("targetAccount.id = :targetAccountId")
-        //     .setParameters({
-        //         uuid: uuid,
-        //         sourceAccountId: account.id,
-        //         targetAccountId: account.id
-        //     })
-        //     .getOne();
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async byId(id: number): Promise<TaskRelationWithUuids> {
@@ -93,24 +102,33 @@ export class TaskRelationRepository {
     }
 
     async update(entity: TaskRelationEntity): Promise<TaskRelationWithUuids> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        await db.update<TaskRelationEntity>("TaskRelation", {
+            relationType: entity.relationType,
+            sourceTaskId: entity.sourceTaskId,
+            targetTaskId: entity.targetTaskId,
+        }, { id: entity.id }, 1);
 
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(TaskRelationEntity, entity);
+        return this.byId(entity.id);
     }
 
     async create(entity: TaskRelationEntity): Promise<TaskRelationWithUuids> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        const id = await db.insert<TaskRelationEntity>("TaskRelation", {
+            uuid: uuidv4(),
+            relationType: entity.relationType,
+            sourceTaskId: entity.sourceTaskId,
+            targetTaskId: entity.targetTaskId,
+        });
 
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(TaskRelationEntity, entity);
+        return this.byId(id);
     }
 
-    async destroy(entity: TaskRelationEntity): Promise<TaskRelationEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.remove(TaskRelationEntity, entity);
+    async destroy(entity: TaskRelationEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<TaskRelationEntity>("TaskRelation", {
+            id: entity.id,
+        }, 1);
     }
 
     clone(src: TaskRelationWithUuids): TaskRelationWithUuids {
