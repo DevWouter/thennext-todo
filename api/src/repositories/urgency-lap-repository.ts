@@ -32,18 +32,22 @@ export class UrgencyLapRepository {
     }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<UrgencyLapEntity> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `UrgencyLap`.* FROM `UrgencyLap`",
+                "WHERE `UrgencyLap`.`uuid` = ?",
+                "  AND `UrgencyLap`.`ownerId` = ?",
+                "LIMIT 1"
+            ],
+            [uuid, account.id]
+        );
 
-        // return (await this.db)
-        //     .createQueryBuilder(UrgencyLapEntity, "urgencyLap")
-        //     .innerJoinAndSelect("urgencyLap.owner", "owner")
-        //     .where("urgencyLap.uuid = :uuid")
-        //     .andWhere("owner.id = :accountId")
-        //     .setParameters({
-        //         accountId: account.id,
-        //         uuid: uuid
-        //     })
-        //     .getOne();
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async of(account: AccountEntity): Promise<UrgencyLapEntity[]> {
@@ -64,15 +68,7 @@ export class UrgencyLapRepository {
         return result;
     }
 
-    async update(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db).createEntityManager();
-        // return entityManager.save(UrgencyLapEntity, entity);
-    }
-
     async create(account: AccountEntity, fromDay: number, score: number): Promise<UrgencyLapEntity> {
-
         const db = await this.database();
         const id = await db.insert<UrgencyLapEntity>("UrgencyLap", {
             uuid: uuidv4(),
@@ -84,11 +80,9 @@ export class UrgencyLapRepository {
         return this.byId(id);
     }
 
-    async destroy(entity: UrgencyLapEntity): Promise<UrgencyLapEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db).createEntityManager();
-        // return entityManager.remove(UrgencyLapEntity, entity);
+    async destroy(entity: UrgencyLapEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<UrgencyLapEntity>("UrgencyLap", { id: entity.id }, 1);
     }
 
     private clone(src: UrgencyLapEntity): UrgencyLapEntity {
