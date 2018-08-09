@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:1.15.2-alpine
 
 # Used for caching
 # Used for the logs
