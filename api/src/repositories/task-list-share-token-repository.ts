@@ -1,32 +1,49 @@
 import { injectable, inject } from "inversify";
-import { Connection } from "typeorm";
-
 import { AccountEntity, TaskListEntity } from "../db/entities";
 import { TaskListShareTokenEntity } from "../db/entities/task-list-share-token.entity";
+import { Database, uuidv4 } from "./database";
 
 
 @injectable()
 export class TaskListShareTokenRepository {
-    private readonly db: Promise<Connection>;
     constructor(
-        @inject("ConnectionProvider") dbPromise: () => Promise<Connection>
+        @inject("Database") private readonly database: () => Promise<Database>
     ) {
-        this.db = dbPromise();
     }
 
-    async create(entity: TaskListShareTokenEntity): Promise<TaskListShareTokenEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(TaskListShareTokenEntity, entity);
+    async byId(id: number): Promise<TaskListShareTokenEntity> {
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListShareToken`.*",
+                "FROM `TaskListShareToken`",
+                "WHERE `TaskListShareToken`.`id`=?",
+            ],
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
-    async update(entity: TaskListShareTokenEntity): Promise<TaskListShareTokenEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(TaskListShareTokenEntity, entity);
+    async create(tasklist: TaskListEntity, token: string): Promise<TaskListShareTokenEntity> {
+        const db = await this.database();
+        const id = await db.insert<TaskListShareTokenEntity>("TaskListShareToken", {
+            uuid: uuidv4(),
+            taskListId: tasklist.id,
+            token: token
+        });
+
+        return this.byId(id);
     }
 
-    async destroy(entity: TaskListShareTokenEntity): Promise<TaskListShareTokenEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.remove(TaskListShareTokenEntity, entity);
+    async destroy(entity: TaskListShareTokenEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<TaskListShareTokenEntity>("TaskListShareToken", { id: entity.id }, 1);
     }
 
     /**
@@ -34,26 +51,26 @@ export class TaskListShareTokenRepository {
      * @param account The account that should own the tokens
      */
     async of(account: AccountEntity): Promise<TaskListShareTokenEntity[]> {
-        return (await this.db)
-            .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
-            .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
-            .where("account.id = :id", { id: account.id })
-            .getMany();
-    }
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListShareToken`.*",
+                "FROM `TaskListShareToken`",
+                "INNER JOIN `TaskList` ON `TaskListShareToken`.`taskListId`=`TaskList`.`id`",
+                "WHERE 1=1",
+                "  AND `TaskList`.`ownerId`=?"
+            ],
+            [account.id]
+        );
 
-    /**
-     * Looks up and detects if a token for a task list exists.
-     * @param token The share token
-     * @param taskListUuid The tasklist for which it was intended.
-     */
-    async byTokenAndListUuid(token: string, taskListUuid: string): Promise<TaskListShareTokenEntity> {
-        return (await this.db)
-            .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
-            .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
-            .where("taskListShareToken.token = :token", { token: token })
-            .andWhere("taskList.uuid = :taskListUuid", { taskListUuid: taskListUuid })
-            .getOne();
+        const result: TaskListShareTokenEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
     /**
@@ -62,12 +79,33 @@ export class TaskListShareTokenRepository {
      * @param account The account that should own the tokens
      */
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListShareTokenEntity> {
-        return (await this.db)
-            .createQueryBuilder(TaskListShareTokenEntity, "taskListShareToken")
-            .leftJoinAndSelect("taskListShareToken.taskList", "taskList")
-            .innerJoin("taskList.owner", "account")
-            .where("account.id = :id", { id: account.id })
-            .where("taskListShareToken.uuid = :uuid", { uuid: uuid })
-            .getOne();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListShareToken`.*",
+                "FROM `TaskListShareToken`",
+                "INNER JOIN `TaskList` ON `TaskListShareToken`.`taskListId`=`TaskList`.`id`",
+                "WHERE 1=1",
+                "  AND `TaskListShareToken`.`uuid`=?",
+                "  AND `TaskList`.`ownerId`=?",
+            ],
+            [uuid, account.id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
+    }
+
+    private clone(src: TaskListShareTokenEntity): TaskListShareTokenEntity {
+        return {
+            id: src.id,
+            taskListId: src.taskListId,
+            token: src.token,
+            uuid: src.uuid,
+        };
     }
 }

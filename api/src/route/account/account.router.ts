@@ -9,6 +9,5 @@ const controller = container.resolve(AccountController);
 const router = express.Router();
 
 router.post("/", asyncMiddleware(controller.create.bind(controller)));
-router.get("/me", [isAuthenticated, asyncMiddleware(controller.me.bind(controller))]);
 
 export { router as accountRouter };

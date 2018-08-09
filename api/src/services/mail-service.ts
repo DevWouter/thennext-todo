@@ -4,10 +4,14 @@ import SendGrid = require('@sendgrid/mail');
 
 interface TemplateMap {
     "PlainMessage": { subject: string, content: string };
+    "CreateAccount": { confirm_url: string };
+    "PasswordRecovery": { reset_url: string };
 }
 
 const templateGuids = {
     "PlainMessage": "d-cade11b620d24d5598123b6f4414c4da",
+    "CreateAccount": "d-256d9c3fd8d241438a7a57aa38faaaf7",
+    "PasswordRecovery": "d-387d63b4b0b743208767442f61b380ff",
 };
 
 

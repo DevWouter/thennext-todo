@@ -1,76 +1,123 @@
 import { injectable, inject } from "inversify";
-import { Connection, Brackets } from "typeorm";
 
 import { AccountEntity, TaskListEntity } from "../db/entities";
-import { TaskListRightEntity } from "../db/entities/task-list-right.entity";
+import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
+import { Database, uuidv4 } from "./database";
 
 @injectable()
 export class TaskListRightRepository {
-
-    private readonly db: Promise<Connection>;
     constructor(
-        @inject("ConnectionProvider") dbProvider: () => Promise<Connection>
+        @inject("Database") private readonly database: () => Promise<Database>
     ) {
-        this.db = dbProvider();
     }
 
-    async update(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(TaskListRightEntity, entity);
+    async byId(id: number): Promise<TaskListRightEntity> {
+        const db = await this.database();
+        const { results } = await db.execute(
+            "SELECT `TaskListRight`.* FROM `TaskListRight` WHERE `TaskListRight`.`id`=? LIMIT 1",
+            [id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
-    async create(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.save(TaskListRightEntity, entity);
+    async create(account: AccountEntity, tasklist: TaskListEntity, access: AccessRight): Promise<TaskListRightEntity> {
+        const db = await this.database();
+        const id = await db.insert<TaskListRightEntity>("TaskListRight", {
+            uuid: uuidv4(),
+            accountId: account.id,
+            taskListId: tasklist.id,
+            access: access,
+        });
+
+        return this.byId(id);
     }
 
-    async destroy(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
-        const entityManager = (await this.db).createEntityManager();
-        return entityManager.remove(TaskListRightEntity, entity);
+    async destroy(entity: TaskListRightEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<TaskListRightEntity>("TaskListRight", { id: entity.id }, 1);
     }
 
     async visibleFor(account: AccountEntity): Promise<TaskListRightEntity[]> {
-        // The user gets to see all the tasklists shared to him/her.
-        return (await this.db)
-            .createQueryBuilder(TaskListRightEntity, "right")
-            .innerJoinAndSelect("right.account", "account")
-            .innerJoinAndSelect("right.taskList", "taskList")
-            .innerJoinAndSelect("taskList.owner", "owner")
-            .where("account.id = :accountId")
-            .orWhere("owner.id = :ownerId")
-            .setParameters({
-                accountId: account.id,
-                ownerId: account.id
-            })
-            .getMany();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListRight`.*",
+                "FROM `TaskListRight`",
+                "WHERE 1=1",
+                "  AND `TaskListRight`.`accountId`=?"
+            ],
+            [account.id]
+        );
+
+        const result: TaskListRightEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
     async getRightsFor(taskList: TaskListEntity): Promise<TaskListRightEntity[]> {
-        return (await this.db)
-            .createQueryBuilder(TaskListRightEntity, "right")
-            .innerJoinAndSelect("right.account", "account")
-            .innerJoinAndSelect("right.taskList", "taskList")
-            .where("taskList.id = :taskListId")
-            .setParameters({
-                taskListId: taskList.id,
-            }).getMany();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListRight`.*",
+                "FROM `TaskListRight`",
+                "WHERE 1=1",
+                "  AND `TaskListRight`.`taskListId`=?"
+            ],
+            [taskList.id]
+        );
+
+        const result: TaskListRightEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListRightEntity> {
-        return (await this.db)
-            .createQueryBuilder(TaskListRightEntity, "right")
-            .innerJoinAndSelect("right.account", "account")
-            .innerJoinAndSelect("right.taskList", "taskList")
-            .innerJoinAndSelect("taskList.owner", "owner")
-            .where(new Brackets(qb => qb
-                .where("account.id = :accountId")
-                .orWhere("owner.id = :ownerId")))
-            .andWhere("right.uuid = :uuid")
-            .setParameters({
-                uuid: uuid,
-                accountId: account.id,
-                ownerId: account.id
-            })
-            .getOne();
+        // The account should either be the owner of the list 
+        // or 
+        // The the one that is affected by the right.
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `TaskListRight`.* FROM `TaskListRight`",
+                "INNER JOIN `TaskList` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
+                "WHERE `TaskListRight`.`uuid`=?",
+                "  AND (",
+                "    `TaskListRight`.`accountId`=? OR `TaskList`.`ownerId`=?",
+                "  )",
+                "LIMIT 1"
+            ],
+            [uuid, account.id, account.id]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
+    }
+
+    private clone(src: TaskListRightEntity): TaskListRightEntity {
+        return {
+            access: src.access,
+            accountId: src.accountId,
+            id: src.id,
+            taskListId: src.taskListId,
+            uuid: src.uuid,
+        };
     }
 }

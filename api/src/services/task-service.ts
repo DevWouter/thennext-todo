@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 
 import {
     AccountRepository,
@@ -8,10 +8,17 @@ import {
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
-import { TaskEntity } from "../db/entities";
+import { TaskEntity, WithTasklistUuid } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
 import { Task, TaskStatus } from "../models/task.model";
 
+function ensureDateTime(obj: Task, keys: string[]) {
+    keys.forEach(key => {
+        if (obj[key] && typeof obj[key] === "string") {
+            obj[key] = new Date(obj[key]);
+        }
+    });
+}
 
 @injectable()
 export class TaskService {
@@ -34,12 +41,18 @@ export class TaskService {
 
         this.messageService
             .commandsOf("create-entity")
-            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .pipe(
+                filter(x => x.event.entityKind === this.KIND),
+                tap(x => ensureDateTime(x.event.entity as Task, ["createdOn", "updatedOn", "completedOn"]))
+            )
             .subscribe(x => this.create(x.client, x.event.entity as Task, x.event.refId));
 
         this.messageService
             .commandsOf("update-entity")
-            .pipe(filter(x => x.event.entityKind === this.KIND))
+            .pipe(
+                filter(x => x.event.entityKind === this.KIND),
+                tap(x => ensureDateTime(x.event.entity as Task, ["createdOn", "updatedOn", "completedOn"]))
+            )
             .subscribe(x => this.update(x.client, x.event.entity as Task, x.event.refId));
 
         this.messageService
@@ -50,11 +63,11 @@ export class TaskService {
 
     private async sync(client: TrustedClient, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const scoreShifts = await this.taskRepository.of(account);
+        const entities = await this.taskRepository.of(account);
 
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
-            entities: scoreShifts.map(x => this.toDTO(x)),
+            entities: entities.map(x => this.toDTO(x)),
         }, { clientId: client.clientId, refId: refId });
     }
 
@@ -66,21 +79,23 @@ export class TaskService {
             throw new Error("No uuid should be set");
         }
 
-        const dst = new TaskEntity();
-        dst.title = src.title;
-        dst.description = src.description || "";
-        dst.status = src.status || TaskStatus.todo;
-        dst.nextChecklistOrder = src.nextChecklistOrder || 1;
+        const dst: TaskEntity = {
+            id: undefined,
+            uuid: undefined,
+            title: src.title,
+            description: src.description || "",
+            status: src.status || TaskStatus.todo,
+            nextChecklistOrder: src.nextChecklistOrder || 1,
 
-        dst.createdAt = src.createdOn || new Date();
-        dst.updatedAt = src.updatedOn || new Date();
-        dst.completedAt = src.completedOn;
+            createdAt: src.createdOn || new Date(),
+            updatedAt: src.updatedOn || new Date(),
+            completedAt: src.completedOn,
+            taskListId: (await taskListPromise).id,
+        };
 
         if (!await taskListPromise) {
             throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
         }
-
-        dst.taskList = await taskListPromise;
 
         const finalEntity = await this.taskRepository.create(dst);
         this.messageService.send("entity-created",
@@ -96,18 +111,18 @@ export class TaskService {
 
     private async update(client: TrustedClient, src: Task, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
-        const dst = await this.taskRepository.byUuid(src.uuid, account);
+        const task = await this.taskRepository.byUuid(src.uuid, account);
 
-        dst.title = src.title;
-        dst.description = src.description || "";
-        dst.status = src.status || TaskStatus.todo;
-        dst.nextChecklistOrder = src.nextChecklistOrder;
+        task.title = src.title;
+        task.description = src.description || "";
+        task.status = src.status || TaskStatus.todo;
+        task.nextChecklistOrder = src.nextChecklistOrder;
 
-        dst.createdAt = src.createdOn || new Date();
-        dst.updatedAt = src.updatedOn || new Date();
-        dst.completedAt = src.completedOn;
+        task.createdAt = src.createdOn || new Date();
+        task.updatedAt = src.updatedOn || new Date();
+        task.completedAt = src.completedOn;
 
-        const finalEntity = await this.taskRepository.update(dst);
+        const finalEntity = await this.taskRepository.update(task);
         this.messageService.send("entity-updated",
             {
                 entity: this.toDTO(finalEntity),
@@ -134,10 +149,10 @@ export class TaskService {
             });
     }
 
-    private toDTO(src: TaskEntity): Task {
+    private toDTO(src: TaskEntity & WithTasklistUuid): Task {
         return <Task>{
             uuid: src.uuid,
-            taskListUuid: src.taskList.uuid,
+            taskListUuid: src.taskListUuid,
             nextChecklistOrder: src.nextChecklistOrder,
             title: src.title,
             status: src.status,

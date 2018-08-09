@@ -1,10 +1,11 @@
-import { Container, injectable, decorate, unmanaged } from "inversify";
-import { Connection, createConnection } from "typeorm";
+import { Container } from "inversify";
 
 import { AuthenticationService } from "./services/authentication-service";
 import { WsMessageService } from "./services/ws-message-service";
 import { WsService } from "./services/ws-service";
 import { ServerApp } from "./server/server-app";
+
+import { createConnection } from "mysql";
 
 import {
     AccountRepository,
@@ -32,20 +33,35 @@ import {
     TaskService,
     UrgencyLapService,
 } from "./services";
+import { Database } from "./repositories/database";
 
 
 
-decorate(injectable(), Connection);
-decorate(unmanaged(), Connection, 1);
 
 const container = new Container();
 
 // Database connection
-const connectionPromise = createConnection();
-type ConnectionProvider = () => Promise<Connection>;
-container.bind<ConnectionProvider>("ConnectionProvider").toProvider<Connection>((context) => {
+const databasePromise = new Promise<Database>((resolve, reject) => {
+    try {
+        console.log("Creating database connection");
+        resolve(new Database(createConnection({
+            host: "db",
+            port: 3306,
+            user: "test",
+            password: "test",
+            database: "test",
+            charset: "utf8mb4_unicode_ci",
+        })));
+        console.log("Database connection created");
+    } catch (error) {
+        reject(error);
+    }
+});
+
+type DatabaseProvider = () => Promise<Database>;
+container.bind<DatabaseProvider>("Database").toProvider<Database>((context) => {
     return () => {
-        return connectionPromise;
+        return databasePromise;
     };
 });
 

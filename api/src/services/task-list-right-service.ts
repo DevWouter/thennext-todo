@@ -13,6 +13,7 @@ import { TrustedClient } from "./ws/message-client";
 import { TaskListShare } from "../models/task-list-share.model";
 import { TaskListRight } from "../models/task-list-right.model";
 import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
+import { TaskListEntity, AccountEntity } from "../db/entities";
 
 
 @injectable()
@@ -54,40 +55,21 @@ export class TaskListRightService {
         const account = await this.accountRepository.byId(client.accountId);
         const entities = await this.taskListRightRepository.visibleFor(account);
 
+        const results: TaskListRight[] = [];
+        for (let i = 0; i < entities.length; ++i) {
+            const element = entities[i];
+            const result = this.toDTO(element, await this.taskListRepository.byId(element.taskListId), account);
+            results.push(result);
+        }
+
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
-            entities: entities.map(x => this.toDTO(x)),
+            entities: results,
         }, { clientId: client.clientId, refId: refId });
     }
 
     private async create(client: TrustedClient, src: TaskListShare, refId: string) {
         throw new Error(`Create is not supported for ${this.KIND}`);
-        // const account = await this.accountRepository.byId(client.accountId);
-        // const taskListPromise = this.taskListRepository.byUuid(src.taskListUuid, account);
-
-        // if (src.uuid) {
-        //     throw new Error("No uuid should be set");
-        // }
-
-        // const dst = new TaskListRightEntity();
-        // dst.token = src.token;
-
-        // if (!await taskListPromise) {
-        //     throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
-        // }
-
-        // dst.taskList = await taskListPromise;
-
-        // const finalEntity = await this.taskListRightRepository.create(dst);
-        // this.messageService.send("entity-created",
-        //     {
-        //         entity: this.toDTO(finalEntity),
-        //         entityKind: this.KIND,
-        //     }, {
-        //         clientId: client.clientId,
-        //         accounts: [account.id],
-        //         refId: refId
-        //     });
     }
 
     private async update(client: TrustedClient, src: TaskListShare, refId: string) {
@@ -112,11 +94,11 @@ export class TaskListRightService {
             });
     }
 
-    private toDTO(src: TaskListRightEntity): TaskListRight {
+    private toDTO(src: TaskListRightEntity, tasklist: TaskListEntity, account: AccountEntity): TaskListRight {
         return <TaskListRight>{
             uuid: src.uuid,
-            taskListUuid: src.taskList.uuid,
-            name: src.account.email,
+            taskListUuid: tasklist.uuid,
+            name: account.email,
         };
     }
 }

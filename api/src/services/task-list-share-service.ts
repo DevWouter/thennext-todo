@@ -8,7 +8,7 @@ import {
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
-import { TaskEntity } from "../db/entities";
+import { TaskEntity, TaskListEntity } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
 import { Task, TaskStatus } from "../models/task.model";
 import { TaskListShare } from "../models/task-list-share.model";
@@ -54,33 +54,36 @@ export class TaskListShareService {
         const account = await this.accountRepository.byId(client.accountId);
         const entities = await this.taskListShareTokenRepository.of(account);
 
+        const results: TaskListShare[] = [];
+        for (let i = 0; i < entities.length; ++i) {
+            const element = entities[i];
+            const result = this.toDTO(element, await this.taskListRepository.byId(element.taskListId));
+            results.push(result);
+        }
+
         this.messageService.send("entities-synced", {
             entityKind: this.KIND,
-            entities: entities.map(x => this.toDTO(x)),
+            entities: results,
         }, { clientId: client.clientId, refId: refId });
     }
 
     private async create(client: TrustedClient, src: TaskListShare, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const taskListPromise = this.taskListRepository.byUuid(src.taskListUuid, account);
+        const tasklist = await taskListPromise;
 
         if (src.uuid) {
             throw new Error("No uuid should be set");
         }
 
-        const dst = new TaskListShareTokenEntity();
-        dst.token = src.token;
-
-        if (!await taskListPromise) {
+        if (!tasklist) {
             throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
         }
 
-        dst.taskList = await taskListPromise;
-
-        const finalEntity = await this.taskListShareTokenRepository.create(dst);
+        const finalEntity = await this.taskListShareTokenRepository.create(await taskListPromise, src.token);
         this.messageService.send("entity-created",
             {
-                entity: this.toDTO(finalEntity),
+                entity: this.toDTO(finalEntity, await taskListPromise),
                 entityKind: this.KIND,
             }, {
                 clientId: client.clientId,
@@ -108,10 +111,10 @@ export class TaskListShareService {
             });
     }
 
-    private toDTO(src: TaskListShareTokenEntity): TaskListShare {
+    private toDTO(src: TaskListShareTokenEntity, taskList: TaskListEntity): TaskListShare {
         return <TaskListShare>{
             uuid: src.uuid,
-            taskListUuid: src.taskList.uuid,
+            taskListUuid: taskList.uuid,
             token: src.token,
         };
     }
