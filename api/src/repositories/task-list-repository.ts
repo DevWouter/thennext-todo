@@ -29,22 +29,6 @@ export class TaskListRepository {
         return this.clone(results[0]);
     }
 
-    async hasOwnership(account: AccountEntity, taskList: TaskListEntity): Promise<boolean> {
-        throw new Error("Not yet implemented");
-
-        // return (await this.db())
-        //     .createQueryBuilder(TaskListEntity, "taskList")
-        //     .innerJoin("taskList.owner", "owner")
-        //     .where("taskList.id = :taskListId")
-        //     .andWhere("owner.id = :accountId")
-        //     .setParameters({
-        //         taskListId: taskList.id,
-        //         accountId: account.id
-        //     })
-        //     .getCount()
-        //     .then(x => x === 1);
-    }
-
     /**
      * Returns a list of tasks that are accessible (and maybe owned) by the user.
      * @param account The account that can access the lists
@@ -65,16 +49,6 @@ export class TaskListRepository {
             result.push(this.clone(element));
         }
         return result;
-
-        // return (await this.db()).createQueryBuilder(TaskListEntity, "taskList")
-        //     .innerJoin("taskList.rights", "right")
-        //     .innerJoinAndSelect("taskList.owner", "owner")
-        //     .innerJoinAndSelect("right.account", "account")
-        //     .where("account.id = :accountId")
-        //     .setParameters({
-        //         accountId: account.id
-        //     })
-        //     .getMany();
     }
 
     async byId(id: number): Promise<TaskListEntity | null> {
