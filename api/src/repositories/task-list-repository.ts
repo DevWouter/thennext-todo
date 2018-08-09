@@ -69,13 +69,6 @@ export class TaskListRepository {
         return this.clone(results[0]);
     }
 
-    async update(entity: TaskListEntity): Promise<TaskListEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(TaskListEntity, entity);
-    }
-
     async create(name: string, account: AccountEntity): Promise<TaskListEntity> {
         const db = await this.database();
         const id = await db.insert<TaskListEntity>("TaskList",

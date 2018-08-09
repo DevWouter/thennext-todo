@@ -79,7 +79,7 @@ export class Database {
                     console.error(`ERROR WHILE EXECUTING QUERY: ${error}`);
                     console.error("-------- START OF QUERY --------");
                     console.error(query);
-                    // console.error(values);
+                    // console.error(values); // Only uncomment if you need to variables
                     console.error("-------- END OF QUERY --------");
 
                     reject(error);

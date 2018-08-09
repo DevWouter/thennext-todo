@@ -2,7 +2,6 @@ import { injectable, inject } from "inversify";
 
 import { AccountEntity, TaskListEntity } from "../db/entities";
 import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
-import { Connection } from "mysql";
 import { Database, uuidv4 } from "./database";
 
 @injectable()

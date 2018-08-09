@@ -4,7 +4,6 @@ import { Database } from "./database";
 
 @injectable()
 export class AccountSettingsRepository {
-
     constructor(
         @inject("Database") private readonly database: () => Promise<Database>
     ) { }
@@ -43,18 +42,6 @@ export class AccountSettingsRepository {
         }
 
         return this.clone(results[0]);
-        // return (await this.db())
-        //     .createQueryBuilder(AccountSettingsEntity, "accountSettings")
-        //     .innerJoin("accountSettings.account", "account")
-        //     .innerJoinAndSelect("accountSettings.primaryList", "primaryList")
-        //     .where("account.id = :id", { id: account.id })
-        //     .getOne();
-    }
-
-    async update(entity: AccountSettingsEntity): Promise<AccountSettingsEntity> {
-        throw new Error("Not yet implemented");
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.save(AccountSettingsEntity, entity);
     }
 
     async create(account: AccountEntity, primaryTaskList: TaskListEntity): Promise<AccountSettingsEntity> {
@@ -73,12 +60,6 @@ export class AccountSettingsRepository {
         });
 
         return this.byId(id);
-    }
-
-    async destroy(entity: AccountSettingsEntity): Promise<AccountSettingsEntity> {
-        throw new Error("Not yet implemented");
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.remove(AccountSettingsEntity, entity);
     }
 
     private clone(src: AccountSettingsEntity): AccountSettingsEntity {

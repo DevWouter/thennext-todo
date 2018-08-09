@@ -10,7 +10,6 @@ export class UrgencyLapRepository {
     constructor(
         @inject("Database") private readonly database: () => Promise<Database>
     ) {
-        // this.db = dbPromise();
     }
 
     async byId(id: number): Promise<UrgencyLapEntity> {

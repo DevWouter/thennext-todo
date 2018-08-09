@@ -70,32 +70,6 @@ export class TaskListRightService {
 
     private async create(client: TrustedClient, src: TaskListShare, refId: string) {
         throw new Error(`Create is not supported for ${this.KIND}`);
-        // const account = await this.accountRepository.byId(client.accountId);
-        // const taskListPromise = this.taskListRepository.byUuid(src.taskListUuid, account);
-
-        // if (src.uuid) {
-        //     throw new Error("No uuid should be set");
-        // }
-
-        // const dst = new TaskListRightEntity();
-        // dst.token = src.token;
-
-        // if (!await taskListPromise) {
-        //     throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
-        // }
-
-        // dst.taskList = await taskListPromise;
-
-        // const finalEntity = await this.taskListRightRepository.create(dst);
-        // this.messageService.send("entity-created",
-        //     {
-        //         entity: this.toDTO(finalEntity),
-        //         entityKind: this.KIND,
-        //     }, {
-        //         clientId: client.clientId,
-        //         accounts: [account.id],
-        //         refId: refId
-        //     });
     }
 
     private async update(client: TrustedClient, src: TaskListShare, refId: string) {
