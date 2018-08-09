@@ -17,13 +17,13 @@ export class TaskPageMenuComponent implements OnInit {
   public get showCompleted(): boolean { return this._showCompleted; }
   public set showCompleted(v: boolean) { this.navigation.toTaskPage({ showCompleted: v }); }
 
-  private _onlyUnblocked: boolean;
-  public get onlyUnblocked(): boolean { return this._onlyUnblocked; }
-  public set onlyUnblocked(v: boolean) { this.navigation.toTaskPage({ onlyUnblocked: v }); }
+  private _showBlocked: boolean;
+  public get showBlocked(): boolean { return this._showBlocked; }
+  public set showBlocked(v: boolean) { this.navigation.toTaskPage({ showBlocked: v }); }
 
-  private _onlyPositive: boolean;
-  public get onlyPositive(): boolean { return this._onlyPositive; }
-  public set onlyPositive(v: boolean) { this.navigation.toTaskPage({ onlyPositive: v }); }
+  private _showNegative: boolean;
+  public get showNegative(): boolean { return this._showNegative; }
+  public set showNegative(v: boolean) { this.navigation.toTaskPage({ showNegative: v }); }
 
   public displayName = "";
   public listName = "";
@@ -52,8 +52,8 @@ export class TaskPageMenuComponent implements OnInit {
       .subscribe(x => this.listName = x.name);
 
     this.navigation.showCompleted.subscribe(x => { this._showCompleted = x; });
-    this.navigation.onlyPositive.subscribe(x => { this._onlyPositive = x; });
-    this.navigation.onlyUnblocked.subscribe(x => { this._onlyUnblocked = x; });
+    this.navigation.showNegative.subscribe(x => { this._showNegative = x; });
+    this.navigation.showBlocked.subscribe(x => { this._showBlocked = x; });
     this.accountService.myAccount.subscribe(x => {
       if (x) {
         this.displayName = x.displayName;

@@ -28,18 +28,18 @@
     </div>
   </div>
 
-  <div class="item" (click)="onlyUnblocked = !onlyUnblocked">
+  <div class="item" (click)="showBlocked = !showBlocked">
     <div class="icon">
-      <i class="far fa-fw" [class.fa-square]="!onlyUnblocked" [class.fa-check-square]="onlyUnblocked"></i>
+      <i class="far fa-fw" [class.fa-square]="!showBlocked" [class.fa-check-square]="showBlocked"></i>
     </div>
-    <div class="text">Only unblocked</div>
+    <div class="text">Show blocked tasks</div>
   </div>
 
-  <div class="item" (click)="onlyPositive = !onlyPositive">
+  <div class="item" (click)="showNegative = !showNegative">
     <div class="icon">
-      <i class="far fa-fw" [class.fa-square]="!onlyPositive" [class.fa-check-square]="onlyPositive"></i>
+      <i class="far fa-fw" [class.fa-square]="!showNegative" [class.fa-check-square]="showNegative"></i>
     </div>
-    <div class="text">Only positive tasks</div>
+    <div class="text">Show negative tasks</div>
   </div>
 
   <div class="item" (click)="showCompleted = !showCompleted">
