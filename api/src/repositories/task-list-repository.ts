@@ -11,19 +11,22 @@ export class TaskListRepository {
     ) { }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListEntity> {
-        throw new Error("Not yet implemented");
-        // return (await this.db())
-        //     .createQueryBuilder(TaskListEntity, "taskList")
-        //     .innerJoinAndSelect("taskList.owner", "owner")
-        //     .innerJoin("taskList.rights", "right")
-        //     .innerJoin("right.account", "account")
-        //     .where("taskList.uuid = :uuid")
-        //     .andWhere("account.id = :accountId")
-        //     .setParameters({
-        //         uuid: uuid,
-        //         accountId: account.id
-        //     })
-        //     .getOne();
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `TaskList`.* FROM `TaskList`",
+                "INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
+                "WHERE `TaskListRight`.`accountId` = ?",
+                "  AND `TaskList`.`uuid` = ?",
+                "LIMIT 1"
+            ], [account.id, uuid]
+        );
+
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     async hasOwnership(account: AccountEntity, taskList: TaskListEntity): Promise<boolean> {
@@ -112,11 +115,9 @@ export class TaskListRepository {
         return this.byId(id);
     }
 
-    async destroy(entity: TaskListEntity): Promise<TaskListEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db()).createEntityManager();
-        // return entityManager.remove(TaskListEntity, entity);
+    async destroy(entity: TaskListEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<TaskListEntity>("TaskList", { id: entity.id }, 1);
     }
 
     private clone(src: TaskListEntity): TaskListEntity {

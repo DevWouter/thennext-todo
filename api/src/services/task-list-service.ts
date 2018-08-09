@@ -56,61 +56,53 @@ export class TaskListService {
     }
 
     private async create(client: TrustedClient, src: TaskList, refId: string) {
-        throw new Error("Not implemented");
-        // const account = await this.accountRepository.byId(client.accountId);
-        // const accountSettings = await this.accountSettingsRepository.of(account);
-        // const dst = new TaskListEntity();
-        // dst.name = src.name;
-        // dst.owner = account;
+        const account = await this.accountRepository.byId(client.accountId);
+        const accountSettings = await this.accountSettingsRepository.of(account);
 
-        // const finalEntity = await this.taskListrepository.create(dst);
+        const finalEntity = await this.taskListrepository.create(src.name, account);
+        await this.taskListRightService.create(account, finalEntity, AccessRight.owner);
 
-        // const ownerRight = new TaskListRightEntity();
-        // ownerRight.access = AccessRight.owner;
-        // ownerRight.account = account;
-        // ownerRight.taskList = finalEntity;
-        // await this.taskListRightService.create(ownerRight);
+        const rights = await this.taskListRightService.getRightsFor(finalEntity);
 
-        // const rights = await this.taskListRightService.getRightsFor(finalEntity);
-
-        // this.messageService.send("entity-created",
-        //     {
-        //         entity: this.toDTO(finalEntity, accountSettings),
-        //         entityKind: "task-list",
-        //     }, {
-        //         clientId: client.clientId,
-        //         accounts: rights.map(x => x.account.id),
-        //         refId: refId
-        //     });
+        this.messageService.send("entity-created",
+            {
+                entity: this.toDTO(finalEntity, accountSettings, account),
+                entityKind: "task-list",
+            }, {
+                clientId: client.clientId,
+                accounts: rights.map(x => x.accountId),
+                refId: refId
+            });
     }
 
     private async delete(client: TrustedClient, uuid: string, refId: string) {
-        throw new Error("Not implemented");
+        const account = await this.accountRepository.byId(client.accountId);
+        const entity = await this.taskListrepository.byUuid(uuid, account);
+        const settings = await this.accountSettingsRepository.of(account);
 
-        // const account = await this.accountRepository.byId(client.accountId);
-        // const settings = await this.accountSettingsRepository.of(account);
-        // const entity = await this.taskListrepository.byUuid(uuid, account);
-        // const rights = await this.taskListRightService.getRightsFor(entity);
+        // Fetch the rights so that we which clients we need to inform that the task-list is deleted
+        const rights = await this.taskListRightService.getRightsFor(entity);
 
-        // const accounts = rights.map(x => x.account.id);
+        const accounts = rights.map(x => x.accountId);
 
-        // if (entity.uuid === settings.primaryList.uuid) {
-        //     throw new Error("You can't delete your own primaryList");
-        // }
 
-        // if (entity.owner.id !== account.id) {
-        //     throw new Error("You are not the owner of the list.");
-        // }
+        if (entity.id === settings.primaryListId) {
+            throw new Error("You can't delete your own primaryList");
+        }
 
-        // this.taskListrepository.destroy(entity);
-        // this.messageService.send("entity-deleted", {
-        //     entityKind: "task-list",
-        //     uuid: uuid,
-        // }, {
-        //         clientId: client.clientId,
-        //         accounts: accounts,
-        //         refId: refId,
-        //     });
+        if (entity.ownerId !== account.id) {
+            throw new Error("You are not the owner of the list.");
+        }
+
+        this.taskListrepository.destroy(entity);
+        this.messageService.send("entity-deleted", {
+            entityKind: "task-list",
+            uuid: uuid,
+        }, {
+                clientId: client.clientId,
+                accounts: accounts,
+                refId: refId,
+            });
     }
 
     private toDTO(taskList: TaskListEntity, accountSettings: AccountSettingsEntity, account: AccountEntity): TaskList {

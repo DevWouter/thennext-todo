@@ -15,7 +15,7 @@ export class TaskListRightRepository {
     async byId(id: number): Promise<TaskListRightEntity> {
         const db = await this.database();
         const { results } = await db.execute(
-            "SELECT * FROM `TaskListRight` WHERE `id`=? LIMIT 1",
+            "SELECT `TaskListRight`.* FROM `TaskListRight` WHERE `TaskListRight`.`id`=? LIMIT 1",
             [id]
         );
 
@@ -24,13 +24,6 @@ export class TaskListRightRepository {
         }
 
         return this.clone(results[0]);
-    }
-
-    async update(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db).createEntityManager();
-        // return entityManager.save(TaskListRightEntity, entity);
     }
 
     async create(account: AccountEntity, tasklist: TaskListEntity, access: AccessRight): Promise<TaskListRightEntity> {
@@ -43,67 +36,80 @@ export class TaskListRightRepository {
         });
 
         return this.byId(id);
-
-        // const entityManager = (await this.db).createEntityManager();
-        // return entityManager.save(TaskListRightEntity, entity);
     }
 
-    async destroy(entity: TaskListRightEntity): Promise<TaskListRightEntity> {
-        throw new Error("Not yet implemented");
-
-        // const entityManager = (await this.db).createEntityManager();
-        // return entityManager.remove(TaskListRightEntity, entity);
+    async destroy(entity: TaskListRightEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<TaskListRightEntity>("TaskListRight", { id: entity.id }, 1);
     }
 
     async visibleFor(account: AccountEntity): Promise<TaskListRightEntity[]> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListRight`.*",
+                "FROM `TaskListRight`",
+                "WHERE 1=1",
+                "  AND `TaskListRight`.`accountId`=?"
+            ],
+            [account.id]
+        );
 
-        // // The user gets to see all the tasklists shared to him/her.
-        // return (await this.db)
-        //     .createQueryBuilder(TaskListRightEntity, "right")
-        //     .innerJoinAndSelect("right.account", "account")
-        //     .innerJoinAndSelect("right.taskList", "taskList")
-        //     .innerJoinAndSelect("taskList.owner", "owner")
-        //     .where("account.id = :accountId")
-        //     .orWhere("owner.id = :ownerId")
-        //     .setParameters({
-        //         accountId: account.id,
-        //         ownerId: account.id
-        //     })
-        //     .getMany();
+        const result: TaskListRightEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
     async getRightsFor(taskList: TaskListEntity): Promise<TaskListRightEntity[]> {
-        throw new Error("Not yet implemented");
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT",
+                "  `TaskListRight`.*",
+                "FROM `TaskListRight`",
+                "WHERE 1=1",
+                "  AND `TaskListRight`.`taskListId`=?"
+            ],
+            [taskList.id]
+        );
 
-        // return (await this.db)
-        //     .createQueryBuilder(TaskListRightEntity, "right")
-        //     .innerJoinAndSelect("right.account", "account")
-        //     .innerJoinAndSelect("right.taskList", "taskList")
-        //     .where("taskList.id = :taskListId")
-        //     .setParameters({
-        //         taskListId: taskList.id,
-        //     }).getMany();
+        const result: TaskListRightEntity[] = [];
+        for (let index = 0; index < results.length; index++) {
+            const element = results[index];
+            result.push(this.clone(element));
+        }
+
+        return result;
     }
 
     async byUuid(uuid: string, account: AccountEntity): Promise<TaskListRightEntity> {
-        throw new Error("Not yet implemented");
+        // The account should either be the owner of the list 
+        // or 
+        // The the one that is affected by the right.
+        const db = await this.database();
+        const { results } = await db.execute(
+            [
+                "SELECT `TaskListRight`.* FROM `TaskListRight`",
+                "INNER JOIN `TaskList` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
+                "WHERE `TaskListRight`.`uuid`=?",
+                "  AND (",
+                "    `TaskListRight`.`accountId`=? OR `TaskList`.`ownerId`=?",
+                "  )",
+                "LIMIT 1"
+            ],
+            [uuid, account.id, account.id]
+        );
 
-        // return (await this.db)
-        //     .createQueryBuilder(TaskListRightEntity, "right")
-        //     .innerJoinAndSelect("right.account", "account")
-        //     .innerJoinAndSelect("right.taskList", "taskList")
-        //     .innerJoinAndSelect("taskList.owner", "owner")
-        //     .where(new Brackets(qb => qb
-        //         .where("account.id = :accountId")
-        //         .orWhere("owner.id = :ownerId")))
-        //     .andWhere("right.uuid = :uuid")
-        //     .setParameters({
-        //         uuid: uuid,
-        //         accountId: account.id,
-        //         ownerId: account.id
-        //     })
-        //     .getOne();
+        if (results.length === 0) {
+            return null;
+        }
+
+        return this.clone(results[0]);
     }
 
     private clone(src: TaskListRightEntity): TaskListRightEntity {

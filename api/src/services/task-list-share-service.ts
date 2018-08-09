@@ -70,21 +70,17 @@ export class TaskListShareService {
     private async create(client: TrustedClient, src: TaskListShare, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const taskListPromise = this.taskListRepository.byUuid(src.taskListUuid, account);
+        const tasklist = await taskListPromise;
 
         if (src.uuid) {
             throw new Error("No uuid should be set");
         }
 
-        const dst = new TaskListShareTokenEntity();
-        dst.token = src.token;
-
-        if (!await taskListPromise) {
+        if (!tasklist) {
             throw new Error(`No taskList was not found with uuid '${src.taskListUuid}'`);
         }
 
-        dst.taskListId = (await taskListPromise).id;
-
-        const finalEntity = await this.taskListShareTokenRepository.create(dst);
+        const finalEntity = await this.taskListShareTokenRepository.create(await taskListPromise, src.token);
         this.messageService.send("entity-created",
             {
                 entity: this.toDTO(finalEntity, await taskListPromise),
