@@ -87,13 +87,9 @@ export class ChecklistItemService {
     private async update(client: TrustedClient, src: ChecklistItem, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const dst = await this.checklistItemRepository.byUuid(src.uuid, account);
-        // TODO: Add check if the user is allowed to see the task that is being refered to.
         dst.checked = src.checked;
         dst.order = src.order;
         dst.title = src.title;
-
-
-
         const finalEntity = await this.checklistItemRepository.update(dst);
         this.messageService.send("entity-updated",
             {
@@ -109,9 +105,6 @@ export class ChecklistItemService {
     private async delete(client: TrustedClient, uuid: string, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const entity = await this.checklistItemRepository.byUuid(uuid, account);
-
-        // TODO: Add check if the user is allowed to see the task that is being refered to.
-
         this.checklistItemRepository.destroy(entity);
         this.messageService.send("entity-deleted", {
             entityKind: this.KIND,
