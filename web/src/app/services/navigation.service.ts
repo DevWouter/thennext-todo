@@ -9,10 +9,8 @@ import { TaskPageNavigation } from "../models";
 
 enum ShowValues {
   completed = "completed",
-}
-enum OnlyValues {
-  unblocked = "unblocked",
-  positive = "positive",
+  blocked = "blocked",
+  negative = "negative"
 }
 
 @Injectable()
@@ -22,20 +20,20 @@ export class NavigationService {
   private _taskUuidValue: string = undefined;
   private _searchValue: string = undefined;
   private _showCompletedValue = false;
-  private _onlyUnblockedValue = false;
-  private _onlyPositiveValue = false;
+  private _showBlockedValue = false;
+  private _showNegativeValue = false;
   private _taskListUuid = new BehaviorSubject<string>(this._taskListUuidValue);
   private _taskUuid = new BehaviorSubject<string>(this._taskUuidValue);
   private _showCompleted = new BehaviorSubject<boolean>(this._showCompletedValue);
-  private _onlyUnblocked = new BehaviorSubject<boolean>(this._onlyUnblockedValue);
-  private _onlyPositive = new BehaviorSubject<boolean>(this._onlyPositiveValue);
+  private _showBlocked = new BehaviorSubject<boolean>(this._showBlockedValue);
+  private _showNegative = new BehaviorSubject<boolean>(this._showNegativeValue);
   private _search = new BehaviorSubject<string>(this._searchValue);
 
   public get taskListUuid(): Observable<string> { return this._taskListUuid; }
   public get taskUuid(): Observable<string> { return this._taskUuid; }
   public get showCompleted(): Observable<boolean> { return this._showCompleted; }
-  public get onlyUnblocked(): Observable<boolean> { return this._onlyUnblocked; }
-  public get onlyPositive(): Observable<boolean> { return this._onlyPositive; }
+  public get showBlocked(): Observable<boolean> { return this._showBlocked; }
+  public get showNegative(): Observable<boolean> { return this._showNegative; }
   public get search(): Observable<string> { return this._search; }
 
   public get lastTaskListUuid(): string {
@@ -71,39 +69,33 @@ export class NavigationService {
     }
 
     const showParams: ShowValues[] = [];
-    const onlyParams: OnlyValues[] = [];
     if (params.showCompleted !== undefined) {
       this._showCompletedValue = params.showCompleted;
     }
 
-    if (params.onlyPositive !== undefined) {
-      this._onlyPositiveValue = params.onlyPositive;
+    if (params.showNegative !== undefined) {
+      this._showNegativeValue = params.showNegative;
     }
 
-    if (params.onlyUnblocked !== undefined) {
-      this._onlyUnblockedValue = params.onlyUnblocked;
+    if (params.showBlocked !== undefined) {
+      this._showBlockedValue = params.showBlocked;
     }
 
     if (this._showCompletedValue) {
       showParams.push(ShowValues.completed);
     }
 
-    if (this._onlyPositiveValue) {
-      onlyParams.push(OnlyValues.positive);
+    if (this._showNegativeValue) {
+      showParams.push(ShowValues.negative);
     }
 
-    if (this._onlyUnblockedValue) {
-      onlyParams.push(OnlyValues.unblocked);
+    if (this._showBlockedValue) {
+      showParams.push(ShowValues.blocked);
     }
 
     let show = showParams.join(",");
     if (show === "") {
       show = null;
-    }
-
-    let only = onlyParams.join(",");
-    if (only === "") {
-      only = null;
     }
 
     let search = this._searchValue;
@@ -120,7 +112,6 @@ export class NavigationService {
         "taskList": tasklist,
         "task": taskUuid,
         "show": show,
-        "only": only,
         "search": search,
       }
     };
@@ -155,7 +146,10 @@ export class NavigationService {
       this._searchValue = pm.search as string;
       this._search.next(this._searchValue);
 
-      this._showCompletedValue = false; // Set to default.
+      // Set to default
+      this._showCompletedValue = false;
+      this._showNegativeValue = false;
+      this._showBlockedValue = false;
 
       const showValue = pm.show as string;
       if (showValue) {
@@ -163,26 +157,17 @@ export class NavigationService {
         if (showParams.includes(ShowValues.completed)) {
           this._showCompletedValue = true;
         }
+        if (showParams.includes(ShowValues.negative)) {
+          this._showNegativeValue = true;
+        }
+        if (showParams.includes(ShowValues.blocked)) {
+          this._showBlockedValue = true;
+        }
       }
 
       this._showCompleted.next(this._showCompletedValue);
-
-      this._onlyPositiveValue = false; // Set to default.
-      this._onlyUnblockedValue = false;
-
-      const onlyValue = pm.only as string;
-      if (onlyValue) {
-        const onlyParams = onlyValue.split(",");
-        if (onlyParams.includes(OnlyValues.positive)) {
-          this._onlyPositiveValue = true;
-        }
-        if (onlyParams.includes(OnlyValues.unblocked)) {
-          this._onlyUnblockedValue = true;
-        }
-      }
-
-      this._onlyPositive.next(this._onlyPositiveValue);
-      this._onlyUnblocked.next(this._onlyUnblockedValue);
+      this._showNegative.next(this._showNegativeValue);
+      this._showBlocked.next(this._showBlockedValue);
     });
   }
 }

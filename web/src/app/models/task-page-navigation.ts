@@ -21,14 +21,14 @@ export class TaskPageNavigation {
   showCompleted?: boolean;
 
   /**
-   * Only show unblocked tasks.
+   * Only show blocked tasks.
    */
-  onlyUnblocked?: boolean;
+  showBlocked?: boolean;
 
   /**
-   * Only show positive tasks.
+   * Only show negative tasks.
    */
-  onlyPositive?: boolean;
+  showNegative?: boolean;
 
   /**
    * The term we are searching for.
