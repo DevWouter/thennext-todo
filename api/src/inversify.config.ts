@@ -1,11 +1,11 @@
-import { Container, injectable, decorate, unmanaged } from "inversify";
+import { Container } from "inversify";
 
 import { AuthenticationService } from "./services/authentication-service";
 import { WsMessageService } from "./services/ws-message-service";
 import { WsService } from "./services/ws-service";
 import { ServerApp } from "./server/server-app";
 
-import { Connection, createConnection, Types } from "mysql";
+import { createConnection } from "mysql";
 
 import {
     AccountRepository,
