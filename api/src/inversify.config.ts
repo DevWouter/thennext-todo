@@ -5,7 +5,6 @@ import { WsMessageService } from "./services/ws-message-service";
 import { WsService } from "./services/ws-service";
 import { ServerApp } from "./server/server-app";
 
-import { createConnection } from "mysql";
 
 import {
     AccountRepository,
@@ -34,8 +33,7 @@ import {
     UrgencyLapService,
 } from "./services";
 import { Database } from "./repositories/database";
-
-
+import { CreateDatabaseConnection } from "./helpers/create-connection";
 
 
 const container = new Container();
@@ -44,14 +42,7 @@ const container = new Container();
 const databasePromise = new Promise<Database>((resolve, reject) => {
     try {
         console.log("Creating database connection");
-        resolve(new Database(createConnection({
-            host: "db",
-            port: 3306,
-            user: "test",
-            password: "test",
-            database: "test",
-            charset: "utf8mb4_unicode_ci",
-        })));
+        resolve(new Database(CreateDatabaseConnection()));
         console.log("Database connection created");
     } catch (error) {
         reject(error);
