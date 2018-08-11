@@ -83,6 +83,7 @@ export class Database {
                     console.error("-------- END OF QUERY --------");
 
                     reject(error);
+                    return;
                 }
 
                 resolve({
