@@ -1,0 +1,20 @@
+<app-common-page-header></app-common-page-header>
+<div class="container">
+  <div *ngIf="status === 0" class="explain">
+    We are confirming your account.
+  </div>
+  <div *ngIf="status === 1" class="explain">
+    We have confirmed your account, redirecting you to the login page.
+  </div>
+  <div *ngIf="status === 2" class="explain">
+    <p>Your account was already confirmed, redirecting you to the login page.</p>
+    <p>Please update your bookmark, your confirmation token will be deleted in the future.</p>
+  </div>
+  <div *ngIf="status === 3" class="explain">
+    <p>Your confirmation token was rejected. Either your confirmation e-mail is realy old or invalid.</p>
+  </div>
+  <div *ngIf="status === 4" class="explain">
+    <p>Oh dear, something seems to have gone wrong while confirming your token. Please try again later.</p>
+  </div>
+</div>
+<app-common-page-footer></app-common-page-footer>

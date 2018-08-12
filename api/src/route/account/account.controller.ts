@@ -1,27 +1,36 @@
 import { Request, Response } from "express";
 
 import * as bcrypt from "bcryptjs";
+import * as moment from "moment";
+
 import { injectable } from "inversify";
 import { Account } from "../../models/account.model";
-import { MyAccount } from "../../models/my-account.model";
 
-import { AccountEntity, AccountSettingsEntity, TaskListEntity, DefaultAccountSettings } from "../../db/entities";
+import { AccountEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
-import { TaskListRightEntity, AccessRight } from "../../db/entities/task-list-right.entity";
-import { AuthenticationService } from "../../services/authentication-service";
-import { UrgencyLapEntity } from "../../db/entities/urgency-lap.entity";
+import { AccessRight } from "../../db/entities/task-list-right.entity";
 import {
     AccountRepository,
+    AccountSettingsRepository,
+    ConfirmationTokenRepository,
     TaskListRepository,
     TaskListRightRepository,
-    AccountSettingsRepository,
-    UrgencyLapRepository
+    UrgencyLapRepository,
 } from "../../repositories";
+import {
+    MailService,
+} from "../../services";
+import { environment } from "../../environments";
+import { getHeapStatistics } from "v8";
 
 export interface CreateAccountInput {
     readonly email: string;
     readonly password: string;
 }
+
+interface ConfirmTokenResponse {
+    state: "confirmed" | "already-confirmed" | "rejected";
+};
 
 
 export function TransformAccount(src: AccountEntity): Account {
@@ -34,12 +43,13 @@ export function TransformAccount(src: AccountEntity): Account {
 @injectable()
 export class AccountController {
     constructor(
-        private readonly accountService: AccountRepository,
-        private readonly accountSettingsService: AccountSettingsRepository,
-        private readonly taskListService: TaskListRepository,
-        private readonly taskListRightService: TaskListRightRepository,
-        private readonly authenticationService: AuthenticationService,
-        private readonly urgencyLapService: UrgencyLapRepository,
+        private readonly accountRepository: AccountRepository,
+        private readonly accountSettingsRepository: AccountSettingsRepository,
+        private readonly confirmationTokenRepository: ConfirmationTokenRepository,
+        private readonly taskListRepository: TaskListRepository,
+        private readonly taskListRightRepository: TaskListRightRepository,
+        private readonly urgencyLapRepository: UrgencyLapRepository,
+        private readonly mailService: MailService,
     ) {
     }
 
@@ -49,23 +59,23 @@ export class AccountController {
             this.throwIfInvalid(input);
 
             // Check if account exists
-            const isExisting = (await this.accountService.byEmail(input.email)) !== null;
+            const isExisting = (await this.accountRepository.byEmail(input.email)) !== null;
             if (isExisting) {
                 throw new Error("Account already exists");
             }
 
             // Create account
-            const account = await this.accountService.create(
+            const account = await this.accountRepository.create(
                 input.email,
                 await bcrypt.hash(input.password, SecurityConfig.saltRounds)
             );
 
             // Create tasklist and the right for the tasklist.
-            const primaryTaskList = await this.taskListService.create("Inbox", account);
-            await this.taskListRightService.create(account, primaryTaskList, AccessRight.owner);
+            const primaryTaskList = await this.taskListRepository.create("Inbox", account);
+            await this.taskListRightRepository.create(account, primaryTaskList, AccessRight.owner);
 
             // Create settings
-            await this.accountSettingsService.create(account, primaryTaskList);
+            await this.accountSettingsRepository.create(account, primaryTaskList);
 
             // Create the default urgency laps
             const options = [
@@ -76,8 +86,17 @@ export class AccountController {
             ];
 
             options.forEach(async (x) => {
-                await this.urgencyLapService.create(account, x.from, x.score);
+                await this.urgencyLapRepository.create(account, x.from, x.score);
             });
+
+            // Generate confirmation token and send an email.
+            const confirmationToken = await this.confirmationTokenRepository.create(account);
+            const confirmUrl = environment.host_web + `confirm-account?token=${confirmationToken.token}`;
+            if (input.email.endsWith("@test.com")) {
+                console.log(`ConfirmationUrl was not send. Please open ${confirmUrl}`);
+            } else {
+                await this.mailService.sendMessage("CreateAccount", input.email, { confirm_url: confirmUrl });
+            }
 
             const dst = TransformAccount(account);
             res.send(dst);
@@ -86,6 +105,37 @@ export class AccountController {
             res.status(500).send((<Error>ex).message);
         }
     }
+
+
+    async confirm(req: Request, res: Response): Promise<void> {
+        const input = req.body as { token: string };
+        const confirmToken = await this.confirmationTokenRepository.byToken(input.token);
+        if (confirmToken === null) {
+            res.send(<ConfirmTokenResponse>{ state: "rejected" });
+            return;
+        }
+
+        if (moment(confirmToken.validUntil).isBefore(moment.now())) {
+            // The token is no longer valid.
+            res.send(<ConfirmTokenResponse>{ state: "rejected" });
+            return;
+        }
+
+        const account = await this.accountRepository.byId(confirmToken.accountId);
+        if (account.is_confirmed) {
+            console.log(account);
+            res.send(<ConfirmTokenResponse>{ state: "already-confirmed" });
+            return;
+        }
+
+        // Set the account to confirmed
+        account.is_confirmed = true;
+        await this.accountRepository.update(account);
+
+        res.send(<ConfirmTokenResponse>{ state: "confirmed" });
+        return;
+    }
+
     private throwIfInvalid(input: CreateAccountInput): void {
         const errors: string[] = [];
         const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

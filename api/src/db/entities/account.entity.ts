@@ -4,4 +4,5 @@ export interface AccountEntity {
     email: string;
     displayName: string;
     password_hash: string;
+    is_confirmed: boolean;
 }

@@ -9,5 +9,6 @@ const controller = container.resolve(AccountController);
 const router = express.Router();
 
 router.post("/", asyncMiddleware(controller.create.bind(controller)));
+router.post("/confirm-token", asyncMiddleware(controller.confirm.bind(controller)));
 
 export { router as accountRouter };

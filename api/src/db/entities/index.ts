@@ -3,6 +3,7 @@
 export * from "./account.entity";
 export * from "./account-settings.entity";
 export * from "./checklist-item.entity";
+export * from "./confirmation-token.entity";
 export * from "./score-shift.entity";
 export * from "./session.entity";
 export * from "./task.entity";
