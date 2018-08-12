@@ -1,13 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import { filter, tap } from "rxjs/operators";
 import { ChecklistItem } from "../../models";
-import { ChecklistItemService } from "../../services";
+import {
+  FocusService,
+  ChecklistItemService,
+} from "../../services";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "task-checklist-item",
   templateUrl: "./checklist-item.component.html",
   styleUrls: ["./checklist-item.component.scss"]
 })
-export class ChecklistItemComponent implements OnInit {
+export class ChecklistItemComponent implements OnInit, OnDestroy {
   public get title(): string { return this._item && this._item.title; }
   public set title(v: string) {
     if (!this._item) { return; }
@@ -29,6 +34,9 @@ export class ChecklistItemComponent implements OnInit {
   @Output()
   public move = new EventEmitter<"up" | "down">();
 
+  @Output()
+  public selectNext = new EventEmitter<"prev" | "next">();
+
   private _item: ChecklistItem = undefined;
   @Input()
   public set item(v: ChecklistItem) {
@@ -39,9 +47,32 @@ export class ChecklistItemComponent implements OnInit {
     return this._item;
   }
 
+  @ViewChild('input')
+  private inputRef: ElementRef;
+
+  private focusSubscription: Subscription;
+
   constructor(
     private readonly checklistItemService: ChecklistItemService,
+    private readonly focusService: FocusService,
   ) { }
+
+  ngOnInit() {
+    this.focusSubscription = this.focusService.request.pipe(
+      filter(x => x.type === "checklistItem"),
+      filter(x => (this._item && x.uuid === this._item.uuid)),
+    ).subscribe(() => {
+      if (this.inputRef) {
+        this.inputRef.nativeElement.focus();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.focusSubscription) {
+      this.focusSubscription.unsubscribe();
+    }
+  }
 
   @HostListener("keydown", ["$event"])
   up(e: KeyboardEvent) {
@@ -68,13 +99,11 @@ export class ChecklistItemComponent implements OnInit {
     this.move.emit("down");
   }
 
-  select(action: "prev" | "next", e: Event) {
+  moveSelection(action: "prev" | "next", e: Event) {
     e.preventDefault();
+    this.selectNext.emit(action);
   }
 
-
-  ngOnInit() {
-  }
 
   updateTitle() {
     if (this._item.title.length === 0) {
