@@ -1,8 +1,12 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
 import { BehaviorSubject, combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 import { ChecklistItem, Task } from "../../models";
-import { ChecklistItemService, TaskService } from "../../services";
+import {
+  ChecklistItemService,
+  FocusService,
+  TaskService,
+} from "../../services";
 
 
 @Component({
@@ -16,6 +20,10 @@ export class ChecklistComponent implements OnInit {
 
   private _taskSubject = new BehaviorSubject<Task>(undefined);
   private _task: Task;
+
+  @ViewChild('input')
+  private inputRef: ElementRef;
+
   @Input()
   public set task(v: Task) {
     this._task = v;
@@ -23,8 +31,9 @@ export class ChecklistComponent implements OnInit {
   }
 
   constructor(
-    private checklistItemService: ChecklistItemService,
-    private taskService: TaskService,
+    private readonly checklistItemService: ChecklistItemService,
+    private readonly taskService: TaskService,
+    private readonly focusService: FocusService,
   ) { }
 
   ngOnInit() {
@@ -35,7 +44,25 @@ export class ChecklistComponent implements OnInit {
       .subscribe(items => this.items = items);
   }
 
-  create(event: Event) {
+  selectNext(item: ChecklistItem, direction: "prev" | "next") {
+    const currentIndex = this.items.indexOf(item);
+    const nextIndex = currentIndex + (direction === "prev" ? -1 : 1);
+    if (nextIndex < 0) {
+      return;
+    }
+
+    if (nextIndex >= this.items.length) {
+      console.log(arguments);
+      this.inputRef.nativeElement.focus();
+      return;
+    }
+
+    const nextItem = this.items[nextIndex];
+    this.focusService.setFocus("checklistItem", nextItem.uuid);
+  }
+
+  async create(event: Event, select: "prev" | "next") {
+    console.log("direction", select);
     const title = this.newValue.trim();
     if (title.length === 0) {
       this.newValue = "";
@@ -43,7 +70,9 @@ export class ChecklistComponent implements OnInit {
       return;
     }
 
-    this.checklistItemService.add(<ChecklistItem>{
+    let prevLastItem: ChecklistItem = this.items && this.items[this.items.length - 1];
+
+    const checklistItemCreatePromise = this.checklistItemService.add(<ChecklistItem>{
       checked: false,
       title: title,
       order: this._task.nextChecklistOrder,
@@ -51,11 +80,30 @@ export class ChecklistComponent implements OnInit {
     });
 
     this._task.nextChecklistOrder = this._task.nextChecklistOrder + 1;
-    this.taskService.update(this._task);
-
+    const taskUpdatePromise = this.taskService.update(this._task);
     this.newValue = "";
+
     // Prevent the enter button from adding a line after keyup.
     event.preventDefault();
+
+    // Wait until both task and checklist have been updated.
+    await checklistItemCreatePromise;
+    await taskUpdatePromise;
+
+    if (select === "next") {
+      // We can keep the focus.
+      return;
+    } else {
+      // We need to put the focus in the newly created item.
+      if (prevLastItem) {
+        this.focusService.setFocus("checklistItem", prevLastItem.uuid);
+        return;
+      } else {
+        this.focusService.setFocus("checklistItem", (await checklistItemCreatePromise).uuid);
+        return;
+      }
+    }
+
   }
 
   move(item: ChecklistItem, direction: "up" | "down") {
