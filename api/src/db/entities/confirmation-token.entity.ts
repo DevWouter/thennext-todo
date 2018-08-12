@@ -4,7 +4,7 @@
  */
 export interface ConfirmationTokenEntity {
     id: number;
-    accountId: string;
+    accountId: number;
     token: string;
     createdAt: Date; // The date at which the token was created.
     validUntil: Date; // The date until which it is valid.

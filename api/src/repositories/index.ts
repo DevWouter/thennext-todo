@@ -1,6 +1,7 @@
 export { AccountRepository } from "./account-repository";
 export { AccountSettingsRepository } from "./account-settings-repository";
 export { ChecklistItemRepository } from "./checklist-item-repository";
+export { ConfirmationTokenRepository } from "./confirmation-token-repository";
 export { ScoreShiftRepository } from "./score-shift-repository";
 export { SessionRepository } from "./session-repository";
 export { TaskListRepository } from "./task-list-repository";

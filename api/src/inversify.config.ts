@@ -10,6 +10,7 @@ import {
     AccountRepository,
     AccountSettingsRepository,
     ChecklistItemRepository,
+    ConfirmationTokenRepository,
     ScoreShiftRepository,
     SessionRepository,
     TaskListRepository,
@@ -57,19 +58,21 @@ container.bind<DatabaseProvider>("Database").toProvider<Database>((context) => {
 });
 
 
-// The various services.
+// The various repositories.
 container.bind<AccountRepository>(AccountRepository).toSelf();
-container.bind<TaskRepository>(TaskRepository).toSelf();
-container.bind<TaskListRepository>(TaskListRepository).toSelf();
 container.bind<AccountSettingsRepository>(AccountSettingsRepository).toSelf();
 container.bind<ChecklistItemRepository>(ChecklistItemRepository).toSelf();
+container.bind<ConfirmationTokenRepository>(ConfirmationTokenRepository).toSelf();
 container.bind<ScoreShiftRepository>(ScoreShiftRepository).toSelf();
 container.bind<SessionRepository>(SessionRepository).toSelf();
+container.bind<TaskListRepository>(TaskListRepository).toSelf();
 container.bind<TaskListRightRepository>(TaskListRightRepository).toSelf();
 container.bind<TaskListShareTokenRepository>(TaskListShareTokenRepository).toSelf();
 container.bind<TaskRelationRepository>(TaskRelationRepository).toSelf();
+container.bind<TaskRepository>(TaskRepository).toSelf();
 container.bind<UrgencyLapRepository>(UrgencyLapRepository).toSelf();
 
+// The various services.
 container.bind<AuthenticationService>(AuthenticationService).toSelf();
 
 container.bind<WsMessageService>(WsMessageService).to(WsMessageService).inSingletonScope();
