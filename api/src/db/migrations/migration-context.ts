@@ -51,6 +51,7 @@ export class MigrationContext {
                 }
 
                 // If the migration has already been executed, we can skip it.
+                console.log(`Database Migration: Skipping ${migration.name} since already executed`);
                 continue;
             }
 
@@ -66,6 +67,8 @@ export class MigrationContext {
             await migrator.execute([
                 " INSERT INTO `__Migration` (`migrationName`) VALUES (?)"
             ], [migration.name]);
+
+            console.log(`Database Migration: Executed up of ${migration.name}`);
         }
     }
 
