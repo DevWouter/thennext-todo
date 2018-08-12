@@ -15,7 +15,7 @@ export class ConfirmationTokenRepository {
         const db = await this.database();
         const { results } = await db.execute(
             [
-                " SELECT `ConfirmationToken`.*,",
+                " SELECT `ConfirmationToken`.*",
                 " FROM `ConfirmationToken`",
                 " WHERE `ConfirmationToken`.`id` = ? ",
                 " LIMIT 1"
@@ -34,7 +34,7 @@ export class ConfirmationTokenRepository {
         const db = await this.database();
         const { results } = await db.execute(
             [
-                " SELECT `ConfirmationToken`.*,",
+                " SELECT `ConfirmationToken`.*",
                 " FROM `ConfirmationToken`",
                 " WHERE `ConfirmationToken`.`token` = ? ",
                 " LIMIT 1"
