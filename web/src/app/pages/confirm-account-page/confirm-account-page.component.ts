@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, delay } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   SessionService,
@@ -27,7 +27,7 @@ enum Status {
 export class ConfirmAccountPageComponent implements OnInit {
   $token = new BehaviorSubject<string>(undefined);
   $status = new BehaviorSubject<Status>(Status.Checking);
-
+  status = Status.Checking;
   constructor(
     private readonly router: Router,
     private readonly activedRoute: ActivatedRoute,
@@ -50,8 +50,15 @@ export class ConfirmAccountPageComponent implements OnInit {
       }
     });
 
-    this.activedRoute.queryParams.subscribe(x => this.$token.next(x.token));
+    this.$status.subscribe(x => this.status = x);
+    this.$status.pipe(
+      filter(x => x === Status.AlreadyConfirmed || x === Status.Confirmed),
+      delay(3000),
+    ).subscribe(() => {
+      this.goToLoginPage();
+    });
 
+    this.activedRoute.queryParams.subscribe(x => this.$token.next(x.token));
   }
 
   goToLoginPage() {
