@@ -1,0 +1,11 @@
+/**
+ * Each token can only be consumed once. Once consumed it will be deleted from the database.
+ * A token can only be consumed if the data presented by validUntil has not yet passed.
+ */
+export interface ConfirmationTokenEntity {
+    id: number;
+    accountId: string;
+    token: string;
+    createdAt: Date; // The date at which the token was created.
+    validUntil: Date; // The date until which it is valid.
+}
