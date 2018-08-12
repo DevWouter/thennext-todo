@@ -81,7 +81,8 @@ export class AccountRepository {
             uuid: uuidv4(),
             email: email,
             displayName: email,
-            password_hash: password_hash
+            password_hash: password_hash,
+            is_confirmed: false,
         });
 
         return this.byId(id);
@@ -93,7 +94,8 @@ export class AccountRepository {
             email: src.email,
             id: src.id,
             password_hash: src.password_hash,
-            uuid: src.uuid
+            uuid: src.uuid,
+            is_confirmed: src.is_confirmed,
         };
     }
 }
