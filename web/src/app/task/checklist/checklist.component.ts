@@ -62,15 +62,17 @@ export class ChecklistComponent implements OnInit {
   }
 
   async create(event: Event, select: "prev" | "next") {
-    console.log("direction", select);
+    let prevLastItem: ChecklistItem = this.items && this.items.length > 0 && this.items[this.items.length - 1];
     const title = this.newValue.trim();
     if (title.length === 0) {
       this.newValue = "";
       event.preventDefault(); // Prevent return
+      if (select === "prev" && prevLastItem) {
+        this.focusService.setFocus("checklistItem", prevLastItem.uuid);
+      }
       return;
     }
 
-    let prevLastItem: ChecklistItem = this.items && this.items[this.items.length - 1];
 
     const checklistItemCreatePromise = this.checklistItemService.add(<ChecklistItem>{
       checked: false,
