@@ -33,7 +33,7 @@ export class TaskPageMenuComponent implements OnInit {
 
   private _currentListUuid: string = undefined;
   public get currentListUuid(): string { return this._currentListUuid; }
-  public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); }
+  public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); this.close(); }
 
 
   expand = false;
