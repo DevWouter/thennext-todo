@@ -67,6 +67,7 @@ export class AccountRepository {
         await db.update<AccountEntity>("Account"
             , { // Update
                 displayName: entity.displayName,
+                is_confirmed: entity.is_confirmed
             }
             , { // Filter
                 id: entity.id

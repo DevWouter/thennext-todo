@@ -30,7 +30,7 @@ export class ConfirmationTokenRepository {
         return this.clone(results[0]);
     }
 
-    async byToken(token: number): Promise<ConfirmationTokenEntity> {
+    async byToken(token: string): Promise<ConfirmationTokenEntity> {
         const db = await this.database();
         const { results } = await db.execute(
             [

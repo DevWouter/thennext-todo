@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 
 import * as bcrypt from "bcryptjs";
+import * as moment from "moment";
+
 import { injectable } from "inversify";
 import { Account } from "../../models/account.model";
 
@@ -19,11 +21,16 @@ import {
     MailService,
 } from "../../services";
 import { environment } from "../../environments";
+import { getHeapStatistics } from "v8";
 
 export interface CreateAccountInput {
     readonly email: string;
     readonly password: string;
 }
+
+interface ConfirmTokenResponse {
+    state: "confirmed" | "already-confirmed" | "rejected";
+};
 
 
 export function TransformAccount(src: AccountEntity): Account {
@@ -98,6 +105,37 @@ export class AccountController {
             res.status(500).send((<Error>ex).message);
         }
     }
+
+
+    async confirm(req: Request, res: Response): Promise<void> {
+        const input = req.body as { token: string };
+        const confirmToken = await this.confirmationTokenRepository.byToken(input.token);
+        if (confirmToken === null) {
+            res.send(<ConfirmTokenResponse>{ state: "rejected" });
+            return;
+        }
+
+        if (moment(confirmToken.validUntil).isBefore(moment.now())) {
+            // The token is no longer valid.
+            res.send(<ConfirmTokenResponse>{ state: "rejected" });
+            return;
+        }
+
+        const account = await this.accountRepository.byId(confirmToken.accountId);
+        if (account.is_confirmed) {
+            console.log(account);
+            res.send(<ConfirmTokenResponse>{ state: "already-confirmed" });
+            return;
+        }
+
+        // Set the account to confirmed
+        account.is_confirmed = true;
+        await this.accountRepository.update(account);
+
+        res.send(<ConfirmTokenResponse>{ state: "confirmed" });
+        return;
+    }
+
     private throwIfInvalid(input: CreateAccountInput): void {
         const errors: string[] = [];
         const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
