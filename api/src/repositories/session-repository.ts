@@ -5,6 +5,7 @@ import * as moment from "moment";
 import { SessionEntity } from "../db/entities";
 import { AccountRepository } from "../repositories/account-repository";
 import { Database } from "./database";
+import { UnconfirmedAccountError } from "../errors";
 
 @injectable()
 export class SessionRepository {
@@ -48,10 +49,16 @@ export class SessionRepository {
             throw new Error("No user found");
         }
 
+        if (!account.is_confirmed) {
+            throw new UnconfirmedAccountError("Account is not confirmed");
+        }
+
+
         const validPassword = await bcrypt.compare(password, account.password_hash);
         if (!validPassword) {
             throw new Error("Password is invalid");
         }
+
 
         const session: Partial<SessionEntity> = {
             accountId: account.id,

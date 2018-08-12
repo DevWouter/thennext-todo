@@ -4,6 +4,7 @@ import { AuthenticationService } from "../../services/authentication-service";
 import { Session } from "../../models/session.model";
 
 import { SessionRepository } from "../../repositories";
+import { UnconfirmedAccountError } from "../../errors"
 
 
 interface SessionCreateInput {
@@ -30,7 +31,12 @@ export class SessionController {
             };
 
             res.send(result);
-        } catch (ex) {
+        } catch (error) {
+            if (error instanceof UnconfirmedAccountError) {
+                res.status(401).send({ reason: "Account is unconfirmed" });
+                return;
+            }
+
             res.status(401).send({});
         }
     }
