@@ -82,6 +82,20 @@ export class TaskListRepository {
         return this.byId(id);
     }
 
+    async update(entity: TaskListEntity): Promise<TaskListEntity> {
+        const db = await this.database();
+        await db.update<TaskListEntity>("TaskList",
+            {
+                // Only allow the name to be changed.
+                name: entity.name,
+            }, {
+                id: entity.id,
+            }, 1
+        );
+
+        return this.byId(entity.id);
+    }
+
     async destroy(entity: TaskListEntity): Promise<void> {
         const db = await this.database();
         await db.delete<TaskListEntity>("TaskList", { id: entity.id }, 1);

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { BehaviorSubject, combineLatest } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { filter, map, first, tap } from "rxjs/operators";
 
 import {
   Task,
@@ -162,6 +162,23 @@ export class RelationsViewComponent implements OnInit {
       targetTaskUuid: target,
       relationType: "blocks",
     });
+
+    this.taskService.entries.pipe(
+      map(x => ({
+        sourceTask: x.find(y => y.uuid === source),
+        targetTask: x.find(y => y.uuid === target),
+      })),
+      first(),
+    ).subscribe(x => {
+      if (!(!!x.sourceTask && !!x.targetTask)) {
+        return;
+      }
+
+      if (x.targetTask.status === TaskStatus.active && x.sourceTask.status === TaskStatus.todo) {
+        x.sourceTask.status = TaskStatus.active;
+        this.taskService.update(x.sourceTask);
+      }
+    })
 
     // Explicit unset of drag-status.
     // This is because the dragged element might no longer exist and as such the drop-event
