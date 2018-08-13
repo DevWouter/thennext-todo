@@ -128,19 +128,14 @@ export class TasklistComponent implements OnInit {
         if (search && search.trim() !== "") {
           tasks = tasks.filter(x => this.searchService.isResult(x, search));
         } else {
-          if (!showBlocked) {
-            tasks = tasks.filter(y => !blockedUuids.includes(y.uuid));
-          }
+          tasks = tasks.filter(task => {
+            const isBlocked = blockedUuids.includes(task.uuid);
+            if (isBlocked && showBlocked) return true;
+            const isNegative = scores.some(s => s.taskUuid === task.uuid && s.score < 0);
+            if (isNegative && showNegative) return true;
 
-          if (!showNegative) {
-            tasks = tasks.filter(task => {
-              const taskScore = scores.find(s => s.taskUuid === task.uuid);
-              if (taskScore) {
-                return taskScore.score >= 0;
-              }
-              return true; // No score, so we can assume 0.
-            });
-          }
+            return !(isBlocked || isNegative);
+          });
         }
 
         return tasks;
