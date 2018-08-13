@@ -13,7 +13,7 @@ import { TaskList } from '../../../models';
 })
 export class SettingsTasklistDetailComponent implements OnInit {
   taskList: TaskList;
-
+  newName = "";
   constructor(
     private activatedRoute: ActivatedRoute,
     private tasklistService: TaskListService,
@@ -24,6 +24,19 @@ export class SettingsTasklistDetailComponent implements OnInit {
     const $currentTaskList = combineLatest(this.tasklistService.entries, $currentTaskListId)
       .pipe(map(([entries, uuid]) => entries.find(e => e.uuid === uuid)));
 
-    $currentTaskList.subscribe(t => this.taskList = t);
+    $currentTaskList.subscribe(t => {
+      this.taskList = t;
+      this.newName = t.name;
+    });
+  }
+
+  updateName() {
+    if (this.newName === null || this.newName === undefined || this.newName.trim().length === 0) {
+      return;
+    }
+
+    this.taskList.name = this.newName;
+    this.tasklistService.update(this.taskList);
+    // this.newName
   }
 }

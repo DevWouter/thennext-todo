@@ -1,8 +1,10 @@
-<h1>
+<app-settings-tab-title>
   <a [routerLink]="[ '..' ]">Tasklists</a>
   <span *ngIf="taskList"> &gt; {{taskList.name}}</span>
-</h1>
+</app-settings-tab-title>
 
 <div>
-  In the future we will add the ability to share and otherwise modify properties of a tasklist.
+  <p>Here you can change the name of the tasklist</p>
+  <input [(ngModel)]="newName">
+  <button (click)="updateName()">Update name</button>
 </div>
