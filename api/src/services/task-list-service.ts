@@ -39,6 +39,11 @@ export class TaskListService {
             .subscribe(x => this.create(x.client, x.event.entity as TaskList, x.event.refId));
 
         this.messageService
+            .commandsOf("update-entity")
+            .pipe(filter(x => x.event.entityKind === "task-list"))
+            .subscribe(x => this.update(x.client, x.event.entity as TaskList, x.event.refId));
+
+        this.messageService
             .commandsOf("delete-entity")
             .pipe(filter(x => x.event.entityKind === "task-list"))
             .subscribe(x => this.delete(x.client, x.event.uuid, x.event.refId));
@@ -72,6 +77,34 @@ export class TaskListService {
                 clientId: client.clientId,
                 accounts: rights.map(x => x.accountId),
                 refId: refId
+            });
+    }
+
+    private async update(client: TrustedClient, src: TaskList, refId: string) {
+        const account = await this.accountRepository.byId(client.accountId);
+        const entity = await this.taskListrepository.byUuid(src.uuid, account);
+        const settings = await this.accountSettingsRepository.of(account);
+
+        // Fetch the rights so that we which clients we need to inform that the task-list is deleted
+        const rights = await this.taskListRightService.getRightsFor(entity);
+
+        const accounts = rights.map(x => x.accountId);
+
+        if (entity.ownerId !== account.id) {
+            throw new Error("You are not the owner of the list.");
+        }
+
+        // Only the name can be updated.
+        entity.name = src.name;
+
+        const finalEntity = await this.taskListrepository.update(entity);
+        this.messageService.send("entity-updated", {
+            entityKind: "task-list",
+            entity: finalEntity,
+        }, {
+                clientId: client.clientId,
+                accounts: accounts,
+                refId: refId,
             });
     }
 
