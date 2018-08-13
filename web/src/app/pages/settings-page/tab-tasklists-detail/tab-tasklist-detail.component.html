@@ -1,29 +1,8 @@
 <h1>
   <a [routerLink]="[ '..' ]">Tasklists</a>
-  <span *ngIf="taskList && rights"> &gt; {{taskList.name}}</span>
+  <span *ngIf="taskList"> &gt; {{taskList.name}}</span>
 </h1>
 
-<div *ngIf="taskList && rights">
-  Show information about the current task-list
-
-  <h3>Shared with</h3>
-  <ul>
-    <li *ngFor="let right of rights">
-      {{right.name}}
-      <button (click)="delete(right)">Delete</button>
-    </li>
-  </ul>
-
-  <h3>Unused share-tokens</h3>
-  <ul>
-    <li *ngFor="let token of tokens">
-      {{token.taskListUuid}} - {{token.token}}
-      <button (click)="deleteToken(token)">Delete</button>
-    </li>
-  </ul>
-  <input [(ngModel)]="newToken" placeholder="What is the secret token?" />
-  <button (click)="addShareToken()">Add token to share list</button>
-</div>
-<div *ngIf="!taskList || !rights">
-  Loading or not found...
+<div>
+  In the future we will add the ability to share and otherwise modify properties of a tasklist.
 </div>
