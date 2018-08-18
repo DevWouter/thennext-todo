@@ -108,7 +108,7 @@ export class ChecklistComponent implements OnInit {
 
   }
 
-  move(item: ChecklistItem, direction: "up" | "down") {
+  async move(item: ChecklistItem, direction: "up" | "down") {
     const curPos = this.items.indexOf(item);
     const otherPos = curPos + (direction === "up" ? 1 : -1);
     if (
@@ -124,7 +124,14 @@ export class ChecklistComponent implements OnInit {
     srcItem.order = dstItem.order;
     dstItem.order = t;
 
-    this.checklistItemService.update(srcItem);
-    this.checklistItemService.update(dstItem);
+    const src_promise = this.checklistItemService.update(srcItem);
+    const dst_promise = this.checklistItemService.update(dstItem);
+
+    // Wait until all changes have been procesed.
+    // If we don't do this the child-elements might be destroyed/created
+    // due to moving and as a result the focus will not be applied.
+    await src_promise;
+    await dst_promise;
+    this.focusService.setFocus("checklistItem", item.uuid);
   }
 }
