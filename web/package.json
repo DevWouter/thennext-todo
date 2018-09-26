@@ -21,6 +21,7 @@
     "@angular/platform-browser": "6.0.3",
     "@angular/platform-browser-dynamic": "6.0.3",
     "@angular/router": "6.0.3",
+    "@fortawesome/fontawesome-free": "^5.3.1",
     "core-js": "^2.5.6",
     "luxon": "^1.2.1",
     "normalize.css": "^8.0.0",
