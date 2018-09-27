@@ -2,6 +2,7 @@ export * from "./account.service";
 export * from "./api-event.service";
 export * from "./api.service";
 export * from "./checklist-item.service";
+export * from "./connection-state.service";
 export * from "./context.service";
 export * from "./focus.service";
 export * from "./media-view.service";

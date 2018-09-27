@@ -94,12 +94,19 @@ export class WsRepository<T extends Entity> implements Repository<T> {
       this._entries.splice(index, 1);
       this.$entriesSubject.next(this._entries);
     });
+  }
 
+  public load() {
     // Send sync command.
     this.messageService.send<"sync-entities">("sync-entities", {
       entityKind: this.entityKind,
       refId: this.generateRefId()
     });
+  }
+
+  public unload() {
+    this._entries = [];
+    this.$entriesSubject.next(this._entries);
   }
 
   private generateRefId(): string {
@@ -245,7 +252,8 @@ export class WsRepository<T extends Entity> implements Repository<T> {
     });
   }
 
-  async removeMany(values: T[], options: RemoveOptions): Promise<T[]> {
+  async removeMany(values: T[], options?: RemoveOptions): Promise<T[]> {
+    options = options || { onlyInternal: false };
     if (!options.onlyInternal) {
       // Delete each value.
       return await Promise.all(values.map(x => this.delete(x)));

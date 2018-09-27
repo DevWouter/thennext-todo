@@ -9,6 +9,7 @@ import { MessageService } from "./message.service";
 import { WsRepository } from "./repositories/ws-repository";
 
 import { Task } from "../models";
+import { ConnectionStateService } from "./connection-state.service";
 
 class TaskEventHandler implements RepositoryEventHandler<Task> {
   onItemLoad(entry: Task): void {
@@ -34,7 +35,7 @@ class TaskEventHandler implements RepositoryEventHandler<Task> {
 
 @Injectable()
 export class TaskService {
-  private _repository: Repository<Task>;
+  private _repository: WsRepository<Task>;
   public get entries(): Observable<Task[]> {
     return this._repository.entries;
   }
@@ -42,8 +43,10 @@ export class TaskService {
   constructor(
     messageService: MessageService,
     private taskEventService: TaskEventService,
+    private readonly connectionStateService: ConnectionStateService,
   ) {
     this._repository = new WsRepository("task", messageService, new TaskEventHandler());
+    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: Task): Promise<Task> {

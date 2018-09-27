@@ -6,10 +6,11 @@ import { WsRepository } from "./repositories/ws-repository";
 
 import { MessageService } from "./message.service";
 import { TaskList } from "../models";
+import { ConnectionStateService } from "./connection-state.service";
 
 @Injectable()
 export class TaskListService implements Repository<TaskList> {
-  private _repository: Repository<TaskList>;
+  private _repository: WsRepository<TaskList>;
 
   public get entries(): Observable<TaskList[]> {
     return this._repository.entries;
@@ -17,8 +18,10 @@ export class TaskListService implements Repository<TaskList> {
 
   constructor(
     readonly messageService: MessageService,
+    connectionStateService: ConnectionStateService,
   ) {
     this._repository = new WsRepository("task-list", messageService);
+    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: TaskList): Promise<TaskList> {

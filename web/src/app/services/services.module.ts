@@ -26,6 +26,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
+import { ConnectionStateService } from "./connection-state.service";
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { UrgencyLapService } from "./urgency-lap.service";
     TaskService,
     TokenService,
     UrgencyLapService,
+    ConnectionStateService,
   ]
 })
 export class ServicesModule {

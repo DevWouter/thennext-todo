@@ -33,6 +33,10 @@ export class MessageService implements OnDestroy {
     this.setup();
   }
 
+  reconnect() {
+    this.setup();
+  }
+
   private setup() {
     this._wsMessageService = new WsMessageService(this.wsServiceConfig, this.tokenService);
     this._wsMessageService.$error.subscribe(x => this.$error.next(x));

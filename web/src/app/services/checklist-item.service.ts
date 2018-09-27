@@ -10,10 +10,11 @@ import { TaskEventService } from "./task-event.service";
 import { MessageService } from "./message.service";
 
 import { ChecklistItem } from "../models";
+import { ConnectionStateService } from "./connection-state.service";
 
 @Injectable()
 export class ChecklistItemService {
-  private _repository: Repository<ChecklistItem>;
+  private _repository: WsRepository<ChecklistItem>;
   public get entries(): Observable<ChecklistItem[]> {
     return this._repository.entries.pipe(map(x => x.sort((a, b) => a.order - b.order)));
   }
@@ -21,6 +22,7 @@ export class ChecklistItemService {
   constructor(
     messageService: MessageService,
     private taskEventService: TaskEventService,
+    connectionStateService: ConnectionStateService,
   ) {
     this._repository = new WsRepository("checklist-item", messageService);
     combineLatest(this.taskEventService.deletedTask, this._repository.entries)
@@ -30,6 +32,8 @@ export class ChecklistItemService {
           .filter(x => x.taskUuid === task.uuid);
         this._repository.removeMany(items, { onlyInternal: true });
       });
+
+      connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: ChecklistItem): Promise<ChecklistItem> {
