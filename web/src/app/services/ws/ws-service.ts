@@ -92,7 +92,7 @@ export class WsService {
   }
 
   private onError(ev: Event): void {
-    console.error("Websocket error", ev);
+    console.error("Websocket error");
     this.markAsClosed();
   }
 
