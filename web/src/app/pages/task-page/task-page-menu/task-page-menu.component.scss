@@ -66,6 +66,7 @@ app-task-page-header-tasklist-selector {
 
 .item {
     height: 48px;
+    min-height: 48px;
     line-height: 48px;
     color: black;
     cursor: pointer;
@@ -88,6 +89,7 @@ app-task-page-header-tasklist-selector {
 }
 
 .panel {
+    overflow-y: auto;
     position: fixed;
     left: -303px;
     width: 300px;
