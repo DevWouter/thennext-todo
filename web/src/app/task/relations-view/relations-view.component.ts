@@ -89,27 +89,34 @@ export class RelationsViewComponent implements OnInit {
       this.afterAllow = this.taskRelationService.checkAllow({ after: x, before: this.taskUuid });
     });
 
-    combineLatest(this.taskRelationService.entries, this.taskService.entries, this._taskSubject.pipe(filter(x => !!x)))
-      .pipe(map(
-        ([relations, tasks, task]) => {
-          const blockedTasks = relations
-            .filter(x => x.sourceTaskUuid === task.uuid)
-            .map(relation => {
-              const remoteTaskUuid = relation.targetTaskUuid;
-              const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
+    combineLatest(
+      this.taskRelationService.entries,
+      this.taskService.entries,
+      this._taskSubject.pipe(filter(x => !!x))
+    ).pipe(map(
+      ([relations, tasks, task]) => {
+        const blockedTasks = relations
+          .filter(x => x.sourceTaskUuid === task.uuid)
+          .map(relation => {
+            const remoteTaskUuid = relation.targetTaskUuid;
+            const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
+            if (remoteTask) {
               return new RemoteTask(remoteTask, relation);
-            });
+            }
+          }).filter(x => !!x);
 
-          const blockingTasks = relations
-            .filter(x => x.targetTaskUuid === task.uuid)
-            .map(relation => {
-              const remoteTaskUuid = relation.sourceTaskUuid;
-              const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
+        const blockingTasks = relations
+          .filter(x => x.targetTaskUuid === task.uuid)
+          .map(relation => {
+            const remoteTaskUuid = relation.sourceTaskUuid;
+            const remoteTask = tasks.find(t => t.uuid === remoteTaskUuid);
+            if (remoteTask) {
               return new RemoteTask(remoteTask, relation);
-            });
+            }
+          }).filter(x => !!x);
 
-          return { tasksAfter: blockedTasks, tasksBefore: blockingTasks };
-        }))
+        return { tasksAfter: blockedTasks, tasksBefore: blockingTasks };
+      }))
       .subscribe(x => {
         this.tasksBefore = x.tasksBefore;
         this.tasksAfter = x.tasksAfter;

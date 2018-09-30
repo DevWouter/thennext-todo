@@ -1,19 +1,4 @@
-<div class="overlay" *ngIf="showDialog"></div>
-<div class="dialog-container" *ngIf="showDialog">
-  <div class="dialog">
-    <div class="title">An error has occured</div>
-    <div class="content">
-      Something went wrong while try to processing your last instruction. Please reload the page and try again.
-      <code>
-        <pre>{{lastError | json}}</pre>
-      </code>
-      <div class="center">
-        <button (click)="reload()">Reload the page</button>
-      </div>
-      <label>
-        <input type="checkbox" [(ngModel)]="autoReloadCheck">
-        Reload the page automatically on error (will be disabled if more than 4 errors occur in 10 second time)
-      </label>
-    </div>
-  </div>
+<div *ngIf="showWarning">
+  <div class="overlay"></div>
+  <div class="warning">{{warningMessage}}</div>
 </div>
