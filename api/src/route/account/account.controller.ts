@@ -21,7 +21,6 @@ import {
     MailService,
 } from "../../services";
 import { environment } from "../../environments";
-import { getHeapStatistics } from "v8";
 
 export interface CreateAccountInput {
     readonly email: string;
