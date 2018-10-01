@@ -69,6 +69,13 @@ export class TaskRelationRepository {
         return this.clone(results[0]);
     }
 
+    async exists(filter: Partial<TaskRelationEntity>): Promise<boolean> {
+        const db = await this.database();
+        return db
+            .count<TaskRelationEntity>("TaskRelation", filter)
+            .then(x => x >= 1);
+    }
+
     async of(account: AccountEntity): Promise<TaskRelationWithUuids[]> {
         const db = await this.database();
         const { results } = await db.execute([
