@@ -24,6 +24,7 @@ import {
 import {
     AccountService,
     ChecklistItemService,
+    LoggerService,
     MailService,
     ScoreShiftService,
     TaskListRightService,
@@ -74,6 +75,7 @@ container.bind<UrgencyLapRepository>(UrgencyLapRepository).toSelf();
 
 // The various services.
 container.bind<AuthenticationService>(AuthenticationService).toSelf();
+container.bind<LoggerService>(LoggerService).toSelf();
 
 container.bind<WsMessageService>(WsMessageService).to(WsMessageService).inSingletonScope();
 container.bind<WsService>(WsService).to(WsService).inSingletonScope();

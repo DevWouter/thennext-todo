@@ -8,6 +8,7 @@ import { WsEventMap } from "./ws/events";
 import { WsMessageClient, TrustedClient } from "./ws/message-client";
 import { AccountRepository } from "../repositories/account-repository";
 import { SessionRepository } from "../repositories";
+import { LoggerService } from "./logger-service";
 
 interface CommandMessage {
     client: TrustedClient;
@@ -39,6 +40,7 @@ export class WsMessageService {
         private readonly wsService: WsService,
         private readonly accountRepository: AccountRepository,
         private readonly sessionRepository: SessionRepository,
+        private readonly logger: LoggerService,
     ) {
         this.setup();
     }
@@ -78,10 +80,10 @@ export class WsMessageService {
                 try {
                     await this.handleCommand(ev.clientId, { command: command, data: commandData });
                 } catch (err) {
-                    console.warn(`Command "${command}" was not handled`, err);
+                    this.logger.warn(`Command "${command}" was not handled`, err);
                 }
             } catch (err) {
-                console.error(err);
+                this.logger.error(err);
             }
         });
     }

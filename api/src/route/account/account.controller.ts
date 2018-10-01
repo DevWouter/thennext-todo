@@ -18,7 +18,7 @@ import {
     UrgencyLapRepository,
 } from "../../repositories";
 import {
-    MailService,
+    MailService, LoggerService,
 } from "../../services";
 import { environment } from "../../environments";
 
@@ -49,6 +49,7 @@ export class AccountController {
         private readonly taskListRightRepository: TaskListRightRepository,
         private readonly urgencyLapRepository: UrgencyLapRepository,
         private readonly mailService: MailService,
+        private readonly logger: LoggerService,
     ) {
     }
 
@@ -92,7 +93,7 @@ export class AccountController {
             const confirmationToken = await this.confirmationTokenRepository.create(account);
             const confirmUrl = environment.host_web + `confirm-account?token=${confirmationToken.token}`;
             if (input.email.endsWith("@test.com")) {
-                console.log(`ConfirmationUrl was not send. Please open ${confirmUrl}`);
+                this.logger.info(`ConfirmationUrl was not send. Please open ${confirmUrl}`);
             } else {
                 await this.mailService.sendMessage("CreateAccount", input.email, { confirm_url: confirmUrl });
             }
@@ -100,7 +101,7 @@ export class AccountController {
             const dst = TransformAccount(account);
             res.send(dst);
         } catch (ex) {
-            console.error(ex);
+            this.logger.error(ex);
             res.status(500).send((<Error>ex).message);
         }
     }
@@ -122,7 +123,6 @@ export class AccountController {
 
         const account = await this.accountRepository.byId(confirmToken.accountId);
         if (account.is_confirmed) {
-            console.log(account);
             res.send(<ConfirmTokenResponse>{ state: "already-confirmed" });
             return;
         }
