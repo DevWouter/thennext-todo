@@ -10,6 +10,18 @@ export class Database {
     ) {
     }
 
+    async count<T>(tablename: string, row: Partial<T>): Promise<number> {
+        const propertyNames = Object.getOwnPropertyNames(row).filter(x => row[x] !== undefined);
+        const query = `SELECT COUNT(1) as \`amount\` FROM \`${tablename}\` \n` +
+            `\n  WHERE 1=1 AND (${propertyNames.reduce((prev, cur) => (prev ? prev + " AND " : "") + "?? = ?", undefined)})`;
+
+        const { results, fields } = await this.execute(query, [
+            ...propertyNames.reduce((prev, cur) => [...prev, cur, row[cur]], []),
+        ]);
+
+        return results["amount"];
+    }
+
     async insert<T>(tablename: string, row: Partial<T>): Promise<number> {
         const propertyNames = Object.getOwnPropertyNames(row).filter(x => row[x] !== undefined);
         const query = `INSERT INTO \`${tablename}\` \n` +

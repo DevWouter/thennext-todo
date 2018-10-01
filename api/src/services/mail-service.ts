@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 
 import SendGrid = require('@sendgrid/mail');
+import { LoggerService } from "./logger-service";
 
 interface TemplateMap {
     "PlainMessage": { subject: string, content: string };
@@ -18,6 +19,7 @@ const templateGuids = {
 @injectable()
 export class MailService {
     constructor(
+        private readonly logger: LoggerService,
     ) {
         this.setup();
     }
@@ -49,7 +51,7 @@ export class MailService {
             await SendGrid.send(msg);
             return true;
         } catch (error) {
-            console.error("Unable to send mail", error);
+            this.logger.error("Unable to send mail", error);
             return false;
         }
 

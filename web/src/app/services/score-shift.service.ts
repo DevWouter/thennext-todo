@@ -8,6 +8,7 @@ import { WsRepository } from "./repositories/ws-repository";
 import { MessageService } from "./message.service";
 
 import { ScoreShift } from "../models";
+import { ConnectionStateService } from "./connection-state.service";
 
 class ScoreShiftRestoreTranslator implements RepositoryEventHandler<ScoreShift> {
   onItemLoad(entry: ScoreShift): void {
@@ -32,15 +33,17 @@ class ScoreShiftRestoreTranslator implements RepositoryEventHandler<ScoreShift> 
 
 @Injectable()
 export class ScoreShiftService {
-  private _repository: Repository<ScoreShift>;
+  private _repository: WsRepository<ScoreShift>;
   public get entries(): Observable<ScoreShift[]> {
     return this._repository.entries;
   }
 
   constructor(
     messageService: MessageService,
+    connectionStateService: ConnectionStateService,
   ) {
     this._repository = new WsRepository<ScoreShift>("score-shift", messageService, new ScoreShiftRestoreTranslator());
+    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: ScoreShift): Promise<ScoreShift> {

@@ -17,6 +17,7 @@ export class WsMessageService {
   private _conSub: Subscription = undefined;
   private _msgSub: Subscription = undefined;
   private _msgQueue: string[] = []; // An array of messages to send.
+  private _wasUp = false;
 
   private readonly $msgQueue = new BehaviorSubject<string[]>(this._msgQueue);
   private readonly $status = new BehaviorSubject<"up" | "down">("down");
@@ -58,7 +59,9 @@ export class WsMessageService {
     });
 
     // If the token is unset, then perform a disconnect.
-    this.tokenService.token.pipe(filter(x => !x)).subscribe(() => this.disconnect());
+    this.tokenService.token
+      .pipe(filter(x => !x))
+      .subscribe(() => this.disconnect());
   }
 
   connect() {
@@ -77,13 +80,20 @@ export class WsMessageService {
     // When the status becomes closed, set status to down.
     this._wsService.connectionStatus
       .pipe(filter(x => x === WsConnectionStatus.CLOSED))
-      .subscribe(() => this.$status.next("down"));
+      .subscribe(() => {
+        if (this._wasUp === false) {
+          this.$status.next("up");
+        }
+        this.$status.next("down");
+      }
+      );
 
     this._conSub = combineLatest(
       this._wsService.connectionStatus,
       this.tokenService.token.pipe(filter(x => !!x))).subscribe(([status, token]) => {
         if (status === WsConnectionStatus.OPEN) {
           // Connection is open, we can send data, but first send the token.
+          this._wasUp = true;
           this.sendDirect("set-token", { token: token });
         }
       });

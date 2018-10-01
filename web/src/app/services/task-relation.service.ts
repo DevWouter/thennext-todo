@@ -9,12 +9,13 @@ import { TaskEventService } from "./task-event.service";
 import { MessageService } from "./message.service";
 
 import { TaskRelation, TaskRelationType } from "../models";
+import { ConnectionStateService } from "./connection-state.service";
 
 
 @Injectable()
 export class TaskRelationService {
   private _internalList: TaskRelation[] = [];
-  private _repository: Repository<TaskRelation>;
+  private _repository: WsRepository<TaskRelation>;
   public get entries(): Observable<TaskRelation[]> {
     return this._repository.entries;
   }
@@ -22,6 +23,7 @@ export class TaskRelationService {
   constructor(
     messageService: MessageService,
     private taskEventService: TaskEventService,
+    connectionStateService: ConnectionStateService,
   ) {
     this._repository = new WsRepository("task-relation", messageService);
     this._repository.entries.subscribe(x => this._internalList = x);
@@ -32,6 +34,8 @@ export class TaskRelationService {
         .filter(x => x.sourceTaskUuid === task.uuid || x.targetTaskUuid === task.uuid);
       this._repository.removeMany(relations, { onlyInternal: true });
     });
+
+    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: TaskRelation): Promise<TaskRelation> {

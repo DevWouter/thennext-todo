@@ -7,9 +7,11 @@ import { apiRouter } from "../route";
 import container from "../inversify.config";
 import { WsService } from "../services/ws-service";
 import { ServerApp } from "./server-app";
+import { LoggerService } from "../services";
 
 export function startServer(port: number) {
-    console.log("Server is starting");
+    const logger = container.get(LoggerService);
+    logger.info("Server is starting");
 
     const app = express();
     app.use("/api", bodyParser.json(), apiRouter);
@@ -20,8 +22,8 @@ export function startServer(port: number) {
     const serverApp = container.get(ServerApp);
 
     server.listen(port, async () => {
-        console.log("Server is ready");
+        logger.info("Server is ready");
     }).on("close", async () => {
-        console.log("Server is closed");
+        logger.info("Server is closed");
     });
 }

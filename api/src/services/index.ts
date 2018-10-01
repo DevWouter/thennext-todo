@@ -8,3 +8,4 @@ export { TaskListShareService } from "./task-list-share-service";
 export { TaskRelationService } from "./task-relation-service";
 export { TaskService } from "./task-service";
 export { UrgencyLapService } from "./urgency-lap-service";
+export { LoggerService } from "./logger-service";

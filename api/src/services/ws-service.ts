@@ -2,6 +2,7 @@ import { Subject, Observable } from "rxjs";
 import { injectable } from "inversify";
 import * as http from "http";
 import * as WebSocket from "ws";
+import { LoggerService } from "./logger-service";
 
 export interface WsClient {
     readonly id: number;
@@ -36,6 +37,10 @@ export class WsService {
     public get newClientEvent(): Observable<number> { return this.$newClientEvent; }
     public get closedClientEvent(): Observable<number> { return this.$closedClientEvent; }
 
+    constructor(private readonly logger: LoggerService) {
+
+    }
+
     public init(httpServer: http.Server) {
         this._server = new WebSocket.Server({
             server: httpServer
@@ -67,7 +72,7 @@ export class WsService {
         const index = this._clients.findIndex(c => c.id === clientId);
         const client = this._clients[index];
         if (index === -1) {
-            console.error(`Trying to close a client that is not listed. Id: ${client.id}`);
+            this.logger.error(`Trying to close a client that is not listed. Id: ${client.id}`);
             return;
         }
 
@@ -76,7 +81,7 @@ export class WsService {
         try {
             client.socket.close(code, reason);
         } catch (error) {
-            console.warn(`Error while trying to close client ${client.id}`, error);
+            this.logger.warn(`Error while trying to close client ${client.id}`, error);
         }
     }
 
@@ -89,7 +94,7 @@ export class WsService {
         client.socket.send(message, (err) => {
             // Report if an error has occured.
             if (err) {
-                console.error(`Error while sending message to client ${clientId}`, err);
+                this.logger.error(`Error while sending message to client ${clientId}`, err);
             }
         });
     }
@@ -103,12 +108,12 @@ export class WsService {
     }
 
     private onClose(client: WsClient, code: number, reason: string): void {
-        console.log(`Client ${client.id} has closed the connection (code: ${code}, reason: ${reason})`);
+        this.logger.info(`Client ${client.id} has closed the connection (code: ${code}, reason: ${reason})`);
         this.removeClient(client);
     }
 
     private onError(client: WsClient, error: Error): void {
-        console.warn(`Client ${client.id} has had an error`, error);
+        this.logger.warn(`Client ${client.id} has had an error`, error);
         this.removeClient(client, true, "Removing due to error: " + error.message);
     }
 
@@ -124,7 +129,7 @@ export class WsService {
             try {
                 client.socket.close(4000, removeReason);
             } catch (error) {
-                console.warn(`Error while trying to remove client ${client.id}`, error);
+                this.logger.warn(`Error while trying to remove client ${client.id}`, error);
             }
         }
     }
@@ -136,7 +141,7 @@ export class WsService {
         };
 
         this._clients.push(client);
-        console.log(`Client ${client.id} was added`);
+        this.logger.info(`Client ${client.id} was added`);
         this.$newClientEvent.next(client.id);
         return client;
     }

@@ -6,6 +6,8 @@ import { AccountService } from "./account.service";
 import { ApiEventService } from "./api-event.service";
 import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
+import { CommandStateService } from "./command-state.service";
+import { ConnectionStateService } from "./connection-state.service";
 import { ContextService } from "./context.service";
 import { FocusService } from "./focus.service";
 import { MediaViewService } from "./media-view.service";
@@ -38,6 +40,8 @@ import { UrgencyLapService } from "./urgency-lap.service";
     ApiEventService,
     ApiService,
     ChecklistItemService,
+    CommandStateService,
+    ConnectionStateService,
     ContextService,
     FocusService,
     MediaViewService,

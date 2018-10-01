@@ -11,6 +11,7 @@ import { WsMessageService } from "./ws-message-service";
 import { TaskRelationEntity, TaskRelationWithUuids } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
 import { TaskRelation } from "../models/task-relation.model";
+import { LoggerService } from "./logger-service";
 
 
 @injectable()
@@ -21,6 +22,7 @@ export class TaskRelationService {
         private readonly taskRelationRepository: TaskRelationRepository,
         private readonly accountRepository: AccountRepository,
         private readonly messageService: WsMessageService,
+        private readonly logger: LoggerService,
     ) {
         // Setup
         this.setup();
@@ -57,6 +59,18 @@ export class TaskRelationService {
         const account = await this.accountRepository.byId(client.accountId);
         const sourceTaskPromise = this.taskRepository.byUuid(src.sourceTaskUuid, account);
         const targetTaskPromise = this.taskRepository.byUuid(src.targetTaskUuid, account);
+
+        const exists = await this.taskRelationRepository.exists({
+            sourceTaskId: (await sourceTaskPromise).id,
+            targetTaskId: (await targetTaskPromise).id,
+            relationType: src.relationType,
+        });
+
+        if (exists) {
+            this.logger.warn(`The ${src.relationType}-relation from ${src.sourceTaskUuid} to ${src.targetTaskUuid} already exists`);
+            return;
+        }
+
         const dst: TaskRelationEntity = {
             id: undefined,
             uuid: undefined,
