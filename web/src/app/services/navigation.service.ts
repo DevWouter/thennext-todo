@@ -18,7 +18,6 @@ export class NavigationService {
   private _primaryTaskListUuid: string = undefined;
   private _taskListUuidValue: string = undefined;
   private _taskUuidValue: string = undefined;
-  private _searchValue: string = undefined;
   private _showCompletedValue = false;
   private _showBlockedValue = false;
   private _showNegativeValue = false;
@@ -27,14 +26,12 @@ export class NavigationService {
   private _showCompleted = new BehaviorSubject<boolean>(this._showCompletedValue);
   private _showBlocked = new BehaviorSubject<boolean>(this._showBlockedValue);
   private _showNegative = new BehaviorSubject<boolean>(this._showNegativeValue);
-  private _search = new BehaviorSubject<string>(this._searchValue);
 
   public get taskListUuid(): Observable<string> { return this._taskListUuid; }
   public get taskUuid(): Observable<string> { return this._taskUuid; }
   public get showCompleted(): Observable<boolean> { return this._showCompleted; }
   public get showBlocked(): Observable<boolean> { return this._showBlocked; }
   public get showNegative(): Observable<boolean> { return this._showNegative; }
-  public get search(): Observable<string> { return this._search; }
 
   public get lastTaskListUuid(): string {
     return this.storageService.get(StorageKey.LAST_TASKLIST);
@@ -98,21 +95,12 @@ export class NavigationService {
       show = null;
     }
 
-    let search = this._searchValue;
-    if (params.search !== undefined) {
-      search = params.search;
-    }
-
-    if (search === "") {
-      search = undefined;
-    }
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
         "taskList": tasklist,
         "task": taskUuid,
         "show": show,
-        "search": search,
       }
     };
 
@@ -142,9 +130,6 @@ export class NavigationService {
 
       this._taskUuidValue = pm.task as string;
       this._taskUuid.next(this._taskUuidValue);
-
-      this._searchValue = pm.search as string;
-      this._search.next(this._searchValue);
 
       // Set to default
       this._showCompletedValue = false;

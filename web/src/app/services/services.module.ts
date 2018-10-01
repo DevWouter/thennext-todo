@@ -6,6 +6,8 @@ import { AccountService } from "./account.service";
 import { ApiEventService } from "./api-event.service";
 import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
+import { CommandStateService } from "./command-state.service";
+import { ConnectionStateService } from "./connection-state.service";
 import { ContextService } from "./context.service";
 import { FocusService } from "./focus.service";
 import { MediaViewService } from "./media-view.service";
@@ -26,7 +28,6 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
-import { ConnectionStateService } from "./connection-state.service";
 
 @NgModule({
   imports: [
@@ -39,6 +40,8 @@ import { ConnectionStateService } from "./connection-state.service";
     ApiEventService,
     ApiService,
     ChecklistItemService,
+    CommandStateService,
+    ConnectionStateService,
     ContextService,
     FocusService,
     MediaViewService,
@@ -59,7 +62,6 @@ import { ConnectionStateService } from "./connection-state.service";
     TaskService,
     TokenService,
     UrgencyLapService,
-    ConnectionStateService,
   ]
 })
 export class ServicesModule {

@@ -14,7 +14,8 @@ import {
   NavigationService,
   SearchService,
   RelationViewService,
-  MediaViewService
+  MediaViewService,
+  CommandStateService
 } from "../services";
 
 @Component({
@@ -38,6 +39,7 @@ export class TasklistComponent implements OnInit {
     private readonly taskScoreService: TaskScoreService,
     private readonly navigationService: NavigationService,
     private readonly searchService: SearchService,
+    private readonly commandStateService: CommandStateService,
     private readonly relationViewService: RelationViewService,
     private readonly mediaViewService: MediaViewService,
   ) {
@@ -95,7 +97,7 @@ export class TasklistComponent implements OnInit {
       this.taskScoreService.delayedTaskUuids,
       this.taskScoreService.taskScores);
 
-    const $search = this.navigationService.search;
+    const $search = this.commandStateService.commandText;
 
     const $relationView = combineLatest(
       this.relationViewService.blockedTaskUuids
