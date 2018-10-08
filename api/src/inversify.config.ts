@@ -37,7 +37,7 @@ import {
 } from "./services";
 import { Database } from "./repositories/database";
 import { CreateDatabaseConnection } from "./helpers/create-connection";
-import { CleanSessionTokensJob, CleanConfirmationTokensJob } from "./server/jobs";
+import { CleanSessionTokensJob, CleanConfirmationTokensJob, CleanPasswordRecoveryTokensJob } from "./server/jobs";
 import { JobManager } from "./server/job-manager";
 
 
@@ -106,6 +106,7 @@ container.bind<UrgencyLapRepository>(UrgencyLapRepository).toSelf();
 // The various jobs
 container.bind<CleanSessionTokensJob>(CleanSessionTokensJob).to(CleanSessionTokensJob);
 container.bind<CleanConfirmationTokensJob>(CleanConfirmationTokensJob).to(CleanConfirmationTokensJob);
+container.bind<CleanPasswordRecoveryTokensJob>(CleanPasswordRecoveryTokensJob).to(CleanPasswordRecoveryTokensJob);
 
 // The job manager
 container.bind<JobManager>(JobManager).to(JobManager).inSingletonScope();
