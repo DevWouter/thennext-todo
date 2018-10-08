@@ -2,8 +2,9 @@ import "reflect-metadata"; // Required so that typeorm can read the types.
 import * as process from 'process';
 
 import { startServer } from "./server";
-import { CreateDatabaseConnection } from "./helpers/create-connection";
 import { MigrationContext } from "./db/migrations/migration-context";
+import container from "./inversify.config";
+
 
 const procesArguments = process.argv.slice(2);
 
@@ -12,9 +13,8 @@ async function main() {
     if (procesArguments.includes("--db-up")) {
         showNoArguments = false;
         // Perform database migration
-        const connection = CreateDatabaseConnection();
         console.log("Database Migration: Starting");
-        const context = new MigrationContext(connection);
+        const context = container.resolve<MigrationContext>(MigrationContext);
         try {
             await context.up();
             console.log("Database Migration: Completed!");

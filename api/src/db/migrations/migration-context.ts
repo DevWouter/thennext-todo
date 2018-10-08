@@ -1,15 +1,19 @@
 import { AllMigrations } from './all-migrations';
-import { Connection } from 'mysql';
 import { Migrator } from './util';
+import { LoggerService } from '../../services';
+import { Database } from '../../repositories/database';
+import { inject, injectable } from 'inversify';
 
 interface MigrationEntity {
     migrationName: string;
     at: Date;
 }
 
+@injectable()
 export class MigrationContext {
     constructor(
-        private readonly connection: Connection,
+        @inject("Database") private readonly database: () => Promise<Database>,
+        private readonly logger: LoggerService,
     ) {
         // Check if the AllMigrations table has all migrations in order
         const migrationNames = AllMigrations.map(x => x.name);
@@ -25,7 +29,7 @@ export class MigrationContext {
     }
 
     async up(): Promise<void> {
-        let migrator = new Migrator(this.connection);
+        let migrator = new Migrator(await this.database());
         await this.ensureMigrationTable(migrator);
 
         // Sort the executed migration
@@ -51,7 +55,7 @@ export class MigrationContext {
                 }
 
                 // If the migration has already been executed, we can skip it.
-                console.log(`Database Migration: Skipping ${migration.name} since already executed`);
+                this.logger.trace(`Skipping ${migration.name} since already executed`);
                 continue;
             }
 
@@ -59,6 +63,7 @@ export class MigrationContext {
             // the schema (like `CREATE TABLE`). So using transaction holds no value.
 
             try {
+                this.logger.info("Start database migration: " + migration.name);
                 await migration.up(migrator);
             } catch (err) {
                 throw { migration: migration.name, inner: err };
@@ -68,7 +73,7 @@ export class MigrationContext {
                 " INSERT INTO `__Migration` (`migrationName`) VALUES (?)"
             ], [migration.name]);
 
-            console.log(`Database Migration: Executed up of ${migration.name}`);
+            this.logger.info("Completed database migration: " + migration.name);
         }
     }
 
@@ -98,6 +103,7 @@ export class MigrationContext {
         }
 
         // Tables doesn't exists --> Create table
+        this.logger.info("Creating migration table");
         await migrator.execute([
             " CREATE TABLE `__Migration` ( ",
             " 	`migrationName` VARCHAR(255) NOT NULL PRIMARY KEY COMMENT 'The name and key of the migration that was executed', ",
