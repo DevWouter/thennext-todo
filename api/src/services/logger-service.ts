@@ -45,20 +45,20 @@ export class LoggerService implements ILogger {
     }
 
     private log(level: LogLevel, message: string, object?: object): void {
-        const prefix = this.className || "???";
+        const prefix = this.className ? (this.className + " - ") : "";
         switch (level) {
             case LogLevel.Debug:
-                return object !== undefined ? console.debug(`${prefix} - ${message}`, object) : console.debug(`${prefix} - ${message}`);
+                return object !== undefined ? console.debug(`[${level}] ${prefix}${message}`, object) : console.debug(`[${level}] ${prefix}${message}`);
             case LogLevel.Error:
-                return object !== undefined ? console.error(`${prefix} - ${message}`, object) : console.error(`${prefix} - ${message}`);
+                return object !== undefined ? console.error(`[${level}] ${prefix}${message}`, object) : console.error(`[${level}] ${prefix}${message}`);
             case LogLevel.Fatal:
-                return object !== undefined ? console.error(`${prefix} - ${message}`, object) : console.error(`${prefix} - ${message}`);
+                return object !== undefined ? console.error(`[${level}] ${prefix}${message}`, object) : console.error(`[${level}] ${prefix}${message}`);
             case LogLevel.Info:
-                return object !== undefined ? console.info(`${prefix} - ${message}`, object) : console.info(`${prefix} - ${message}`);
+                return object !== undefined ? console.info(`[${level}] ${prefix}${message}`, object) : console.info(`[${level}] ${prefix}${message}`);
             case LogLevel.Trace:
-                return object !== undefined ? console.trace(`${prefix} - ${message}`, object) : console.trace(`${prefix} - ${message}`);
+                return object !== undefined ? console.trace(`[${level}] ${prefix}${message}`, object) : console.trace(`[${level}] ${prefix}${message}`);
             case LogLevel.Warn:
-                return object !== undefined ? console.warn(`${prefix} - ${message}`, object) : console.warn(`${prefix} - ${message}`);
+                return object !== undefined ? console.warn(`[${level}] ${prefix}${message}`, object) : console.warn(`[${level}] ${prefix}${message}`);
             default:
                 break;
         }
