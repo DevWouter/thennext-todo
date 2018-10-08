@@ -19,5 +19,4 @@ export class CleanSessionTokensJob implements JobInterface {
             this.logger.error("Unable to delete old tokens", err);
         }
     }
-
 }

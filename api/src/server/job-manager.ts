@@ -3,6 +3,7 @@ import {
     JobInterface,
 
     CleanSessionTokensJob,
+    CleanConfirmationTokensJob,
 } from "./jobs";
 
 interface JobConfig {
@@ -22,9 +23,11 @@ interface JobConfig {
 export class JobManager {
     constructor(
         private readonly cleanSessionTokensJob: CleanSessionTokensJob,
+        private readonly cleanConfirmationTokensJob: CleanConfirmationTokensJob,
     ) {
-        // Clean sessions should be executed once every hour.
+        // Clean sessions and confirmations tokens every hour and at startup
         this.schedule(this.cleanSessionTokensJob, { atBoot: true, intervalMinutes: 60 });
+        this.schedule(this.cleanConfirmationTokensJob, { atBoot: true, intervalMinutes: 60 });
     }
 
     private schedule(job: JobInterface, config: Partial<JobConfig>) {

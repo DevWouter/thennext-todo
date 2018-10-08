@@ -70,6 +70,17 @@ export class ConfirmationTokenRepository {
         await db.delete<ConfirmationTokenEntity>("ConfirmationToken", { id: entity.id }, 1);
     }
 
+    async deleteExpiredTokens(): Promise<number> {
+        const db = await this.database();
+
+        const { results } = await db.execute([
+            "DELETE FROM `ConfirmationToken`",
+            "WHERE `validUntil` < NOW()"
+        ]);
+        
+        return results.affectedRows;
+    }
+
     private clone(src: ConfirmationTokenEntity): ConfirmationTokenEntity {
         return {
             id: src.id,
