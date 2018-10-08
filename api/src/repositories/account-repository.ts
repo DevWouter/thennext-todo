@@ -62,6 +62,18 @@ export class AccountRepository {
         return this.clone(results[0]);
     }
 
+    async updatePassword(entity: AccountEntity): Promise<void> {
+        const db = await this.database();
+        await db.update<AccountEntity>("Account"
+            , { // Update
+                password_hash: entity.password_hash,
+            }
+            , { // Filter
+                id: entity.id
+            }
+            , 1);
+    }
+
     async update(entity: AccountEntity): Promise<void> {
         const db = await this.database();
         await db.update<AccountEntity>("Account"
@@ -73,7 +85,6 @@ export class AccountRepository {
                 id: entity.id
             }
             , 1);
-
     }
 
     async create(email: string, password_hash: string): Promise<AccountEntity> {

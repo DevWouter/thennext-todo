@@ -16,6 +16,7 @@ import {
     TaskListRepository,
     TaskListRightRepository,
     UrgencyLapRepository,
+    PasswordRecoveryTokenRepository,
 } from "../../repositories";
 import {
     MailService, LoggerService,
@@ -27,9 +28,31 @@ export interface CreateAccountInput {
     readonly password: string;
 }
 
+export interface CreateRecoveryTokenRequest {
+    readonly email: string;
+}
+
+
 interface ConfirmTokenResponse {
     state: "confirmed" | "already-confirmed" | "rejected";
 };
+
+interface CreateRecoveryTokenResponse {
+    state: "recovery-send" | "rejected" | "unconfirmed";
+    message?: string;
+};
+
+
+interface ResetPasswordRequest {
+    token: string;
+    email: string;
+    newPassword: string;
+}
+
+interface ResetPasswordResponse {
+    state: "rejected" | "accepted";
+    message?: string;
+}
 
 
 export function TransformAccount(src: AccountEntity): Account {
@@ -45,6 +68,7 @@ export class AccountController {
         private readonly accountRepository: AccountRepository,
         private readonly accountSettingsRepository: AccountSettingsRepository,
         private readonly confirmationTokenRepository: ConfirmationTokenRepository,
+        private readonly passwordRecoveryTokenRepository: PasswordRecoveryTokenRepository,
         private readonly taskListRepository: TaskListRepository,
         private readonly taskListRightRepository: TaskListRightRepository,
         private readonly urgencyLapRepository: UrgencyLapRepository,
@@ -106,6 +130,68 @@ export class AccountController {
         }
     }
 
+    async createRecovery(req: Request, res: Response): Promise<void> {
+        try {
+            const input = req.body as CreateRecoveryTokenRequest;
+            const account = (await this.accountRepository.byEmail(input.email));
+            if (account === null) {
+                this.logger.error("CreateRecovery: Account doesn't exist", { email: input.email });
+                res.status(500).send(<CreateRecoveryTokenResponse>{ state: "rejected", message: "Account doesn't exist" });
+                return;
+            }
+
+            if (!account.is_confirmed) {
+                this.logger.error("CreateRecovery: Account is not yet confirmed", { accountId: account.id });
+                res.status(500).send(<CreateRecoveryTokenResponse>{ state: "unconfirmed", message: "Account is unconfirmed" });
+                return;
+            }
+
+            const recoveryToken = await this.passwordRecoveryTokenRepository.create(account);
+            const recoverUrl = environment.host_web + `recover-account?token=${recoveryToken.token}`;
+            if (input.email.endsWith("@test.com")) {
+                this.logger.info(`RecoverUrl was not send. Please open ${recoverUrl}`);
+            } else {
+                await this.mailService.sendMessage("PasswordRecovery", input.email, { reset_url: recoverUrl });
+            }
+
+            res.send(<CreateRecoveryTokenResponse>{ state: "recovery-send" });
+        } catch (ex) {
+            this.logger.error(ex);
+            res.status(500).send((<Error>ex).message);
+        }
+    }
+
+
+    async resetPassword(req: Request, res: Response): Promise<void> {
+        try {
+            const input = req.body as ResetPasswordRequest;
+            const token = (await this.passwordRecoveryTokenRepository.byTokenAndEmail(input.token, input.email));
+            if (token === null) {
+                this.logger.error("ResetPassword: token doesn't exist", { email: input.email, token: input.token });
+                res.status(500).send(<ResetPasswordResponse>{ state: "rejected", message: "token doesn't exist" });
+                return;
+            }
+
+            if (moment(token.validUntil).isBefore(moment.now())) {
+                this.logger.error("ResetPassword: token has expired", { email: input.email, token: input.token });
+                res.status(500).send(<ResetPasswordResponse>{ state: "rejected", message: "token is expired" });
+                return;
+            }
+
+            // Get the account and update the password.
+            const account = await this.accountRepository.byId(token.accountId);
+            account.password_hash = await bcrypt.hash(input.newPassword, SecurityConfig.saltRounds);
+            this.accountRepository.updatePassword(account);
+
+            // Delete the token that was used for reseting the password.
+            await this.passwordRecoveryTokenRepository.destroy(token);
+
+            res.send(<ResetPasswordResponse>{ state: "accepted" });
+        } catch (ex) {
+            this.logger.error(ex);
+            res.status(500).send((<Error>ex).message);
+        }
+    }
 
     async confirm(req: Request, res: Response): Promise<void> {
         const input = req.body as { token: string };
@@ -130,6 +216,9 @@ export class AccountController {
         // Set the account to confirmed
         account.is_confirmed = true;
         await this.accountRepository.update(account);
+
+        // Delete the token used for confirming the account.
+        await this.confirmationTokenRepository.destroy(confirmToken);
 
         res.send(<ConfirmTokenResponse>{ state: "confirmed" });
         return;
