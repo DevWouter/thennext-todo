@@ -11,6 +11,7 @@ import {
     UrgencyLapService,
     MailService,
 } from "../services";
+import { JobManager } from "./job-manager";
 
 
 @injectable()
@@ -25,6 +26,7 @@ export class ServerApp {
         private readonly taskRelationService: TaskRelationService,
         private readonly taskService: TaskService,
         private readonly urgencyLapService: UrgencyLapService,
+        private readonly jobManager: JobManager,
         // private readonly mailService: MailService,
     ) {
     }

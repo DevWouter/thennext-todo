@@ -36,6 +36,8 @@ import {
 } from "./services";
 import { Database } from "./repositories/database";
 import { CreateDatabaseConnection } from "./helpers/create-connection";
+import { CleanSessionTokensJob } from "./server/jobs";
+import { JobManager } from "./server/job-manager";
 
 
 const container = new Container();
@@ -73,6 +75,12 @@ container.bind<TaskRelationRepository>(TaskRelationRepository).toSelf();
 container.bind<TaskRepository>(TaskRepository).toSelf();
 container.bind<UrgencyLapRepository>(UrgencyLapRepository).toSelf();
 
+// The various jobs
+container.bind<CleanSessionTokensJob>(CleanSessionTokensJob).to(CleanSessionTokensJob);
+
+// The job manager
+container.bind<JobManager>(JobManager).to(JobManager).inSingletonScope();
+
 // The various services.
 container.bind<AuthenticationService>(AuthenticationService).toSelf();
 container.bind<LoggerService>(LoggerService).toSelf();
@@ -92,5 +100,7 @@ container.bind<TaskService>(TaskService).toSelf();
 container.bind<UrgencyLapService>(UrgencyLapService).toSelf();
 
 container.bind<ServerApp>(ServerApp).toSelf();
+
+
 
 export default container;
