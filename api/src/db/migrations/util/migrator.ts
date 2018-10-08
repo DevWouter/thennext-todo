@@ -1,28 +1,13 @@
-import { Connection, FieldInfo } from "mysql";
+import { FieldInfo } from "mysql";
+import { Database } from "../../../repositories/database";
 
 export class Migrator {
     constructor(
-        private readonly connection: Connection,
+        private readonly database: Database,
     ) {
     }
 
     execute(query: string | string[], values?: any[]): Promise<{ results: any, fields: FieldInfo[] }> {
-        if (Array.isArray(query)) {
-            query = query.join("\n");
-        }
-
-        return new Promise((resolve, reject) => {
-            this.connection.query(query as string, values, (error, results, fields) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
-
-                resolve({
-                    results: results,
-                    fields: fields,
-                });
-            });
-        });
+        return this.database.execute(query, values);
     }
 }

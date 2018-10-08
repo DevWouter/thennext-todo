@@ -102,6 +102,17 @@ export class SessionRepository {
         }
     }
 
+    // Delets expired tokens and returns the amount of expired tokens.
+    async deleteExpiredTokens(): Promise<number> {
+        const db = await this.database();
+        const { results } = await db.execute([
+            "DELETE FROM `Session`",
+            "WHERE `Session`.`expire_on` < NOW()"
+        ]);
+
+        return +results.affectedRows;
+    }
+
     private clone(src: SessionEntity): SessionEntity {
         return {
             id: src.id,
