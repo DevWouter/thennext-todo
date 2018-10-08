@@ -19,6 +19,7 @@ import {
     TaskRelationRepository,
     TaskRepository,
     UrgencyLapRepository,
+    PasswordRecoveryTokenRepository,
 } from "./repositories";
 
 import {
@@ -92,6 +93,7 @@ container.bind<AccountRepository>(AccountRepository).toSelf();
 container.bind<AccountSettingsRepository>(AccountSettingsRepository).toSelf();
 container.bind<ChecklistItemRepository>(ChecklistItemRepository).toSelf();
 container.bind<ConfirmationTokenRepository>(ConfirmationTokenRepository).toSelf();
+container.bind<PasswordRecoveryTokenRepository>(PasswordRecoveryTokenRepository).toSelf();
 container.bind<ScoreShiftRepository>(ScoreShiftRepository).toSelf();
 container.bind<SessionRepository>(SessionRepository).toSelf();
 container.bind<TaskListRepository>(TaskListRepository).toSelf();
