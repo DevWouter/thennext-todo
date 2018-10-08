@@ -56,7 +56,7 @@ export class LoggerService implements ILogger {
             case LogLevel.Info:
                 return object !== undefined ? console.info(`[${level}] ${prefix}${message}`, object) : console.info(`[${level}] ${prefix}${message}`);
             case LogLevel.Trace:
-                return object !== undefined ? console.trace(`[${level}] ${prefix}${message}`, object) : console.trace(`[${level}] ${prefix}${message}`);
+                return object !== undefined ? console.debug(`[${level}] ${prefix}${message}`, object) : console.debug(`[${level}] ${prefix}${message}`);
             case LogLevel.Warn:
                 return object !== undefined ? console.warn(`[${level}] ${prefix}${message}`, object) : console.warn(`[${level}] ${prefix}${message}`);
             default:
