@@ -1,4 +1,4 @@
-import { Container } from "inversify";
+import { Container, interfaces } from "inversify";
 
 import { AuthenticationService } from "./services/authentication-service";
 import { WsMessageService } from "./services/ws-message-service";
@@ -40,6 +40,26 @@ import { CleanSessionTokensJob, CleanConfirmationTokensJob } from "./server/jobs
 import { JobManager } from "./server/job-manager";
 
 
+function getClassName(request: interfaces.Request): string {
+    const className = request.parentRequest &&
+        request.parentRequest.bindings.length &&
+        request.parentRequest.bindings[0].implementationType &&
+        (request.parentRequest.bindings[0].implementationType as Function).name;
+
+    return className;
+}
+
+function getPath(request: interfaces.Request): string[] {
+    const classes: string[] = [];
+    while (getClassName(request)) {
+        classes.push(getClassName(request));
+        request = request.parentRequest;
+    }
+
+    return classes;
+}
+
+
 const container = new Container();
 
 // Database connection
@@ -58,6 +78,12 @@ container.bind<DatabaseProvider>("Database").toProvider<Database>((context) => {
     return () => {
         return databasePromise;
     };
+});
+
+// The logger
+container.bind<LoggerService>(LoggerService).toDynamicValue((context) => {
+    const path = getPath(context.currentRequest);
+    return new LoggerService(path.length > 0 ? path[0] : undefined);
 });
 
 
@@ -84,7 +110,6 @@ container.bind<JobManager>(JobManager).to(JobManager).inSingletonScope();
 
 // The various services.
 container.bind<AuthenticationService>(AuthenticationService).toSelf();
-container.bind<LoggerService>(LoggerService).toSelf();
 
 container.bind<WsMessageService>(WsMessageService).to(WsMessageService).inSingletonScope();
 container.bind<WsService>(WsService).to(WsService).inSingletonScope();

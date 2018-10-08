@@ -21,6 +21,7 @@ interface ILogger {
 @injectable()
 export class LoggerService implements ILogger {
     constructor(
+        private readonly className?: string
     ) {
     }
 
@@ -44,19 +45,20 @@ export class LoggerService implements ILogger {
     }
 
     private log(level: LogLevel, message: string, object?: object): void {
+        const prefix = this.className || "???";
         switch (level) {
             case LogLevel.Debug:
-                return object !== undefined ? console.debug(message, object) : console.debug(message);
+                return object !== undefined ? console.debug(`${prefix} - ${message}`, object) : console.debug(`${prefix} - ${message}`);
             case LogLevel.Error:
-                return object !== undefined ? console.error(message, object) : console.error(message);
+                return object !== undefined ? console.error(`${prefix} - ${message}`, object) : console.error(`${prefix} - ${message}`);
             case LogLevel.Fatal:
-                return object !== undefined ? console.error(message, object) : console.error(message);
+                return object !== undefined ? console.error(`${prefix} - ${message}`, object) : console.error(`${prefix} - ${message}`);
             case LogLevel.Info:
-                return object !== undefined ? console.info(message, object) : console.info(message);
+                return object !== undefined ? console.info(`${prefix} - ${message}`, object) : console.info(`${prefix} - ${message}`);
             case LogLevel.Trace:
-                return object !== undefined ? console.trace(message, object) : console.trace(message);
+                return object !== undefined ? console.trace(`${prefix} - ${message}`, object) : console.trace(`${prefix} - ${message}`);
             case LogLevel.Warn:
-                return object !== undefined ? console.warn(message, object) : console.warn(message);
+                return object !== undefined ? console.warn(`${prefix} - ${message}`, object) : console.warn(`${prefix} - ${message}`);
             default:
                 break;
         }
