@@ -144,6 +144,7 @@ export class WsMessageService {
         console.error(reason);
         this.$error.next({ reason: reason, requireLogin: true });
         this.disconnect();
+        this.$status.next("down");
       } break;
       default: {
         this.$event.next(data);
