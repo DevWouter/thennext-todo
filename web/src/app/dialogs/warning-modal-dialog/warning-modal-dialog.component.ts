@@ -30,6 +30,12 @@ export class WarningModalDialogComponent implements OnInit {
       }
     });
 
+    this.messageService.$error.pipe(filter(x => x.requireLogin))
+      .subscribe(x => {
+        // HACK: We are reloading the page since we the repositories don't know if they should reload.
+        window.location.assign("/login");
+      });
+
     this.connectionStateService.state.pipe(
       filter(x => x === "unload")).subscribe(() => {
         this.warningMessage = `Trying to reconnect, attempt ${this.reconnectCounter++}`;

@@ -8,7 +8,6 @@ import { WsCommandMap } from "./ws/commands";
 import { WsEventMap, WsEventBasic, WsEvent } from "./ws/events";
 
 import { TokenService } from "./token.service";
-import { StorageService, StorageKey } from "./storage.service";
 
 import { environment } from "../../environments/environment";
 
@@ -27,8 +26,7 @@ export class MessageService implements OnDestroy {
   get status(): Observable<"up" | "down"> { return this.$status.pipe(filter(x => !!x)); }
 
   constructor(
-    private readonly tokenService: TokenService,
-    private readonly storageService: StorageService,
+    private readonly tokenService: TokenService
   ) {
     this.setup();
   }

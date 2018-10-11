@@ -174,7 +174,12 @@ export class WsMessageService {
                 refId: options.refId,
                 data: content,
             });
-            this.wsService.send(client.clientId, msgString);
+
+            try {
+                this.wsService.send(client.clientId, msgString);
+            } catch (err) {
+                this.logger.error(`Unable to send a ${type} event to client ${client.clientId}`, err);
+            }
         };
 
         // Go over all clients
@@ -196,11 +201,17 @@ export class WsMessageService {
     }
 
     private removeClient(clientId: number, ...lists: WsMessageClient[][]) {
+        let removeCounter = 0;
         lists.forEach(list => {
             const index = list.findIndex(x => x.clientId === clientId);
             if (index !== -1) {
+                removeCounter++;
                 list.splice(index, 1);
             }
         });
+
+        if (removeCounter === 0) {
+            this.logger.warn(`The client ${clientId} was not registered in any of the lists`);
+        }
     }
 }
