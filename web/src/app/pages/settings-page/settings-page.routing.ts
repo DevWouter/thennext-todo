@@ -7,9 +7,12 @@ import { SettingsTabTagsComponent } from './tab-tags/tab-tags.component';
 import { SettingsTabUrgencyComponent } from './tab-urgency/tab-urgency.component';
 import { SettingsTasklistDetailComponent } from './tab-tasklists-detail/tab-tasklist-detail.component';
 import { SettingsTabPersonalComponent } from './tab-personal/tab-personal.component';
+import { SessionTokenGuard } from '../../guards/session-token.guard';
 
 const routes: Routes = [
   {
+    canActivate: [SessionTokenGuard],
+    canActivateChild: [SessionTokenGuard],
     path: 'settings', component: SettingsPageComponent,
     children: [
       { path: '', redirectTo: '/settings/(tab:personal)', pathMatch: "full" },
