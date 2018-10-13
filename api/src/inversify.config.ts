@@ -34,6 +34,7 @@ import {
     TaskRelationService,
     TaskService,
     UrgencyLapService,
+    PasswordCheckService,
 } from "./services";
 import { Database } from "./repositories/database";
 import { CreateDatabaseConnection } from "./helpers/create-connection";
@@ -120,6 +121,7 @@ container.bind<WsService>(WsService).to(WsService).inSingletonScope();
 container.bind<AccountService>(AccountService).toSelf();
 container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<MailService>(MailService).toSelf();
+container.bind<PasswordCheckService>(PasswordCheckService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
 container.bind<TaskListRightService>(TaskListRightService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();

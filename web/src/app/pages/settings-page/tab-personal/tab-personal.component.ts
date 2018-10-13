@@ -11,6 +11,9 @@ import { Subject } from 'rxjs';
 export class SettingsTabPersonalComponent implements OnInit {
   private $displayName = new Subject<string>();
   private _displayName: string;
+
+  public newPassword: string;
+
   public get displayName(): string {
     return this._displayName;
   }
@@ -31,6 +34,30 @@ export class SettingsTabPersonalComponent implements OnInit {
     this.$displayName
       .pipe(debounceTime(300))
       .subscribe(() => this.save());
+  }
+
+  changePassword() {
+    const errors: string[] = [];
+    if (this.newPassword.length === 0) {
+      errors.push("Password must have a length");
+    }
+    if (this.newPassword.trim().length !== this.newPassword.length) {
+      errors.push("Password cannot start with a space at the start or end");
+    }
+
+    if (errors.length) {
+      alert(`Errors found in password:\n - ` + (errors.join("\n - ")));
+      return;
+    }
+
+    try {
+      this.accountService.updatePassword(this.newPassword);
+      this.newPassword = ""; // Reset password.
+      alert("Password has been updated");
+    } catch (err) {
+      console.error("Unable to update password", err);
+      alert("Unable to update password");
+    }
   }
 
   private async save() {

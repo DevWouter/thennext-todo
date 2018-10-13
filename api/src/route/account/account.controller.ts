@@ -19,7 +19,7 @@ import {
     PasswordRecoveryTokenRepository,
 } from "../../repositories";
 import {
-    MailService, LoggerService,
+    MailService, LoggerService, PasswordCheckService,
 } from "../../services";
 import { environment } from "../../environments";
 
@@ -72,6 +72,7 @@ export class AccountController {
         private readonly taskListRepository: TaskListRepository,
         private readonly taskListRightRepository: TaskListRightRepository,
         private readonly urgencyLapRepository: UrgencyLapRepository,
+        private readonly passwordCheckService: PasswordCheckService,
         private readonly mailService: MailService,
         private readonly logger: LoggerService,
     ) {
@@ -232,13 +233,7 @@ export class AccountController {
             errors.push("Email is invalid");
         }
 
-        if (input.password.length === 0) {
-            errors.push("Empty password is not allowed");
-        }
-
-        if (input.password.trim().length !== input.password.length) {
-            errors.push("Password can not contain whitespace at start or end");
-        }
+        errors.push(...this.passwordCheckService.validatePassword(input.password));
 
         if (errors.length !== 0) {
             throw new Error("Input is invalid: " + errors.join(", "));
