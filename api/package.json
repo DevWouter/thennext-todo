@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The API for a personal assistant",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "start": "node index.js --run --db-up",
     "build": "tsc",
