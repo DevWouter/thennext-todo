@@ -61,4 +61,10 @@ export class AccountService {
       displayName: change.displayName
     });
   }
+
+  updatePassword(password: string): any {
+    this.messageSerivce.send("update-my-password", {
+      newPassword: password
+    });
+  }
 }

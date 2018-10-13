@@ -9,4 +9,16 @@
       <input [(ngModel)]="displayName">
     </div>
   </div>
+  <div class="row">
+    <div class="label">New password</div>
+    <div class="value">
+      <input [(ngModel)]="newPassword" type="password" autocomplete="new-password" placeholder="Enter new password here">
+    </div>
+  </div>
+  <div class="row">
+    <div class="label"></div>
+    <div class="value">
+      <button (click)="changePassword()">Update password</button>
+    </div>
+  </div>
 </div>
