@@ -169,13 +169,13 @@ export class AccountController {
             const token = (await this.passwordRecoveryTokenRepository.byTokenAndEmail(input.token, input.email));
             if (token === null) {
                 this.logger.error("ResetPassword: token doesn't exist", { email: input.email, token: input.token });
-                res.status(500).send(<ResetPasswordResponse>{ state: "rejected", message: "token doesn't exist" });
+                res.send(<ResetPasswordResponse>{ state: "rejected", message: "token doesn't exist" });
                 return;
             }
 
             if (moment(token.validUntil).isBefore(moment.now())) {
                 this.logger.error("ResetPassword: token has expired", { email: input.email, token: input.token });
-                res.status(500).send(<ResetPasswordResponse>{ state: "rejected", message: "token is expired" });
+                res.send(<ResetPasswordResponse>{ state: "rejected", message: "token is expired" });
                 return;
             }
 
@@ -183,6 +183,8 @@ export class AccountController {
             const account = await this.accountRepository.byId(token.accountId);
             account.password_hash = await bcrypt.hash(input.newPassword, SecurityConfig.saltRounds);
             this.accountRepository.updatePassword(account);
+
+            this.logger.info(`Updated the password for account ${account.id}`);
 
             // Delete the token that was used for reseting the password.
             await this.passwordRecoveryTokenRepository.destroy(token);

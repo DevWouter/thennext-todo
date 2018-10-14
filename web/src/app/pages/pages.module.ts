@@ -12,6 +12,7 @@ import { CreateAccountPageComponent } from "./create-account-page/create-account
 import { ForgetPasswordPageComponent } from "./forget-password-page/forget-password-page.component";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
+import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
 
 // Sub modules
 import { TaskPageModule } from "./task-page/task-page.module";
@@ -39,6 +40,7 @@ import { PagesRoutingModule } from "./pages.routing";
     ForgetPasswordPageComponent,
     HomePageComponent,
     LoginPageComponent,
+    RecoverAccountPageComponent,
   ],
   exports: [
     HomePageComponent,

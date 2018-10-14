@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { ApiService } from "./api.service";
 import { MessageService } from "./message.service";
 import { TokenService } from "./token.service";
+import { promise } from "selenium-webdriver";
 
 interface Account {
   uuid: string;
@@ -13,6 +14,18 @@ interface Account {
 interface MyAccount {
   uuid: string;
   displayName: string;
+}
+
+
+interface ResetPasswordRequest {
+  token: string;
+  email: string;
+  newPassword: string;
+}
+
+interface ResetPasswordResponse {
+  state: "rejected" | "accepted";
+  message?: string;
 }
 
 export interface CreateRecoveryTokenResponse {
@@ -79,5 +92,13 @@ export class AccountService {
       .toPromise();
 
     return recoveryResponse;
+  }
+
+  async resetPassword(token: string, email: string, password: string): Promise<ResetPasswordResponse> {
+    const response = await this.apiService
+      .post<ResetPasswordResponse>("/api/account/reset-password", <ResetPasswordRequest>{ token: token, email: email, newPassword: password })
+      .toPromise();
+
+    return response;
   }
 }

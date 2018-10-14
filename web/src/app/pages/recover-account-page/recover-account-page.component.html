@@ -1,0 +1,49 @@
+<app-common-page-header></app-common-page-header>
+<div class="container">
+  <div class="form-container" *ngIf="state !== 'done'">
+    <div class="row">
+      <div class="explain">Enter your email and a new password and we will recover your account.</div>
+    </div>
+    <div class="input-splitter"></div>
+    <label class="row">
+      <div class="icon">
+        <i class="far fa-fw fa-envelope"></i>
+      </div>
+      <div class="input">
+        <input type="text" [(ngModel)]="email" name="email" placeholder="email" [disabled]="state === 'processing' || state ==='done'">
+      </div>
+    </label>
+    <div class="input-splitter"></div>
+    <label class="row">
+      <div class="icon">
+        <i class="fas fa-fw fa-lock"></i>
+      </div>
+      <div class="input">
+        <input type="text" [(ngModel)]="password" name="password" type="password" placeholder="new password" [disabled]="state === 'processing' || state ==='done'"
+          autocomplete="new-password">
+      </div>
+    </label>
+    <div class="input-splitter"></div>
+    <div class="row">
+      <button class="login-button" (click)="recoverAccount()" [disabled]="state === 'processing' || state ==='done'">
+        Recover account
+      </button>
+    </div>
+    <div class="input-splitter" *ngIf="state !== 'init'"></div>
+    <div class="row" *ngIf="state !== 'init'">
+      <div class="explain">{{state}}</div>
+      <div class="explain" *ngIf="state === 'rejected' || state === 'error-generic'">{{errorMessage}}</div>
+    </div>
+  </div>
+  <div class="form-container" *ngIf="state === 'done'">
+    <div class="row">
+      <div class="explain">Your password has been updated and you will be redirected to the login page in 5 seconds</div>
+    </div>
+    <div class="row">
+      <button class="login-button" [routerLink]="['/login']">
+        Go to the login page
+      </button>
+    </div>
+  </div>
+</div>
+<app-common-page-footer></app-common-page-footer>

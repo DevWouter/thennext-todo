@@ -8,6 +8,7 @@ import { ForgetPasswordPageComponent } from "./forget-password-page/forget-passw
 import { HomePageComponent } from "./home-page/home-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
 import { TaskPageComponent } from "./task-page/task-page.component";
+import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
 
 // Guard modules
 import { SessionTokenGuard } from "../guards/session-token.guard";
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: "login", component: LoginPageComponent },
   { path: "tasks", component: TaskPageComponent, canActivate: [SessionTokenGuard] },
   { path: "forget-password", component: ForgetPasswordPageComponent },
+  { path: "recover-account", component: RecoverAccountPageComponent },
 ];
 
 @NgModule({
