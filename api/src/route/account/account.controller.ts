@@ -137,13 +137,13 @@ export class AccountController {
             const account = (await this.accountRepository.byEmail(input.email));
             if (account === null) {
                 this.logger.error("CreateRecovery: Account doesn't exist", { email: input.email });
-                res.status(500).send(<CreateRecoveryTokenResponse>{ state: "rejected", message: "Account doesn't exist" });
+                res.send(<CreateRecoveryTokenResponse>{ state: "rejected", message: "Account doesn't exist" });
                 return;
             }
 
             if (!account.is_confirmed) {
                 this.logger.error("CreateRecovery: Account is not yet confirmed", { accountId: account.id });
-                res.status(500).send(<CreateRecoveryTokenResponse>{ state: "unconfirmed", message: "Account is unconfirmed" });
+                res.send(<CreateRecoveryTokenResponse>{ state: "unconfirmed", message: "Account is unconfirmed" });
                 return;
             }
 

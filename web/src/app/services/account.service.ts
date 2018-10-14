@@ -15,6 +15,11 @@ interface MyAccount {
   displayName: string;
 }
 
+export interface CreateRecoveryTokenResponse {
+  state: "recovery-send" | "rejected" | "unconfirmed";
+  message?: string;
+};
+
 @Injectable()
 export class AccountService {
   private _myAccount = new BehaviorSubject<MyAccount>(undefined);
@@ -66,5 +71,13 @@ export class AccountService {
     this.messageSerivce.send("update-my-password", {
       newPassword: password
     });
+  }
+
+  async requestRecoveryToken(email: string): Promise<CreateRecoveryTokenResponse> {
+    const recoveryResponse = await this.apiService
+      .post<CreateRecoveryTokenResponse>("/api/account/create-recovery-token", { email: email })
+      .toPromise();
+
+    return recoveryResponse;
   }
 }
