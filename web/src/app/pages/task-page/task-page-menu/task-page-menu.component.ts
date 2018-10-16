@@ -5,7 +5,7 @@ import { filter } from "rxjs/operators";
 
 import { NavigationService, SessionService, AccountService, ContextService, TaskListService } from "../../../services";
 import { TaskList } from "../../../models";
-import { MenuComponent } from "../../../gui/menu/menu.component";
+import { MenuComponent } from "../../../gui/menu";
 
 
 @Component({

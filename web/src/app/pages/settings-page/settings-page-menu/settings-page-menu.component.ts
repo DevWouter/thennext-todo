@@ -4,7 +4,7 @@ import {
   NavigationService,
   SessionService,
 } from '../../../services';
-import { MenuComponent } from '../../../gui/menu/menu.component';
+import { MenuComponent } from '../../../gui/menu';
 
 @Component({
   selector: 'settings-page-menu',
