@@ -125,9 +125,10 @@ select {
 
 a {
     text-decoration: none;
-    &.active {
-        font-weight: bold;
-    }
+}
+
+.active {
+    font-weight: bold;
 }
 
 @media (min-width: 1400px) {

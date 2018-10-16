@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="menu-btn" (click)="toggle()">
+  <div class="menu-btn" (click)="open()">
     <div class="icon">
       <i class="fas fa-cog fa-fw"></i>
     </div>
@@ -7,52 +7,21 @@
   <div class="title">Settings</div>
 </div>
 
-<div class="background" [class.expand]="expand" (click)="close()"></div>
-<div class="panel" [class.expand]="expand">
-  <div class="title">
-    <i class="fa fa-fw fa-cog"></i>&nbsp;Settings</div>
+<gui-menu [menuTitle]='"Settings"'>
+  <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
+    iconClass='fas fa-fw fa-user'>Personal</gui-menu-item>
 
-  <a class="item" [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()">
-    <div class="icon">
-      <i class="fas fa-fw fa-user"></i>
-    </div>
-    <div class="text">Personal</div>
-  </a>
+  <gui-menu-item [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-list'
+    (click)="close()">Tasklists</gui-menu-item>
 
-  <a class="item" [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" (click)="close()">
-    <div class="icon">
-      <i class="fas fa-fw fa-list"></i>
-    </div>
-    <div class="text">Tasklists</div>
-  </a>
+  <gui-menu-item [routerLink]="[{ outlets: { tab: ['tags'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-tag'
+    (click)="close()">Tags</gui-menu-item>
 
-  <a class="item" [routerLink]="[{ outlets: { tab: ['tags'] } }]" routerLinkActive="active" (click)="close()">
-    <div class="icon">
-      <i class="fas fa-fw fa-tag"></i>
-    </div>
-    <div class="text">Tags</div>
-  </a>
+  <gui-menu-item [routerLink]="[{ outlets: { tab: ['urgency'] } }]" iconClass='fas fa-fw fa-weight-hanging'
+    routerLinkActive="active" (click)="close()">urgency</gui-menu-item>
 
-  <a class="item" [routerLink]="[{ outlets: { tab: ['urgency'] } }]" routerLinkActive="active" (click)="close()">
-    <div class="icon">
-      <i class="fas fa-fw fa-weight-hanging"></i>
-    </div>
-    <div class="text">Urgency</div>
-  </a>
+  <gui-menu-spacer></gui-menu-spacer>
 
-  <div class="spacer"></div>
-
-  <div class="item" (click)="goToTasks()">
-    <div class="icon">
-      <i class="fas fa-list fa-fw"></i>
-    </div>
-    <div class="text">Back to tasks</div>
-  </div>
-
-  <div class="item" (click)="logout()">
-    <div class="icon">
-      <i class="fas fa-sign-out-alt fa-fw"></i>
-    </div>
-    <div class="text">Logout</div>
-  </div>
-</div>
+  <gui-menu-item iconClass="fas fa-list fa-fw" (click)="goToTasks()">Back to tasks</gui-menu-item>
+  <gui-menu-item iconClass="fas fa-sign-out-alt fa-fw" (click)="logout()">Logout</gui-menu-item>
+</gui-menu>

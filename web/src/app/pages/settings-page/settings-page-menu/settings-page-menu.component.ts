@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   NavigationService,
   SessionService,
 } from '../../../services';
+import { MenuComponent } from '../../../gui/menu/menu.component';
 
 @Component({
   selector: 'settings-page-menu',
@@ -15,8 +16,9 @@ export class SettingsPageMenuComponent implements OnInit {
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); }
 
+  @ViewChild(MenuComponent)
+  private menu: MenuComponent;
 
-  expand = false;
   constructor(
     private readonly router: Router,
     private readonly navigation: NavigationService,
@@ -27,12 +29,13 @@ export class SettingsPageMenuComponent implements OnInit {
   }
 
   close() {
-    this.expand = false;
+    this.menu.close();
   }
 
-  toggle() {
-    this.expand = !this.expand;
+  open() {
+    this.menu.open();
   }
+
   goToTasks() {
     this.router.navigate(["/tasks"]);
   }

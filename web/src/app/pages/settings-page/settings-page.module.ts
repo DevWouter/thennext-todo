@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { DialogsModule } from '../../dialogs/dialogs.module';
+import { GuiModule } from '../../gui/gui.module';
 
 import { SettingsPageComponent } from './settings-page.component';
 import { SettingsPageMenuComponent } from './settings-page-menu/settings-page-menu.component';
@@ -21,6 +22,7 @@ import { SettingsTabPersonalComponent } from './tab-personal/tab-personal.compon
     FormsModule,
     SettingsPageRoutingModule,
     DialogsModule,
+    GuiModule,
   ],
   declarations: [
     SettingsPageComponent,
