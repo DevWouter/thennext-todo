@@ -1,0 +1,53 @@
+// :host {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+// }
+$animation-speed: 0.1s;
+.menu-background {
+    z-index: 105;
+    background-color: black;
+    position: fixed;
+    opacity: 0;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: opacity $animation-speed, visibility $animation-speed;
+    &.expand {
+        opacity: 0.4;
+        visibility: visible;
+    }
+}
+
+.menu {
+    overflow-y: auto;
+    position: fixed;
+    left: -303px;
+    width: 300px;
+    top: 48px;
+    top: 0px;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    &.expand {
+        left: 0;
+    }
+    background-color: #71af8c; // Dark color
+    background-color: white;
+    border-right: 3px solid #71af8c;
+    transition: left $animation-speed;
+    z-index: 110;
+    .title {
+        background-color: #71af8c; // Dark color
+        padding-top: 20px;
+        padding-bottom: 20px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+    }
+}
