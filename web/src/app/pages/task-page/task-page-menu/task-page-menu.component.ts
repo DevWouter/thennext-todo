@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { combineLatest } from "rxjs";
+import { combineLatest, BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { NavigationService, SessionService, AccountService, ContextService, TaskListService } from "../../../services";
 import { TaskList } from "../../../models";
+import { MenuComponent } from "../../../gui/menu/menu.component";
 
 
 @Component({
@@ -36,7 +37,9 @@ export class TaskPageMenuComponent implements OnInit {
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); this.close(); }
 
 
-  expand = false;
+  @ViewChild(MenuComponent)
+  private menu: MenuComponent;
+
   constructor(
     private readonly router: Router,
     private readonly navigation: NavigationService,
@@ -77,11 +80,11 @@ export class TaskPageMenuComponent implements OnInit {
   }
 
   close() {
-    this.expand = false;
+    this.menu.close();
   }
 
-  toggle() {
-    this.expand = !this.expand;
+  open() {
+    this.menu.open();
   }
   goToSettings() {
     this.router.navigate(["/settings"]);
