@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { combineLatest, BehaviorSubject } from "rxjs";
+import { combineLatest } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { NavigationService, SessionService, AccountService, ContextService, TaskListService } from "../../../services";
@@ -29,7 +29,6 @@ export class TaskPageMenuComponent implements OnInit {
   public displayName = "";
   public listName = "";
 
-  public connectionStatus = "";
   public lists: TaskList[] = [];
 
   private _currentListUuid: string = undefined;
@@ -100,5 +99,4 @@ export class TaskPageMenuComponent implements OnInit {
   updated() {
     this.navigation.toTaskPage({ taskListUuid: this._currentListUuid, taskUuid: null });
   }
-
 }
