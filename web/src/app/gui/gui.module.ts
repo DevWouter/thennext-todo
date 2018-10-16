@@ -1,30 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MenuModule } from './menu/menu.module';
 
-import {
-  MenuComponent,
-  MenuItemCheckboxComponent,
-  MenuSpacerComponent,
-  MenuItemComponent
-} from './menu';
 
 @NgModule({
-  declarations: [
-    MenuComponent,
-    MenuItemComponent,
-    MenuSpacerComponent,
-    MenuItemCheckboxComponent,
-  ],
+
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    MenuModule,
   ],
   exports: [
-    MenuComponent,
-    MenuItemComponent,
-    MenuSpacerComponent,
-    MenuItemCheckboxComponent
+    MenuModule,
   ],
   providers: [],
 })
