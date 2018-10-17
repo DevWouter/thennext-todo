@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 
 export enum StorageKey {
   SESSION_TOKEN = "SESSION_TOKEN",
-  LAST_TASKLIST = "LAST_TASKLIST",
 }
 
 @Injectable()
