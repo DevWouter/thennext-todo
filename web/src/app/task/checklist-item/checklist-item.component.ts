@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef, OnDestroy } from "@angular/core";
-import { filter, tap } from "rxjs/operators";
+import { filter } from "rxjs/operators";
 import { ChecklistItem } from "../../models";
 import {
   FocusService,
@@ -47,7 +47,7 @@ export class ChecklistItemComponent implements OnInit, OnDestroy {
     return this._item;
   }
 
-  @ViewChild('input')
+  @ViewChild("input")
   private inputRef: ElementRef;
 
   private focusSubscription: Subscription;
@@ -80,12 +80,12 @@ export class ChecklistItemComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (e.keyCode === 74) { // 'k'
+    if (e.code === "KeyK") { // 'k'
       this.moveDown();
       e.preventDefault();
     }
 
-    if (e.keyCode === 75) { // 'j'
+    if (e.code === "KeyJ") { // 'j'
       this.moveUp();
       e.preventDefault();
     }

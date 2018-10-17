@@ -8,10 +8,10 @@ import { AccountService, SessionService, TokenService, StorageService, StorageKe
   styleUrls: ["./login-page.component.scss"]
 })
 export class LoginPageComponent implements OnInit {
-  username: string = "";
-  password: string = "";
-  working: boolean = false;
-  showError: boolean = false;
+  username = "";
+  password = "";
+  working = false;
+  showError = false;
   loginReason: string = undefined;
 
   constructor(

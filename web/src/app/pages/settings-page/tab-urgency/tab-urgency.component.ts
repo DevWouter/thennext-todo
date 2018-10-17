@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { Component, OnInit } from "@angular/core";
+import { map } from "rxjs/operators";
 
-import { UrgencyLapService } from '../../../services';
-import { UrgencyLap } from '../../../models';
+import { UrgencyLapService } from "../../../services";
+import { UrgencyLap } from "../../../models";
 
 @Component({
-  selector: 'app-tab-urgency',
-  templateUrl: './tab-urgency.component.html',
-  styleUrls: ['./tab-urgency.component.scss']
+  selector: "app-tab-urgency",
+  templateUrl: "./tab-urgency.component.html",
+  styleUrls: ["./tab-urgency.component.scss"]
 })
 export class SettingsTabUrgencyComponent implements OnInit {
   items: UrgencyLap[];

@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
 import {
   NavigationService,
   SessionService,
-} from '../../../services';
-import { MenuComponent } from '../../../gui/menu';
+} from "../../../services";
+import { MenuComponent } from "../../../gui/menu";
 
 @Component({
-  selector: 'settings-page-menu',
-  templateUrl: './settings-page-menu.component.html',
-  styleUrls: ['./settings-page-menu.component.scss']
+  selector: "settings-page-menu",
+  templateUrl: "./settings-page-menu.component.html",
+  styleUrls: ["./settings-page-menu.component.scss"]
 })
 export class SettingsPageMenuComponent implements OnInit {
   private _currentListUuid: string = undefined;

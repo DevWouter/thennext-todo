@@ -21,7 +21,7 @@ export class ChecklistComponent implements OnInit {
   private _taskSubject = new BehaviorSubject<Task>(undefined);
   private _task: Task;
 
-  @ViewChild('input')
+  @ViewChild("input")
   private inputRef: ElementRef;
 
   @Input()
@@ -62,7 +62,7 @@ export class ChecklistComponent implements OnInit {
   }
 
   async create(event: Event, select: "prev" | "next") {
-    let prevLastItem: ChecklistItem = this.items && this.items.length > 0 && this.items[this.items.length - 1];
+    const prevLastItem: ChecklistItem = this.items && this.items.length > 0 && this.items[this.items.length - 1];
     const title = this.newValue.trim();
     if (title.length === 0) {
       this.newValue = "";

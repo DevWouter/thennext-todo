@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { filter, delay } from 'rxjs/operators';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+import { filter, delay } from "rxjs/operators";
+import { Router, ActivatedRoute } from "@angular/router";
 import {
   SessionService,
-} from '../../services';
+} from "../../services";
 
 enum Status {
   /** Waiting for input or checking with the API */
@@ -20,9 +20,9 @@ enum Status {
 }
 
 @Component({
-  selector: 'app-confirm-account-page',
-  templateUrl: './confirm-account-page.component.html',
-  styleUrls: ['./confirm-account-page.component.scss']
+  selector: "app-confirm-account-page",
+  templateUrl: "./confirm-account-page.component.html",
+  styleUrls: ["./confirm-account-page.component.scss"]
 })
 export class ConfirmAccountPageComponent implements OnInit {
   $token = new BehaviorSubject<string>(undefined);

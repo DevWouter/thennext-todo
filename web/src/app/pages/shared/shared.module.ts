@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { CommonPageHeaderComponent } from './common-page-header/common-page-header.component';
-import { CommonPageFooterComponent } from './common-page-footer/common-page-footer.component';
+import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import { CommonPageHeaderComponent } from "./common-page-header/common-page-header.component";
+import { CommonPageFooterComponent } from "./common-page-footer/common-page-footer.component";
 
 @NgModule({
   imports: [

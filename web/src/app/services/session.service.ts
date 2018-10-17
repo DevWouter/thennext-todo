@@ -5,7 +5,7 @@ import { TokenService } from "./token.service";
 
 interface ConfirmTokenResponse {
   state: "confirmed" | "already-confirmed" | "rejected";
-};
+}
 
 @Injectable()
 export class SessionService {

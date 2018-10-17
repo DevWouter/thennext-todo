@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'gui-menu-item',
-  templateUrl: './menu-item.component.html',
-  styleUrls: ['./menu-item.component.scss']
+  selector: "gui-menu-item",
+  templateUrl: "./menu-item.component.html",
+  styleUrls: ["./menu-item.component.scss"]
 })
 export class MenuItemComponent implements OnInit {
   @Input()

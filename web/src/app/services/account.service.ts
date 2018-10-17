@@ -31,7 +31,7 @@ interface ResetPasswordResponse {
 export interface CreateRecoveryTokenResponse {
   state: "recovery-send" | "rejected" | "unconfirmed";
   message?: string;
-};
+}
 
 @Injectable()
 export class AccountService {
@@ -96,7 +96,10 @@ export class AccountService {
 
   async resetPassword(token: string, email: string, password: string): Promise<ResetPasswordResponse> {
     const response = await this.apiService
-      .post<ResetPasswordResponse>("/api/account/reset-password", <ResetPasswordRequest>{ token: token, email: email, newPassword: password })
+      .post<ResetPasswordResponse>(
+        "/api/account/reset-password",
+        <ResetPasswordRequest>{ token: token, email: email, newPassword: password }
+      )
       .toPromise();
 
     return response;

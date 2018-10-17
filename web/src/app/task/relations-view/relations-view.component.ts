@@ -185,7 +185,7 @@ export class RelationsViewComponent implements OnInit {
         x.sourceTask.status = TaskStatus.active;
         this.taskService.update(x.sourceTask);
       }
-    })
+    });
 
     // Explicit unset of drag-status.
     // This is because the dragged element might no longer exist and as such the drop-event

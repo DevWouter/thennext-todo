@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
-import { AccountService } from '../../services';
+import { AccountService } from "../../services";
 
 type PageStatus = "init" | "processing" | "done" | "rejected" | "error-generic";
 
 @Component({
-  selector: 'app-recover-account-page',
-  templateUrl: './recover-account-page.component.html',
-  styleUrls: ['./recover-account-page.component.scss']
+  selector: "app-recover-account-page",
+  templateUrl: "./recover-account-page.component.html",
+  styleUrls: ["./recover-account-page.component.scss"]
 })
 export class RecoverAccountPageComponent implements OnInit {
   state: PageStatus = "init";
-  email: string = "";
+  email = "";
   password = "";
   token: string = undefined;
   errorMessage = "";

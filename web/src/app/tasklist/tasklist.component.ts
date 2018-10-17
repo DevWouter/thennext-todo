@@ -132,9 +132,9 @@ export class TasklistComponent implements OnInit {
         } else {
           tasks = tasks.filter(task => {
             const isBlocked = blockedUuids.includes(task.uuid);
-            if (isBlocked && showBlocked) return true;
+            if (isBlocked && showBlocked) { return true; }
             const isNegative = scores.some(s => s.taskUuid === task.uuid && s.score < 0);
-            if (isNegative && showNegative) return true;
+            if (isNegative && showNegative) { return true; }
 
             return !(isBlocked || isNegative);
           });
