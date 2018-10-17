@@ -1,11 +1,7 @@
-<div class="container">
-  <div class="menu-btn" (click)="open()">
-    <div class="icon">
-      <i class="fas fa-bars fa-fw"></i>
-    </div>
-  </div>
-  <div class="title">{{listName}}</div>
-</div>
+<gui-header>
+  <gui-header-button-icon iconClass="fas fa-fw fa-bars" (click)="open()"></gui-header-button-icon>
+  <gui-header-text>{{listName}}</gui-header-text>
+</gui-header>
 
 <gui-menu [menuTitle]="displayName">
   <gui-menu-item iconClass="fas fa-fw fa-list">
