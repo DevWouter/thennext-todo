@@ -1,11 +1,7 @@
-<div class="container">
-  <div class="menu-btn" (click)="open()">
-    <div class="icon">
-      <i class="fas fa-cog fa-fw"></i>
-    </div>
-  </div>
-  <div class="title">Settings</div>
-</div>
+<gui-header>
+  <gui-header-button-icon [iconClass]="'fas fa-fw fa-cog'" (click)="open()"></gui-header-button-icon>
+  <gui-header-text>Settings</gui-header-text>
+</gui-header>
 
 <gui-menu [menuTitle]='"Settings"'>
   <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
