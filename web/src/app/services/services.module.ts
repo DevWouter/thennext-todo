@@ -28,11 +28,13 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
+import { MessageBusModule } from "./message-bus/message-bus.module";
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
+    MessageBusModule,
   ],
   declarations: [],
   providers: [
