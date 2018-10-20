@@ -1,12 +1,12 @@
 <div class="container" [ngClass]="state" draggable="true" (dragstart)="dragStart($event)" (dragend)="dragEnd($event)">
-  <div *ngIf="checked == false" class="checkbox unchecked" (click)="check()">
+  <div *ngIf="checked == false" class="checkbox unchecked" (click)="check()" data-cy="task-done-button">
     <span class="fa-stack">
       <i class="far fa-circle fa-stack-2x"></i>
       <i class="fas fa-check fa-stack-1x checkbox__check"></i>
       <i class="fas fa-lock fa-stack-1x checkbox__locked" *ngIf="isBlocked"></i>
     </span>
   </div>
-  <div *ngIf="checked == true" class="checkbox checked" (click)="uncheck()">
+  <div *ngIf="checked == true" class="checkbox checked" (click)="uncheck()" data-cy="task-todo-button">
     <span class="fa-stack">
       <i class="far fa-circle fa-stack-2x"></i>
       <i class="fas fa-check fa-stack-1x checkbox__check"></i>
