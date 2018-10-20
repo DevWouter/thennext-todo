@@ -1,5 +1,5 @@
-<div class="menu-background" [class.expand]="expand" (click)="expand = false"></div>
-<div class="menu" [class.expand]="expand">
+<div data-cy="menu-background" class="menu-background" [class.expand]="expand" (click)="expand = false"></div>
+<div data-cy="menu" class="menu" [class.expand]="expand">
   <div class="title">{{menuTitle}}</div>
   <ng-content></ng-content>
 </div>

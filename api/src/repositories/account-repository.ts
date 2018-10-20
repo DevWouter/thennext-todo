@@ -100,6 +100,14 @@ export class AccountRepository {
         return this.byId(id);
     }
 
+    async destroy(account: AccountEntity): Promise<void> {
+        const db = await this.database();
+        await db.delete<AccountEntity>("Account", {
+            id: account.id
+        }, 1);
+    }
+
+
     private clone(src: AccountEntity): AccountEntity {
         return {
             displayName: src.displayName,

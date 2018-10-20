@@ -23,3 +23,22 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("ensureTestAccount", () => {
+    cy.request("POST", "/api/test/seed", {});
+});
+
+
+Cypress.Commands.add("loginTestAccount", () => {
+    cy.request("POST", "/api/session/create", {
+        email: "e2e@test.com",
+        password: "abcdef"
+    }).then((response) => {
+        if (response.isOkStatusCode) {
+            console.log("Token", response.body);
+            localStorage.setItem("SESSION_TOKEN", response.body.token);
+        }
+    });
+});
+
+
