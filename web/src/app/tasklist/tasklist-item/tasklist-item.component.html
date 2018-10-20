@@ -14,10 +14,10 @@
   </div>
   <div class="title" [class.title--single-line]="singleline">{{title}}</div>
   <div class="buttons">
-    <div *ngIf="showPlayIcon" class="button button--play" (click)="play()">
+    <div *ngIf="showPlayIcon" class="button button--play" (click)="play()" data-cy="play-button">
       <i class="fas fa-angle-double-up fa-fw"></i>
     </div>
-    <div *ngIf="showPauseIcon" class="button button--pause" (click)="pause()">
+    <div *ngIf="showPauseIcon" class="button button--pause" (click)="pause()" data-cy="pause-button">
       <i class="fas fa-angle-double-down fa-fw"></i>
     </div>
   </div>
