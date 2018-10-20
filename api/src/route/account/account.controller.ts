@@ -84,7 +84,7 @@ export class AccountController {
             this.throwIfInvalid(input);
 
             // Hack for the e2e tests
-            if (input.email === "e2e-test@thennext.com" && (await this.accountRepository.byEmail(input.email)) !== null) {
+            if (input.email === "e2e@test.com" && (await this.accountRepository.byEmail(input.email)) !== null) {
                 const account = await this.accountRepository.byEmail(input.email);
                 const dst = TransformAccount(account);
                 res.send(dst);
