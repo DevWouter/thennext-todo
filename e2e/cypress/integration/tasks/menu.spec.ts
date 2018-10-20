@@ -5,6 +5,7 @@ describe("Tasks - Menu", () => {
         cy.loginTestAccount();
         cy.visit("/tasks");
     });
+
     it("Should open the menu on click", () => {
         cy.get('[data-cy=menu-button]').click();
         cy.get('[data-cy=menu]').should("be.visible");

@@ -16,6 +16,6 @@
 
   <gui-menu-spacer></gui-menu-spacer>
 
-  <gui-menu-item iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
-  <gui-menu-item iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
+  <gui-menu-item data-cy="menu-settings" iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
+  <gui-menu-item data-cy="menu-logout" iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
 </gui-menu>
