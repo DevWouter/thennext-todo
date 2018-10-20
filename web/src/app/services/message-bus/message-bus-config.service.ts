@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, BehaviorSubject } from "rxjs";
 
-interface MessageBusConfig {
+export interface MessageBusConfig {
   active: boolean;
   token: string;
 }
