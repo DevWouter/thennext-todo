@@ -1,27 +1,27 @@
 import { Injectable } from "@angular/core";
 import { Observable, BehaviorSubject } from "rxjs";
-
-export interface MessageBusConfig {
-  active: boolean;
-  token: string;
-}
+import { MessageBusConfig } from "./message-bus-config";
 
 @Injectable({
   providedIn: "root"
 })
 export class MessageBusConfigService {
-  private _state: MessageBusConfig = {
-    active: false,
-    token: null,
-  };
+  private _state: MessageBusConfig;
 
-  private $state = new BehaviorSubject<MessageBusConfig>(this._state);
+  private $state: BehaviorSubject<MessageBusConfig>;
 
   get state(): Observable<MessageBusConfig> {
     return this.$state;
   }
 
-  constructor() { }
+  constructor() {
+    this._state = {
+      active: false,
+      token: null,
+    };
+
+    this.$state = new BehaviorSubject(this._state);
+  }
 
   update(state: Partial<MessageBusConfig>): void {
     this._state = { ...this._state, ...state };
