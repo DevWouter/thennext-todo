@@ -10,5 +10,6 @@
     "**/docker_volume": true,
     "docks": true,
     "db/backups": true,
+    "coverage": true,
   }
 }
