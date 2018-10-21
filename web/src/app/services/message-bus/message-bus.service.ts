@@ -108,7 +108,7 @@ export class MessageBusService {
 
   private onDataStringReceived(data: string): void {
     // Should be a json object.
-    var object = JSON.parse(data) as WsEventBasic;
+    const object = JSON.parse(data) as WsEventBasic;
     this.onEvent(object);
   }
 
@@ -117,7 +117,7 @@ export class MessageBusService {
       this.updateState({ authenticated: true });
     }
     if (data.type === "token-rejected") {
-      var message = data as WsEvent<"token-rejected">;
+      const message = data as WsEvent<"token-rejected">;
       this.updateState({
         activated: false,
         authenticated: false,

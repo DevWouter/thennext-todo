@@ -6,7 +6,7 @@ export interface MessageBusState {
    * What the current state of the messagebus is.
    */
   connection: MessageBusStateConnection;
-};
+}
 
 export interface MessageBusStateRejection {
   cause: "connection" | "auth";
@@ -38,5 +38,5 @@ export interface MessageBusStateConnection {
    * Contains a property that a connection was rejected.
    */
   error: MessageBusStateRejection | null;
-};
+}
 
