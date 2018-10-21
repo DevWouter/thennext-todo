@@ -18,7 +18,7 @@ describe("Task - Block", () => {
         });
 
         it("Drag task A in the 'before' of B", () => {
-            let tempV = undefined;
+            let tempV = "";
             let dt = { setData(x, v) { tempV = v; }, getData() { return tempV; } };
             cy.get("app-tasklist-item").contains("A")
                 .trigger('dragstart', { dataTransfer: dt });
@@ -37,7 +37,7 @@ describe("Task - Block", () => {
 
     describe("Make task C depend on task B", () => {
         it("Drag task C in the 'after' of B", () => {
-            let tempV = undefined;
+            let tempV = "";
             let dt = { setData(x, v) { tempV = v; }, getData() { return tempV; } };
             cy.get("app-tasklist-item").contains("C")
                 .trigger('dragstart', { dataTransfer: dt });
