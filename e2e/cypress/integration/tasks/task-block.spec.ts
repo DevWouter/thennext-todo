@@ -51,13 +51,6 @@ describe("Task - Block", () => {
             cy.get("app-tasklist-item").contains("A").should("be.visible");
             cy.get("app-tasklist-item").should("have.length", 1);
         });
-    });
 
-    describe("Prevent task A to depend on task B (prevent child to be father)", () => {
-        it("TODO");
     });
-
-    describe("Prevent task A to depend on task C (prevent grandchild to be father)", () => {
-        it("TODO");
-    });
-})
+})  
