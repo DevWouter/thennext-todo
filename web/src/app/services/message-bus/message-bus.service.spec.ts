@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
-import { Observable, BehaviorSubject } from "rxjs";
+import { Observable, BehaviorSubject, combineLatest } from "rxjs";
 import { filter, skipUntil, skip } from "rxjs/operators";
 
 import { MessageBusService } from "./message-bus.service";
@@ -244,5 +244,72 @@ describe("MessageBusService", () => {
     messageBus.send("sync-my-account", {});
 
     expect(wsServiceSpy.send).toHaveBeenCalledWith(JSON.stringify({ command: "sync-my-account", data: {} }));
+  });
+
+  it("should report messages it has received", (done) => {
+    const json_response = JSON.stringify(<WsEvent<"entity-created">>{
+      data: { entity: null },
+      type: "entity-created",
+      echo: false
+    });
+
+
+    messageBus.addEventHandler("entity-created", (data) => {
+      expect(JSON.stringify(data)).toBe(json_response);
+      done();
+    });
+
+    messageBus.callbacks.received(json_response);
+
+  });
+
+  it("should not report messages it is not listening to", (done) => {
+
+    console.log(document.addEventListener);
+    // console.log();
+    const json_response_1 = JSON.stringify(<WsEvent<"entity-created">>{
+      data: { entity: null },
+      type: "entity-created",
+      echo: false
+    });
+
+    const json_response_2 = JSON.stringify(<WsEvent<"entity-deleted">>{
+      type: "entity-deleted",
+      echo: false
+    });
+
+    let p = new BehaviorSubject<string>(undefined);
+
+    let entityCreatedHandler = jasmine.createSpy("entity-created handler", () => p.next("created")).and.callThrough();
+    let entityDeletedHandler = jasmine.createSpy("entity-deleted event handler", () => p.next("deleted")).and.callThrough();
+
+    let pCreated = p.pipe(filter(x => x === "created"));
+    let pDeleted = p.pipe(filter(x => x === "deleted"));
+
+    var sub = combineLatest(pCreated, pDeleted).subscribe(() => {
+      expect(entityCreatedHandler).toHaveBeenCalledTimes(1);
+      expect(entityDeletedHandler).toHaveBeenCalledTimes(1);
+      done();
+
+      sub.unsubscribe();
+    });
+
+    messageBus.addEventHandler("entity-created", entityCreatedHandler);
+    messageBus.addEventHandler("entity-deleted", entityDeletedHandler);
+
+    messageBus.callbacks.received(json_response_1);
+    messageBus.callbacks.received(json_response_2);
+  });
+
+  it("should throw an exception adding a listener for token-accepted", () => {
+    let eventHandler = jasmine.createSpy("event handler");
+    expect(() => { messageBus.addEventHandler("token-accepted", eventHandler); })
+      .toThrowError("It's illegal to listen to token-accepted, as this is part of the internal");
+  });
+
+  it("should throw an exception adding a listener for token-rejected", () => {
+    let eventHandler = jasmine.createSpy("event handler");
+    expect(() => { messageBus.addEventHandler("token-rejected", eventHandler); })
+      .toThrowError("It's illegal to listen to token-rejected, as this is part of the internal");
   });
 });

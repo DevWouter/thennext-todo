@@ -1,19 +1,24 @@
 import { Injectable } from "@angular/core";
+import { combineLatest, Observable, BehaviorSubject } from "rxjs";
+import { filter, map } from "rxjs/operators";
+
 import { MessageBusConfigService } from "./message-bus-config.service";
-import { Observable, BehaviorSubject } from "rxjs";
 import { MessageBusState, MessageBusStateConnection } from "./message-bus-state";
 import { WsConnection, WsConnectionCallbacks } from "./ws-connection";
-import { WsEventBasic, WsEvent } from "../ws/events";
-import { combineLatest } from "rxjs";
-import { filter } from "rxjs/operators";
+
+import { WsEventBasic, WsEvent, WsEventMap } from "../ws/events";
 import { WsCommandMap } from "../ws/commands";
+
+export interface MessageBusInterface {
+  readonly state: Observable<MessageBusState>;
+  send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void;
+  addEventHandler<K extends keyof WsEventMap>(type: K, listener: (data: WsEvent<K>) => void): void;
+}
 
 @Injectable({
   providedIn: "root"
 })
-export class MessageBusService {
-  callbacks: WsConnectionCallbacks;
-
+export class MessageBusService implements MessageBusInterface {
   private _state: MessageBusState = {
     connection: {
       activated: false,
@@ -24,7 +29,9 @@ export class MessageBusService {
   };
 
   private $state = new BehaviorSubject(this._state);
+  private $event = new BehaviorSubject<WsEventBasic>(undefined);
 
+  callbacks: WsConnectionCallbacks;
   get state(): Observable<MessageBusState> {
     return this.$state;
   }
@@ -48,6 +55,17 @@ export class MessageBusService {
     const rawCommand = { command: type, data: data };
     const rawCommandJson = JSON.stringify(rawCommand);
     this.wsConnection.send(rawCommandJson);
+  }
+
+  addEventHandler<K extends keyof WsEventMap>(type: K, listener: (data: WsEvent<K>) => void): void {
+    if (type === "token-accepted" || type === "token-rejected") {
+      throw new Error(`It's illegal to listen to ${type}, as this is part of the internal`);
+    }
+    this.$event.pipe(
+      filter(x => x !== undefined),
+      filter(x => x.type === type),
+      map(x => x as WsEvent<K>)
+    ).subscribe(x => listener(x));
   }
 
   private setup() {
@@ -115,14 +133,15 @@ export class MessageBusService {
   private onEvent(data: WsEventBasic): void {
     if (data.type === "token-accepted") {
       this.updateState({ authenticated: true });
-    }
-    if (data.type === "token-rejected") {
+    } else if (data.type === "token-rejected") {
       const message = data as WsEvent<"token-rejected">;
       this.updateState({
         activated: false,
         authenticated: false,
         error: { cause: "auth", reason: message.data.reason }
       });
+    } else {
+      this.$event.next(data);
     }
   }
 
