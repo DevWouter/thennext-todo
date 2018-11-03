@@ -23,7 +23,9 @@ describe('Repository', () => {
       "remove",
       "sync",
       "createRefId"]);
+
     messenger.createRefId.and.returnValues("ref-id-1", "ref-id-2", "ref-id-3");
+
     repository = new Repository<UserFake>(messenger);
   });
 
@@ -36,20 +38,6 @@ describe('Repository', () => {
 
   it('should exist', () => {
     expect(repository).toBeTruthy();
-  });
-
-  it('should have an observable array of entities', () => {
-    expect(repository.entities).toEqual(jasmine.any(Observable));
-  });
-
-  it('should initially be empty', (done) => {
-    const sub = repository.entities.subscribe(entities => {
-      expect(entities).toBeDefined("when not initialized it should still return an empty array");
-      expect(entities.length).toBe(0, "when not initialized it should still return an empty array");
-      done();
-    });
-
-    postActions.push(async () => { sub.unsubscribe() });
   });
 
   it('should send a message when adding entity', () => {
