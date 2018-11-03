@@ -1,68 +1,35 @@
 import { Entity } from "../../models/entity";
-import { MessageBusInterface } from "./message-bus.service";
-import { filter } from "rxjs/operators";
-import { WsEventBasic } from "../ws/events";
-import { EntityEventCallbacks, EntityEventCallbacksOptions } from "./entity-event-callbacks";
 
-export class EntityMessenger<T extends Entity> {
-  private _nextId = 0;
-  private callbacks: EntityEventCallbacks<T>;
-  constructor(
-    private readonly entityKind: string,
-    private readonly messageBus: MessageBusInterface,
-  ) {
-  }
+export interface EntityMessengerInterface<T extends Entity> {
+  /**
+   * Send a command to the server to add a new entity.
+   * @param entity The entity that needs to be added.
+   * @param refId The reference id that needs to be used in the message send.
+   */
+  add(refId: string, entity: T);
 
-  setup(callbacks: EntityEventCallbacks<T>) {
-    if (this.callbacks) {
-      throw new Error("EntityMessenger.setup can only be called once");
-    }
+  /**
+   * Send a command to the server to update an entity.
+   * @param entity The entity that needs to be updated.
+   * @param refId The reference id that needs to be used in the message send.
+   */
+  update(refId: string, entity: T);
 
-    // Register the callback handler.
-    this.callbacks = callbacks;
+  /**
+   * Send a command to the server to remove an entity.
+   * @param entity The entity that needs to be removed.
+   * @param refId The reference id that needs to be used in the message send.
+   */
+  remove(refId: string, entity: T);
 
-    this.messageBus.state.pipe(
-      filter(x => x.connection.authenticated === true)
-    ).subscribe(() => {
-      this.messageBus.send("sync-entities", {
-        entityKind: this.entityKind,
-        refId: this.generateRefId()
-      });
-    });
+  /**
+   * Send a command to the server asking to send all entities of this type.
+   * @param refId The reference id that needs to be used in the message send.
+   */
+  sync(refId: string);
 
-    this.messageBus.addEventHandler("entities-synced", (data) => {
-      this.callbacks.onEntitiesSynced(data.data.entities as T[], this.toOptions(data));
-    });
-
-    this.messageBus.addEventHandler("entity-created", (data) => {
-      this.callbacks.onEntityCreated(data.data.entity as T, this.toOptions(data));
-    });
-
-    this.messageBus.addEventHandler("entity-updated", (data) => {
-      this.callbacks.onEntityUpdated(data.data.entity as T, this.toOptions(data));
-    });
-
-    this.messageBus.addEventHandler("entity-deleted", (data) => {
-      this.callbacks.onEntityDeleted(data.data.uuid, this.toOptions(data));
-    });
-  }
-
-  sendCreate(entity: T): string {
-    const refId = this.generateRefId();
-    this.messageBus.send("create-entity", {
-      entity: entity,
-      entityKind: this.entityKind,
-      refId: refId,
-    });
-
-    return refId;
-  }
-
-  private toOptions(data: WsEventBasic): EntityEventCallbacksOptions {
-    return { echo: data.echo, refId: data.refId };
-  }
-
-  private generateRefId(): string {
-    return `${this._nextId++}-${this.entityKind}-${Date.now()}-${Math.random()}`;
-  }
+  /**
+   * Returns a random ID unique for this kind of entity.
+   */
+  createRefId(): string;
 }
