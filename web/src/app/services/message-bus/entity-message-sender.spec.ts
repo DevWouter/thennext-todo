@@ -6,7 +6,7 @@ class FakeUser implements Entity {
   name: string;
 }
 
-xdescribe("EntityMessenger", () => {
+describe("EntityMessengerSender", () => {
   let messenger: EntityMessageSender<Entity>;
 
   beforeEach(() => {

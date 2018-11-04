@@ -21,8 +21,9 @@ interface RepositoryRemoveEvent {
 }
 
 export class Repository<T extends Entity> {
-  private _entries: T[] = [];
-  readonly entries = new BehaviorSubject<T[]>(this._entries);
+  private readonly _entities: T[] = [];
+  private readonly $entities = new BehaviorSubject<T[]>(this._entities);
+  public readonly entities = this.$entities.asObservable();
 
   constructor(
     private readonly _send: EntityMessageSenderInterface<T>,
@@ -44,8 +45,8 @@ export class Repository<T extends Entity> {
 
     // Perform an internal wait to feed another entry.
     const pushSub = obs.subscribe(x => {
-      this._entries.push(x);
-      this.entries.next(this._entries);
+      this._entities.push(x);
+      this.$entities.next(this._entities);
       pushSub.unsubscribe(); // Remove own sub.
     });
 
@@ -57,20 +58,20 @@ export class Repository<T extends Entity> {
       throw new Error("The entity is missing an uuid");
     }
 
-    if (!this._entries.find(x => x.uuid === entity.uuid)) {
+    if (!this._entities.find(x => x.uuid === entity.uuid)) {
       throw new Error("The entity is unknown in storage");
     }
 
     const obs = this._send.update(entity)
       .pipe(
-        map(x => {
-          entity.uuid = x.uuid;
+        map(() => {
+          // Return the original entity
           return entity;
         }), share()
       );
 
     // We don't need to wait for an update.
-    this.entries.next(this._entries);
+    this.$entities.next(this._entities);
 
     return obs;
   }
@@ -80,7 +81,7 @@ export class Repository<T extends Entity> {
       throw new Error("The entity is missing an uuid");
     }
 
-    if (!this._entries.find(x => x.uuid === entity.uuid)) {
+    if (!this._entities.find(x => x.uuid === entity.uuid)) {
       throw new Error("The entity is unknown in storage");
     }
 
@@ -89,11 +90,11 @@ export class Repository<T extends Entity> {
 
     const pushSub = obs
       .pipe(
-        map(() => this._entries.findIndex(x => x.uuid === entity.uuid)),
+        map(() => this._entities.findIndex(x => x.uuid === entity.uuid)),
         filter(item => item !== -1),
         tap(index => {
-          this._entries.splice(index, 1);
-          this.entries.next(this._entries);
+          this._entities.splice(index, 1);
+          this.$entities.next(this._entities);
         })
       ).subscribe(() => {
         pushSub.unsubscribe();
@@ -106,8 +107,8 @@ export class Repository<T extends Entity> {
     const obs = this._send.sync();
 
     const pushSub = obs.subscribe(entities => {
-      this._entries.splice(0, this._entries.length, ...entities);
-      this.entries.next(this._entries);
+      this._entities.splice(0, this._entities.length, ...entities);
+      this.$entities.next(this._entities);
       pushSub.unsubscribe(); // Remove own sub.
     });
 
@@ -117,30 +118,30 @@ export class Repository<T extends Entity> {
   handle(event: RepositoryRemoveEvent | RepositoryAddEvent<T> | RepositoryUpdateEvent<T>): void {
     switch (event.type) {
       case "add": {
-        this._entries.push(event.data);
-        this.entries.next(this._entries);
+        this._entities.push(event.data);
+        this.$entities.next(this._entities);
       } break;
 
       case "update": {
         const src = event.data;
-        const dst = this._entries.find(x => x.uuid === src.uuid);
+        const dst = this._entities.find(x => x.uuid === src.uuid);
         if (dst) {
           // Copy the values.
           // We only need to do this for external events, since internal events will already have updated the data
           Object.getOwnPropertyNames(src).forEach(prop => {
             dst[prop] = src[prop];
           });
-          this.entries.next(this._entries);
+          this.$entities.next(this._entities);
         } else {
           throw new Error("Unable to find entity");
         }
       } break;
 
       case "remove": {
-        const index = this._entries.findIndex(x => x.uuid === event.uuid);
+        const index = this._entities.findIndex(x => x.uuid === event.uuid);
         if (index !== -1) {
-          this._entries.splice(index, 1);
-          this.entries.next(this._entries);
+          this._entities.splice(index, 1);
+          this.$entities.next(this._entities);
         } else {
           throw new Error("Unable to find entity");
         }
