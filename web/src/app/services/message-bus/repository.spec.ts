@@ -1,16 +1,13 @@
 import { Repository } from "./repository";
 import { Entity } from "../../models/entity";
-import { Observable, Subscription, from, Subject, BehaviorSubject, combineLatest } from "rxjs";
-import { map, tap, share, filter } from "rxjs/operators";
+import { Subscription, Subject, combineLatest } from "rxjs";
+import { filter } from "rxjs/operators";
 import { EntityMessengerInterface } from "./entity-messenger";
 
 interface UserFake extends Entity {
   name: string;
 }
 
-const ref_id_1 = "ref-id-1";
-const ref_id_2 = "ref-id-2";
-const ref_id_3 = "ref-id-3";
 describe('Repository', () => {
   let userWouter: UserFake;
   let repository: Repository<UserFake>;
@@ -37,14 +34,12 @@ describe('Repository', () => {
       "add",
       "update",
       "remove",
-      "sync",
-      "createRefId"]);
+      "sync"]);
 
     messenger.add.and.returnValue($messengerAdd);
     messenger.update.and.returnValue($messengerUpdate);
     messenger.remove.and.returnValue($messengerRemove);
 
-    messenger.createRefId.and.returnValues(ref_id_1, ref_id_2, ref_id_3);
 
     repository = new Repository<UserFake>(messenger);
   });
@@ -63,28 +58,24 @@ describe('Repository', () => {
   it('should send a message when adding entity', () => {
     repository.add(userWouter);
     const messengerArgs = messenger.add.calls.mostRecent().args;
-    expect(messengerArgs[0]).toBe(ref_id_1, "first argument should be the generated ref-id");
-    expect(messengerArgs[1]).toBe(userWouter, "second argument should be the entity");
+    expect(messengerArgs[0]).toBe(userWouter, "first argument should be the entity");
   });
 
   it('should send a message when updating entity', () => {
     repository.update(userWouter);
     const messengerArgs = messenger.update.calls.mostRecent().args;
-    expect(messengerArgs[0]).toBe(ref_id_1, "first argument should be the generated ref-id");
-    expect(messengerArgs[1]).toBe(userWouter, "second argument should be the entity");
+    expect(messengerArgs[0]).toBe(userWouter, "first argument should be the entity");
   });
 
   it('should send a message when removing entity', () => {
     repository.remove(userWouter);
     const messengerArgs = messenger.remove.calls.mostRecent().args;
-    expect(messengerArgs[0]).toBe(ref_id_1, "first argument should be the generated ref-id");
-    expect(messengerArgs[1]).toBe(userWouter, "second argument should be the entity");
+    expect(messengerArgs[0]).toBe(userWouter, "first argument should be the entity");
   });
 
   it('should send a message when sync is called', () => {
     repository.sync();
-    const messengerArgs = messenger.sync.calls.mostRecent().args;
-    expect(messengerArgs[0]).toBe(ref_id_1, "first argument should be the generated ref-id");
+    expect(messenger.sync).toHaveBeenCalledTimes(1);
   });
 
   it('The add function returns an observable that will resolve when server replies', (done) => {

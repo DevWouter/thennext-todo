@@ -18,8 +18,7 @@ export class Repository<T extends Entity> {
   ) { }
 
   add(entity: T): Observable<T> {
-    const refId = this._messenger.createRefId();
-    const obs = this._messenger.add(refId, entity)
+    const obs = this._messenger.add(entity)
       .pipe(
         map(x => {
           entity.uuid = x.uuid;
@@ -39,8 +38,7 @@ export class Repository<T extends Entity> {
   }
 
   update(entity: T): Observable<T> {
-    const refId = this._messenger.createRefId();
-    const obs = this._messenger.update(refId, entity)
+    const obs = this._messenger.update(entity)
       .pipe(
         map(x => {
           entity.uuid = x.uuid;
@@ -52,8 +50,7 @@ export class Repository<T extends Entity> {
   }
 
   remove(entity: T): Observable<void> {
-    const refId = this._messenger.createRefId();
-    const obs = this._messenger.remove(refId, entity)
+    const obs = this._messenger.remove(entity)
       .pipe(
         map(x => { /* Remove all information, since we don't expect a response */ })
       );
@@ -62,8 +59,7 @@ export class Repository<T extends Entity> {
   }
 
   sync() {
-    const refId = this._messenger.createRefId();
-    this._messenger.sync(refId);
+    this._messenger.sync();
   }
 
 }
