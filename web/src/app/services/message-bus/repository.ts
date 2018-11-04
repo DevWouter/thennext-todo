@@ -3,10 +3,21 @@ import { map, share, tap, filter } from "rxjs/operators";
 import { Entity } from "../../models/entity";
 import { EntityMessengerInterface } from "./entity-messenger";
 
-export interface RepositoryEvent<T> {
-  refId: string;
-  echo: boolean;
+interface RepositoryEvent {
+  type: "add" | "update" | "remove";
+}
+
+interface RepositoryAddEvent<T extends Entity> extends RepositoryEvent {
+  type: "add";
   data: T;
+}
+interface RepositoryUpdateEvent<T extends Entity> {
+  type: "update";
+  data: T;
+}
+interface RepositoryRemoveEvent {
+  type: "remove";
+  uuid: string;
 }
 
 export class Repository<T extends Entity> {
@@ -103,4 +114,37 @@ export class Repository<T extends Entity> {
     return obs;
   }
 
+  handle(event: RepositoryRemoveEvent | RepositoryAddEvent<T> | RepositoryUpdateEvent<T>): void {
+    switch (event.type) {
+      case "add": {
+        this._entries.push(event.data);
+        this.entries.next(this._entries);
+      } break;
+
+      case "update": {
+        const src = event.data;
+        const dst = this._entries.find(x => x.uuid === src.uuid);
+        if (dst) {
+          // Copy the values.
+          // We only need to do this for external events, since internal events will already have updated the data
+          Object.getOwnPropertyNames(src).forEach(prop => {
+            dst[prop] = src[prop];
+          });
+          this.entries.next(this._entries);
+        } else {
+          throw new Error("Unable to find entity");
+        }
+      } break;
+
+      case "remove": {
+        const index = this._entries.findIndex(x => x.uuid === event.uuid);
+        if (index !== -1) {
+          this._entries.splice(index, 1);
+          this.entries.next(this._entries);
+        } else {
+          throw new Error("Unable to find entity");
+        }
+      } break;
+    }
+  }
 }

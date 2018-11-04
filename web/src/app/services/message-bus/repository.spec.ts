@@ -32,7 +32,6 @@ describe('Repository', () => {
     $messengerRemove = new Subject<void>();
     $messengerSync = new Subject<UserFake[]>();
 
-
     messenger = jasmine.createSpyObj<EntityMessengerInterface<UserFake>>("EntityMessenger", [
       "add",
       "update",
@@ -312,7 +311,71 @@ describe('Repository', () => {
     $messengerAdd.next({ ...userWouter, ... { uuid: "user-02" } });
   });
 
-  // TODO: external Add
-  // TODO: external Update
-  // TODO: external Remove
+  it("should add an entity when the messenger says so", (done) => {
+    _autoUnsub(repository.entries.pipe(skip(1)).subscribe(entities => {
+      expect(entities.length).toBe(1, "since the server has send a message that we need to add an entity");
+      done();
+    }));
+
+    repository.handle({
+      type: "add",
+      data: { ...userWouter, ...{ uuid: "user-01" } }
+    });
+  });
+
+  it("should remove an entity when the messenger says so", (done) => {
+    repository.handle({
+      type: "add",
+      data: { ...userWouter, ...{ uuid: "user-01" } }
+    });
+
+    _autoUnsub(repository.entries.pipe(skip(1)).subscribe(entities => {
+      expect(entities.length).toBe(0, "since the server has send a message that we need to remove an entity");
+      done();
+    }));
+
+    repository.handle({
+      type: "remove",
+      uuid: "user-01"
+    });
+  });
+
+  it("should update an entity when the messenger says so", (done) => {
+    repository.handle({ type: "add", data: { ...userWouter, ...{ uuid: "user-01" } } });
+
+    _autoUnsub(repository.entries.pipe(skip(1)).subscribe(entities => {
+      expect(entities.length).toBe(1, "since we updated an entity");
+      expect(entities[0].name).toBe("Rutger", "since we update the name");
+      done();
+    }));
+
+    repository.handle({
+      type: "update",
+      data: { uuid: "user-01", name: "Rutger" }
+    });
+  });
+
+  it("should thrown an error when an external update can not be applied due to missing content", () => {
+    repository.handle({ type: "add", data: { ...userWouter, ...{ uuid: "user-01" } } });
+    const call = () => {
+      repository.handle({
+        type: "update",
+        data: { uuid: "invalid-uuid", name: "Rutger" }
+      });
+    };
+
+    expect(call).toThrowError("Unable to find entity");
+  });
+
+  it("should thrown an error when an external remove can not be applied due to missing content", () => {
+    repository.handle({ type: "add", data: { ...userWouter, ...{ uuid: "user-01" } } });
+    const call = () => {
+      repository.handle({
+        type: "remove",
+        uuid: "invalid-uuid"
+      });
+    };
+
+    expect(call).toThrowError("Unable to find entity");
+  });
 });
