@@ -1,7 +1,7 @@
 import { Observable, BehaviorSubject } from "rxjs";
 import { map, share, tap, filter } from "rxjs/operators";
 import { Entity } from "../../models/entity";
-import { EntityMessengerInterface } from "./entity-messenger";
+import { EntityMessageSenderInterface } from "./entity-message-sender";
 
 interface RepositoryEvent {
   type: "add" | "update" | "remove";
@@ -25,7 +25,7 @@ export class Repository<T extends Entity> {
   readonly entries = new BehaviorSubject<T[]>(this._entries);
 
   constructor(
-    private readonly _messenger: EntityMessengerInterface<T>,
+    private readonly _send: EntityMessageSenderInterface<T>,
   ) { }
 
   add(entity: T): Observable<T> {
@@ -33,7 +33,7 @@ export class Repository<T extends Entity> {
       throw new Error("The entity has an uuid, which is not allowed when adding");
     }
 
-    const obs = this._messenger.add(entity)
+    const obs = this._send.add(entity)
       .pipe(
         map(x => {
           entity.uuid = x.uuid;
@@ -61,7 +61,7 @@ export class Repository<T extends Entity> {
       throw new Error("The entity is unknown in storage");
     }
 
-    const obs = this._messenger.update(entity)
+    const obs = this._send.update(entity)
       .pipe(
         map(x => {
           entity.uuid = x.uuid;
@@ -84,7 +84,7 @@ export class Repository<T extends Entity> {
       throw new Error("The entity is unknown in storage");
     }
 
-    const obs = this._messenger.remove(entity)
+    const obs = this._send.remove(entity)
       .pipe(share());
 
     const pushSub = obs
@@ -103,7 +103,7 @@ export class Repository<T extends Entity> {
   }
 
   sync(): Observable<T[]> {
-    const obs = this._messenger.sync();
+    const obs = this._send.sync();
 
     const pushSub = obs.subscribe(entities => {
       this._entries.splice(0, this._entries.length, ...entities);

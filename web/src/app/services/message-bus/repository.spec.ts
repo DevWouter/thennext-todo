@@ -2,7 +2,7 @@ import { Repository } from "./repository";
 import { Entity } from "../../models/entity";
 import { Subscription, Subject, combineLatest } from "rxjs";
 import { filter, skip, take } from "rxjs/operators";
-import { EntityMessengerInterface } from "./entity-messenger";
+import { EntityMessageSenderInterface } from "./entity-message-sender";
 
 interface UserFake extends Entity {
   name: string;
@@ -11,7 +11,7 @@ interface UserFake extends Entity {
 describe('Repository', () => {
   let userWouter: UserFake;
   let repository: Repository<UserFake>;
-  let messenger: jasmine.SpyObj<EntityMessengerInterface<UserFake>>;
+  let messenger: jasmine.SpyObj<EntityMessageSenderInterface<UserFake>>;
   let postActions: (() => Promise<void>)[];
 
   let $messengerAdd: Subject<UserFake>;
@@ -32,7 +32,7 @@ describe('Repository', () => {
     $messengerRemove = new Subject<void>();
     $messengerSync = new Subject<UserFake[]>();
 
-    messenger = jasmine.createSpyObj<EntityMessengerInterface<UserFake>>("EntityMessenger", [
+    messenger = jasmine.createSpyObj<EntityMessageSenderInterface<UserFake>>("EntityMessenger", [
       "add",
       "update",
       "remove",
