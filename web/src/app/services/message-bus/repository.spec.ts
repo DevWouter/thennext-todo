@@ -13,9 +13,11 @@ describe('Repository', () => {
   let repository: Repository<UserFake>;
   let messenger: jasmine.SpyObj<EntityMessengerInterface<UserFake>>;
   let postActions: (() => Promise<void>)[];
+
   let $messengerAdd: Subject<UserFake>;
   let $messengerUpdate: Subject<UserFake>;
   let $messengerRemove: Subject<void>;
+  let $messengerSync: Subject<UserFake[]>;
 
   function _autoUnsub(sub: Subscription) {
     postActions.push(async () => { sub.unsubscribe(); });
@@ -28,6 +30,7 @@ describe('Repository', () => {
     $messengerAdd = new Subject<UserFake>();
     $messengerUpdate = new Subject<UserFake>();
     $messengerRemove = new Subject<void>();
+    $messengerSync = new Subject<UserFake[]>();
 
 
     messenger = jasmine.createSpyObj<EntityMessengerInterface<UserFake>>("EntityMessenger", [
@@ -39,7 +42,7 @@ describe('Repository', () => {
     messenger.add.and.returnValue($messengerAdd);
     messenger.update.and.returnValue($messengerUpdate);
     messenger.remove.and.returnValue($messengerRemove);
-
+    messenger.sync.and.returnValue($messengerSync);
 
     repository = new Repository<UserFake>(messenger);
   });
@@ -197,13 +200,13 @@ describe('Repository', () => {
   });
 
   it("should update the entities observable when the server responds with an remove", (done) => {
-
     _autoUnsub(repository.add(userWouter).subscribe(() => {
       const trigger = new Subject<"before" | "after">();
 
       const sub = combineLatest(repository.entries.pipe(skip(1), take(1)), trigger)
         .subscribe(([entries, state]) => {
           expect(state).toBe("after", "since the server must respond before we react to entries");
+          expect(entries.length).toBe(0, "since we have removed all the entities");
           done();
         });
 
@@ -249,10 +252,67 @@ describe('Repository', () => {
     expect(call).toThrowError("The entity is unknown in storage");
   });
 
+
+  it("Should wait until the server responds with a sync message", (done) => {
+    const trigger = new Subject<"before" | "after">();
+
+    const sub = combineLatest(repository.sync(), trigger)
+      .subscribe(([entries, state]) => {
+        expect(state).toBe("after", "since the server must respond before we receive the entries");
+        expect(entries.length).toBe(1, "since we only received one user");
+        done();
+      });
+
+    _autoUnsub(sub);
+
+    trigger.next("before");
+    trigger.next("after");
+    $messengerSync.next([{ ...userWouter, ...{ uuid: "user-01" } }]);
+  });
+
+  it("Check if sync updates the entries", (done) => {
+    const trigger = new Subject<"before" | "after">();
+
+    const sub = combineLatest(repository.entries.pipe(skip(1), take(1)), trigger)
+      .subscribe(([entries, state]) => {
+        expect(state).toBe("after", "since the server must respond before we react to entries");
+        expect(entries.length).toBe(1, "since we only received one user");
+        done();
+      });
+
+    _autoUnsub(sub);
+
+    repository.sync();
+
+    trigger.next("before");
+    trigger.next("after");
+    $messengerSync.next([{ ...userWouter, ...{ uuid: "user-01" } }]);
+  });
+
+  it("Should not unsubscribe twice", (done) => {
+    repository.add({ ...userWouter });
+    $messengerAdd.next({ ...userWouter, ... { uuid: "user-01" } });
+
+    _autoUnsub(repository.add(userWouter).subscribe(() => {
+      repository.remove(userWouter);
+      repository.remove(userWouter);
+
+      $messengerRemove.next();
+      $messengerRemove.next();
+
+      const sub = repository.entries
+        .subscribe((entries) => {
+          expect(entries.length).toBe(1, "since we have only removed 1 (even thoughwe used two calls");
+          done();
+        });
+
+      _autoUnsub(sub);
+    }));
+
+    $messengerAdd.next({ ...userWouter, ... { uuid: "user-02" } });
+  });
+
   // TODO: external Add
   // TODO: external Update
   // TODO: external Remove
-
-  // TODO: Check the observable from sync message
-  // TODO: Check if sync updates the entries
 });

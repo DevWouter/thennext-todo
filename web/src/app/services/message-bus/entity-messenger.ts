@@ -23,5 +23,5 @@ export interface EntityMessengerInterface<T extends Entity> {
   /**
    * Send a command to the server asking to send all entities of this type.
    */
-  sync();
+  sync(): Observable<T[]>;
 }

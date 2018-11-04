@@ -1,5 +1,5 @@
 import { Observable, BehaviorSubject } from "rxjs";
-import { map, share, tap } from "rxjs/operators";
+import { map, share, tap, filter } from "rxjs/operators";
 import { Entity } from "../../models/entity";
 import { EntityMessengerInterface } from "./entity-messenger";
 
@@ -73,18 +73,34 @@ export class Repository<T extends Entity> {
       throw new Error("The entity is unknown in storage");
     }
 
-    const obs = this._messenger.remove(entity);
+    const obs = this._messenger.remove(entity)
+      .pipe(share());
 
-    const pushSub = obs.subscribe(() => {
+    const pushSub = obs
+      .pipe(
+        map(() => this._entries.findIndex(x => x.uuid === entity.uuid)),
+        filter(item => item !== -1),
+        tap(index => {
+          this._entries.splice(index, 1);
+          this.entries.next(this._entries);
+        })
+      ).subscribe(() => {
+        pushSub.unsubscribe();
+      });
+
+    return obs;
+  }
+
+  sync(): Observable<T[]> {
+    const obs = this._messenger.sync();
+
+    const pushSub = obs.subscribe(entities => {
+      this._entries.splice(0, this._entries.length, ...entities);
       this.entries.next(this._entries);
       pushSub.unsubscribe(); // Remove own sub.
     });
 
     return obs;
-  }
-
-  sync() {
-    this._messenger.sync();
   }
 
 }
