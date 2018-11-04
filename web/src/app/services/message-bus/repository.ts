@@ -2,23 +2,7 @@ import { Observable, BehaviorSubject } from "rxjs";
 import { map, share, tap, filter } from "rxjs/operators";
 import { Entity } from "../../models/entity";
 import { EntityMessageSenderInterface } from "./entity-message-sender";
-
-interface RepositoryEvent {
-  type: "add" | "update" | "remove";
-}
-
-interface RepositoryAddEvent<T extends Entity> extends RepositoryEvent {
-  type: "add";
-  data: T;
-}
-interface RepositoryUpdateEvent<T extends Entity> {
-  type: "update";
-  data: T;
-}
-interface RepositoryRemoveEvent {
-  type: "remove";
-  uuid: string;
-}
+import { EntityMessageReceiverInterface } from "./entity-message-receiver";
 
 export class Repository<T extends Entity> {
   private readonly _entities: T[] = [];
@@ -27,7 +11,46 @@ export class Repository<T extends Entity> {
 
   constructor(
     private readonly _send: EntityMessageSenderInterface<T>,
-  ) { }
+    private readonly _receive: EntityMessageReceiverInterface<T>,
+  ) { this.setup(); }
+
+  private setup() {
+    this._receive.onAdd()
+      .subscribe(event => {
+        this._entities.push(event.data);
+        this.$entities.next(this._entities);
+      });
+
+    this._receive.onUpdate()
+      .pipe(
+        // Determine the destination target
+        map(x => ({
+          src: x.data,
+          dst: this._entities.find(y => y.uuid === x.data.uuid)
+        })),
+        filter(x => x.dst !== undefined)
+      )
+      .subscribe((event) => {
+        const { src, dst } = event;
+
+        // Assign values from src to dst
+        Object.getOwnPropertyNames(src).forEach(prop => {
+          dst[prop] = src[prop];
+        });
+
+        this.$entities.next(this._entities);
+      });
+
+    this._receive.onRemove()
+      .pipe(
+        map(x => this._entities.findIndex(y => y.uuid === x.uuid)),
+        filter(x => x !== -1)
+      )
+      .subscribe(index => {
+        this._entities.splice(index, 1);
+        this.$entities.next(this._entities);
+      });
+  }
 
   add(entity: T): Observable<T> {
     if (entity.uuid) {
@@ -113,39 +136,5 @@ export class Repository<T extends Entity> {
     });
 
     return obs;
-  }
-
-  handle(event: RepositoryRemoveEvent | RepositoryAddEvent<T> | RepositoryUpdateEvent<T>): void {
-    switch (event.type) {
-      case "add": {
-        this._entities.push(event.data);
-        this.$entities.next(this._entities);
-      } break;
-
-      case "update": {
-        const src = event.data;
-        const dst = this._entities.find(x => x.uuid === src.uuid);
-        if (dst) {
-          // Copy the values.
-          // We only need to do this for external events, since internal events will already have updated the data
-          Object.getOwnPropertyNames(src).forEach(prop => {
-            dst[prop] = src[prop];
-          });
-          this.$entities.next(this._entities);
-        } else {
-          throw new Error("Unable to find entity");
-        }
-      } break;
-
-      case "remove": {
-        const index = this._entities.findIndex(x => x.uuid === event.uuid);
-        if (index !== -1) {
-          this._entities.splice(index, 1);
-          this.$entities.next(this._entities);
-        } else {
-          throw new Error("Unable to find entity");
-        }
-      } break;
-    }
   }
 }

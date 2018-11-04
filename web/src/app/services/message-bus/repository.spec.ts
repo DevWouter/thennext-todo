@@ -3,6 +3,7 @@ import { Entity } from "../../models/entity";
 import { Subscription, Subject, combineLatest } from "rxjs";
 import { filter, skip, take } from "rxjs/operators";
 import { EntityMessageSenderInterface } from "./entity-message-sender";
+import { EntityMessageReceiverInterface } from "./entity-message-receiver";
 
 interface UserFake extends Entity {
   name: string;
@@ -12,12 +13,18 @@ describe('Repository', () => {
   let userWouter: UserFake;
   let repository: Repository<UserFake>;
   let sender: jasmine.SpyObj<EntityMessageSenderInterface<UserFake>>;
+  let receiver: jasmine.SpyObj<EntityMessageReceiverInterface<UserFake>>;
   let postActions: (() => Promise<void>)[];
 
   let $sendAdd: Subject<UserFake>;
   let $sendUpdate: Subject<UserFake>;
   let $sendRemove: Subject<void>;
   let $sendSync: Subject<UserFake[]>;
+
+
+  let $receiveAdd: Subject<{ data: UserFake }>;
+  let $receiveUpdate: Subject<{ data: UserFake }>;
+  let $receiveRemove: Subject<{ uuid: string }>;
 
   function _autoUnsub(sub: Subscription) {
     postActions.push(async () => { sub.unsubscribe(); });
@@ -42,18 +49,30 @@ describe('Repository', () => {
     $sendRemove = new Subject<void>();
     $sendSync = new Subject<UserFake[]>();
 
-    sender = jasmine.createSpyObj<EntityMessageSenderInterface<UserFake>>("EntityMessageSender", [
-      "add",
-      "update",
-      "remove",
-      "sync"]);
+    sender = jasmine.createSpyObj<EntityMessageSenderInterface<UserFake>>(
+      "EntityMessageSender",
+      ["add", "update", "remove", "sync"]
+    );
 
     sender.add.and.returnValue($sendAdd);
     sender.update.and.returnValue($sendUpdate);
     sender.remove.and.returnValue($sendRemove);
     sender.sync.and.returnValue($sendSync);
 
-    repository = new Repository<UserFake>(sender);
+    $receiveAdd = new Subject<{ data: UserFake }>();
+    $receiveUpdate = new Subject<{ data: UserFake }>();
+    $receiveRemove = new Subject<{ uuid: string }>();
+
+    receiver = jasmine.createSpyObj<EntityMessageReceiverInterface<UserFake>>(
+      "EntityMessageReceiver",
+      ["onAdd", "onRemove", "onUpdate"]
+    );
+
+    receiver.onAdd.and.returnValue($receiveAdd);
+    receiver.onUpdate.and.returnValue($receiveUpdate);
+    receiver.onRemove.and.returnValue($receiveRemove);
+
+    repository = new Repository<UserFake>(sender, receiver);
   });
 
   afterEach((done) => {
@@ -290,73 +309,86 @@ describe('Repository', () => {
     });
   });
 
-  describe("handle-function", () => {
+  describe("use of receive messenger", () => {
+    it("should invoke onAdd and register a subscriber", () => {
+      expect(receiver.onAdd).toHaveBeenCalledTimes(1);
+      expect($receiveAdd.observers.length).toBe(1);
+    });
+
+    it("should invoke onUpdate and register a subscriber", () => {
+      expect(receiver.onUpdate).toHaveBeenCalledTimes(1);
+      expect($receiveUpdate.observers.length).toBe(1);
+    });
+
+    it("should invoke onRemove and register a subscriber", () => {
+      expect(receiver.onRemove).toHaveBeenCalledTimes(1);
+      expect($receiveRemove.observers.length).toBe(1);
+    });
+
     it("should add an entity when the messenger says so", (done) => {
       _autoUnsub(repository.entities.pipe(skip(1)).subscribe(entities => {
         expect(entities.length).toBe(1, "since the server has send a message that we need to add an entity");
         done();
       }));
 
-      repository.handle({
-        type: "add",
+      $receiveAdd.next({
         data: { ...userWouter, ...{ uuid: "user-01" } }
       });
     });
 
     it("should remove an entity when the messenger says so", (done) => {
-      repository.handle({
-        type: "add",
-        data: { ...userWouter, ...{ uuid: "user-01" } }
-      });
+      withUserInRepository(userWouter, () => {
+        _autoUnsub(repository.entities.pipe(skip(1)).subscribe(entities => {
+          expect(entities.length).toBe(0, "since the server has send a message that we need to remove an entity");
+          done();
+        }));
 
-      _autoUnsub(repository.entities.pipe(skip(1)).subscribe(entities => {
-        expect(entities.length).toBe(0, "since the server has send a message that we need to remove an entity");
-        done();
-      }));
-
-      repository.handle({
-        type: "remove",
-        uuid: "user-01"
-      });
+        $receiveRemove.next({ uuid: "user-01" });
+      })
     });
 
     it("should update an entity when the messenger says so", (done) => {
-      repository.handle({ type: "add", data: { ...userWouter, ...{ uuid: "user-01" } } });
+      withUserInRepository(userWouter, () => {
 
-      _autoUnsub(repository.entities.pipe(skip(1)).subscribe(entities => {
-        expect(entities.length).toBe(1, "since we updated an entity");
-        expect(entities[0].name).toBe("Rutger", "since we update the name");
-        done();
-      }));
+        _autoUnsub(repository.entities.pipe(skip(1)).subscribe(entities => {
+          expect(entities.length).toBe(1, "since we updated an entity");
+          expect(entities[0].name).toBe("Rutger", "since we update the name");
+          done();
+        }));
 
-      repository.handle({
-        type: "update",
-        data: { uuid: "user-01", name: "Rutger" }
+        $receiveUpdate.next({
+          data: { uuid: "user-01", name: "Rutger" }
+        });
       });
     });
 
-    it("should thrown an error when an external update can not be applied due to missing content", () => {
-      repository.handle({ type: "add", data: { ...userWouter, ...{ uuid: "user-01" } } });
-      const call = () => {
-        repository.handle({
-          type: "update",
+    it("should thrown an error when an external update can not be applied due to missing content", (done) => {
+      withUserInRepository(userWouter, () => {
+        $receiveUpdate.next({
           data: { uuid: "invalid-uuid", name: "Rutger" }
         });
-      };
 
-      expect(call).toThrowError("Unable to find entity");
+        _autoUnsub(repository.entities
+          .subscribe(entities => {
+            expect(entities[0].name).toBe("Wouter", "since the invalid uuid has not resulted in a update");
+            done();
+          }));
+      });
     });
 
-    it("should thrown an error when an external remove can not be applied due to missing content", () => {
-      repository.handle({ type: "add", data: { ...userWouter, ...{ uuid: "user-01" } } });
-      const call = () => {
-        repository.handle({
-          type: "remove",
+    it("should not alter repository when invalid remove is provided", (done) => {
+      withUserInRepository(userWouter, () => {
+        $receiveRemove.next({
           uuid: "invalid-uuid"
         });
-      };
 
-      expect(call).toThrowError("Unable to find entity");
+        _autoUnsub(repository.entities
+          .subscribe(entities => {
+            expect(entities.length).toBe(1, "since the invalid uuid has not resulted in a remove");
+            done();
+          }));
+      });
     });
   });
 });
+
