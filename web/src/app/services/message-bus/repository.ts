@@ -18,6 +18,10 @@ export class Repository<T extends Entity> {
   ) { }
 
   add(entity: T): Observable<T> {
+    if (entity.uuid) {
+      throw new Error("The entity has an uuid, which is not allowed when adding");
+    }
+
     const obs = this._messenger.add(entity)
       .pipe(
         map(x => {
@@ -38,6 +42,14 @@ export class Repository<T extends Entity> {
   }
 
   update(entity: T): Observable<T> {
+    if (!entity.uuid) {
+      throw new Error("The entity is missing an uuid");
+    }
+
+    if (!this._entries.find(x => x.uuid === entity.uuid)) {
+      throw new Error("The entity is unknown in storage");
+    }
+
     const obs = this._messenger.update(entity)
       .pipe(
         map(x => {
@@ -46,14 +58,27 @@ export class Repository<T extends Entity> {
         }), share()
       );
 
+    // We don't need to wait for an update.
+    this.entries.next(this._entries);
+
     return obs;
   }
 
   remove(entity: T): Observable<void> {
-    const obs = this._messenger.remove(entity)
-      .pipe(
-        map(x => { /* Remove all information, since we don't expect a response */ })
-      );
+    if (!entity.uuid) {
+      throw new Error("The entity is missing an uuid");
+    }
+
+    if (!this._entries.find(x => x.uuid === entity.uuid)) {
+      throw new Error("The entity is unknown in storage");
+    }
+
+    const obs = this._messenger.remove(entity);
+
+    const pushSub = obs.subscribe(() => {
+      this.entries.next(this._entries);
+      pushSub.unsubscribe(); // Remove own sub.
+    });
 
     return obs;
   }
