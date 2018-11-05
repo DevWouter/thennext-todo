@@ -15,6 +15,7 @@ describe('Repository', () => {
   let sender: jasmine.SpyObj<EntityMessageSenderInterface<UserFake>>;
   let receiver: jasmine.SpyObj<EntityMessageReceiverInterface<UserFake>>;
   let postActions: (() => Promise<void>)[];
+  let entityType: string;
 
   let $sendAdd: Subject<UserFake>;
   let $sendUpdate: Subject<UserFake>;
@@ -42,6 +43,7 @@ describe('Repository', () => {
 
   beforeEach(() => {
     postActions = [];
+    entityType = "UserFake";
     userWouter = <UserFake>{ name: "Wouter" };
 
     $sendAdd = new Subject<UserFake>();
@@ -72,7 +74,7 @@ describe('Repository', () => {
     receiver.onUpdate.and.returnValue($receiveUpdate);
     receiver.onRemove.and.returnValue($receiveRemove);
 
-    repository = new Repository<UserFake>(sender, receiver);
+    repository = new Repository<UserFake>(sender, receiver, "UserFake");
   });
 
   afterEach((done) => {

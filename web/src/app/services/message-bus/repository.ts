@@ -12,6 +12,7 @@ export class Repository<T extends Entity> {
   constructor(
     private readonly _send: EntityMessageSenderInterface<T>,
     private readonly _receive: EntityMessageReceiverInterface<T>,
+    private readonly _entityType: string,
   ) { this.setup(); }
 
   private setup() {
