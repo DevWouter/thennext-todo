@@ -1,2 +1,3 @@
 describe('WsConnectionFactory', () => {
+  it("exists");
 });
