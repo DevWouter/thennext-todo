@@ -3,7 +3,7 @@ import { EntityMessageSender } from "./entity-message-sender";
 import { Entity } from "../../models/entity";
 import { WsConnectionFactoryInterface } from "./ws-connection-factory";
 import { WsConnectionInterface } from "./ws-connection";
-import { EntityRefIdGenerator } from "./entity-refid-generator";
+import { EntityRefIdGeneratorInterface } from "./entity-refid-generator";
 
 import {
   WsEventBasic,
@@ -29,7 +29,7 @@ describe("EntityMessengerSender", () => {
   let sender: EntityMessageSender<FakeUser>;
   let connectionFactory: jasmine.SpyObj<WsConnectionFactoryInterface>;
   let connection: jasmine.SpyObj<WsConnectionInterface>;
-  let refIdGenerator: jasmine.SpyObj<EntityRefIdGenerator>;
+  let refIdGenerator: jasmine.SpyObj<EntityRefIdGeneratorInterface>;
   let $events: Subject<WsEventBasic>;
   let postActions: (() => Promise<void>)[];
   let userWouter: FakeUser;
@@ -50,7 +50,7 @@ describe("EntityMessengerSender", () => {
     $events = new Subject<WsEventBasic>();
     reviverFunc = jasmine.createSpy("reviver", (key: any, value: any): any => value);
 
-    refIdGenerator = jasmine.createSpyObj<EntityRefIdGenerator>("refIdGenerator", ["next"]);
+    refIdGenerator = jasmine.createSpyObj<EntityRefIdGeneratorInterface>("refIdGenerator", ["next"]);
     refIdGenerator.next.and.returnValues("msg-1", "msg-2", "msg-3", "msg-4");
 
     connection = jasmine.createSpyObj<WsConnectionInterface>("connection", ["events", "send"]);

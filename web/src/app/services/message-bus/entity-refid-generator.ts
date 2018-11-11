@@ -1,5 +1,11 @@
 
-export class EntityRefIdGenerator {
+
+export interface EntityRefIdGeneratorInterface {
+  next(): string;
+}
+
+
+export class EntityRefIdGenerator implements EntityRefIdGeneratorInterface {
   private _nextId = 0;
 
   constructor(

@@ -2,7 +2,7 @@ import { Entity } from "../../models/entity";
 import { Observable, Subject, OperatorFunction, pipe } from "rxjs";
 import { WsConnectionFactoryInterface } from "./ws-connection-factory";
 import { WsConnectionInterface } from "./ws-connection";
-import { EntityRefIdGenerator } from "./entity-refid-generator";
+import { EntityRefIdGeneratorInterface } from "./entity-refid-generator";
 import { filter, map } from "rxjs/operators";
 import { WsEvent, WsEventBasic, WsEventMap } from "../ws/events";
 
@@ -48,7 +48,7 @@ export class EntityMessageSender<T extends Entity> implements EntityMessageSende
   private _nextId = 0;
 
   private connection: WsConnectionInterface;
-  private refGenerator: EntityRefIdGenerator;
+  private refGenerator: EntityRefIdGeneratorInterface;
 
   constructor(
     private readonly connectionFactory: WsConnectionFactoryInterface,
