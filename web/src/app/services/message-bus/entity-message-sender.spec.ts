@@ -1,7 +1,6 @@
 import { Subject, Subscription } from "rxjs";
 import { EntityMessageSender } from "./entity-message-sender";
 import { Entity } from "../../models/entity";
-import { WsConnectionFactoryInterface } from "./ws-connection-factory";
 import { WsConnectionInterface } from "./ws-connection";
 import { EntityRefIdGeneratorInterface } from "./entity-refid-generator";
 
@@ -27,7 +26,6 @@ class FakeUser implements Entity {
 
 describe("EntityMessengerSender", () => {
   let sender: EntityMessageSender<FakeUser>;
-  let connectionFactory: jasmine.SpyObj<WsConnectionFactoryInterface>;
   let connection: jasmine.SpyObj<WsConnectionInterface>;
   let refIdGenerator: jasmine.SpyObj<EntityRefIdGeneratorInterface>;
   let $events: Subject<WsEventBasic>;
@@ -56,11 +54,7 @@ describe("EntityMessengerSender", () => {
     connection = jasmine.createSpyObj<WsConnectionInterface>("connection", ["events", "send"]);
     connection.events.and.returnValue($events);
 
-    connectionFactory = jasmine.createSpyObj<WsConnectionFactoryInterface>("connectionFactory", ["create", "createRefId"]);
-    connectionFactory.create.and.returnValue(connection);
-    connectionFactory.createRefId.and.returnValue(refIdGenerator);
-
-    sender = new EntityMessageSender<FakeUser>(connectionFactory, entityType, reviverFunc);
+    sender = new EntityMessageSender<FakeUser>(connection, refIdGenerator, entityType, reviverFunc);
   });
 
   afterEach((done) => {
@@ -72,10 +66,6 @@ describe("EntityMessengerSender", () => {
 
   it("should exist", () => {
     expect(sender).toBeDefined();
-  });
-
-  it("should request an refIdGenerator with entity type as tag", () => {
-    expect(connectionFactory.createRefId).toHaveBeenCalledWith(entityType);
   });
 
   it("should send a add-message when `add` is called", () => {
@@ -317,7 +307,7 @@ describe("EntityMessengerSender", () => {
   });
 
   it("should not fail if the reviver is missing", (done) => {
-    sender = new EntityMessageSender(connectionFactory, entityType, null);
+    sender = new EntityMessageSender(connection, refIdGenerator, entityType, null);
     _autoUnsub(sender.add(userWouter).subscribe({
       next(remoteEntity) {
         expect(remoteEntity.name).toBe("Wouter");

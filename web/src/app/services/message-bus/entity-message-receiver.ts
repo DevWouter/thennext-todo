@@ -1,8 +1,8 @@
 import { Entity } from "../../models/entity";
 import { Observable } from "rxjs";
-import { WsConnectionFactoryInterface } from "./ws-connection-factory";
 import { filter, map } from "rxjs/operators";
 import { WsEvent } from "../ws/events";
+import { WsConnectionInterface } from "./ws-connection";
 
 export interface EntityMessageReceiverInterface<T extends Entity> {
   onAdd(): Observable<{ data: T }>;
@@ -16,7 +16,7 @@ export class EntityMessageReceiver<T extends Entity> implements EntityMessageRec
   private $remove: Observable<{ uuid: string; }>;
 
   constructor(
-    private readonly connectionFactory: WsConnectionFactoryInterface,
+    private readonly connection: WsConnectionInterface,
     private readonly entityType: string,
     private readonly reviver: (key: any, value: any) => any,
   ) {
@@ -36,8 +36,7 @@ export class EntityMessageReceiver<T extends Entity> implements EntityMessageRec
   }
 
   private setup(): any {
-    const localConnection = this.connectionFactory.create();
-    this.$add = localConnection.events()
+    this.$add = this.connection.events()
       .pipe(
         filter(x => x.echo === false),
         filter(x => x.type === "entity-created"),
@@ -46,7 +45,7 @@ export class EntityMessageReceiver<T extends Entity> implements EntityMessageRec
         map(x => ({ data: this.revive(x.data.entity as T) }))
       );
 
-    this.$update = localConnection.events()
+    this.$update = this.connection.events()
       .pipe(
         filter(x => x.echo === false),
         filter(x => x.type === "entity-updated"),
@@ -55,7 +54,7 @@ export class EntityMessageReceiver<T extends Entity> implements EntityMessageRec
         map(x => ({ data: this.revive(x.data.entity as T) }))
       );
 
-    this.$remove = localConnection.events()
+    this.$remove = this.connection.events()
       .pipe(
         filter(x => x.echo === false),
         filter(x => x.type === "entity-deleted"),

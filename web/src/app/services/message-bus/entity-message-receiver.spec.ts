@@ -1,5 +1,4 @@
 import { EntityMessageReceiver } from "./entity-message-receiver";
-import { WsConnectionFactoryInterface } from "./ws-connection-factory";
 import { WsConnectionInterface } from "./ws-connection";
 import { WsEventBasic, WsEvent } from "../ws/events";
 import { Subject, Subscription } from "rxjs";
@@ -11,7 +10,6 @@ interface FakeUser {
 
 describe("EntityMessageReceiver", () => {
   let receiver: EntityMessageReceiver<FakeUser>;
-  let connectionFactory: jasmine.SpyObj<WsConnectionFactoryInterface>;
   let connection: jasmine.SpyObj<WsConnectionInterface>;
   let $events: Subject<WsEventBasic>;
   let postActions: (() => Promise<void>)[];
@@ -34,10 +32,8 @@ describe("EntityMessageReceiver", () => {
     reviverFunc = jasmine.createSpy("reviver", (key: any, value: any): any => value);
     connection.events.and.returnValue($events);
 
-    connectionFactory = jasmine.createSpyObj<WsConnectionFactoryInterface>("connectionFactory", ["create"]);
-    connectionFactory.create.and.returnValue(connection);
 
-    receiver = new EntityMessageReceiver(connectionFactory, entityType, reviverFunc);
+    receiver = new EntityMessageReceiver(connection, entityType, reviverFunc);
   });
 
   afterEach((done) => {
@@ -49,10 +45,6 @@ describe("EntityMessageReceiver", () => {
 
   it("should exists", () => {
     expect(receiver).toBeDefined();
-  });
-
-  it("should retrieve a connection from the `WsConnectionFactory`", () => {
-    expect(connectionFactory.create).toHaveBeenCalledTimes(1);
   });
 
   it("should listen to 'user-entity' messages for `onAdd` that are from remote client", (done) => {
@@ -268,7 +260,7 @@ describe("EntityMessageReceiver", () => {
   });
 
   it("should not fail if the reviver is missing", (done) => {
-    receiver = new EntityMessageReceiver(connectionFactory, entityType, null);
+    receiver = new EntityMessageReceiver(connection, entityType, null);
     _autoUnsub(receiver.onAdd().subscribe({
       next(event) {
         expect(event.data.name).toBe("Wouter");

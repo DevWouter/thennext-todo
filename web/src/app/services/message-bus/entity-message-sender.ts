@@ -1,6 +1,5 @@
 import { Entity } from "../../models/entity";
-import { Observable, Subject, OperatorFunction, pipe } from "rxjs";
-import { WsConnectionFactoryInterface } from "./ws-connection-factory";
+import { Observable, Subject } from "rxjs";
 import { WsConnectionInterface } from "./ws-connection";
 import { EntityRefIdGeneratorInterface } from "./entity-refid-generator";
 import { filter, map } from "rxjs/operators";
@@ -47,15 +46,13 @@ export interface EntityMessageSenderInterface<T extends Entity> {
 export class EntityMessageSender<T extends Entity> implements EntityMessageSenderInterface<T> {
   private _nextId = 0;
 
-  private connection: WsConnectionInterface;
-  private refGenerator: EntityRefIdGeneratorInterface;
 
   constructor(
-    private readonly connectionFactory: WsConnectionFactoryInterface,
+    private readonly connection: WsConnectionInterface,
+    private readonly refGenerator: EntityRefIdGeneratorInterface,
     private readonly entityType: string,
     private readonly reviver: (key: any, value: any) => any,
   ) {
-    this.setup();
   }
 
   add(entity: T): Observable<T> {
@@ -176,11 +173,6 @@ export class EntityMessageSender<T extends Entity> implements EntityMessageSende
     });
 
     return obs;
-  }
-
-  private setup() {
-    this.connection = this.connectionFactory.create();
-    this.refGenerator = this.connectionFactory.createRefId(this.entityType);
   }
 
   private revive(entity: T): T {
