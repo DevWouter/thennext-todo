@@ -4,7 +4,15 @@ import { Entity } from "../../models/entity";
 import { EntityMessageSenderInterface } from "./entity-message-sender";
 import { EntityMessageReceiverInterface } from "./entity-message-receiver";
 
-export class Repository<T extends Entity> {
+export interface RepositoryInterface<T extends Entity> {
+  readonly entities: Observable<T[]>;
+  add(entity: T): Observable<T>;
+  update(entity: T): Observable<T>;
+  remove(entity: T): Observable<void>;
+  sync(): Observable<T[]>;
+}
+
+export class Repository<T extends Entity> implements RepositoryInterface<T> {
   private readonly _entities: T[] = [];
   private readonly $entities = new BehaviorSubject<T[]>(this._entities);
   public readonly entities = this.$entities.asObservable();
@@ -12,7 +20,6 @@ export class Repository<T extends Entity> {
   constructor(
     private readonly _send: EntityMessageSenderInterface<T>,
     private readonly _receive: EntityMessageReceiverInterface<T>,
-    private readonly _entityType: string,
   ) { this.setup(); }
 
   private setup() {

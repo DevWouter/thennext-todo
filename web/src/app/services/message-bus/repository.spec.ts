@@ -74,7 +74,7 @@ describe('Repository', () => {
     receiver.onUpdate.and.returnValue($receiveUpdate);
     receiver.onRemove.and.returnValue($receiveRemove);
 
-    repository = new Repository<UserFake>(sender, receiver, "UserFake");
+    repository = new Repository<UserFake>(sender, receiver);
   });
 
   afterEach((done) => {
