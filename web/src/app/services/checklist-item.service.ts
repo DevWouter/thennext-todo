@@ -1,50 +1,50 @@
 import { Injectable } from "@angular/core";
 
 import { Observable, combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
-
-import { Repository } from "./repositories/repository";
-import { WsRepository } from "./repositories/ws-repository";
+import { map, filter } from "rxjs/operators";
 
 import { TaskEventService } from "./task-event.service";
-import { MessageService } from "./message.service";
 
 import { ChecklistItem } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
+import { MessageBusService, Repository } from "./message-bus";
 
 @Injectable()
 export class ChecklistItemService {
-  private _repository: WsRepository<ChecklistItem>;
+  private _repository: Repository<ChecklistItem>;
   public get entries(): Observable<ChecklistItem[]> {
-    return this._repository.entries.pipe(map(x => x.sort((a, b) => a.order - b.order)));
+    return this._repository.entities.pipe(map(x => x.sort((a, b) => a.order - b.order)));
   }
 
   constructor(
-    messageService: MessageService,
+    private readonly messageBusService: MessageBusService,
     private taskEventService: TaskEventService,
-    connectionStateService: ConnectionStateService,
   ) {
-    this._repository = new WsRepository("checklist-item", messageService);
-    combineLatest(this.taskEventService.deletedTask, this._repository.entries)
+
+    const sender = this.messageBusService.createSender<ChecklistItem>("checklist-item", undefined);
+    const receiver = this.messageBusService.createReceiver<ChecklistItem>("checklist-item", undefined);
+
+    this._repository = new Repository(sender, receiver);
+
+    combineLatest(this.taskEventService.deletedTask, this._repository.entities)
       .subscribe(([task, checklistItems]) => {
         // Find all relations beloning to the task and delete them.
         const items = checklistItems
           .filter(x => x.taskUuid === task.uuid);
-        this._repository.removeMany(items, { onlyInternal: true });
+        items.forEach(item => {
+          this._repository.remove(item);
+        });
       });
-
-      connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: ChecklistItem): Promise<ChecklistItem> {
-    return this._repository.add(value);
+    return this._repository.add(value).toPromise();
   }
 
   update(value: ChecklistItem): Promise<ChecklistItem> {
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: ChecklistItem): Promise<ChecklistItem> {
-    return this._repository.delete(value);
+    return this._repository.remove(value).toPromise().then(() => value);
   }
 }
