@@ -2,10 +2,11 @@ import { Injectable } from "@angular/core";
 import { ApiService } from "./api.service";
 import { Session } from "../models";
 import { TokenService } from "./token.service";
+import { MessageBusStateService } from "./message-bus";
 
 interface ConfirmTokenResponse {
   state: "confirmed" | "already-confirmed" | "rejected";
-};
+}
 
 @Injectable()
 export class SessionService {
@@ -13,6 +14,7 @@ export class SessionService {
   constructor(
     private apiService: ApiService,
     private tokenService: TokenService,
+    private messageBusStateService: MessageBusStateService,
   ) { }
 
   createSession(email: string, password: string): Promise<Session> {
@@ -23,6 +25,7 @@ export class SessionService {
   }
 
   async logout(): Promise<void> {
+    this.messageBusStateService.set("close");
     await this.apiService.delete<object>("/api/session/destroy")
       .toPromise()
       .catch((reason) => console.error(reason));

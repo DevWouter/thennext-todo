@@ -1,11 +1,11 @@
 <div class="timeline" *ngIf="showDropArea">
-  <div class="droparea droparea--before" [class.allow]="beforeAllow" (dragover)="dragover($event, 'before')" (drop)="drop($event, 'before')">
+  <div class="droparea droparea--before" [class.allow]="beforeAllow" (dragover)="dragover($event, 'before')" (drop)="drop($event, 'before')" data-cy="task-pane-before-drop">
     <b>before</b>
     <br>"{{taskname}}"</div>
   <div class="droparea-splitter">
     <span>or</span>
   </div>
-  <div class="droparea droparea--after" [class.allow]="afterAllow" (dragover)="dragover($event, 'after')" (drop)="drop($event, 'after')">
+  <div class="droparea droparea--after" [class.allow]="afterAllow" (dragover)="dragover($event, 'after')" (drop)="drop($event, 'after')" data-cy="task-pane-after-drop">
     <b>after</b>
     <br>"{{taskname}}"</div>
 </div>

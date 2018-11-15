@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Task } from '../../../../models';
-import { TaskService, NavigationService } from '../../../../services';
+import { Component, OnInit, Input } from "@angular/core";
+import { Task } from "../../../../models";
+import { TaskService, NavigationService } from "../../../../services";
 
 @Component({
-  selector: 'task-pane-action',
-  templateUrl: './task-pane-action.component.html',
-  styleUrls: ['./task-pane-action.component.scss']
+  selector: "task-pane-action",
+  templateUrl: "./task-pane-action.component.html",
+  styleUrls: ["./task-pane-action.component.scss"]
 })
 export class TaskPaneActionComponent implements OnInit {
   @Input()

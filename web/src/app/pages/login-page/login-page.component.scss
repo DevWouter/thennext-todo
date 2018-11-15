@@ -77,3 +77,13 @@ $row-spacing: 16px;
 .row--error {
     padding: $row-spacing;
 }
+
+.row--explain {
+    // text-align: center;
+    justify-content: center;
+    padding: $row-spacing;
+    font-size: smaller;
+    a {
+        color: hsla(146, 28%, 28%, 1);
+    }
+}

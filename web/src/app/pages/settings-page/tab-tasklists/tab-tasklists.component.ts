@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { Component, OnInit } from "@angular/core";
+import { filter } from "rxjs/operators";
 
-import { TaskListService, AccountService } from '../../../services';
-import { TaskList } from '../../../models';
+import { TaskListService, AccountService } from "../../../services";
+import { TaskList } from "../../../models";
 
 @Component({
-  selector: 'settings-tab-tasklists',
-  templateUrl: './tab-tasklists.component.html',
-  styleUrls: ['./tab-tasklists.component.scss']
+  selector: "settings-tab-tasklists",
+  templateUrl: "./tab-tasklists.component.html",
+  styleUrls: ["./tab-tasklists.component.scss"]
 })
 export class SettingsTasklistsComponent implements OnInit {
   tasklists: TaskList[] = [];

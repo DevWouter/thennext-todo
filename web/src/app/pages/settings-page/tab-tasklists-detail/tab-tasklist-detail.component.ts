@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
 
-import { TaskListService } from '../../../services';
-import { TaskList } from '../../../models';
+import { TaskListService } from "../../../services";
+import { TaskList } from "../../../models";
 
 @Component({
-  selector: 'settings-tab-tasklist-detail',
-  templateUrl: './tab-tasklist-detail.component.html',
-  styleUrls: ['./tab-tasklist-detail.component.scss']
+  selector: "settings-tab-tasklist-detail",
+  templateUrl: "./tab-tasklist-detail.component.html",
+  styleUrls: ["./tab-tasklist-detail.component.scss"]
 })
 export class SettingsTasklistDetailComponent implements OnInit {
   taskList: TaskList;

@@ -1,0 +1,18 @@
+:host {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    cursor: pointer;
+    transition: width 0.1s, background-color 0.1s;
+    color: white;
+    &:hover {
+        background-color: #559872;
+    }
+}
+
+.icon {
+    display: inline-block;
+    text-align: center;
+    width: 48px;
+    height: 100%;
+}

@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { AccountService } from '../../../services';
-import { filter, debounceTime, tap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Component, OnInit } from "@angular/core";
+import { AccountService } from "../../../services";
+import { filter, debounceTime, tap } from "rxjs/operators";
+import { Subject } from "rxjs";
 
 @Component({
-  selector: 'app-tab-personal',
-  templateUrl: './tab-personal.component.html',
-  styleUrls: ['./tab-personal.component.scss']
+  selector: "app-tab-personal",
+  templateUrl: "./tab-personal.component.html",
+  styleUrls: ["./tab-personal.component.scss"]
 })
 export class SettingsTabPersonalComponent implements OnInit {
   private $displayName = new Subject<string>();

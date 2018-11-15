@@ -1,67 +1,21 @@
-<div class="container">
-  <div class="menu-btn" (click)="toggle()">
-    <div class="icon">
-      <i class="fas fa-bars fa-fw"></i>
-    </div>
-  </div>
-  <div class="title">{{listName}}</div>
-  <div class="connection-status">
-    <i class="fas fa-lg fa-circle" *ngIf="connectionStatus === 'online'"></i>
-    <i class="fas fa-lg fa-exclamation-circle warn" *ngIf="connectionStatus === 'offline'"></i>
-    <i class="fas fa-lg fa-times-circle error" *ngIf="connectionStatus === 'error'"></i>
-    <i class="fas fa-lg fa-question-circle warn" *ngIf="connectionStatus === 'unknown'"></i>
-  </div>
-</div>
+<gui-header>
+  <gui-header-button-icon data-cy="menu-button" iconClass="fas fa-fw fa-bars" (click)="open()"></gui-header-button-icon>
+  <gui-header-text>{{listName}}</gui-header-text>
+</gui-header>
 
-<div class="background" [class.expand]="expand" (click)="close()"></div>
-<div class="panel" [class.expand]="expand">
-  <div class="title">{{displayName}}</div>
+<gui-menu [menuTitle]="displayName">
+  <gui-menu-item iconClass="fas fa-fw fa-list">
+    <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
+      <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
+    </select>
+  </gui-menu-item>
 
-  <div class="item">
-    <div class="icon">
-      <i class="fas fa-fw fa-list"></i>
-    </div>
-    <div class="text">
-      <select [(ngModel)]="currentListUuid">
-        <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
-      </select>
-    </div>
-  </div>
+  <gui-menu-item-checkbox data-cy="show-blocked-tasks" [checked]="showBlocked" (click)="showBlocked = !showBlocked">Show blocked tasks</gui-menu-item-checkbox>
+  <gui-menu-item-checkbox data-cy="show-negative-tasks" [checked]="showNegative" (click)="showNegative = !showNegative">Show negative tasks</gui-menu-item-checkbox>
+  <gui-menu-item-checkbox data-cy="show-completed-tasks" [checked]="showCompleted" (click)="showCompleted = !showCompleted">Show completed</gui-menu-item-checkbox>
 
-  <div class="item" (click)="showBlocked = !showBlocked">
-    <div class="icon">
-      <i class="far fa-fw" [class.fa-square]="!showBlocked" [class.fa-check-square]="showBlocked"></i>
-    </div>
-    <div class="text">Show blocked tasks</div>
-  </div>
+  <gui-menu-spacer></gui-menu-spacer>
 
-  <div class="item" (click)="showNegative = !showNegative">
-    <div class="icon">
-      <i class="far fa-fw" [class.fa-square]="!showNegative" [class.fa-check-square]="showNegative"></i>
-    </div>
-    <div class="text">Show negative tasks</div>
-  </div>
-
-  <div class="item" (click)="showCompleted = !showCompleted">
-    <div class="icon">
-      <i class="far fa-fw" [class.fa-square]="!showCompleted" [class.fa-check-square]="showCompleted"></i>
-    </div>
-    <div class="text">Show completed</div>
-  </div>
-
-  <div class="spacer"></div>
-
-  <div class="item" (click)="goToSettings()">
-    <div class="icon">
-      <i class="fas fa-cog fa-fw"></i>
-    </div>
-    <div class="text">Settings</div>
-  </div>
-
-  <div class="item" (click)="logout()">
-    <div class="icon">
-      <i class="fas fa-sign-out-alt fa-fw"></i>
-    </div>
-    <div class="text">Logout</div>
-  </div>
-</div>
+  <gui-menu-item data-cy="menu-settings" iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
+  <gui-menu-item data-cy="menu-logout" iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
+</gui-menu>

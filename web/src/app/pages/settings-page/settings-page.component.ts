@@ -1,12 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { MessageBusStateService } from "../../services/message-bus";
 
 @Component({
-  selector: 'app-settings-page',
-  templateUrl: './settings-page.component.html',
-  styleUrls: ['./settings-page.component.scss']
+  selector: "app-settings-page",
+  templateUrl: "./settings-page.component.html",
+  styleUrls: ["./settings-page.component.scss"]
 })
 export class SettingsPageComponent implements OnInit {
-  constructor() { }
+  constructor(
+    private readonly messageBusStateService: MessageBusStateService,
+  ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.messageBusStateService.set("open");
+   }
 }

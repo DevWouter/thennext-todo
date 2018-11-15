@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { ScoreShift } from '../../../models';
-import { ScoreShiftService } from '../../../services';
+import { Component, OnInit } from "@angular/core";
+import { map } from "rxjs/operators";
+import { ScoreShift } from "../../../models";
+import { ScoreShiftService } from "../../../services";
 
 @Component({
-  selector: 'settings-tab-tags',
-  templateUrl: './tab-tags.component.html',
-  styleUrls: ['./tab-tags.component.scss']
+  selector: "settings-tab-tags",
+  templateUrl: "./tab-tags.component.html",
+  styleUrls: ["./tab-tags.component.scss"]
 })
 export class SettingsTabTagsComponent implements OnInit {
   items: ScoreShift[];

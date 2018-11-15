@@ -1,52 +1,53 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-
-import { Repository } from "./repositories/repository";
-import { RepositoryEventHandler } from "./repositories/repository-event-handler";
+import { filter } from "rxjs/operators";
 
 import { TaskEventService } from "./task-event.service";
-import { MessageService } from "./message.service";
-import { WsRepository } from "./repositories/ws-repository";
 
 import { Task } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
+import { Repository, MessageBusService } from "./message-bus";
 
-class TaskEventHandler implements RepositoryEventHandler<Task> {
-  onItemLoad(entry: Task): void {
-    entry.createdOn = this.fixDate(entry.createdOn);
-    entry.updatedOn = this.fixDate(entry.updatedOn);
-    entry.completedOn = this.fixDate(entry.completedOn);
+function fixDate(v: string | Date) {
+  if (typeof (v) === "string") {
+    return new Date(Date.parse(v));
   }
 
-  fixDate(v: string | Date): Date {
-    if (v === null || v === undefined) {
-      return undefined;
-    }
+  return v;
+}
 
-    if (typeof (v) === "string") {
-      const vs = <string>(v);
-      return new Date(Date.parse(vs));
-    }
-
-    // We can assume it is a date.
-    return <Date>v;
-  }
+function taskRevive(key: keyof Task, value): any {
+  if (key === "createdOn") { return fixDate(value); }
+  if (key === "updatedOn") { return fixDate(value); }
+  if (key === "completedOn") { return fixDate(value); }
+  return value;
 }
 
 @Injectable()
 export class TaskService {
-  private _repository: WsRepository<Task>;
+  private _repository: Repository<Task>;
+
   public get entries(): Observable<Task[]> {
-    return this._repository.entries;
+    return this._repository.entities.pipe(filter(x => !!x));
   }
 
   constructor(
-    messageService: MessageService,
+    private readonly messageBusService: MessageBusService,
     private taskEventService: TaskEventService,
-    private readonly connectionStateService: ConnectionStateService,
   ) {
-    this._repository = new WsRepository("task", messageService, new TaskEventHandler());
-    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
+    this.setup();
+  }
+
+  private setup() {
+    const sender = this.messageBusService.createSender<Task>("task", taskRevive);
+    const receiver = this.messageBusService.createReceiver<Task>("task", taskRevive);
+
+    this._repository = new Repository(sender, receiver);
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
   }
 
   add(value: Task): Promise<Task> {
@@ -58,16 +59,18 @@ export class TaskService {
     }
 
     value.description = value.description || "";
-    return this._repository.add(value);
+    return this._repository.add(value).toPromise();
   }
 
   update(value: Task): Promise<Task> {
     value.updatedOn = new Date();
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: Task): Promise<Task> {
-    return this._repository.delete(value)
+    return this._repository.remove(value)
+      .toPromise()
+      .then(() => value)
       .then(x => {
         this.taskEventService.deleted(value);
         return x;

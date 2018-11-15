@@ -17,6 +17,7 @@ import { CommandInputComponent } from "./command-input/command-input.component";
 import { TaskPageLeftComponent } from "./task-page-left/task-page-left.component";
 import { TaskPageDividerComponent } from "./task-page-divider/task-page-divider.component";
 import { TaskPageMenuComponent } from "./task-page-menu/task-page-menu.component";
+import { GuiModule } from "../../gui/gui.module";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { TaskPageMenuComponent } from "./task-page-menu/task-page-menu.component
     DialogsModule,
     ServicesModule,
     TasklistModule,
-    TaskPaneModule
+    TaskPaneModule,
+    GuiModule
   ],
   declarations: [
     CommandInputComponent,

@@ -5,10 +5,10 @@
   <app-command-input></app-command-input>
 </div>
 <div class="task-list-wrapper">
-  <div class="task-list" [hidden]="!showTasks">
+  <div data-cy="task-list-container" class="task-list" [hidden]="!showTasks">
     <app-tasklist (taskFoundCount)="setFoundCount($event)"></app-tasklist>
   </div>
-  <div class="empty-message" *ngIf="showEmptyListMessage">
+  <div data-cy="no-tasks-found" class="empty-message" *ngIf="showEmptyListMessage">
     <div class="content">
       No tasks could be found
     </div>

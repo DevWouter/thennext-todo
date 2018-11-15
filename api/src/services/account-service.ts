@@ -3,7 +3,6 @@ import { injectable } from "inversify";
 
 import {
     AccountRepository,
-    AccountSettingsRepository,
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
@@ -11,11 +10,11 @@ import { TrustedClient } from "./ws/message-client";
 import { UpdateMyAccountCommand, UpdateMyPasswordCommand } from "./ws/commands";
 import { PasswordCheckService } from "./password-check-service";
 import { SecurityConfig } from "../config";
+
 @injectable()
 export class AccountService {
     constructor(
         private readonly accountRepository: AccountRepository,
-        private readonly accountSettingsRepository: AccountSettingsRepository,
         private readonly messageService: WsMessageService,
         private readonly passwordCheckService: PasswordCheckService,
     ) {

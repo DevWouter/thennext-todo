@@ -2,53 +2,57 @@ import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { Repository } from "./repositories/repository";
-import { WsRepository } from "./repositories/ws-repository";
-
 import { TaskEventService } from "./task-event.service";
-import { MessageService } from "./message.service";
 
 import { TaskRelation, TaskRelationType } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
-
+import { Repository, MessageBusService } from "./message-bus";
+import { filter } from "rxjs/operators";
 
 @Injectable()
 export class TaskRelationService {
   private _internalList: TaskRelation[] = [];
-  private _repository: WsRepository<TaskRelation>;
+  private _repository: Repository<TaskRelation>;
   public get entries(): Observable<TaskRelation[]> {
-    return this._repository.entries;
+    return this._repository.entities;
   }
 
   constructor(
-    messageService: MessageService,
+    private readonly messageBusService: MessageBusService,
     private taskEventService: TaskEventService,
-    connectionStateService: ConnectionStateService,
   ) {
-    this._repository = new WsRepository("task-relation", messageService);
-    this._repository.entries.subscribe(x => this._internalList = x);
+    const sender = this.messageBusService.createSender<TaskRelation>("task-relation", undefined);
+    const receiver = this.messageBusService.createReceiver<TaskRelation>("task-relation", undefined);
+
+    this._repository = new Repository(sender, receiver);
+    this._repository.entities.subscribe(x => { this._internalList = x; });
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
 
     this.taskEventService.deletedTask.subscribe(task => {
       // Find all relations beloning to the task and delete them.
       const relations = this._internalList
         .filter(x => x.sourceTaskUuid === task.uuid || x.targetTaskUuid === task.uuid);
-      this._repository.removeMany(relations, { onlyInternal: true });
+      relations.forEach(element => {
+        this._repository.remove(element);
+      });
     });
-
-    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
   }
 
   add(value: TaskRelation): Promise<TaskRelation> {
     value.relationType = value.relationType || TaskRelationType.blocks;
-    return this._repository.add(value);
+    return this._repository.add(value).toPromise();
   }
 
   update(value: TaskRelation): Promise<TaskRelation> {
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: TaskRelation): Promise<TaskRelation> {
-    return this._repository.delete(value);
+    return this._repository.remove(value).toPromise().then(() => value);
   }
 
   findAllParents(child: string, relations: TaskRelation[]): string[] {

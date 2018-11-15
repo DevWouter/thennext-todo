@@ -1,0 +1,25 @@
+:host {
+    height: 48px;
+    min-height: 48px;
+    line-height: 48px;
+    color: black;
+    cursor: pointer;
+    display: flex;
+    padding-right: 16px;
+    &:hover {
+        background-color: darken(#71af8c, 10);
+        background-color: #e1f2fe;
+    }
+}
+
+.icon {
+    display: inline-block;
+    text-align: center;
+    width: 48px;
+    height: 100%;
+}
+
+.content {
+    display: inline-block;
+    flex-grow: 1;
+}

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { Subject, Observable } from "rxjs";
+import { filter, tap } from "rxjs/operators";
 
 type ElementType = "checklistItem" | "task";
 

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivateChild } from '@angular/router';
-import { StorageService, StorageKey } from '../services';
+import { Injectable } from "@angular/core";
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivateChild } from "@angular/router";
+import { StorageService, StorageKey } from "../services";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class SessionTokenGuard implements CanActivate, CanActivateChild {
 

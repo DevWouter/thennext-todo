@@ -1,10 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { filter } from "rxjs/operators";
 
-import {
-  MessageService,
-  ConnectionStateService,
-} from "../../services";
+import { MessageBusService } from "../../services/message-bus";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-warning-modal-dialog",
@@ -16,31 +14,30 @@ export class WarningModalDialogComponent implements OnInit {
   warningMessage = "";
   reconnectCounter = 0;
   constructor(
-    private readonly messageService: MessageService,
-    private connectionStateService: ConnectionStateService,
+    private readonly messageBusService: MessageBusService,
+    private readonly router: Router,
   ) {
   }
 
   ngOnInit() {
-    this.connectionStateService.state.subscribe(x => {
-      if (x === "unload") {
-        this.showWarning = true;
-      } else {
-        this.showWarning = false;
-      }
-    });
-
-    this.messageService.$error.pipe(filter(x => x.requireLogin))
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "closed"))
       .subscribe(x => {
-        // HACK: We are reloading the page since we the repositories don't know if they should reload.
-        window.location.assign("/login");
+        this.reconnectCounter++;
+        this.warningMessage = `Trying to reconnect, attempt ${this.reconnectCounter}`;
+        this.showWarning = true;
       });
 
-    this.connectionStateService.state.pipe(
-      filter(x => x === "unload")).subscribe(() => {
-        this.warningMessage = `Trying to reconnect, attempt ${this.reconnectCounter++}`;
-        console.log(this.warningMessage);
-        this.messageService.reconnect();
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(x => {
+        this.reconnectCounter = 0;
+        this.showWarning = false;
+      });
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "rejected")).subscribe(() => {
+        this.router.navigate(["/login"]);
       });
   }
 }
