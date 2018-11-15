@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ContextService, MediaViewService } from "../../services";
+import { MessageBusStateService } from "../../services/message-bus";
 
 // TODO: When screen becomes mobile, either show the active task or the tasklist
 @Component({
@@ -14,6 +15,7 @@ export class TaskPageComponent implements OnInit {
   constructor(
     private readonly contextService: ContextService,
     private readonly mediaViewService: MediaViewService,
+    private readonly messageBusStateService: MessageBusStateService,
   ) {
   }
 
@@ -22,6 +24,8 @@ export class TaskPageComponent implements OnInit {
       .subscribe((task) => {
         this.showPane = !!task;
       });
+
+    this.messageBusStateService.set("open");
 
     this.mediaViewService.extraSmall.subscribe(x => this.isMobile = x);
   }

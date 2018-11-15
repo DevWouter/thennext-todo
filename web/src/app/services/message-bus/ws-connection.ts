@@ -10,9 +10,12 @@ export interface WsConnectionInterface {
   send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void
 }
 
+export type WsConnectionState = "closed" | "connecting" | "connected" | "closing";
+export type WsConnectionOrigin = "client" | "server";
+
 export interface WsConnectionStatus {
-  status: "closed" | "connecting" | "connected" | "closing";
-  origin: "client" | "server";
+  status: WsConnectionState;
+  origin: WsConnectionOrigin;
 }
 
 /**
