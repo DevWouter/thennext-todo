@@ -6,7 +6,6 @@ import { map, distinctUntilChanged, filter } from "rxjs/operators";
 
 import { RelationViewService } from "./relation-view.service";
 import { ScoreShiftService } from "./score-shift.service";
-import { TaskRelationService } from "./task-relation.service";
 import { TaskService } from "./task.service";
 import { UrgencyLapService } from "./urgency-lap.service";
 
@@ -40,7 +39,6 @@ export class TaskScoreService {
   constructor(
     private readonly taskService: TaskService,                   // Since we need the title
     private readonly scoreShiftService: ScoreShiftService,
-    private readonly taskRelationService: TaskRelationService,
     private readonly relationViewService: RelationViewService,
     private readonly urgencyLapService: UrgencyLapService,
   ) { this.setup(); }

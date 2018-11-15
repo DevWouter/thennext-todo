@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { filter } from "rxjs/operators";
 
 import { ApiService } from "./api.service";
-import { MessageService } from "./message.service";
-import { TokenService } from "./token.service";
-import { promise } from "selenium-webdriver";
+import { MessageBusService } from "./message-bus";
 
 interface Account {
   uuid: string;
@@ -40,11 +39,9 @@ export class AccountService {
 
   constructor(
     private apiService: ApiService,
-    private messageSerivce: MessageService,
-    private tokenService: TokenService,
+    private messageBusService: MessageBusService,
   ) {
-
-    this.messageSerivce.eventsOf("my-account-synced")
+    this.messageBusService.eventsOf("my-account-synced")
       .subscribe(ev => {
         this._myAccount.next({
           uuid: ev.data.uuid,
@@ -52,14 +49,9 @@ export class AccountService {
         });
       });
 
-    this.tokenService.token
-      .subscribe((token) => {
-        if (!token) {
-          this._myAccount.next(undefined);
-        } else {
-          // Send a message that we want the account synced.
-          this.messageSerivce.send("sync-my-account", {});
-        }
+    this.messageBusService.status.pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this.messageBusService.send("sync-my-account", {});
       });
   }
 
@@ -75,13 +67,13 @@ export class AccountService {
       throw new Error("You can't change your own uuid");
     }
 
-    this.messageSerivce.send("update-my-account", {
+    this.messageBusService.send("update-my-account", {
       displayName: change.displayName
     });
   }
 
   updatePassword(password: string): any {
-    this.messageSerivce.send("update-my-password", {
+    this.messageBusService.send("update-my-password", {
       newPassword: password
     });
   }

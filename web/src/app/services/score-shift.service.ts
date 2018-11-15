@@ -1,49 +1,44 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { Repository } from "./repositories/repository";
-import { RepositoryEventHandler } from "./repositories/repository-event-handler";
-import { WsRepository } from "./repositories/ws-repository";
-
-import { MessageService } from "./message.service";
-
 import { ScoreShift } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
+import { MessageBusService, Repository } from "./message-bus";
+import { filter } from "rxjs/operators";
 
-class ScoreShiftRestoreTranslator implements RepositoryEventHandler<ScoreShift> {
-  onItemLoad(entry: ScoreShift): void {
-    entry.createdOn = this.fixDate(entry.createdOn);
-    entry.updatedOn = this.fixDate(entry.updatedOn);
+function fixDate(v: string | Date): Date {
+  if (typeof (v) === "string") {
+    return new Date(Date.parse(v));
   }
 
-  fixDate(v: string | Date): Date {
-    if (v === null || v === undefined) {
-      return undefined;
-    }
+  return v;
+}
 
-    if (typeof (v) === "string") {
-      const vs = <string>(v);
-      return new Date(Date.parse(vs));
-    }
-
-    // We can assume it is a date.
-    return <Date>v;
-  }
+function reviveScoreShift(key: keyof ScoreShift, value: any): any {
+  if (key === "createdOn") return fixDate(value);
+  if (key === "updatedOn") return fixDate(value);
+  return value;
 }
 
 @Injectable()
 export class ScoreShiftService {
-  private _repository: WsRepository<ScoreShift>;
+  private _repository: Repository<ScoreShift>;
   public get entries(): Observable<ScoreShift[]> {
-    return this._repository.entries;
+    return this._repository.entities;
   }
 
   constructor(
-    messageService: MessageService,
-    connectionStateService: ConnectionStateService,
+    private readonly messageBusService: MessageBusService,
   ) {
-    this._repository = new WsRepository<ScoreShift>("score-shift", messageService, new ScoreShiftRestoreTranslator());
-    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
+    const sender = this.messageBusService.createSender<ScoreShift>("score-shift", reviveScoreShift);
+    const receiver = this.messageBusService.createReceiver<ScoreShift>("score-shift", reviveScoreShift);
+
+    this._repository = new Repository(sender, receiver);
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
   }
 
   add(value: ScoreShift): Promise<ScoreShift> {
@@ -55,15 +50,15 @@ export class ScoreShiftService {
     }
 
     value.score = value.score || 0;
-    return this._repository.add(value);
+    return this._repository.add(value).toPromise();
   }
 
   update(value: ScoreShift): Promise<ScoreShift> {
     value.updatedOn = new Date();
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: ScoreShift): Promise<ScoreShift> {
-    return this._repository.delete(value);
+    return this._repository.remove(value).toPromise().then(() => value);
   }
 }

@@ -1,26 +1,30 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { Repository } from "./repositories/repository";
-import { WsRepository } from "./repositories/ws-repository";
-
-import { MessageService } from "./message.service";
 import { TaskListRight } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
+import { Repository, MessageBusService } from "./message-bus";
+import { filter } from "rxjs/operators";
 
 @Injectable()
 export class TaskListRightService {
-  private _repository: WsRepository<TaskListRight>;
+  private _repository: Repository<TaskListRight>;
   public get entries(): Observable<TaskListRight[]> {
-    return this._repository.entries;
+    return this._repository.entities;
   }
 
   constructor(
-    messageService: MessageService,
-    connectionStateService: ConnectionStateService,
+    private readonly messageBusService: MessageBusService,
   ) {
-    this._repository = new WsRepository("task-list-right", messageService);
-    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
+    const sender = this.messageBusService.createSender<TaskListRight>("task-list-right", undefined);
+    const receiver = this.messageBusService.createReceiver<TaskListRight>("task", undefined);
+
+    this._repository = new Repository(sender, receiver);
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
   }
 
   async accept(taskListUuid: string, token: string): Promise<boolean> {
@@ -28,14 +32,14 @@ export class TaskListRightService {
   }
 
   add(value: TaskListRight): Promise<TaskListRight> {
-    return this._repository.add(value);
+    return this._repository.add(value).toPromise();
   }
 
   update(value: TaskListRight): Promise<TaskListRight> {
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: TaskListRight): Promise<TaskListRight> {
-    return this._repository.delete(value);
+    return this._repository.remove(value).toPromise().then(() => value);
   }
 }
