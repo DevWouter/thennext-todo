@@ -1,42 +1,42 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { Repository } from "./repositories/repository";
-import { WsRepository } from "./repositories/ws-repository";
-
-import { MessageService } from "./message.service";
 import { TaskList } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
+import { Repository, MessageBusService } from "./message-bus";
+import { filter } from "rxjs/operators";
 
 @Injectable()
-export class TaskListService implements Repository<TaskList> {
-  private _repository: WsRepository<TaskList>;
+export class TaskListService {
+  private _repository: Repository<TaskList>;
 
   public get entries(): Observable<TaskList[]> {
-    return this._repository.entries;
+    return this._repository.entities;
   }
 
   constructor(
-    readonly messageService: MessageService,
-    connectionStateService: ConnectionStateService,
+    readonly messageBusService: MessageBusService,
   ) {
-    this._repository = new WsRepository("task-list", messageService);
-    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
+    const sender = this.messageBusService.createSender<TaskList>("task-list", undefined);
+    const receiver = this.messageBusService.createReceiver<TaskList>("task-list", undefined);
+
+    this._repository = new Repository(sender, receiver);
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
   }
 
   add(value: TaskList): Promise<TaskList> {
-    return this._repository.add(value);
+    return this._repository.add(value).toPromise();
   }
 
   update(value: TaskList): Promise<TaskList> {
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: TaskList): Promise<TaskList> {
-    return this._repository.delete(value);
-  }
-
-  removeMany(values: TaskList[]): Promise<TaskList[]> {
-    return this._repository.removeMany(values);
+    return this._repository.remove(value).toPromise().then(() => value);
   }
 }
