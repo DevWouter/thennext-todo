@@ -1,40 +1,43 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { filter } from "rxjs/operators";
 
-import { Repository } from "./repositories/repository";
-import { WsRepository } from "./repositories/ws-repository";
-
-import { MessageService } from "./message.service";
 import { TaskListShareToken } from "../models";
-import { ConnectionStateService } from "./connection-state.service";
+import { Repository, MessageBusService } from "./message-bus";
 
 
 @Injectable()
 export class TaskListShareTokenService {
-  private _repository: WsRepository<TaskListShareToken>;
+  private _repository: Repository<TaskListShareToken>;
   public get entries(): Observable<TaskListShareToken[]> {
-    return this._repository.entries;
+    return this._repository.entities;
   }
 
   constructor(
-    messageService: MessageService,
-    connectionStateService: ConnectionStateService,
+    private readonly messageBusService: MessageBusService,
   ) {
-    this._repository = new WsRepository("task-list-share", messageService);
-    connectionStateService.state.subscribe(x => { if (x === "load") { this._repository.load(); } else { this._repository.unload(); } });
+
+    const sender = this.messageBusService.createSender<TaskListShareToken>("task-list-share", undefined);
+    const receiver = this.messageBusService.createReceiver<TaskListShareToken>("task-list-share", undefined);
+
+    this._repository = new Repository(sender, receiver);
+
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
   }
 
-  async add(value: TaskListShareToken): Promise<TaskListShareToken> {
-    const result = await this._repository.add(value);
-    console.log(result);
-    return result;
+  add(value: TaskListShareToken): Promise<TaskListShareToken> {
+    return this._repository.add(value).toPromise();
   }
 
   update(value: TaskListShareToken): Promise<TaskListShareToken> {
-    return this._repository.update(value);
+    return this._repository.update(value).toPromise();
   }
 
   delete(value: TaskListShareToken): Promise<TaskListShareToken> {
-    return this._repository.delete(value);
+    return this._repository.remove(value).toPromise().then(() => value);
   }
 }
