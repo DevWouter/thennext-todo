@@ -10,6 +10,7 @@ import { environment } from "../../../environments/environment";
 import { filter, map } from "rxjs/operators";
 import { TokenService } from "../token.service";
 import { WsEventMap, WsEventBasic, WsEvent } from "../ws/events";
+import { WsCommandMap } from "../ws/commands";
 
 type ReviveFunc = (key: any, value: any) => any;
 
@@ -36,6 +37,8 @@ export interface MessageBusInterface {
 @Injectable()
 export class MessageBusService implements MessageBusInterface {
   private readonly _connection: WsConnection = new WsConnection({ url: environment.wsEndPoint });
+  private readonly $connectionStatus = this._connection.status();
+  private readonly $connectionEvents = this._connection.events();
   private readonly _status = new BehaviorSubject<MessageBusStatus>({
     origin: "client",
     status: "closed"
@@ -44,11 +47,8 @@ export class MessageBusService implements MessageBusInterface {
   public readonly status = this._status.asObservable();
 
   constructor(tokenService: TokenService) {
-    const $connectionStatus = this._connection.status();
-    const $connectionEvents = this._connection.events();
-
     // Always forward the connection status.
-    $connectionStatus.subscribe(status => {
+    this.$connectionStatus.subscribe(status => {
       this._status.next({
         status: status.status,
         origin: status.origin,
@@ -56,13 +56,13 @@ export class MessageBusService implements MessageBusInterface {
     });
 
     // If connected send the token.
-    combineLatest($connectionStatus, tokenService.token)
+    combineLatest(this.$connectionStatus, tokenService.token)
       .pipe(filter(([status]) => status.status === "connected"))
       .subscribe(([_, token]) => {
         this._connection.send("set-token", { token: token });
       });
 
-    $connectionEvents.pipe(WhenEvent("token-accepted"))
+    this.$connectionEvents.pipe(WhenEvent("token-accepted"))
       .subscribe(x => {
         this._status.next({
           status: "accepted",
@@ -70,13 +70,22 @@ export class MessageBusService implements MessageBusInterface {
         });
       });
 
-    $connectionEvents.pipe(WhenEvent("token-rejected"))
+    this.$connectionEvents.pipe(WhenEvent("token-rejected"))
       .subscribe(x => {
         this._status.next({
           status: "rejected",
           origin: "server",
         });
       });
+  }
+
+  eventsOf<K extends keyof WsEventMap>(type: K): Observable<WsEvent<K>> {
+    return this.$connectionEvents
+      .pipe(WhenEvent(type));
+  }
+
+  send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void {
+    this._connection.send(type, data);
   }
 
   createSender<T extends Entity>(entityType: string, reviver: ReviveFunc): EntityMessageSenderInterface<T> {
