@@ -73,6 +73,7 @@ export class WsConnection implements WsConnectionInterface, WsConnectionControlI
     });
 
     this.socket.addEventListener("close", (ev) => {
+      this.socket = undefined;
       this._status.next({
         status: "closed",
         origin: ev.reason === "client closes" ? "client" : "server"
