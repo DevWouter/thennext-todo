@@ -7,7 +7,7 @@ import { WsCommandMap } from "../ws/commands";
  */
 export interface WsConnectionInterface {
   events(): Observable<WsEventBasic>;
-  send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void
+  send<K extends keyof WsCommandMap>(type: K, data: WsCommandMap[K]): void;
 }
 
 export type WsConnectionState = "closed" | "connecting" | "connected" | "closing";

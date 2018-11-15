@@ -14,8 +14,8 @@ function fixDate(v: string | Date): Date {
 }
 
 function reviveScoreShift(key: keyof ScoreShift, value: any): any {
-  if (key === "createdOn") return fixDate(value);
-  if (key === "updatedOn") return fixDate(value);
+  if (key === "createdOn") { return fixDate(value); }
+  if (key === "updatedOn") { return fixDate(value); }
   return value;
 }
 

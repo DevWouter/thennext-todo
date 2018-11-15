@@ -8,7 +8,7 @@ import { BehaviorSubject, combineLatest } from "rxjs";
  */
 @Injectable()
 export class MessageBusStateService {
-  private desiredState: "open" | "close" = "close"
+  private desiredState: "open" | "close" = "close";
   private $desiredState = new BehaviorSubject<"open" | "close">(this.desiredState);
 
   constructor(private readonly messageBusService: MessageBusService) {
@@ -39,7 +39,7 @@ export class MessageBusStateService {
   }
 
   set(state: "open" | "close") {
-    if (state == this.desiredState) {
+    if (state === this.desiredState) {
       return;
     }
 

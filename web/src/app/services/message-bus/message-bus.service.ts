@@ -20,9 +20,9 @@ function WhenEvent<K extends keyof WsEventMap>(eventType: K) {
       filter(x => x.echo),
       filter(x => x.type === eventType),
       map(x => x as WsEvent<K>),
-    )
+    );
   };
-};
+}
 
 export interface MessageBusStatus {
   status: WsConnectionState | "accepted" | "rejected";

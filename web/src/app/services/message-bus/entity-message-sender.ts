@@ -12,9 +12,9 @@ function filterEvent<K extends keyof WsEventMap>(eventType: K, refId: string) {
       filter(x => x.refId === refId),
       filter(x => x.type === eventType),
       map(x => x as WsEvent<K>),
-    )
+    );
   };
-};
+}
 
 export interface EntityMessageSenderInterface<T extends Entity> {
   /**
@@ -66,8 +66,8 @@ export class EntityMessageSender<T extends Entity> implements EntityMessageSende
         filter(x => x.data.entityKind === this.entityType)
       )
       .subscribe(event => {
-        const entity = event.data.entity as T;
-        obs.next(this.revive(entity));
+        const returnedEntity = event.data.entity as T;
+        obs.next(this.revive(returnedEntity));
         obs.complete();
 
         // We no longer need to listen
@@ -96,8 +96,8 @@ export class EntityMessageSender<T extends Entity> implements EntityMessageSende
         filter(x => x.data.entityKind === this.entityType)
       )
       .subscribe(event => {
-        const entity = event.data.entity as T;
-        obs.next(this.revive(entity));
+        const returnedEntity = event.data.entity as T;
+        obs.next(this.revive(returnedEntity));
         obs.complete();
 
         // We no longer need to listen

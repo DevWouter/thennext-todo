@@ -16,9 +16,9 @@ function fixDate(v: string | Date) {
 }
 
 function taskRevive(key: keyof Task, value): any {
-  if (key === "createdOn") return fixDate(value);
-  if (key === "updatedOn") return fixDate(value);
-  if (key === "completedOn") return fixDate(value);
+  if (key === "createdOn") { return fixDate(value); }
+  if (key === "updatedOn") { return fixDate(value); }
+  if (key === "completedOn") { return fixDate(value); }
   return value;
 }
 
