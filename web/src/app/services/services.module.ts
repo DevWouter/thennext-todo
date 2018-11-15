@@ -7,11 +7,9 @@ import { ApiEventService } from "./api-event.service";
 import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { CommandStateService } from "./command-state.service";
-import { ConnectionStateService } from "./connection-state.service";
 import { ContextService } from "./context.service";
 import { FocusService } from "./focus.service";
 import { MediaViewService } from "./media-view.service";
-import { MessageService } from "./message.service";
 import { NavigationService } from "./navigation.service";
 import { RelationViewService } from "./relation-view.service";
 import { ScoreShiftService } from "./score-shift.service";
@@ -43,11 +41,9 @@ import { MessageBusModule } from "./message-bus/message-bus.module";
     ApiService,
     ChecklistItemService,
     CommandStateService,
-    ConnectionStateService,
     ContextService,
     FocusService,
     MediaViewService,
-    MessageService,
     NavigationService,
     RelationViewService,
     ScoreShiftService,
