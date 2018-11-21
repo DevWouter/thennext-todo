@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { combineLatest } from "rxjs";
-import { filter } from "rxjs/operators";
+import { combineLatest, Observable } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 import { NavigationService, SessionService, AccountService, ContextService, TaskListService } from "../../../services";
 import { TaskList } from "../../../models";
@@ -28,6 +28,7 @@ export class TaskPageMenuComponent implements OnInit {
 
   public displayName = "";
   public listName = "";
+  public $taskListName: Observable<string>;
 
   public lists: TaskList[] = [];
 
@@ -76,6 +77,20 @@ export class TaskPageMenuComponent implements OnInit {
           }
         }
       });
+
+    // Find current
+    const $currentTaskList = combineLatest(this.taskListService.entries, this.navigation.taskListUuid)
+      .pipe(map(([lists, uuid]) => {
+        const primaryTasklist = lists.find(x => x.primary);
+        const activeTasklist = lists.find(x => x.uuid === uuid);
+        return activeTasklist || primaryTasklist;
+      }));
+
+    this.$taskListName = $currentTaskList.pipe(
+      filter(x => !!x),
+      map(x => x.name)
+    );
+
   }
 
   close() {

@@ -1,6 +1,6 @@
 <gui-header>
   <gui-header-button-icon data-cy="menu-button" iconClass="fas fa-fw fa-bars" (click)="open()"></gui-header-button-icon>
-  <gui-header-text>{{listName}}</gui-header-text>
+  <gui-header-text>{{$taskListName | async}}</gui-header-text>
 </gui-header>
 
 <gui-menu [menuTitle]="displayName">
