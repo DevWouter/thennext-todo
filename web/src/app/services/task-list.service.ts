@@ -39,4 +39,9 @@ export class TaskListService {
   delete(value: TaskList): Promise<TaskList> {
     return this._repository.remove(value).toPromise().then(() => value);
   }
+
+  isEncrypted(taskList: TaskList): boolean {
+    return false;
+  }
+
 }

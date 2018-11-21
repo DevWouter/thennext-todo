@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { combineLatest, Observable } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { filter, map, share } from "rxjs/operators";
 
 import { NavigationService, SessionService, AccountService, ContextService, TaskListService } from "../../../services";
 import { TaskList } from "../../../models";
@@ -36,6 +36,9 @@ export class TaskPageMenuComponent implements OnInit {
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); this.close(); }
 
+  public $showDecrypt: Observable<boolean>;
+  public $showEncrypt: Observable<boolean>;
+  public $showEncryptMenu: Observable<boolean>;
 
   @ViewChild(MenuComponent)
   private menu: MenuComponent;
@@ -80,17 +83,26 @@ export class TaskPageMenuComponent implements OnInit {
 
     // Find current
     const $currentTaskList = combineLatest(this.taskListService.entries, this.navigation.taskListUuid)
-      .pipe(map(([lists, uuid]) => {
-        const primaryTasklist = lists.find(x => x.primary);
-        const activeTasklist = lists.find(x => x.uuid === uuid);
-        return activeTasklist || primaryTasklist;
-      }));
+      .pipe(
+        map(([lists, uuid]) => {
+          const primaryTasklist = lists.find(x => x.primary);
+          const activeTasklist = lists.find(x => x.uuid === uuid);
+          return activeTasklist || primaryTasklist;
+        }),
+        share()
+      );
 
     this.$taskListName = $currentTaskList.pipe(
       filter(x => !!x),
       map(x => x.name)
     );
 
+    this.$showDecrypt = $currentTaskList.pipe(map(x => this.taskListService.isEncrypted(x)));
+    this.$showEncrypt = $currentTaskList.pipe(map(x => !this.taskListService.isEncrypted(x)));
+    this.$showEncryptMenu = combineLatest(this.$showEncrypt, this.$showDecrypt)
+      .pipe(
+        map(options => options.some(x => x === true))
+      );
   }
 
   close() {
@@ -102,6 +114,14 @@ export class TaskPageMenuComponent implements OnInit {
   }
   goToSettings() {
     this.router.navigate(["/settings"]);
+  }
+
+  goToEncrypt() {
+
+  }
+
+  goToDecrypt() {
+
   }
 
   logout() {
