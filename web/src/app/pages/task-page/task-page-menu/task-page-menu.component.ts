@@ -116,12 +116,8 @@ export class TaskPageMenuComponent implements OnInit {
     this.router.navigate(["/settings"]);
   }
 
-  goToEncrypt() {
-
-  }
-
-  goToDecrypt() {
-
+  goToTasklistSettings() {
+    this.router.navigate(["/settings", { outlets: { tab: ['tasklists', this._currentListUuid] } }]);
   }
 
   logout() {
