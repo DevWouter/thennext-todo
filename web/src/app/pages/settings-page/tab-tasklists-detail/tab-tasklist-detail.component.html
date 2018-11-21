@@ -1,10 +1,16 @@
-<app-settings-tab-title>
-  <a [routerLink]="[ '..' ]">Tasklists</a>
-  <span *ngIf="taskList"> &gt; {{taskList.name}}</span>
-</app-settings-tab-title>
+<div *ngIf="($taskList |async) as taskList; else loading">
+  <app-settings-tab-title>
+    <a [routerLink]="[ '..' ]">Tasklists</a>
+    <span> &gt; {{taskList.name}}</span>
+  </app-settings-tab-title>
 
-<div>
-  <p>Here you can change the name of the tasklist</p>
-  <input [(ngModel)]="newName">
-  <button (click)="updateName()">Update name</button>
+  <div>
+    <p>Here you can change the name of the tasklist</p>
+    <input [(ngModel)]="newName">
+    <button (click)="updateName()">Update name</button>
+  </div>
 </div>
+
+<ng-template #loading>
+  Loading!
+</ng-template>
