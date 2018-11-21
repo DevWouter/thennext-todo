@@ -96,6 +96,7 @@ export class TaskListService {
 
         // Only the name can be updated.
         entity.name = src.name;
+        entity.privateKeyHash = src.privateKeyHash;
 
         const finalEntity = await this.taskListrepository.update(entity);
         this.messageService.send("entity-updated", {
@@ -142,8 +143,9 @@ export class TaskListService {
         return <TaskList>{
             uuid: taskList.uuid,
             name: taskList.name,
-            primary: taskList.id === accountSettings.primaryListId, // TO BE REMOVED
-            ownerUuid: account.uuid
+            ownerUuid: account.uuid,
+            privateKeyHash: taskList.privateKeyHash,
+            primary: taskList.id === accountSettings.primaryListId // TO BE REMOVED
         };
     }
 }

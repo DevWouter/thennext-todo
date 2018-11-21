@@ -5,4 +5,5 @@ export interface TaskList extends Entity {
   name: string;
   primary: boolean;
   ownerUuid: string;
+  privateKeyHash?: string;
 }

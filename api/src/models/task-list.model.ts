@@ -3,4 +3,5 @@ export interface TaskList {
     readonly name: string;
     readonly primary: boolean;
     readonly ownerUuid: string;
+    readonly privateKeyHash: string;
 }

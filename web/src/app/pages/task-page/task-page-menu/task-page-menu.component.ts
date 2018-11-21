@@ -89,16 +89,16 @@ export class TaskPageMenuComponent implements OnInit {
           const activeTasklist = lists.find(x => x.uuid === uuid);
           return activeTasklist || primaryTasklist;
         }),
-        share()
+        share(),
+        filter(x => !!x),
       );
 
     this.$taskListName = $currentTaskList.pipe(
-      filter(x => !!x),
       map(x => x.name)
     );
 
-    this.$showDecrypt = $currentTaskList.pipe(map(x => this.taskListService.isEncrypted(x)));
-    this.$showEncrypt = $currentTaskList.pipe(map(x => !this.taskListService.isEncrypted(x)));
+    this.$showDecrypt = $currentTaskList.pipe(map(x => !!x.privateKeyHash));
+    this.$showEncrypt = $currentTaskList.pipe(map(x => x.privateKeyHash === null || x.privateKeyHash === undefined));
     this.$showEncryptMenu = combineLatest(this.$showEncrypt, this.$showDecrypt)
       .pipe(
         map(options => options.some(x => x === true))
