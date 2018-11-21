@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~scss/variables';
+
+body {
+  --green-default: #71af8c;
+}
+
+body {
+  --background-color-dark: var(--green-default);
+}
