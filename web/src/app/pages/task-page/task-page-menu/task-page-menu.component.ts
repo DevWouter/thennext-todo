@@ -36,10 +36,6 @@ export class TaskPageMenuComponent implements OnInit {
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); this.close(); }
 
-  public $showDecrypt: Observable<boolean>;
-  public $showEncrypt: Observable<boolean>;
-  public $showEncryptMenu: Observable<boolean>;
-
   @ViewChild(MenuComponent)
   private menu: MenuComponent;
 
@@ -96,13 +92,6 @@ export class TaskPageMenuComponent implements OnInit {
     this.$taskListName = $currentTaskList.pipe(
       map(x => x.name)
     );
-
-    this.$showDecrypt = $currentTaskList.pipe(map(x => !!x.privateKeyHash));
-    this.$showEncrypt = $currentTaskList.pipe(map(x => x.privateKeyHash === null || x.privateKeyHash === undefined));
-    this.$showEncryptMenu = combineLatest(this.$showEncrypt, this.$showDecrypt)
-      .pipe(
-        map(options => options.some(x => x === true))
-      );
   }
 
   close() {
@@ -114,10 +103,6 @@ export class TaskPageMenuComponent implements OnInit {
   }
   goToSettings() {
     this.router.navigate(["/settings"]);
-  }
-
-  goToTasklistSettings() {
-    this.router.navigate(["/settings", { outlets: { tab: ['tasklists', this._currentListUuid] } }]);
   }
 
   logout() {
