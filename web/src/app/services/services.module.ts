@@ -8,8 +8,10 @@ import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { CommandStateService } from "./command-state.service";
 import { ContextService } from "./context.service";
+import { FilterService } from "./filter.service";
 import { FocusService } from "./focus.service";
 import { MediaViewService } from "./media-view.service";
+import { MessageBusModule } from "./message-bus/message-bus.module";
 import { NavigationService } from "./navigation.service";
 import { RelationViewService } from "./relation-view.service";
 import { ScoreShiftService } from "./score-shift.service";
@@ -26,7 +28,6 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
-import { MessageBusModule } from "./message-bus/message-bus.module";
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { MessageBusModule } from "./message-bus/message-bus.module";
     ChecklistItemService,
     CommandStateService,
     ContextService,
+    FilterService,
     FocusService,
     MediaViewService,
     NavigationService,

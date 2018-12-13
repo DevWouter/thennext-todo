@@ -4,6 +4,7 @@ export * from "./api.service";
 export * from "./checklist-item.service";
 export * from "./command-state.service";
 export * from "./context.service";
+export * from "./filter.service";
 export * from "./focus.service";
 export * from "./media-view.service";
 export * from "./navigation.service";
