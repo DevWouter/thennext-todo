@@ -8,7 +8,6 @@ import { ApiService } from "./api.service";
 import { ChecklistItemService } from "./checklist-item.service";
 import { CommandStateService } from "./command-state.service";
 import { ContextService } from "./context.service";
-import { FilterService } from "./filter.service";
 import { FocusService } from "./focus.service";
 import { MediaViewService } from "./media-view.service";
 import { MessageBusModule } from "./message-bus/message-bus.module";
@@ -20,7 +19,6 @@ import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
 import { TaskEventService } from "./task-event.service";
 import { TaskListRightService } from "./task-list-right.service";
-import { TaskListService } from "./task-list.service";
 import { TaskListShareTokenService } from "./task-list-share-token.service";
 import { TaskParseService } from "./task-parse.service";
 import { TaskRelationService } from "./task-relation.service";
@@ -28,6 +26,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
+import { TasklistEventService, TasklistFilterService, TaskListService } from "./tasklist";
 
 @NgModule({
   imports: [
@@ -43,7 +42,7 @@ import { UrgencyLapService } from "./urgency-lap.service";
     ChecklistItemService,
     CommandStateService,
     ContextService,
-    FilterService,
+    TasklistFilterService,
     FocusService,
     MediaViewService,
     NavigationService,
@@ -53,6 +52,7 @@ import { UrgencyLapService } from "./urgency-lap.service";
     SessionService,
     StorageService,
     TaskEventService,
+    TasklistEventService,
     TaskListRightService,
     TaskListService,
     TaskListShareTokenService,

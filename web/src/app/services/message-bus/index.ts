@@ -7,3 +7,4 @@ export * from "./ws-connection";
 // Services
 export * from "./message-bus.service";
 export * from "./message-bus-state.service";
+export * from "./respository-factory.service";

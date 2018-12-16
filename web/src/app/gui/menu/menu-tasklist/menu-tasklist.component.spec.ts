@@ -1,10 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MenuTasklistComponent } from './menu-tasklist.component';
-import { TaskList } from '../../../models';
-import { MenuTasklistItemComponent } from '../menu-tasklist-item/menu-tasklist-item.component';
 import { By } from '@angular/platform-browser';
-import { TaskListService, FilterService } from '../../../services';
+
+import { IMock, Mock } from 'typemoq';
+
 import { BehaviorSubject, Observable } from 'rxjs';
+
+import { MenuTasklistComponent } from './menu-tasklist.component';
+import { MenuTasklistItemComponent } from '../menu-tasklist-item/menu-tasklist-item.component';
+import { TaskList } from '../../../models';
+import { TaskListService, TasklistFilterService } from '../../../services';
 
 describe('MenuTasklistComponent', () => {
   let listA: TaskList;
@@ -12,11 +16,14 @@ describe('MenuTasklistComponent', () => {
   let component: MenuTasklistComponent;
   let fixture: ComponentFixture<MenuTasklistComponent>;
   let taskLists: BehaviorSubject<TaskList[]>;
-  let filterService: jasmine.SpyObj<FilterService>;
+  let filterServiceMock: IMock<TasklistFilterService>;
+  let filteredTasklists: BehaviorSubject<TaskList[]>;
 
   beforeEach(async(() => {
+    filteredTasklists = new BehaviorSubject<TaskList[]>([]);
     taskLists = new BehaviorSubject<TaskList[]>([]);
-    filterService = jasmine.createSpyObj<FilterService>("FilerService", ["addList"]);
+    filterServiceMock = Mock.ofType<TasklistFilterService>();
+    filterServiceMock.setup(x => x.filteredLists).returns(() => filteredTasklists as Observable<TaskList[]>);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -25,15 +32,15 @@ describe('MenuTasklistComponent', () => {
       ],
       providers: [
         { provide: TaskListService, useValue: { entries: taskLists } },
-        { provide: FilterService, useValue: filterService }
+        { provide: TasklistFilterService, useFactory: () => filterServiceMock.object }
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    listA = <TaskList>{ uuid: "list-a", name: "List A" }
-    listB = <TaskList>{ uuid: "list-b", name: "List B" }
+    listA = <TaskList>{ uuid: "list-a", name: "List A" };
+    listB = <TaskList>{ uuid: "list-b", name: "List B" };
     fixture = TestBed.createComponent(MenuTasklistComponent);
     component = fixture.componentInstance;
   });

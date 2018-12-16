@@ -4,18 +4,19 @@
 </gui-header>
 
 <gui-menu [menuTitle]="displayName">
+  <gui-menu-item iconClass="fas fa-fw fa-list">
+    <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
+      <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
+    </select>
+  </gui-menu-item>
+  <gui-menu-bar></gui-menu-bar>
+
   <gui-menu-item-checkbox data-cy="show-blocked-tasks" [checked]="showBlocked" (click)="showBlocked = !showBlocked">Show blocked tasks</gui-menu-item-checkbox>
   <gui-menu-item-checkbox data-cy="show-negative-tasks" [checked]="showNegative" (click)="showNegative = !showNegative">Show negative tasks</gui-menu-item-checkbox>
   <gui-menu-item-checkbox data-cy="show-completed-tasks" [checked]="showCompleted" (click)="showCompleted = !showCompleted">Show completed</gui-menu-item-checkbox>
   <gui-menu-bar></gui-menu-bar>
 
-  <gui-menu-item-checkbox *ngFor="let list of lists" [checked]="showCompleted" (click)="showCompleted = !showCompleted">{{list.name}}</gui-menu-item-checkbox>
-
-  <!-- <gui-menu-item iconClass="fas fa-fw fa-list">
-    <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
-      <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
-    </select>
-  </gui-menu-item> -->
+  <!-- <gui-menu-tasklist></gui-menu-tasklist> -->
 
   <gui-menu-spacer></gui-menu-spacer>
   <gui-menu-bar></gui-menu-bar>
