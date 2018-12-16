@@ -1,0 +1,6 @@
+<div class="icon" [ngSwitch]="$state | async">
+  <i *ngSwitchCase="'none'"     class="far fa-fw fa-eye grey" data-cy="tasklist-icon-filter-none"></i>
+  <i *ngSwitchCase="'included'" class="far fa-fw fa-eye" data-cy="tasklist-icon-filter-included"></i>
+  <i *ngSwitchCase="'excluded'" class="far fa-fw fa-eye-slash" data-cy="tasklist-icon-filter-excluded"></i>
+</div>
+<div class="content">{{list.name}}</div>

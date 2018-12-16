@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { TaskList } from "../models";
-import { Repository, MessageBusService } from "./message-bus";
+import { TaskList } from "../../models";
+import { Repository, MessageBusService, RepositoryFactoryService } from "../message-bus";
 import { filter } from "rxjs/operators";
 
 @Injectable()
@@ -15,11 +15,12 @@ export class TaskListService {
 
   constructor(
     readonly messageBusService: MessageBusService,
+    readonly repositoryFactory: RepositoryFactoryService,
   ) {
     const sender = this.messageBusService.createSender<TaskList>("task-list", undefined);
     const receiver = this.messageBusService.createReceiver<TaskList>("task-list", undefined);
 
-    this._repository = new Repository(sender, receiver);
+    this._repository = repositoryFactory.create(sender, receiver);
 
     this.messageBusService.status
       .pipe(filter(x => x.status === "accepted"))
@@ -28,15 +29,15 @@ export class TaskListService {
       });
   }
 
-  add(value: TaskList): Promise<TaskList> {
-    return this._repository.add(value).toPromise();
+  add(value: TaskList): Observable<TaskList> {
+    return this._repository.add(value);
   }
 
-  update(value: TaskList): Promise<TaskList> {
-    return this._repository.update(value).toPromise();
+  update(value: TaskList): Observable<TaskList> {
+    return this._repository.update(value);
   }
 
-  delete(value: TaskList): Promise<TaskList> {
-    return this._repository.remove(value).toPromise().then(() => value);
+  delete(value: TaskList): Observable<void> {
+    return this._repository.remove(value);
   }
 }

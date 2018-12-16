@@ -84,11 +84,18 @@ export class TaskListRepository {
 
     async update(entity: TaskListEntity): Promise<TaskListEntity> {
         const db = await this.database();
+        // delete entity.privateKeyHash;
+        const change: Partial<TaskListEntity> = { name: entity.name };
+
+        // We also set the privateKeyHash unless it was undefined.
+        // If it is null, it means we remove the field in the database.
+        if (entity.privateKeyHash !== undefined) {
+            change.privateKeyHash = entity.privateKeyHash;
+        }
+
         await db.update<TaskListEntity>("TaskList",
+            change,
             {
-                // Only allow the name to be changed.
-                name: entity.name,
-            }, {
                 id: entity.id,
             }, 1
         );
@@ -107,6 +114,7 @@ export class TaskListRepository {
             name: src.name,
             ownerId: src.ownerId,
             uuid: src.uuid,
+            privateKeyHash: src.privateKeyHash,
         };
     }
 }

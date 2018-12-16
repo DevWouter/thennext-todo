@@ -27,6 +27,8 @@
     "normalize.css": "^8.0.0",
     "rxjs": "^6.3.3",
     "rxjs-tslint": "^0.1.5",
+    "tweetnacl": "^1.0.0",
+    "tweetnacl-util": "^0.15.0",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -50,6 +52,7 @@
     "protractor": "^5.4.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
+    "typemoq": "^2.1.0",
     "typescript": "^2.9.2"
   }
 }

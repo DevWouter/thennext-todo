@@ -4,8 +4,8 @@ import { TaskList, Task, ChecklistItem } from "../models";
 
 import { ChecklistItemService } from "./checklist-item.service";
 import { NavigationService } from "./navigation.service";
-import { TaskListService } from "./task-list.service";
 import { TaskService } from "./task.service";
+import { TaskListService } from "./tasklist";
 
 @Injectable()
 export class ContextService {
