@@ -11,7 +11,7 @@ const NONE_ICON = By.css("[data-cy='tasklist-icon-filter-none']");
 const INCLUDED_ICON = By.css("[data-cy='tasklist-icon-filter-included']");
 const EXCLUDED_ICON = By.css("[data-cy='tasklist-icon-filter-excluded']");
 
-fdescribe('MenuTasklistItemComponent', () => {
+describe('MenuTasklistItemComponent', () => {
   let component: MenuTasklistItemComponent;
   let fixture: ComponentFixture<MenuTasklistItemComponent>;
   let listA: TaskList;
