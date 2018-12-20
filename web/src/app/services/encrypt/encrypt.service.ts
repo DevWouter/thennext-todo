@@ -35,6 +35,10 @@ export class EncryptService {
       throw new Error("Task unrelated to the tasklist cannot be encrypted with given tasklist");
     }
 
+    if (checklistItems.some(item => tasks.findIndex(x => x.uuid === item.taskUuid) === -1)) {
+      throw new Error("ChecklistItem unrelated to the tasklist cannot be encrypted with given tasklist");
+    }
+
     tasks.forEach(task => this.encryptTask(privateKey, task, checklistItems));
     list.privateKeyHash = encodeBase64(hash(privateKey));
     this.tasklistKeysService.set(list.uuid, privateKey);
@@ -51,6 +55,12 @@ export class EncryptService {
     task.title = this.encryptText(task.title, pkNonce, pk);
     task.description = this.encryptText(task.description, pkNonce, pk);
     task.pkNonce = encodeBase64(pkNonce);
+
+    checklistItems.forEach(item => this.encryptChecklistItem(pk, pkNonce, item));
+  }
+
+  encryptChecklistItem(pk: Uint8Array, taskNonce: Uint8Array, checklistItem: ChecklistItem): void {
+    checklistItem.title = this.encryptText(checklistItem.title, taskNonce, pk);
   }
 
   private encryptText(text: string, pkNonce: Uint8Array, pk: Uint8Array): string {
