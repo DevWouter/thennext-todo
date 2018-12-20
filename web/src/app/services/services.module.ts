@@ -26,7 +26,7 @@ import { TaskScoreService } from "./task-score.service";
 import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
-import { TasklistEventService, TasklistFilterService, TaskListService } from "./tasklist";
+import { TasklistEventService, TasklistFilterService, TaskListService, TasklistKeysService } from "./tasklist";
 
 @NgModule({
   imports: [
@@ -42,7 +42,6 @@ import { TasklistEventService, TasklistFilterService, TaskListService } from "./
     ChecklistItemService,
     CommandStateService,
     ContextService,
-    TasklistFilterService,
     FocusService,
     MediaViewService,
     NavigationService,
@@ -53,6 +52,8 @@ import { TasklistEventService, TasklistFilterService, TaskListService } from "./
     StorageService,
     TaskEventService,
     TasklistEventService,
+    TasklistFilterService,
+    TasklistKeysService,
     TaskListRightService,
     TaskListService,
     TaskListShareTokenService,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as nacl from "tweetnacl";
-import { encodeBase64 } from "tweetnacl-util";
+import { encodeBase64, encodeUTF8 } from "tweetnacl-util";
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
