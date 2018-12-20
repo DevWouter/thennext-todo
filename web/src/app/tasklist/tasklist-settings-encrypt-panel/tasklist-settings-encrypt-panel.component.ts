@@ -3,7 +3,7 @@ import { TaskList } from '../../models';
 
 import { randomBytes, hash } from "tweetnacl";
 import { encodeBase64, decodeBase64 } from "tweetnacl-util";
-import { EncryptTasklistService } from '../../services/encrypt';
+import { EncryptService } from '../../services/encrypt';
 
 type ValidationRule = "WRONG_PK_ENCODING" | "WRONG_PK_LENGTH";
 
@@ -20,19 +20,21 @@ export class TasklistSettingsEncryptPanelComponent implements OnInit {
   privateKeyString: string;
 
   constructor(
-    private readonly tasklistEncryptService: EncryptTasklistService,
+    private readonly encryptService: EncryptService,
   ) { }
 
   ngOnInit() {
   }
 
   save(): any {
-    this.validations = this.tasklistEncryptService.validatePrivateKey(this.privateKeyString);
+    this.validations = this.encryptService.validatePrivateKey(this.privateKeyString);
     if (this.validations.length) {
       return;
     }
 
-    this.tasklistEncryptService.encrypt(this.tasklist, this.privateKeyString)
+    const pk = decodeBase64(this.privateKeyString);
+
+    this.encryptService.encryptTaskList(pk, this.tasklist, [], []);
   }
 
   generatePrivateKey(): void {

@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { EncryptKeysStorageService } from './encrypt-keys-storage.service';
-import { EncryptTasklistService } from './encrypt-tasklist.service';
-import { EncryptTaskService } from './encrypt-task.service';
-
+import { EncryptService } from './encrypt.service';
 
 @NgModule({
   declarations: [],
@@ -12,8 +10,7 @@ import { EncryptTaskService } from './encrypt-task.service';
   exports: [],
   providers: [
     EncryptKeysStorageService,
-    EncryptTasklistService,
-    EncryptTaskService,
+    EncryptService,
   ],
 })
 export class EncryptModule { }
