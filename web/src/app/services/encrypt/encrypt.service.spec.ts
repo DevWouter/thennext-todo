@@ -142,4 +142,13 @@ describe('Service: Encrypt', () => {
       ));
     });
   });
+
+  describe("Post-encrypt", () => {
+    // We need to save the tasklist since it contains hash of the privateKey
+    // We need to save the encrypted task since it contains the noonce with which the task properties were encrypted.
+    // We need to save the encrypted checklist item since it was encrypted.
+    it('should call the save function for the encrypted tasklist');
+    it('should call the save function for each encrypted task');
+    it('should call the save function for each encrypted checllst item');
+  });
 });

@@ -6,27 +6,54 @@ import { DebugElement } from '@angular/core';
 import { TasklistSettingsEncryptPanelComponent } from './tasklist-settings-encrypt-panel.component';
 import { randomBytes, verify } from "tweetnacl";
 import { encodeBase64, decodeBase64 } from "tweetnacl-util";
-import { TaskListService } from '../../services';
+import { TaskListService, TaskService, ChecklistItemService } from '../../services';
 import { IMock, Mock, Times, It } from 'typemoq';
-import { TaskList, Task } from '../../models';
+import { TaskList, Task, ChecklistItem } from '../../models';
 import { EncryptKeysStorageService, EncryptService } from '../../services/encrypt';
+import { of, BehaviorSubject, Observable } from 'rxjs';
+import { detectChanges } from '@angular/core/src/render3';
 
 
 describe('TasklistSettingsEncryptPanelComponent', () => {
   let component: TasklistSettingsEncryptPanelComponent;
   let fixture: ComponentFixture<TasklistSettingsEncryptPanelComponent>;
+
   let listA: TaskList;
+
+  let taskA: Task;
   let taskB: Task;
+
+  let itemA: ChecklistItem;
+  let itemB: ChecklistItem;
+
+  let $lists: BehaviorSubject<TaskList[]>;
+  let $tasks: BehaviorSubject<Task[]>;
+  let $items: BehaviorSubject<ChecklistItem[]>;
+
   let tasklistServiceMock: IMock<TaskListService>;
   let tasklistKeysServiceMock: IMock<EncryptKeysStorageService>;
   let encryptServiceMock: IMock<EncryptService>;
+  let checklistItemServiceMock: IMock<ChecklistItemService>;
+  let taskServiceMock: IMock<TaskService>;
 
   beforeEach(async(() => {
     listA = <TaskList>{ uuid: "list-a", name: "List A" };
-    tasklistServiceMock = Mock.ofType<TaskListService>();
-    tasklistKeysServiceMock = Mock.ofType<EncryptKeysStorageService>();
-    encryptServiceMock = Mock.ofType<EncryptService>();
 
+    taskA = <Task>{ uuid: "task-a", taskListUuid: "list-a" };
+    taskB = <Task>{ uuid: "task-b", taskListUuid: "list-b" };
+
+    itemA = <ChecklistItem>{ uuid: "item-a", taskUuid: "task-a" };
+    itemB = <ChecklistItem>{ uuid: "item-b", taskUuid: "task-b" };
+
+    $lists = new BehaviorSubject([]);
+    $tasks = new BehaviorSubject([]);
+    $items = new BehaviorSubject([]);
+
+    tasklistServiceMock = Mock.ofType<TaskListService>();
+    taskServiceMock = Mock.ofType<TaskService>();
+    checklistItemServiceMock = Mock.ofType<ChecklistItemService>();
+
+    encryptServiceMock = Mock.ofType<EncryptService>();
 
     TestBed.configureTestingModule({
       declarations: [TasklistSettingsEncryptPanelComponent],
@@ -34,12 +61,18 @@ describe('TasklistSettingsEncryptPanelComponent', () => {
         { provide: TaskListService, useFactory: () => tasklistServiceMock.object },
         { provide: EncryptKeysStorageService, useFactory: () => tasklistKeysServiceMock.object },
         { provide: EncryptService, useFactory: () => encryptServiceMock.object },
+        { provide: TaskService, useFactory: () => taskServiceMock.object },
+        { provide: ChecklistItemService, useFactory: () => checklistItemServiceMock.object },
       ]
     })
       .compileComponents();
   }));
 
   function setup() {
+    tasklistServiceMock.setup(x => x.entries).returns(() => $lists);
+    taskServiceMock.setup(x => x.entries).returns(() => $tasks);
+    checklistItemServiceMock.setup(x => x.entries).returns(() => $items);
+
     encryptServiceMock.setup(x => x.validatePrivateKey(It.isAny())).returns(() => []);
 
     fixture = TestBed.createComponent(TasklistSettingsEncryptPanelComponent);
@@ -53,14 +86,18 @@ describe('TasklistSettingsEncryptPanelComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should check if private key is verified on save', () => {
+  it('should check if private key is verified on save', (done) => {
     const pk = randomBytes(32);
     const pk_string = encodeBase64(pk);
     encryptServiceMock.setup(x => x.validatePrivateKey(pk_string)).returns(() => ["WRONG_PK_ENCODING"]);
     setup();
     component.privateKeyString = pk_string;
-    component.save();
-    expect(() => encryptServiceMock.verify(x => x.validatePrivateKey(pk_string), Times.once())).not.toThrow();
+    component.getEncrypted().subscribe({
+      error() {
+        expect(() => encryptServiceMock.verify(x => x.validatePrivateKey(pk_string), Times.once())).not.toThrow();
+        done();
+      },
+    });
   });
 
   it('should generate a valid private key when pressing "generate"', () => {
@@ -69,43 +106,145 @@ describe('TasklistSettingsEncryptPanelComponent', () => {
     expect(decodeBase64(component.privateKeyString).length).toBe(32);
   });
 
-  it('should not encrypt the tasklist when validation fails', () => {
+  it('should not encrypt the tasklist when validation fails', (done) => {
     const pk = randomBytes(32);
     const pk_string = encodeBase64(pk);
     encryptServiceMock.setup(x => x.validatePrivateKey(pk_string)).returns(() => ["WRONG_PK_ENCODING"]);
     setup();
     component.privateKeyString = pk_string;
-    component.save();
+    component.getEncrypted().subscribe({
+      error() {
+        const expectedCall = encrypt_service => encrypt_service.encryptTaskList(
+          It.is(input => verify(input, pk)),
+          It.isValue(listA),
+          It.isAny(),
+          It.isAny()
+        );
 
+        expect(() => encryptServiceMock.verify(expectedCall, Times.never())).not.toThrow();
 
-    const expectedCall = encrypt_service => encrypt_service.encryptTaskList(
-      It.is(input => verify(input, pk)),
-      It.isValue(listA),
-      [],
-      []
-    );
-
-    expect(() => encryptServiceMock.verify(expectedCall, Times.never())).not.toThrow();
+        done();
+      }
+    });
   });
 
-  it('should encrypt the tasklist when validation succeeds', () => {
+  it('should encrypt the tasklist when validation succeeds', (done) => {
+    const pk = randomBytes(32);
+    const pk_string = encodeBase64(pk);
+    $tasks = new BehaviorSubject([taskA, taskB]);
+    setup();
+    component.privateKeyString = pk_string;
+    component.getEncrypted().subscribe(undefined, undefined, () => {
+      const expectedCall = encrypt_service => encrypt_service.encryptTaskList(
+        It.is(input => verify(input, pk)),
+        It.isValue(listA),
+        It.isAny(),
+        It.isAny()
+      );
+
+      expect(() => encryptServiceMock.verify(expectedCall, Times.once())).not.toThrow();
+      done();
+    });
+  });
+
+  it('should provide the encrypt-function with tasks associated with the tasklist', (done) => {
+    const pk = randomBytes(32);
+    const pk_string = encodeBase64(pk);
+    $tasks = new BehaviorSubject([taskA]);
+    setup();
+    component.privateKeyString = pk_string;
+    component.getEncrypted().subscribe(() => {
+      const expectedCall = (encrypt_service: EncryptService) => encrypt_service.encryptTaskList(
+        It.isAny(),
+        It.isAny(),
+        It.is((v: Task[]) => !!v.find(x => x.uuid === taskA.uuid)),
+        It.isAny()
+      );
+      expect(() => encryptServiceMock.verify(expectedCall, Times.once())).not.toThrow();
+      done();
+    });
+  });
+
+  it('should provide the encrypt-function with checklistItems associated with the tasklist', (done) => {
+    const pk = randomBytes(32);
+    const pk_string = encodeBase64(pk);
+    $tasks = new BehaviorSubject([taskA]);
+    $items = new BehaviorSubject([itemA]);
+    setup();
+    component.privateKeyString = pk_string;
+    component.getEncrypted().subscribe(() => {
+      const expectedCall = (encrypt_service: EncryptService) => encrypt_service.encryptTaskList(
+        It.isAny(),
+        It.isAny(),
+        It.isAny(),
+        It.is(v => !!v.find(x => x.uuid === itemA.uuid))
+      );
+      expect(() => encryptServiceMock.verify(expectedCall, Times.once())).not.toThrow();
+      done();
+    });
+  });
+
+  it('should not provide the encrypt-function with tasks associated with other tasklists', (done) => {
+    const pk = randomBytes(32);
+    const pk_string = encodeBase64(pk);
+    $tasks = new BehaviorSubject([taskA, taskB]);
+    setup();
+    component.privateKeyString = pk_string;
+    component.getEncrypted().subscribe(() => {
+      const expectedCall = (encrypt_service: EncryptService) => encrypt_service.encryptTaskList(
+        It.isAny(),
+        It.isAny(),
+        It.is((v: Task[]) => !v.find(x => x.uuid === taskB.uuid)),
+        It.isAny()
+      );
+      expect(() => encryptServiceMock.verify(expectedCall, Times.once())).not.toThrow();
+      done();
+    });
+  });
+
+  it('should not provide the encrypt-function with checklistItems associated with other tasklists', (done) => {
+    const pk = randomBytes(32);
+    const pk_string = encodeBase64(pk);
+    $tasks = new BehaviorSubject([taskA, taskB]);
+    $items = new BehaviorSubject([itemA, itemB]);
+    setup();
+    component.privateKeyString = pk_string;
+    component.getEncrypted().subscribe(() => {
+      const expectedCall = (encrypt_service: EncryptService) => encrypt_service.encryptTaskList(
+        It.isAny(),
+        It.isAny(),
+        It.isAny(),
+        It.is(v => v.find(x => x.uuid === itemB.uuid) === undefined),
+      );
+      expect(() => encryptServiceMock.verify(expectedCall, Times.once())).not.toThrow();
+      done();
+    });
+  });
+
+  it('should call the encrypt function when the save button is clicked', () => {
     const pk = randomBytes(32);
     const pk_string = encodeBase64(pk);
     setup();
     component.privateKeyString = pk_string;
-    component.save();
+    (fixture.debugElement.query(By.css('[cy-data="save"]')).nativeElement as HTMLElement).click();
 
-    const expectedCall = encrypt_service => encrypt_service.encryptTaskList(
-      It.is(input => verify(input, pk)),
-      It.isValue(listA),
-      [],
-      []
-    );
-
-    expect(() => encryptServiceMock.verify(expectedCall, Times.once())).not.toThrow();
+    expect(() => encryptServiceMock.verify(s => s.encryptTaskList(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.once())).not.toThrow();
   });
 
-  it('should encrypt the tasks associated with the tasklist');
-  it('should encrypt the checklistItems associated with the tasklist');
-  it('should show a message asking the person to download their private key after encrypting');
+  it('should show a message asking the person to download their private key after encrypting', (done) => {
+    const getSaveButton = () => fixture.debugElement.query(By.css('[cy-data="save"]')).nativeElement as HTMLElement;
+    const getShowPrivateKeyMessage = () => fixture.debugElement.query(By.css('[cy-data="pk-message"]')).nativeElement as HTMLElement;
+
+    const pk = randomBytes(32);
+    const pk_string = encodeBase64(pk);
+    setup();
+    component.privateKeyString = pk_string;
+    fixture.detectChanges();
+    getSaveButton().click();
+    fixture.whenStable().then(() => {
+      expect(getShowPrivateKeyMessage().innerText).toContain(pk_string);
+      done();
+    });
+
+  });
 });

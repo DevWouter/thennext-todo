@@ -25,4 +25,7 @@ describe('TasklistSettingsDecryptPanelComponent', () => {
   it('should exist', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show a button to decrypt the tasklist');
+  it('should invoke the "decrypt-service" when the decrypt button is clicked')
 });

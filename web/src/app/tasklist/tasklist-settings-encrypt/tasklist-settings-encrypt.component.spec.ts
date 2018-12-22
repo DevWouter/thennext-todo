@@ -12,7 +12,7 @@ import { TaskList } from '../../models';
 
 import * as nacl from "tweetnacl";
 import { encodeBase64 } from "tweetnacl-util";
-import { TaskListService, TaskService } from '../../services';
+import { TaskListService, TaskService, ChecklistItemService } from '../../services';
 
 import { TasklistSettingsEncryptPanelComponent } from '../tasklist-settings-encrypt-panel/tasklist-settings-encrypt-panel.component';
 import { TasklistSettingsDecryptPanelComponent } from '../tasklist-settings-decrypt-panel/tasklist-settings-decrypt-panel.component';
@@ -35,6 +35,7 @@ describe('TasklistSettingsEncryptComponent', () => {
   let tasklistKeysServiceMock: IMock<EncryptKeysStorageService>;
   let taskListServiceMock: IMock<TaskListService>;
   let taskServiceMock: IMock<TaskService>;
+  let checklistItemServiceMock: IMock<ChecklistItemService>;
   let privateKeys: BehaviorSubject<TasklistPrivateKey[]>;
 
   beforeEach(async(() => {
@@ -43,6 +44,7 @@ describe('TasklistSettingsEncryptComponent', () => {
     tasklistKeysServiceMock = Mock.ofType<EncryptKeysStorageService>();
     taskListServiceMock = Mock.ofType<TaskListService>();
     taskServiceMock = Mock.ofType<TaskService>();
+    checklistItemServiceMock = Mock.ofType<ChecklistItemService>();
     tasklistKeysServiceMock.setup(x => x.privateKeys).returns(() => privateKeys);
 
     TestBed.configureTestingModule({
@@ -56,6 +58,7 @@ describe('TasklistSettingsEncryptComponent', () => {
         { provide: EncryptKeysStorageService, useFactory: () => tasklistKeysServiceMock.object },
         { provide: TaskListService, useFactory: () => taskListServiceMock.object },
         { provide: TaskService, useFactory: () => taskServiceMock.object },
+        { provide: ChecklistItemService, useFactory: () => checklistItemServiceMock.object },
       ]
     }).compileComponents();
   }));
