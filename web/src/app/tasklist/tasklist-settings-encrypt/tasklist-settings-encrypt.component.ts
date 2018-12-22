@@ -28,6 +28,7 @@ export class TasklistSettingsEncryptComponent implements OnInit {
 
   $privateKey: Observable<TasklistPrivateKey>;
   $panel: Observable<Panel>;
+  allowEncryption = false;
 
   constructor(
     private readonly tasklistKeysService: EncryptKeysStorageService

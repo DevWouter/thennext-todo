@@ -1,10 +1,6 @@
-<p>
-  tasklist-settings-encrypt-panel works!
-</p>
-
 <button cy-data="save" (click)="save()"></button>
 
-<div cy-data="pk-message">
+<div cy-data="pk-message" *ngIf="showPrivateKey">
   Copy the following key and store it somewhere save. Without this key it is impossible to decode your tasklist.
   We won't store this code anywhere!
   <code>

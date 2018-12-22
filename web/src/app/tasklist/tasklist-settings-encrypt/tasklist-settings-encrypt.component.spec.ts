@@ -67,6 +67,7 @@ describe('TasklistSettingsEncryptComponent', () => {
     fixture = TestBed.createComponent(TasklistSettingsEncryptComponent);
     component = fixture.componentInstance;
     component.tasklist = tasklist;
+    component.allowEncryption = true;
     fixture.detectChanges();
   }
 
@@ -77,6 +78,16 @@ describe('TasklistSettingsEncryptComponent', () => {
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();
+  });
+
+  it('should not show the encryption panel unless enabled', () => {
+    setup();
+    component.allowEncryption = false;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(encryptPanel)).toBeNull("since encryption is not allowed");
+    expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since encryption is not allowed");
+    expect(fixture.debugElement.query(decryptPanel)).toBeNull("since encryption is not allowed");
+
   });
 
   it('should pass the tasklist to encryptPanel', () => {

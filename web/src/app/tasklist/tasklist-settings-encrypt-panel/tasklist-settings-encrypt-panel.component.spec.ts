@@ -231,7 +231,12 @@ describe('TasklistSettingsEncryptPanelComponent', () => {
     expect(() => encryptServiceMock.verify(s => s.encryptTaskList(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.once())).not.toThrow();
   });
 
-  it('should show a message asking the person to download their private key after encrypting', (done) => {
+  it('should not show a message asking to store their private key unless it was just encrypted', () => {
+    setup();
+    expect(fixture.debugElement.query(By.css('[cy-data="pk-message"]'))).toBeNull();
+  });
+
+  it('should show a message asking the person to store their private key after encrypting', (done) => {
     const getSaveButton = () => fixture.debugElement.query(By.css('[cy-data="save"]')).nativeElement as HTMLElement;
     const getShowPrivateKeyMessage = () => fixture.debugElement.query(By.css('[cy-data="pk-message"]')).nativeElement as HTMLElement;
 
@@ -242,6 +247,7 @@ describe('TasklistSettingsEncryptPanelComponent', () => {
     fixture.detectChanges();
     getSaveButton().click();
     fixture.whenStable().then(() => {
+      fixture.detectChanges();
       expect(getShowPrivateKeyMessage().innerText).toContain(pk_string);
       done();
     });

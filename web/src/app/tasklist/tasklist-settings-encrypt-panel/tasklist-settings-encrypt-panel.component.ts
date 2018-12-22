@@ -21,6 +21,7 @@ export class TasklistSettingsEncryptPanelComponent implements OnInit {
 
   @Input() tasklist: TaskList;
   privateKeyString: string;
+  showPrivateKey = false;
 
   constructor(
     private readonly encryptService: EncryptService,
@@ -65,6 +66,7 @@ export class TasklistSettingsEncryptPanelComponent implements OnInit {
       tap(([pk, tasklist, tasks, items]) => {
         this.encryptService.encryptTaskList(pk, tasklist, tasks, items);
       }),
+      tap(() => { this.showPrivateKey = true; }),
       shareReplay(),
     );
 
