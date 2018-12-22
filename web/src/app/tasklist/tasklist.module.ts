@@ -17,7 +17,7 @@ const publicComponents = [
   TasklistSettingsEncryptComponent,
 ];
 
-const privateComponents= [
+const privateComponents = [
   TasklistItemComponent,
   TasklistSettingsEncryptPanelComponent,
   TasklistSettingsDecryptPanelComponent,

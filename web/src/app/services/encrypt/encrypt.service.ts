@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
 import { randomBytes, secretbox, hash } from "tweetnacl";
 import { decodeBase64, encodeBase64 } from "tweetnacl-util";
 
-import { TaskList, Task, ChecklistItem } from '../../models';
+import { TaskList, Task, ChecklistItem } from "../../models";
 
 // Internal services
-import { EncryptKeysStorageService } from './encrypt-keys-storage.service';
+import { EncryptKeysStorageService } from "./encrypt-keys-storage.service";
 
 type ValidationRule = "WRONG_PK_ENCODING" | "WRONG_PK_LENGTH";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class EncryptService {
   constructor(

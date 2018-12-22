@@ -7,4 +7,4 @@ export { EncryptService } from "./encrypt.service";
 // Models
 export {
   TasklistPrivateKey,
-} from "./models"
+} from "./models";

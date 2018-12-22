@@ -1,19 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { TaskList, Task, ChecklistItem } from '../../models';
+import { Component, OnInit, Input } from "@angular/core";
+import { TaskList, Task, ChecklistItem } from "../../models";
 
 import { randomBytes, hash } from "tweetnacl";
 import { encodeBase64, decodeBase64 } from "tweetnacl-util";
-import { EncryptService } from '../../services/encrypt';
-import { TaskService, ChecklistItemService } from '../../services';
-import { take, tap, shareReplay, map, switchMap } from 'rxjs/operators';
-import { Observable, of, combineLatest, throwError } from 'rxjs';
+import { EncryptService } from "../../services/encrypt";
+import { TaskService, ChecklistItemService } from "../../services";
+import { take, tap, shareReplay, map, switchMap } from "rxjs/operators";
+import { Observable, of, combineLatest, throwError } from "rxjs";
 
 type ValidationRule = "WRONG_PK_ENCODING" | "WRONG_PK_LENGTH";
 
 @Component({
-  selector: 'app-tasklist-settings-encrypt-panel',
-  templateUrl: './tasklist-settings-encrypt-panel.component.html',
-  styleUrls: ['./tasklist-settings-encrypt-panel.component.scss']
+  selector: "app-tasklist-settings-encrypt-panel",
+  templateUrl: "./tasklist-settings-encrypt-panel.component.html",
+  styleUrls: ["./tasklist-settings-encrypt-panel.component.scss"]
 })
 export class TasklistSettingsEncryptPanelComponent implements OnInit {
 
@@ -49,7 +49,7 @@ export class TasklistSettingsEncryptPanelComponent implements OnInit {
     );
 
     const $tasks = combineLatest($tasklist, this.taskService.entries).pipe(
-      map(([tasklist, tasks]) => tasks.filter(task => task.taskListUuid == tasklist.uuid)),
+      map(([tasklist, tasks]) => tasks.filter(task => task.taskListUuid === tasklist.uuid)),
       shareReplay(),
     );
 

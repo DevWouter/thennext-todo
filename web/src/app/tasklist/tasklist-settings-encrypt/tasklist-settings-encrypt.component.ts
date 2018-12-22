@@ -1,18 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { TaskList } from '../../models';
+import { Component, OnInit, Input } from "@angular/core";
+import { TaskList } from "../../models";
 
 import * as nacl from "tweetnacl";
 import { encodeBase64 } from "tweetnacl-util";
-import { map, filter } from 'rxjs/operators';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { TasklistPrivateKey, EncryptKeysStorageService } from '../../services/encrypt';
+import { map, filter } from "rxjs/operators";
+import { Observable, BehaviorSubject, combineLatest } from "rxjs";
+import { TasklistPrivateKey, EncryptKeysStorageService } from "../../services/encrypt";
 
 type Panel = "encrypt" | "key-input" | "decrypt";
 
 @Component({
-  selector: 'app-tasklist-settings-encrypt',
-  templateUrl: './tasklist-settings-encrypt.component.html',
-  styleUrls: ['./tasklist-settings-encrypt.component.scss']
+  selector: "app-tasklist-settings-encrypt",
+  templateUrl: "./tasklist-settings-encrypt.component.html",
+  styleUrls: ["./tasklist-settings-encrypt.component.scss"]
 })
 export class TasklistSettingsEncryptComponent implements OnInit {
 

@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable, BehaviorSubject } from "rxjs";
 
 import { decodeBase64, encodeBase64 } from "tweetnacl-util";
 
-import { StorageService } from '../storage.service';
-import { TasklistEventService } from '../tasklist';
+import { StorageService } from "../storage.service";
+import { TasklistEventService } from "../tasklist";
 
-import { TasklistPrivateKey } from './models';
+import { TasklistPrivateKey } from "./models";
 
 const STORAGE_KEY = "tasklist-private-keys";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class EncryptKeysStorageService {
 
@@ -36,9 +36,9 @@ export class EncryptKeysStorageService {
   }
 
   loadFromStorage(): void {
-    var storedPrivateKeysJson = this.storage.get(STORAGE_KEY);
+    const storedPrivateKeysJson = this.storage.get(STORAGE_KEY);
     if (!!storedPrivateKeysJson) {
-      var storedPrivateKeys = JSON.parse(storedPrivateKeysJson, (k, v) => {
+      const storedPrivateKeys = JSON.parse(storedPrivateKeysJson, (k, v) => {
         if (k === "privateKey") {
           return decodeBase64(v);
         }
@@ -78,7 +78,7 @@ export class EncryptKeysStorageService {
   }
 
   private save() {
-    var to_store_json = JSON.stringify(this._privateKeys.map(x => {
+    const to_store_json = JSON.stringify(this._privateKeys.map(x => {
       return {
         privateKey: encodeBase64(x.privateKey),
         tasklistGuid: x.tasklistGuid,
