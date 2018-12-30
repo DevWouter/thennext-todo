@@ -1,0 +1,3 @@
+<ng-container *ngIf="task">
+  <input #inputEl data-cy="duration-value-input" [(ngModel)]="durationValue" (focus)="selectContent(inputEl)">
+</ng-container>
