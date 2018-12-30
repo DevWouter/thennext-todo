@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 
 import { TaskList } from "../../models";
 import { Repository, MessageBusService, RepositoryFactoryService } from "../message-bus";
-import { filter } from "rxjs/operators";
+import { filter, share } from "rxjs/operators";
 
 @Injectable()
 export class TaskListService {
@@ -30,14 +30,14 @@ export class TaskListService {
   }
 
   add(value: TaskList): Observable<TaskList> {
-    return this._repository.add(value);
+    return this._repository.add(value).pipe(share());
   }
 
   update(value: TaskList): Observable<TaskList> {
-    return this._repository.update(value);
+    return this._repository.update(value).pipe(share());
   }
 
   delete(value: TaskList): Observable<void> {
-    return this._repository.remove(value);
+    return this._repository.remove(value).pipe(share());
   }
 }

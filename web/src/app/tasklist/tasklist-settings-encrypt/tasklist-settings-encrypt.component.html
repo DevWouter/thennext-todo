@@ -1,0 +1,5 @@
+<div [ngSwitch]="$panel | async" *ngIf="allowEncryption">
+  <app-tasklist-settings-encrypt-panel *ngSwitchCase="'encrypt'" [tasklist]="tasklist">Encrypt panel</app-tasklist-settings-encrypt-panel>
+  <app-tasklist-settings-decrypt-panel *ngSwitchCase="'decrypt'" [tasklist]="tasklist">Decrypt panel</app-tasklist-settings-decrypt-panel>
+  <app-tasklist-settings-keyinput-panel *ngSwitchCase="'key-input'" [tasklist]="tasklist">Key input panel</app-tasklist-settings-keyinput-panel>
+</div>

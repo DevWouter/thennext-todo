@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import * as nacl from "tweetnacl";
-import { encodeBase64 } from "tweetnacl-util";
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { encodeBase64, encodeUTF8 } from "tweetnacl-util";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Component({
-  selector: 'app-demo-page',
-  templateUrl: './demo-page.component.html',
-  styleUrls: ['./demo-page.component.scss']
+  selector: "app-demo-page",
+  templateUrl: "./demo-page.component.html",
+  styleUrls: ["./demo-page.component.scss"]
 })
 export class DemoPageComponent implements OnInit {
   $encrypted: Observable<string>;
@@ -33,7 +33,7 @@ export class DemoPageComponent implements OnInit {
   ngOnInit(): void {
     this._privateKey = nacl.randomBytes(32);
     this.privateKey = encodeBase64(this._privateKey);
-    this._privateKeyHash = nacl.hash(this._privateKey)
+    this._privateKeyHash = nacl.hash(this._privateKey);
     this.privateKeyHash = encodeBase64(this._privateKeyHash);
     this._nonce = nacl.randomBytes(24);
     this.nonce = encodeBase64(this._nonce);

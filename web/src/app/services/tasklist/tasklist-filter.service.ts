@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { TaskList } from '../../models';
-import { TasklistEventService } from './tasklist-event.service';
+import { Injectable } from "@angular/core";
+import { Observable, BehaviorSubject } from "rxjs";
+import { TaskList } from "../../models";
+import { TasklistEventService } from "./tasklist-event.service";
 
 @Injectable()
 export class TasklistFilterService {
@@ -11,7 +11,7 @@ export class TasklistFilterService {
 
   public get filteredLists(): Observable<TaskList[]> {
     return this.$filteredLists;
-  };
+  }
 
   constructor(
     private readonly tasklistEventService: TasklistEventService,
@@ -21,7 +21,7 @@ export class TasklistFilterService {
 
   setup(): void {
     this.tasklistEventService.deletedTasklist.subscribe(list => {
-      const index = this._filteredLists.findIndex(x => x.uuid == list.uuid);
+      const index = this._filteredLists.findIndex(x => x.uuid === list.uuid);
       if (index === -1) {
         return;
       }
@@ -40,7 +40,7 @@ export class TasklistFilterService {
   }
 
   removeList(list: TaskList) {
-    const index = this._filteredLists.findIndex(x => x.uuid == list.uuid);
+    const index = this._filteredLists.findIndex(x => x.uuid === list.uuid);
     if (index === -1) {
       throw new Error("unable to remove list since it is not part of the filter");
     }

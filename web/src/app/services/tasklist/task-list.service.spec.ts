@@ -14,7 +14,7 @@ import {
 } from "../message-bus";
 import { TaskList } from "../../models";
 
-describe('TasklistService', () => {
+describe('Service: TasklistService', () => {
   let tasklistService: TaskListService;
   let messageBusServiceMock: IMock<MessageBusService>;
   let receiverMock: IMock<EntityMessageReceiver<TaskList>>;

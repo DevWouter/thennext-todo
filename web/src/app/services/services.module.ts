@@ -27,12 +27,16 @@ import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
 import { TasklistEventService, TasklistFilterService, TaskListService } from "./tasklist";
+import { EncryptModule } from "./encrypt";
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
     MessageBusModule,
+
+    // Our modules
+    EncryptModule,
   ],
   declarations: [],
   providers: [
@@ -42,7 +46,6 @@ import { TasklistEventService, TasklistFilterService, TaskListService } from "./
     ChecklistItemService,
     CommandStateService,
     ContextService,
-    TasklistFilterService,
     FocusService,
     MediaViewService,
     NavigationService,
@@ -53,6 +56,7 @@ import { TasklistEventService, TasklistFilterService, TaskListService } from "./
     StorageService,
     TaskEventService,
     TasklistEventService,
+    TasklistFilterService,
     TaskListRightService,
     TaskListService,
     TaskListShareTokenService,

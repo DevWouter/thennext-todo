@@ -1,7 +1,7 @@
-<div *ngIf="($taskList |async) as taskList; else loading">
+<div *ngIf="($taskList |async) as tasklist; else loading">
   <app-settings-tab-title>
     <a [routerLink]="[ '..' ]">Tasklists</a>
-    <span> &gt; {{taskList.name}}</span>
+    <span> &gt; {{tasklist.name}}</span>
   </app-settings-tab-title>
 
   <div>
@@ -9,6 +9,8 @@
     <input [(ngModel)]="newName">
     <button (click)="updateName()">Update name</button>
   </div>
+
+  <app-tasklist-settings-encrypt [tasklist]="tasklist"></app-tasklist-settings-encrypt>
 </div>
 
 <ng-template #loading>

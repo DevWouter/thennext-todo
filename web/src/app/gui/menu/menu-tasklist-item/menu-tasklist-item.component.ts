@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, HostListener, OnDestroy } from '@angular/core';
-import { TaskList } from '../../../models';
-import { TasklistFilterService, TaskListService } from '../../../services';
-import { combineLatest, Observable, BehaviorSubject } from 'rxjs';
-import { map, filter, take } from 'rxjs/operators';
+import { Component, OnInit, Input, HostListener, OnDestroy } from "@angular/core";
+import { TaskList } from "../../../models";
+import { TasklistFilterService, TaskListService } from "../../../services";
+import { combineLatest, Observable, BehaviorSubject } from "rxjs";
+import { map, filter, take } from "rxjs/operators";
 
 @Component({
-  selector: 'gui-menu-tasklist-item',
-  templateUrl: './menu-tasklist-item.component.html',
-  styleUrls: ['./menu-tasklist-item.component.scss', "../menu-item/menu-item.component.scss"]
+  selector: "gui-menu-tasklist-item",
+  templateUrl: "./menu-tasklist-item.component.html",
+  styleUrls: ["./menu-tasklist-item.component.scss", "../menu-item/menu-item.component.scss"]
 })
 export class MenuTasklistItemComponent implements OnInit {
   public $state: Observable<"none" | "included" | "excluded">;
@@ -45,7 +45,7 @@ export class MenuTasklistItemComponent implements OnInit {
     }));
   }
 
-  @HostListener('click')
+  @HostListener("click")
   public onClick() {
     combineLatest(
       this.tasklistService.entries,
@@ -65,6 +65,6 @@ export class MenuTasklistItemComponent implements OnInit {
         }
 
         this.filterService.addList(this.list);
-      })
+      });
   }
 }
