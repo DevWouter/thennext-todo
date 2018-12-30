@@ -89,6 +89,7 @@ export class TaskRepository {
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,
             completedAt: entity.completedAt,
+            estimatedDuration: entity.estimatedDuration,
         }, { id: entity.id }, 1);
 
         return this.byId(entity.id);
@@ -107,7 +108,7 @@ export class TaskRepository {
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,
             completedAt: undefined,
-
+            estimatedDuration: entity.estimatedDuration,
         })
 
         return this.byId(id);
@@ -128,6 +129,7 @@ export class TaskRepository {
             status: src.status,
             taskListId: src.taskListId,
             title: src.title,
+            estimatedDuration: src.estimatedDuration,
             updatedAt: src.updatedAt,
             uuid: src.uuid,
             taskListUuid: src.taskListUuid,
