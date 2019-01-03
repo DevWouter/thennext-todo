@@ -14,10 +14,16 @@ describe('DurationInputComponent', () => {
   let fixture: ComponentFixture<DurationInputComponent>;
   let task: Task;
   let taskServiceMock: IMock<TaskService>;
+  let spyEvent: jasmine.SpyObj<{ preventDefault: () => void }>
+  let setValue: (v: string, event: "keyup" | "change") => void;
+  let getInputDebug: () => DebugElement;
+  let getInput: () => HTMLInputElement;
+  let basicSetup: (seconds: undefined | null | number) => void;
 
   beforeEach(async(() => {
     task = <Task>{ estimatedDuration: null };
     taskServiceMock = Mock.ofType<TaskService>();
+    spyEvent = jasmine.createSpyObj<{ preventDefault: () => void }>("event", ["preventDefault"]);
 
     TestBed.configureTestingModule({
       declarations: [DurationInputComponent],
@@ -26,6 +32,27 @@ describe('DurationInputComponent', () => {
         { provide: TaskService, useFactory: () => taskServiceMock.object }
       ]
     }).compileComponents();
+
+    basicSetup = (seconds: undefined | null | number) => {
+      task.estimatedDuration = seconds;
+      component.task = task;
+      fixture.detectChanges();
+    }
+
+    getInputDebug = () => {
+      return fixture.debugElement.query(By.css("[data-cy=duration-input]"));
+    }
+
+    getInput = () => {
+      return (getInputDebug().nativeElement as HTMLInputElement)
+    }
+
+    setValue = (v: string, event: "keyup" | "change") => {
+      const el = getInputDebug();
+      getInput().value = v;
+      el.triggerEventHandler(event, spyEvent);
+      fixture.detectChanges();
+    }
   }));
 
   beforeEach(() => {
@@ -38,136 +65,108 @@ describe('DurationInputComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not show input when no task is assigned to the component', () => {
-    const inputElements = fixture.debugElement.queryAll(By.css('input'));
-    expect(inputElements.length).toBe(0, "since we have no task");
-  });
-
-  it('should show input when task is assigned to the component', () => {
-    component.task = task;
-    fixture.detectChanges();
-    const inputElements = fixture.debugElement.queryAll(By.css('input'));
-    expect(inputElements.length).not.toBe(0, "since we have a task and as such we can input the duration");
-  });
-
-  it('should default to "<empty>" when no estimatedDuration is given', (done) => {
-    component.task = task;
-    fixture.detectChanges();
-
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("");
-      done();
-    });
-  });
-
-  it('should show estimated duration as 0 minute(s) when estimatedDuration is 0', (done) => {
-    task.estimatedDuration = 0;
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("0m");
-      done();
-    });
-  });
-
-  it('should set estimate to `null` if input value is cleared', (done) => {
-    task.estimatedDuration = 1; // 1 second
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    component.durationValue = "";
-    fixture.detectChanges();
-
-    fixture.whenStable().then(() => {
-      expect(() => taskServiceMock.verify(s => s.update(It.isValue(task)), Times.once())).not.toThrow();
-      expect(task.estimatedDuration).toBeNull("since we want to remove the esimtatedDuration from the task");
-      expect(input.value).toBe("");
-      done();
-    });
-  });
-
-  it('should reject non-numbers', (done) => {
-    task.estimatedDuration = 1;
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    input.value = "abcdef";
-    fixture.detectChanges();
-
-    fixture.whenStable().then(() => {
-      expect(() => taskServiceMock.verify(s => s.update(It.isAny()), Times.never())).not.toThrow();
-      expect(task.estimatedDuration).toBe(1, "since it was never changed");
-      expect(input.value).toBe("1s", "since it was never changed");
-      done();
-    });
-  });
-
-  it('should show estimated duration as second(s) when seconds can not be divided by minute-length (60)', (done) => {
-    task.estimatedDuration = 61;
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("61s");
-      done();
-    });
-  });
-
-  it('should show estimated duration as minutes(s) when seconds can not be divided by hour-length (60 * 60)', (done) => {
-    task.estimatedDuration = 3660; // 3660 seconds ==> 61 minutes ==> 1 hour + 1 minute
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("61m");
-      done();
-    });
-  });
-
-  it('should show estimated duration as hours(s) when seconds can not be divided by day-length (60 * 60 * 24)', (done) => {
-    task.estimatedDuration = 90000; // 90000 seconds ==> 25 hours minutes ==> 1 day + 1 hour
-    component.task = task;
+  it('should not show the input when no task is set', (done) => {
+    component.task = undefined;
     fixture.detectChanges(true);
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("25h");
-      done();
-    });
+    fixture.whenStable().then(
+      () => {
+        expect(getInputDebug()).toBeNull();
+        done();
+      }
+    )
   });
 
-  it('should show estimated duration as 1 minute(s) when seconds can be divided by 60', (done) => {
-    task.estimatedDuration = 60; // 60 seconds ==> 1 minute
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("1m");
-      done();
-    });
+  it('should show the amount of minutes', (done) => {
+    basicSetup(60);
+    fixture.whenStable().then(
+      () => {
+        expect(getInput().value).toBe("1");
+        done();
+      });
   });
 
-  it('should show estimated duration as 1 hour(s) when seconds can be divided by 60 * 60', (done) => {
-    task.estimatedDuration = 3600; // 3600 seconds ==> 60 minutes ==> 1 hour
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("1h");
-      done();
-    });
+  it('should show show no text when no time is estimated', (done) => {
+    basicSetup(undefined);
+    fixture.whenStable().then(
+      () => {
+        expect(getInput().value).toBe("");
+        done();
+      }
+    );
   });
 
-  it('should show estimated duration as 1 day(s) when seconds can be divided by 60 * 60 * 24', (done) => {
-    task.estimatedDuration = 86400; // 86.400 seconds ==> 1440 minutes ==> 24 hour ==> 1 day
-    component.task = task;
-    fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css("[data-cy=duration-value-input]")).nativeElement as HTMLInputElement;
-    fixture.whenStable().then(() => {
-      expect(input.value).toBe("1d");
-      done();
-    });
+  it('should update the estimatedDuration on change', (done) => {
+    basicSetup(undefined);
+    setValue("1", "change");
+    fixture.whenStable().then(
+      () => {
+        expect(task.estimatedDuration).toBe(60);
+        expect(() => taskServiceMock.verify(x => x.update(It.isValue(task)), Times.once())).not.toThrow();
+        done();
+      }
+    );
+  })
+
+  it('should update the estimatedDuration on keyup', (done) => {
+    basicSetup(undefined);
+    setValue("1", "keyup");
+    fixture.whenStable().then(
+      () => {
+        expect(task.estimatedDuration).toBe(60);
+        expect(() => taskServiceMock.verify(x => x.update(It.isValue(task)), Times.once())).not.toThrow();
+        done();
+      }
+    );
+  })
+
+  it('should clamp numbers above 1440 minutes to 1440 minutes', (done) => {
+    basicSetup(undefined);
+    setValue("1500", "change");
+    fixture.whenStable().then(
+      () => {
+        expect(task.estimatedDuration).toBe(1440 * 60, "since we save in seconds, not minutes");
+        expect(getInput().value).toBe("1440", "since we display in minutes");
+        expect(() => taskServiceMock.verify(x => x.update(It.isValue(task)), Times.once())).not.toThrow();
+        done();
+      }
+    );
+  });
+
+  it('should unset the task estimated when input is made empty', (done) => {
+    basicSetup(60); // 1 minute
+    setValue("", "change");
+    fixture.whenStable().then(
+      () => {
+        expect(task.estimatedDuration).toBeNull("since we have removed the estimate");
+        expect(getInput().value).toBe("", "since we have removed the estimate");
+        expect(() => taskServiceMock.verify(x => x.update(It.isValue(task)), Times.once())).not.toThrow();
+        done();
+      }
+    );
+  });
+
+  it('should not send a task update when value is the same', (done) => {
+    basicSetup(60); // 1 minute
+    setValue("1", "change");
+    fixture.whenStable().then(
+      () => {
+        expect(() => taskServiceMock.verify(x => x.update(It.isValue(task)), Times.never())).not.toThrow();
+        done();
+      }
+    );
+  });
+
+  it('should reject negative numbers', (done) => {
+    basicSetup(60); // 1 minute
+    setValue("-2", "change");
+    fixture.whenStable().then(
+      () => {
+        expect(task.estimatedDuration).toBe(60, "since we haven't updated the original");
+        expect(getInput().value).toBe("1", "since we haven't updated the original");
+        expect(spyEvent.preventDefault).toHaveBeenCalledTimes(1);
+        expect(() => taskServiceMock.verify(x => x.update(It.isValue(task)), Times.never())).not.toThrow();
+        done();
+      }
+    );
   });
 });

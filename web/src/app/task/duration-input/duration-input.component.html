@@ -1,3 +1,15 @@
-<ng-container *ngIf="task">
-  <input #inputEl data-cy="duration-value-input" [(ngModel)]="durationValue" (focus)="selectContent(inputEl)">
-</ng-container>
+<div *ngIf="task" class="container">
+  <label>Estimated&nbsp;</label>
+  <input data-cy="duration-input"
+    #input
+    type="number"
+    [value]="durationInUnits()"
+    [max]="maxMinutes"
+    [min]="0"
+    placeholder="?"
+    (keyup)="onChange($event, input.value)"
+    (change)="onChange($event, input.value)"
+    >
+    <span>minutes</span>
+
+</div>

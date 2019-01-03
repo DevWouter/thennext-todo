@@ -1,12 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Task } from '../../models';
-import { TaskService } from '../../services';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 
-type DurationType =
-  "second(s)" |
-  "minute(s)" |
-  "hour(s)" |
-  "day(s)";
+import { Task } from '../../models';
+import { TaskService, } from '../../services';
 
 @Component({
   selector: 'app-duration-input',
@@ -14,50 +9,9 @@ type DurationType =
   styleUrls: ['./duration-input.component.scss']
 })
 export class DurationInputComponent implements OnInit {
-
-  @Input() task: Task;
-
-  get durationValue(): string {
-    if (typeof this.task.estimatedDuration !== "number") {
-      return "";
-    }
-
-    const seconds = this.task.estimatedDuration;
-    if (seconds === 0) {
-      return "0m";
-    }
-    if (seconds % (60 * 60 * 24) === 0) {
-      return (seconds / (60 * 60 * 24)).toString(10) + "d";
-    }
-    if (seconds % (60 * 60) === 0) {
-      return (seconds / (60 * 60)).toString(10) + "h";
-    }
-    if (seconds % 60 === 0) {
-      return (seconds / 60).toString(10) + "m";
-    }
-
-    return seconds.toString(10) + "s";
-  }
-
-  set durationValue(v: string) {
-    v = (v || "").trim().toLowerCase();
-    v = v.split(" ").filter(x => x.trim().length).join();
-
-    const r = /^([0-9]+)([dhms])$/.exec(v);
-
-    if (r === null) {
-      this.task.estimatedDuration = null;
-      this.taskService.update(this.task);
-      return;
-    }
-
-    const amount = parseInt(r[1], 10);
-    const unit_type = r[2] as "d" | "h" | "m" | "s";
-
-    const seconds = this.toSeconds(amount, unit_type);
-    this.task.estimatedDuration = seconds;
-    this.taskService.update(this.task);
-  }
+  public readonly maxMinutes = 1440;
+  @Input() public task: Task;
+  @ViewChild("input") inputEl: ElementRef;
 
   constructor(
     private readonly taskService: TaskService,
@@ -66,24 +20,39 @@ export class DurationInputComponent implements OnInit {
   ngOnInit() {
   }
 
-  selectContent(el: HTMLInputElement) {
-    el.setSelectionRange(0, (el.value || "0m").length - 1);
-  }
-
-  private toSeconds(value: number | undefined, type: "d" | "h" | "m" | "s"): number | undefined {
-    if (value == undefined) {
-      return undefined;
+  onChange(ev: Event, v: string) {
+    v = (v || "").trim();
+    if (v === "") {
+      this.task.estimatedDuration = null;
+      this.taskService.update(this.task);
+      return;
     }
 
-    switch (type) {
-      case "s": return value;
-      case "m": return value * 60;
-      case "h": return value * 60 * 60;
-      case "d": return value * 60 * 60 * 24;
-      default: {
-        throw new Error(`undefined DurationType ${type}`);
-      }
+    if (!/^[0-9]+$/.test(v)) {
+      // Is not a number, reject the chnage
+      (this.inputEl.nativeElement as HTMLInputElement).value = this.durationInUnits();
+      ev.preventDefault();
+      return;
     }
+
+    let vi = parseInt(v);
+
+    vi = Math.min(vi, this.maxMinutes);
+    const nv = vi * 60;
+    if (nv !== this.task.estimatedDuration) {
+      this.task.estimatedDuration = nv;
+      this.taskService.update(this.task);
+    }
+
+    // Always restore the value.
+    (this.inputEl.nativeElement as HTMLInputElement).value = this.durationInUnits();
   }
 
+  public durationInUnits(): string {
+    if (this.task.estimatedDuration === null || this.task.estimatedDuration === undefined) {
+      return "";
+    }
+
+    return (this.task.estimatedDuration / 60).toString(10);
+  }
 }
