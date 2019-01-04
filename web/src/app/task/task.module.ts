@@ -15,6 +15,8 @@ import { RelationsViewComponent } from "./relations-view/relations-view.componen
 import { StatsViewComponent } from "./stats-view/stats-view.component";
 import { TitleInputComponent } from "./title-input/title-input.component";
 
+import { MatFormFieldModule, MatInputModule } from "@angular/material";
+
 const publicComponents = [
   ChecklistComponent,
   DescriptionInputComponent,
@@ -32,6 +34,7 @@ const privateComponents = [
   imports: [
     CommonModule,
     FormsModule,
+    MatFormFieldModule, MatInputModule,
 
     ServicesModule,
     HtmlDirectivesModule,
