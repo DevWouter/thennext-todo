@@ -15,7 +15,6 @@ import { encodeBase64 } from "tweetnacl-util";
 import { TaskListService, TaskService, ChecklistItemService } from '../../services';
 
 import { TasklistSettingsEncryptPanelComponent } from '../tasklist-settings-encrypt-panel/tasklist-settings-encrypt-panel.component';
-import { TasklistSettingsKeyinputPanelComponent } from '../tasklist-settings-keyinput-panel/tasklist-settings-keyinput-panel.component';
 import { Type, Predicate, DebugElement } from '@angular/core';
 import { EncryptKeysStorageService, TasklistPrivateKey } from '../../services/encrypt';
 
@@ -24,7 +23,6 @@ const dummyPrivateKeyHash = nacl.hash(dummyPrivateKey);
 const dummyPrivateKeyHashString = encodeBase64(dummyPrivateKeyHash);
 
 const encryptPanel = By.directive(TasklistSettingsEncryptPanelComponent);
-const keyInputPanel = By.directive(TasklistSettingsKeyinputPanelComponent);
 
 describe('TasklistSettingsEncryptComponent', () => {
   let component: TasklistSettingsEncryptComponent;
@@ -49,7 +47,6 @@ describe('TasklistSettingsEncryptComponent', () => {
       declarations: [
         TasklistSettingsEncryptComponent,
         TasklistSettingsEncryptPanelComponent,
-        TasklistSettingsKeyinputPanelComponent,
       ],
       providers: [
         { provide: EncryptKeysStorageService, useFactory: () => tasklistKeysServiceMock.object },
@@ -82,7 +79,6 @@ describe('TasklistSettingsEncryptComponent', () => {
     component.allowEncryption = false;
     fixture.detectChanges();
     expect(fixture.debugElement.query(encryptPanel)).toBeNull("since encryption is not allowed");
-    expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since encryption is not allowed");
 
   });
 
@@ -92,18 +88,10 @@ describe('TasklistSettingsEncryptComponent', () => {
     expect(component.tasklist).toBe(tasklist);
   });
 
-  it('should pass the tasklist to keyinputPanel', () => {
-    tasklist.privateKeyHash = dummyPrivateKeyHashString;
-    setup();
-    const component = getComponent(keyInputPanel, TasklistSettingsKeyinputPanelComponent);
-    expect(component.tasklist).toBe(tasklist);
-  });
-
   it('should show a option to encrypt a tasklist if unencrypted', (done) => {
     setup();
 
     expect(fixture.debugElement.query(encryptPanel)).toBeTruthy("since the tasklist is not encrypted, so show encrypt options");
-    expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since the tasklist is not encrypted, so show no key input is required");
 
     component.$panel.pipe(take(1)).subscribe(x => {
       expect(x).toBe("encrypt");
@@ -116,7 +104,6 @@ describe('TasklistSettingsEncryptComponent', () => {
     setup();
 
     expect(fixture.debugElement.query(encryptPanel)).toBeNull("since the tasklist is encrypted, so show no encrypt options");
-    expect(fixture.debugElement.query(keyInputPanel)).toBeTruthy("since the tasklist is encrypted but key is still unknown, so key input is required");
 
     component.$panel.pipe(take(1)).subscribe(x => {
       expect(x).toBe("key-input");
@@ -135,7 +122,6 @@ describe('TasklistSettingsEncryptComponent', () => {
     setup();
 
     expect(fixture.debugElement.query(encryptPanel)).toBeNull("since the tasklist is encrypted, so show no encrypt options");
-    expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since the tasklist is encrypted and PK is known, so no key input is required");
 
     component.$panel.pipe(take(1)).subscribe(x => {
       expect(x).toBe("decrypt");
