@@ -12,6 +12,7 @@ export interface Task extends Entity {
   createdOn: Date;
   updatedOn: Date;
   completedOn: Date;
+  estimatedDuration?: number,
 
   pkNonce: string;
 }

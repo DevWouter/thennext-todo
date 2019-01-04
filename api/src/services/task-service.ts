@@ -86,6 +86,7 @@ export class TaskService {
             description: src.description || "",
             status: src.status || TaskStatus.todo,
             nextChecklistOrder: src.nextChecklistOrder || 1,
+            estimatedDuration: src.estimatedDuration,
 
             createdAt: src.createdOn || new Date(),
             updatedAt: src.updatedOn || new Date(),
@@ -117,6 +118,7 @@ export class TaskService {
         task.description = src.description || "";
         task.status = src.status || TaskStatus.todo;
         task.nextChecklistOrder = src.nextChecklistOrder;
+        task.estimatedDuration = src.estimatedDuration;
 
         task.createdAt = src.createdOn || new Date();
         task.updatedAt = src.updatedOn || new Date();
@@ -157,6 +159,7 @@ export class TaskService {
             title: src.title,
             status: src.status,
             description: src.description,
+            estimatedDuration: src.estimatedDuration,
             createdOn: src.createdAt,
             updatedOn: src.updatedAt,
             completedOn: src.completedAt,

@@ -17,4 +17,6 @@ export interface Task {
     completedOn: Date;
 
     status: TaskStatus;
+
+    estimatedDuration?: number;
 }
