@@ -13,8 +13,6 @@ export interface Task extends Entity {
   updatedOn: Date;
   completedOn: Date;
   estimatedDuration?: number,
-
-  pkNonce: string;
 }
 
 export enum TaskStatus {

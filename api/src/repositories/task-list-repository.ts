@@ -87,12 +87,6 @@ export class TaskListRepository {
         // delete entity.privateKeyHash;
         const change: Partial<TaskListEntity> = { name: entity.name };
 
-        // We also set the privateKeyHash unless it was undefined.
-        // If it is null, it means we remove the field in the database.
-        if (entity.privateKeyHash !== undefined) {
-            change.privateKeyHash = entity.privateKeyHash;
-        }
-
         await db.update<TaskListEntity>("TaskList",
             change,
             {
@@ -114,7 +108,6 @@ export class TaskListRepository {
             name: src.name,
             ownerId: src.ownerId,
             uuid: src.uuid,
-            privateKeyHash: src.privateKeyHash,
         };
     }
 }
