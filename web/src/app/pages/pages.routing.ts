@@ -12,11 +12,9 @@ import { RecoverAccountPageComponent } from "./recover-account-page/recover-acco
 
 // Guard modules
 import { SessionTokenGuard } from "../guards/session-token.guard";
-import { DemoPageComponent } from "./demo-page/demo-page.component";
 
 const routes: Routes = [
   { path: "", component: HomePageComponent },
-  { path: "demo", component: DemoPageComponent },
   { path: "create-account", component: CreateAccountPageComponent },
   { path: "account-created", component: AccountCreatedPageComponent },
   { path: "confirm-account", component: ConfirmAccountPageComponent },

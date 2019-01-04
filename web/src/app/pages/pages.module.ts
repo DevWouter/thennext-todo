@@ -21,7 +21,6 @@ import { SharedPagesModule } from "./shared/shared.module";
 
 // Routing module
 import { PagesRoutingModule } from "./pages.routing";
-import { DemoPageComponent } from "./demo-page/demo-page.component";
 
 @NgModule({
   imports: [
@@ -42,7 +41,6 @@ import { DemoPageComponent } from "./demo-page/demo-page.component";
     HomePageComponent,
     LoginPageComponent,
     RecoverAccountPageComponent,
-    DemoPageComponent,
   ],
   exports: [
     HomePageComponent,
