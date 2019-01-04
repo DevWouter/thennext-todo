@@ -5,6 +5,7 @@ import { Migration_20180812100232_add_confirmation_token_table } from "./2018081
 import { Migration_20181008162733_add_password_recovery_table } from "./20181008162733-add-password-recovery-table";
 import { Migration_20181121184426_add_privatekeyhash_to_tasklist } from "./20181121184426-add-privatekeyhash-to-tasklist";
 import { Migration_20181230211754_add_time_estimate_to_task } from "./20181230211754-add-time-estimate-to-task";
+import { Migration_20190104220641_remove_private_key } from "./20190104220641-remove-private-key";
 
 // This const contains all the migrations in the order they need to be executed.
 // They should also contain a name, which will be used to check if the migration is executed in the correct order.
@@ -15,4 +16,5 @@ export const AllMigrations: MigrationInterface[] = [
     new Migration_20181008162733_add_password_recovery_table(),
     new Migration_20181121184426_add_privatekeyhash_to_tasklist(),
     new Migration_20181230211754_add_time_estimate_to_task(),
+    new Migration_20190104220641_remove_private_key(),
 ];
