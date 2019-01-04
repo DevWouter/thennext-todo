@@ -9,7 +9,6 @@ import { TasklistComponent } from "./tasklist.component";
 import { TasklistItemComponent } from "./tasklist-item/tasklist-item.component";
 import { TasklistSettingsEncryptComponent } from "./tasklist-settings-encrypt/tasklist-settings-encrypt.component";
 import { TasklistSettingsEncryptPanelComponent } from "./tasklist-settings-encrypt-panel/tasklist-settings-encrypt-panel.component";
-import { TasklistSettingsDecryptPanelComponent } from "./tasklist-settings-decrypt-panel/tasklist-settings-decrypt-panel.component";
 import { TasklistSettingsKeyinputPanelComponent } from "./tasklist-settings-keyinput-panel/tasklist-settings-keyinput-panel.component";
 
 const publicComponents = [
@@ -20,7 +19,6 @@ const publicComponents = [
 const privateComponents = [
   TasklistItemComponent,
   TasklistSettingsEncryptPanelComponent,
-  TasklistSettingsDecryptPanelComponent,
   TasklistSettingsKeyinputPanelComponent,
 ];
 
