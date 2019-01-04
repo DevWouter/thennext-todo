@@ -7,17 +7,13 @@ import { ServicesModule } from "../services/services.module";
 
 import { TasklistComponent } from "./tasklist.component";
 import { TasklistItemComponent } from "./tasklist-item/tasklist-item.component";
-import { TasklistSettingsEncryptComponent } from "./tasklist-settings-encrypt/tasklist-settings-encrypt.component";
-import { TasklistSettingsEncryptPanelComponent } from "./tasklist-settings-encrypt-panel/tasklist-settings-encrypt-panel.component";
 
 const publicComponents = [
   TasklistComponent,
-  TasklistSettingsEncryptComponent,
 ];
 
 const privateComponents = [
   TasklistItemComponent,
-  TasklistSettingsEncryptPanelComponent,
 ];
 
 @NgModule({
