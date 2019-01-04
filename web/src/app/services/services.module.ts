@@ -27,7 +27,6 @@ import { TaskService } from "./task.service";
 import { TokenService } from "./token.service";
 import { UrgencyLapService } from "./urgency-lap.service";
 import { TasklistEventService, TasklistFilterService, TaskListService } from "./tasklist";
-import { EncryptModule } from "./encrypt";
 
 @NgModule({
   imports: [
@@ -35,8 +34,6 @@ import { EncryptModule } from "./encrypt";
     HttpClientModule,
     MessageBusModule,
 
-    // Our modules
-    EncryptModule,
   ],
   declarations: [],
   providers: [
