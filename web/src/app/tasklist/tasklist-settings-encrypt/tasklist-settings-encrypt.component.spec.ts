@@ -15,7 +15,6 @@ import { encodeBase64 } from "tweetnacl-util";
 import { TaskListService, TaskService, ChecklistItemService } from '../../services';
 
 import { TasklistSettingsEncryptPanelComponent } from '../tasklist-settings-encrypt-panel/tasklist-settings-encrypt-panel.component';
-import { TasklistSettingsDecryptPanelComponent } from '../tasklist-settings-decrypt-panel/tasklist-settings-decrypt-panel.component';
 import { TasklistSettingsKeyinputPanelComponent } from '../tasklist-settings-keyinput-panel/tasklist-settings-keyinput-panel.component';
 import { Type, Predicate, DebugElement } from '@angular/core';
 import { EncryptKeysStorageService, TasklistPrivateKey } from '../../services/encrypt';
@@ -26,7 +25,6 @@ const dummyPrivateKeyHashString = encodeBase64(dummyPrivateKeyHash);
 
 const encryptPanel = By.directive(TasklistSettingsEncryptPanelComponent);
 const keyInputPanel = By.directive(TasklistSettingsKeyinputPanelComponent);
-const decryptPanel = By.directive(TasklistSettingsDecryptPanelComponent);
 
 describe('TasklistSettingsEncryptComponent', () => {
   let component: TasklistSettingsEncryptComponent;
@@ -51,7 +49,6 @@ describe('TasklistSettingsEncryptComponent', () => {
       declarations: [
         TasklistSettingsEncryptComponent,
         TasklistSettingsEncryptPanelComponent,
-        TasklistSettingsDecryptPanelComponent,
         TasklistSettingsKeyinputPanelComponent,
       ],
       providers: [
@@ -86,7 +83,6 @@ describe('TasklistSettingsEncryptComponent', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.query(encryptPanel)).toBeNull("since encryption is not allowed");
     expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since encryption is not allowed");
-    expect(fixture.debugElement.query(decryptPanel)).toBeNull("since encryption is not allowed");
 
   });
 
@@ -103,23 +99,11 @@ describe('TasklistSettingsEncryptComponent', () => {
     expect(component.tasklist).toBe(tasklist);
   });
 
-  it('should pass the tasklist to decryptPanel', () => {
-    tasklist.privateKeyHash = dummyPrivateKeyHashString;
-    privateKeys.next([{
-      privateKey: dummyPrivateKey,
-      tasklistGuid: "list-a"
-    }]);
-    setup();
-    const component = getComponent(decryptPanel, TasklistSettingsDecryptPanelComponent);
-    expect(component.tasklist).toBe(tasklist);
-  });
-
   it('should show a option to encrypt a tasklist if unencrypted', (done) => {
     setup();
 
     expect(fixture.debugElement.query(encryptPanel)).toBeTruthy("since the tasklist is not encrypted, so show encrypt options");
     expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since the tasklist is not encrypted, so show no key input is required");
-    expect(fixture.debugElement.query(decryptPanel)).toBeNull("since the tasklist is not encrypted, so show no decrypt options");
 
     component.$panel.pipe(take(1)).subscribe(x => {
       expect(x).toBe("encrypt");
@@ -133,7 +117,6 @@ describe('TasklistSettingsEncryptComponent', () => {
 
     expect(fixture.debugElement.query(encryptPanel)).toBeNull("since the tasklist is encrypted, so show no encrypt options");
     expect(fixture.debugElement.query(keyInputPanel)).toBeTruthy("since the tasklist is encrypted but key is still unknown, so key input is required");
-    expect(fixture.debugElement.query(decryptPanel)).toBeNull("since the tasklist is encrypted, but decrypt key is unknown, so no decrypt options");
 
     component.$panel.pipe(take(1)).subscribe(x => {
       expect(x).toBe("key-input");
@@ -153,7 +136,6 @@ describe('TasklistSettingsEncryptComponent', () => {
 
     expect(fixture.debugElement.query(encryptPanel)).toBeNull("since the tasklist is encrypted, so show no encrypt options");
     expect(fixture.debugElement.query(keyInputPanel)).toBeNull("since the tasklist is encrypted and PK is known, so no key input is required");
-    expect(fixture.debugElement.query(decryptPanel)).toBeTruthy("since the tasklist is encrypted, but PK is known, so show decrypt options");
 
     component.$panel.pipe(take(1)).subscribe(x => {
       expect(x).toBe("decrypt");
