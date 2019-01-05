@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import {
+  MatButtonModule,
   MatCommonModule,
+  MatIconModule,
   MatSidenavModule,
-  MatToolbarModule
+  MatToolbarModule,
 } from '@angular/material';
 
 
 const publicModules = [
+  MatIconModule,
   MatToolbarModule,
   MatSidenavModule,
+  MatButtonModule,
 ];
 
 const privateModules = [
