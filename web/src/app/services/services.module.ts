@@ -18,7 +18,6 @@ import { SearchService } from "./search.service";
 import { SessionService } from "./session.service";
 import { StorageService } from "./storage.service";
 import { TaskEventService } from "./task-event.service";
-import { TaskListRightService } from "./task-list-right.service";
 import { TaskListShareTokenService } from "./task-list-share-token.service";
 import { TaskParseService } from "./task-parse.service";
 import { TaskRelationService } from "./task-relation.service";
@@ -54,7 +53,6 @@ import { TasklistEventService, TasklistFilterService, TaskListService } from "./
     TaskEventService,
     TasklistEventService,
     TasklistFilterService,
-    TaskListRightService,
     TaskListService,
     TaskListShareTokenService,
     TaskParseService,

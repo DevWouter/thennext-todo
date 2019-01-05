@@ -14,7 +14,6 @@ export * from "./search.service";
 export * from "./session.service";
 export * from "./storage.service";
 export * from "./task-event.service";
-export * from "./task-list-right.service";
 export * from "./task-list-share-token.service";
 export * from "./task-parse.service";
 export * from "./task-relation.service";
