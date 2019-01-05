@@ -4,7 +4,6 @@ export { LoggerService } from "./logger-service";
 export { MailService } from "./mail-service";
 export { PasswordCheckService } from "./password-check-service";
 export { ScoreShiftService } from "./score-shift-service";
-export { TaskListRightService } from "./task-list-right-service";
 export { TaskListService } from "./task-list-service";
 export { TaskListShareService } from "./task-list-share-service";
 export { TaskRelationService } from "./task-relation-service";

@@ -28,7 +28,6 @@ import {
     LoggerService,
     MailService,
     ScoreShiftService,
-    TaskListRightService,
     TaskListService,
     TaskListShareService,
     TaskRelationService,
@@ -123,7 +122,6 @@ container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<MailService>(MailService).toSelf();
 container.bind<PasswordCheckService>(PasswordCheckService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
-container.bind<TaskListRightService>(TaskListRightService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
 container.bind<TaskListShareService>(TaskListShareService).toSelf();
 container.bind<TaskRelationService>(TaskRelationService).toSelf();
