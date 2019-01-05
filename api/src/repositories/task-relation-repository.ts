@@ -23,15 +23,12 @@ export class TaskRelationRepository {
                 // Join for rights on source task
                 " INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`",
                 " INNER JOIN `TaskList` AS `SourceTaskList` ON `SourceTask`.`taskListId`=`SourceTaskList`.`id`",
-                " INNER JOIN `TaskListRight` AS `SourceTaskListRight` ON `SourceTaskList`.`id`=`SourceTaskListRight`.`taskListId`",
                 // Join for rights on target task
                 " INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`",
                 " INNER JOIN `TaskList` AS `TargetTaskList` ON `TargetTask`.`taskListId`=`TargetTaskList`.`id`",
-                " INNER JOIN `TaskListRight` AS `TargetTaskListRight` ON `TargetTaskList`.`id`=`TargetTaskListRight`.`taskListId`",
                 // 
                 " WHERE `TaskRelation`.`uuid` = ?",
-                " AND `SourceTaskListRight`.`accountId` = ?",
-                " AND `TargetTaskListRight`.`accountId` = ?",
+                " AND `SourceTaskList`.`ownerId`=`TargetTaskList`.`ownerId`",
                 " LIMIT 1"
             ]
             , [uuid, account.id, account.id]
@@ -87,15 +84,13 @@ export class TaskRelationRepository {
             // Join for rights on source task
             "INNER JOIN `Task` AS `SourceTask` ON `TaskRelation`.`sourceTaskId`=`SourceTask`.`id`",
             "INNER JOIN `TaskList` AS `SourceTaskList` ON `SourceTask`.`taskListId`=`SourceTaskList`.`id`",
-            "INNER JOIN `TaskListRight` AS `SourceTaskListRight` ON `SourceTaskList`.`id`=`SourceTaskListRight`.`taskListId`",
             // Join for rights on target task
             "INNER JOIN `Task` AS `TargetTask` ON `TaskRelation`.`targetTaskId`=`TargetTask`.`id`",
             "INNER JOIN `TaskList` AS `TargetTaskList` ON `TargetTask`.`taskListId`=`TargetTaskList`.`id`",
-            "INNER JOIN `TaskListRight` AS `TargetTaskListRight` ON `TargetTaskList`.`id`=`TargetTaskListRight`.`taskListId`",
             // Check if the account has access to both target and source tasklist
             "WHERE 1=1 ",
-            "AND `SourceTaskListRight`.`accountId` = ?",
-            "AND `TargetTaskListRight`.`accountId` = ?"
+            "AND `SourceTaskList`.`ownerId` = ?",
+            "AND `TargetTaskList`.`ownerId` = ?"
         ], [account.id, account.id]);
 
         const result: TaskRelationWithUuids[] = [];

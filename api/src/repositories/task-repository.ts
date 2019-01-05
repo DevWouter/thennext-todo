@@ -22,8 +22,7 @@ export class TaskRepository {
                 " `Task`.*, `TaskList`.`uuid` as `taskListUuid`",
                 "FROM `Task`",
                 "INNER JOIN `TaskList` ON `Task`.`taskListId`=`TaskList`.`id`",
-                "INNER JOIN `TaskListRight` ON `TaskList`.`id`=`TaskListRight`.`taskListId`",
-                "WHERE `TaskListRight`.`accountId` = ? AND `Task`.`uuid` = ?"
+                "WHERE `TaskList`.`ownerId` = ? AND `Task`.`uuid` = ?"
             ]
             ,
             [account.id, uuid]
@@ -63,8 +62,7 @@ export class TaskRepository {
                 " `Task`.*, `TaskList`.`uuid` as `taskListUuid`",
                 "FROM `Task`",
                 "INNER JOIN `TaskList` ON `Task`.`taskListId`=`TaskList`.`id`",
-                "INNER JOIN `TaskListRight` ON `TaskList`.`id`=`TaskListRight`.`taskListId`",
-                "WHERE `TaskListRight`.`accountId` = ?"
+                "WHERE `TaskList`.`ownerId` = ?"
             ]
             ,
             [account.id]);
