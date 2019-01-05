@@ -14,7 +14,6 @@ import {
     ScoreShiftRepository,
     SessionRepository,
     TaskListRepository,
-    TaskListShareTokenRepository,
     TaskRelationRepository,
     TaskRepository,
     UrgencyLapRepository,
@@ -95,7 +94,6 @@ container.bind<PasswordRecoveryTokenRepository>(PasswordRecoveryTokenRepository)
 container.bind<ScoreShiftRepository>(ScoreShiftRepository).toSelf();
 container.bind<SessionRepository>(SessionRepository).toSelf();
 container.bind<TaskListRepository>(TaskListRepository).toSelf();
-container.bind<TaskListShareTokenRepository>(TaskListShareTokenRepository).toSelf();
 container.bind<TaskRelationRepository>(TaskRelationRepository).toSelf();
 container.bind<TaskRepository>(TaskRepository).toSelf();
 container.bind<UrgencyLapRepository>(UrgencyLapRepository).toSelf();
