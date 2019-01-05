@@ -5,7 +5,6 @@ import {
     AccountRepository,
     ChecklistItemRepository,
     TaskRepository,
-    TaskListRightRepository,
 } from "../repositories";
 
 import { WsMessageService } from "./ws-message-service";
@@ -19,7 +18,6 @@ export class ChecklistItemService {
     private readonly KIND = "checklist-item";
     constructor(
         private readonly taskRepository: TaskRepository,
-        private readonly taskListRightRepository: TaskListRightRepository,
         private readonly checklistItemRepository: ChecklistItemRepository,
         private readonly accountRepository: AccountRepository,
         private readonly messageService: WsMessageService,
