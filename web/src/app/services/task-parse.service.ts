@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { map } from "rxjs/operators";
 
 import { TaskService } from "./task.service";
-import { TaskListService } from "./task-list.service";
 import { NavigationService } from "./navigation.service";
 
 import { Task, TaskStatus } from "../models";
+import { TaskListService } from "./tasklist";
 
 @Injectable()
 export class TaskParseService {

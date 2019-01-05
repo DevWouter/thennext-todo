@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { Router, ActivatedRoute, NavigationExtras, Params } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { TaskListService } from "./task-list.service";
 
 import { TaskPageNavigation } from "../models";
+import { TaskListService } from "./tasklist";
 
 enum ShowValues {
   completed = "completed",

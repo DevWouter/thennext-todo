@@ -1,6 +1,7 @@
 import { Entity } from "./entity";
 
 export interface Task extends Entity {
+
   uuid: string;
   taskListUuid: string;
   nextChecklistOrder: number;
@@ -11,6 +12,7 @@ export interface Task extends Entity {
   createdOn: Date;
   updatedOn: Date;
   completedOn: Date;
+  estimatedDuration?: number,
 }
 
 export enum TaskStatus {

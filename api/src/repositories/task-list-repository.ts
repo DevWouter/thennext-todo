@@ -15,8 +15,7 @@ export class TaskListRepository {
         const { results } = await db.execute(
             [
                 "SELECT `TaskList`.* FROM `TaskList`",
-                "INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
-                "WHERE `TaskListRight`.`accountId` = ?",
+                "WHERE `TaskList`.`ownerId` = ?",
                 "  AND `TaskList`.`uuid` = ?",
                 "LIMIT 1"
             ], [account.id, uuid]
@@ -38,8 +37,7 @@ export class TaskListRepository {
         const { results } = await db.execute(
             [
                 "SELECT `TaskList`.* FROM `TaskList`",
-                "INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
-                "WHERE `TaskListRight`.`accountId` = ?"
+                "WHERE `TaskList`.`ownerId` = ?"
             ], [account.id]
         );
 
@@ -84,11 +82,12 @@ export class TaskListRepository {
 
     async update(entity: TaskListEntity): Promise<TaskListEntity> {
         const db = await this.database();
+        // delete entity.privateKeyHash;
+        const change: Partial<TaskListEntity> = { name: entity.name };
+
         await db.update<TaskListEntity>("TaskList",
+            change,
             {
-                // Only allow the name to be changed.
-                name: entity.name,
-            }, {
                 id: entity.id,
             }, 1
         );

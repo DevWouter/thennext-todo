@@ -1,15 +1,8 @@
-.container{
-  position: relative;
+.full-width {
+    width: 100%;
 }
+
 textarea {
-    width: 100%;
+    font-size: 11pt;
     font-family: monospace;
-    border: none;
-    outline: none;
-    -moz-appearance: none;
-    resize: none;
-    overflow: hidden;
-    width: 100%;
-    transition: height 0.1s;
-    padding: 0;
 }

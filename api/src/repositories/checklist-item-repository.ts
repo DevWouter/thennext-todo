@@ -18,9 +18,9 @@ export class ChecklistItemRepository {
                 "   `Task`.`uuid` AS `taskUuid`",
                 " FROM `ChecklistItem`",
                 " INNER JOIN `Task` ON `Task`.`id`=`ChecklistItem`.`taskId`",
-                " INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`Task`.`taskListId`",
+                " INNER JOIN `TaskList` ON `TaskList`.`id`=`Task`.`taskListId`",
                 " WHERE `ChecklistItem`.`uuid` = ? ",
-                "   AND `TaskListRight`.`accountId` = ?",
+                "   AND `TaskList`.`ownerId` = ?",
                 " LIMIT 1"
             ],
             [uuid, account.id]
@@ -64,8 +64,8 @@ export class ChecklistItemRepository {
                 "   `Task`.`uuid` AS `taskUuid`",
                 " FROM `ChecklistItem`",
                 " INNER JOIN `Task` ON `Task`.`id`=`ChecklistItem`.`taskId`",
-                " INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`Task`.`taskListId`",
-                " WHERE `TaskListRight`.`accountId` = ?"
+                " INNER JOIN `TaskList` ON `TaskList`.`id`=`Task`.`taskListId`",
+                " WHERE `TaskList`.`ownerId` = ?"
             ],
             [account.id]
         );

@@ -25,6 +25,12 @@ export class ChecklistItemService {
 
     this._repository = new Repository(sender, receiver);
 
+    this.messageBusService.status
+      .pipe(filter(x => x.status === "accepted"))
+      .subscribe(() => {
+        this._repository.sync();
+      });
+
     combineLatest(this.taskEventService.deletedTask, this._repository.entities)
       .subscribe(([task, checklistItems]) => {
         // Find all relations beloning to the task and delete them.

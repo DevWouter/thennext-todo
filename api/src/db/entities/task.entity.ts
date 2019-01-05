@@ -15,6 +15,7 @@ export interface TaskEntity {
     createdAt: Date;
     updatedAt: Date;
     completedAt: Date;
+    estimatedDuration?: number;
 }
 
 export interface WithTaskUuid {

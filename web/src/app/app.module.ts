@@ -1,7 +1,7 @@
 // tslint:disable:max-line-length
 
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule as AnimationModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -22,8 +22,8 @@ import { PagesModule } from "./pages/pages.module";
     AppComponent,
   ],
   imports: [
-    AnimationModule,
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HtmlDirectivesModule,
     ServicesModule,

@@ -14,8 +14,6 @@ import {
     ScoreShiftRepository,
     SessionRepository,
     TaskListRepository,
-    TaskListRightRepository,
-    TaskListShareTokenRepository,
     TaskRelationRepository,
     TaskRepository,
     UrgencyLapRepository,
@@ -28,9 +26,7 @@ import {
     LoggerService,
     MailService,
     ScoreShiftService,
-    TaskListRightService,
     TaskListService,
-    TaskListShareService,
     TaskRelationService,
     TaskService,
     UrgencyLapService,
@@ -98,8 +94,6 @@ container.bind<PasswordRecoveryTokenRepository>(PasswordRecoveryTokenRepository)
 container.bind<ScoreShiftRepository>(ScoreShiftRepository).toSelf();
 container.bind<SessionRepository>(SessionRepository).toSelf();
 container.bind<TaskListRepository>(TaskListRepository).toSelf();
-container.bind<TaskListRightRepository>(TaskListRightRepository).toSelf();
-container.bind<TaskListShareTokenRepository>(TaskListShareTokenRepository).toSelf();
 container.bind<TaskRelationRepository>(TaskRelationRepository).toSelf();
 container.bind<TaskRepository>(TaskRepository).toSelf();
 container.bind<UrgencyLapRepository>(UrgencyLapRepository).toSelf();
@@ -123,9 +117,7 @@ container.bind<ChecklistItemService>(ChecklistItemService).toSelf();
 container.bind<MailService>(MailService).toSelf();
 container.bind<PasswordCheckService>(PasswordCheckService).toSelf();
 container.bind<ScoreShiftService>(ScoreShiftService).toSelf();
-container.bind<TaskListRightService>(TaskListRightService).toSelf();
 container.bind<TaskListService>(TaskListService).toSelf();
-container.bind<TaskListShareService>(TaskListShareService).toSelf();
 container.bind<TaskRelationService>(TaskRelationService).toSelf();
 container.bind<TaskService>(TaskService).toSelf();
 container.bind<UrgencyLapService>(UrgencyLapService).toSelf();

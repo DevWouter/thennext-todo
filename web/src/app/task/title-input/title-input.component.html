@@ -1,2 +1,1 @@
-<!-- <input [(ngModel)]="taskTitle" placeholder="title of the task"> -->
-<textarea rows="1" [(ngModel)]="taskTitle" appTextareaResize="" placeholder="title of the task" (keydown.enter)="reject($event)"></textarea>
+<textarea matInput placeholder="Title" [(ngModel)]="taskTitle" (keydown.enter)="reject($event)" cdkTextareaAutosize></textarea>

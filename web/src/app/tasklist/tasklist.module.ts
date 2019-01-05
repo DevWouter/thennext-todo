@@ -8,6 +8,13 @@ import { ServicesModule } from "../services/services.module";
 import { TasklistComponent } from "./tasklist.component";
 import { TasklistItemComponent } from "./tasklist-item/tasklist-item.component";
 
+const publicComponents = [
+  TasklistComponent,
+];
+
+const privateComponents = [
+  TasklistItemComponent,
+];
 
 @NgModule({
   imports: [
@@ -17,9 +24,11 @@ import { TasklistItemComponent } from "./tasklist-item/tasklist-item.component";
     ServicesModule,
   ],
   declarations: [
-    TasklistComponent,
-    TasklistItemComponent,
+    ...publicComponents,
+    ...privateComponents,
   ],
-  exports: [TasklistComponent]
+  exports: [
+    ...publicComponents,
+  ]
 })
 export class TasklistModule { }

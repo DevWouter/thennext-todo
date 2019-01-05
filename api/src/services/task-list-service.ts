@@ -5,12 +5,10 @@ import { WsMessageService } from "./ws-message-service";
 import { TaskList } from "../models/task-list.model";
 import { TaskListEntity, AccountSettingsEntity, AccountEntity } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
-import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
 
 import {
     AccountRepository,
     TaskListRepository,
-    TaskListRightRepository,
     AccountSettingsRepository,
 } from "../repositories";
 
@@ -21,7 +19,6 @@ export class TaskListService {
         private readonly accountRepository: AccountRepository,
         private readonly accountSettingsRepository: AccountSettingsRepository,
         private readonly messageService: WsMessageService,
-        private readonly taskListRightService: TaskListRightRepository,
     ) {
         // Setup
         this.setup();
@@ -65,9 +62,6 @@ export class TaskListService {
         const accountSettings = await this.accountSettingsRepository.of(account);
 
         const finalEntity = await this.taskListrepository.create(src.name, account);
-        await this.taskListRightService.create(account, finalEntity, AccessRight.owner);
-
-        const rights = await this.taskListRightService.getRightsFor(finalEntity);
 
         this.messageService.send("entity-created",
             {
@@ -75,20 +69,15 @@ export class TaskListService {
                 entityKind: "task-list",
             }, {
                 clientId: client.clientId,
-                accounts: rights.map(x => x.accountId),
+                accounts: [finalEntity.ownerId],
                 refId: refId
-            });
+            }
+        );
     }
 
     private async update(client: TrustedClient, src: TaskList, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const entity = await this.taskListrepository.byUuid(src.uuid, account);
-        const settings = await this.accountSettingsRepository.of(account);
-
-        // Fetch the rights so that we which clients we need to inform that the task-list is deleted
-        const rights = await this.taskListRightService.getRightsFor(entity);
-
-        const accounts = rights.map(x => x.accountId);
 
         if (entity.ownerId !== account.id) {
             throw new Error("You are not the owner of the list.");
@@ -98,25 +87,22 @@ export class TaskListService {
         entity.name = src.name;
 
         const finalEntity = await this.taskListrepository.update(entity);
-        this.messageService.send("entity-updated", {
-            entityKind: "task-list",
-            entity: finalEntity,
-        }, {
+        this.messageService.send("entity-updated",
+            {
+                entityKind: "task-list",
+                entity: finalEntity,
+            }, {
                 clientId: client.clientId,
-                accounts: accounts,
+                accounts: [finalEntity.ownerId],
                 refId: refId,
-            });
+            }
+        );
     }
 
     private async delete(client: TrustedClient, uuid: string, refId: string) {
         const account = await this.accountRepository.byId(client.accountId);
         const entity = await this.taskListrepository.byUuid(uuid, account);
         const settings = await this.accountSettingsRepository.of(account);
-
-        // Fetch the rights so that we which clients we need to inform that the task-list is deleted
-        const rights = await this.taskListRightService.getRightsFor(entity);
-
-        const accounts = rights.map(x => x.accountId);
 
 
         if (entity.id === settings.primaryListId) {
@@ -128,22 +114,24 @@ export class TaskListService {
         }
 
         this.taskListrepository.destroy(entity);
-        this.messageService.send("entity-deleted", {
-            entityKind: "task-list",
-            uuid: uuid,
-        }, {
+        this.messageService.send("entity-deleted",
+            {
+                entityKind: "task-list",
+                uuid: uuid,
+            }, {
                 clientId: client.clientId,
-                accounts: accounts,
+                accounts: [entity.ownerId],
                 refId: refId,
-            });
+            }
+        );
     }
 
     private toDTO(taskList: TaskListEntity, accountSettings: AccountSettingsEntity, account: AccountEntity): TaskList {
         return <TaskList>{
             uuid: taskList.uuid,
             name: taskList.name,
-            primary: taskList.id === accountSettings.primaryListId, // TO BE REMOVED
-            ownerUuid: account.uuid
+            ownerUuid: account.uuid,
+            primary: taskList.id === accountSettings.primaryListId // TO BE REMOVED
         };
     }
 }

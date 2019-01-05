@@ -6,8 +6,6 @@ export { PasswordRecoveryTokenRepository } from "./password-recovery-token-repos
 export { ScoreShiftRepository } from "./score-shift-repository";
 export { SessionRepository } from "./session-repository";
 export { TaskListRepository } from "./task-list-repository";
-export { TaskListRightRepository } from "./task-list-right-repository";
-export { TaskListShareTokenRepository } from "./task-list-share-token-repository";
 export { TaskRelationRepository } from "./task-relation-repository";
 export { TaskRepository } from "./task-repository";
 export { UrgencyLapRepository } from "./urgency-lap-repository";
