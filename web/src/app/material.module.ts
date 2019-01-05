@@ -6,14 +6,16 @@ import {
   MatIconModule,
   MatSidenavModule,
   MatToolbarModule,
+  MatTooltipModule,
 } from '@angular/material';
 
 
 const publicModules = [
-  MatIconModule,
-  MatToolbarModule,
-  MatSidenavModule,
   MatButtonModule,
+  MatIconModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatTooltipModule,
 ];
 
 const privateModules = [
