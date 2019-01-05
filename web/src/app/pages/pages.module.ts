@@ -6,14 +6,6 @@ import { RouterModule } from "@angular/router";
 import { ServicesModule } from "../services/services.module";
 import { DialogsModule } from "../dialogs/dialogs.module";
 
-import { AccountCreatedPageComponent } from "./account-created-page/account-created-page.component";
-import { ConfirmAccountPageComponent } from "./confirm-account-page/confirm-account-page.component";
-import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
-import { ForgetPasswordPageComponent } from "./forget-password-page/forget-password-page.component";
-import { HomePageComponent } from "./home-page/home-page.component";
-import { LoginPageComponent } from "./login-page/login-page.component";
-import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
-
 // Sub modules
 import { TaskPageModule } from "./task-page/task-page.module";
 import { SettingsPageModule } from "./settings-page/settings-page.module";
@@ -21,6 +13,16 @@ import { SharedPagesModule } from "./shared/shared.module";
 
 // Routing module
 import { PagesRoutingModule } from "./pages.routing";
+
+// Pages
+import { AccountCreatedPageComponent } from "./account-created-page/account-created-page.component";
+import { ConfirmAccountPageComponent } from "./confirm-account-page/confirm-account-page.component";
+import { CreateAccountPageComponent } from "./create-account-page/create-account-page.component";
+import { ForgetPasswordPageComponent } from "./forget-password-page/forget-password-page.component";
+import { HomePageComponent } from "./home-page/home-page.component";
+import { LoginPageComponent } from "./login-page/login-page.component";
+import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
+import { SchedulePageComponent } from './schedule-page/schedule-page.component';
 
 @NgModule({
   imports: [
@@ -41,6 +43,7 @@ import { PagesRoutingModule } from "./pages.routing";
     HomePageComponent,
     LoginPageComponent,
     RecoverAccountPageComponent,
+    SchedulePageComponent,
   ],
   exports: [
     HomePageComponent,
