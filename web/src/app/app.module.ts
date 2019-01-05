@@ -4,6 +4,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { MatCommonModule } from '@angular/material';
 
 import { HtmlDirectivesModule } from "./html-directives/html-directives.module";
 import { ServicesModule } from "./services/services.module";
@@ -25,6 +26,8 @@ import { PagesModule } from "./pages/pages.module";
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    MatCommonModule,
+
     HtmlDirectivesModule,
     ServicesModule,
     DialogsModule,

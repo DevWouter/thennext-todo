@@ -3,8 +3,11 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 
+
+
 import { ServicesModule } from "../services/services.module";
 import { DialogsModule } from "../dialogs/dialogs.module";
+import { MaterialModule } from '../material.module';
 
 // Sub modules
 import { TaskPageModule } from "./task-page/task-page.module";
@@ -29,6 +32,10 @@ import { SchedulePageComponent } from './schedule-page/schedule-page.component';
     CommonModule,
     RouterModule, // Required for navigation links
     FormsModule,
+
+    MaterialModule,
+
+    // Our modules
     ServicesModule,
     DialogsModule,
     SharedPagesModule,

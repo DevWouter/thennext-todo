@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { SchedulePageComponent } from './schedule-page.component';
+import { MaterialModule } from '../../material.module';
 
 describe('SchedulePageComponent', () => {
   let component: SchedulePageComponent;
@@ -11,9 +12,10 @@ describe('SchedulePageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchedulePageComponent ]
+      declarations: [SchedulePageComponent],
+      imports: [MaterialModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
