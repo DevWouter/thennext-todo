@@ -8,7 +8,6 @@ import { Account } from "../../models/account.model";
 
 import { AccountEntity } from "../../db/entities";
 import { SecurityConfig } from "../../config";
-import { AccessRight } from "../../db/entities/task-list-right.entity";
 import {
     AccountRepository,
     AccountSettingsRepository,
