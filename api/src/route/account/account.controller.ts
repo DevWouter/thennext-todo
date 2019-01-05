@@ -14,7 +14,6 @@ import {
     AccountSettingsRepository,
     ConfirmationTokenRepository,
     TaskListRepository,
-    TaskListRightRepository,
     UrgencyLapRepository,
     PasswordRecoveryTokenRepository,
 } from "../../repositories";
@@ -70,7 +69,6 @@ export class AccountController {
         private readonly confirmationTokenRepository: ConfirmationTokenRepository,
         private readonly passwordRecoveryTokenRepository: PasswordRecoveryTokenRepository,
         private readonly taskListRepository: TaskListRepository,
-        private readonly taskListRightRepository: TaskListRightRepository,
         private readonly urgencyLapRepository: UrgencyLapRepository,
         private readonly passwordCheckService: PasswordCheckService,
         private readonly mailService: MailService,
@@ -105,7 +103,6 @@ export class AccountController {
 
             // Create tasklist and the right for the tasklist.
             const primaryTaskList = await this.taskListRepository.create("Inbox", account);
-            await this.taskListRightRepository.create(account, primaryTaskList, AccessRight.owner);
 
             // Create settings
             await this.accountSettingsRepository.create(account, primaryTaskList);
