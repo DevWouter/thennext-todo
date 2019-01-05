@@ -5,7 +5,7 @@ import { WsMessageService } from "./ws-message-service";
 import { TaskList } from "../models/task-list.model";
 import { TaskListEntity, AccountSettingsEntity, AccountEntity } from "../db/entities";
 import { TrustedClient } from "./ws/message-client";
-import { TaskListRightEntity, AccessRight } from "../db/entities/task-list-right.entity";
+import { AccessRight } from "../db/entities/task-list-right.entity";
 
 import {
     AccountRepository,
