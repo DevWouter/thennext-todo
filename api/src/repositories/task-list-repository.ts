@@ -15,8 +15,7 @@ export class TaskListRepository {
         const { results } = await db.execute(
             [
                 "SELECT `TaskList`.* FROM `TaskList`",
-                "INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
-                "WHERE `TaskListRight`.`accountId` = ?",
+                "WHERE `TaskList`.`ownerId` = ?",
                 "  AND `TaskList`.`uuid` = ?",
                 "LIMIT 1"
             ], [account.id, uuid]
@@ -38,8 +37,7 @@ export class TaskListRepository {
         const { results } = await db.execute(
             [
                 "SELECT `TaskList`.* FROM `TaskList`",
-                "INNER JOIN `TaskListRight` ON `TaskListRight`.`taskListId`=`TaskList`.`id`",
-                "WHERE `TaskListRight`.`accountId` = ?"
+                "WHERE `TaskList`.`ownerId` = ?"
             ], [account.id]
         );
 
