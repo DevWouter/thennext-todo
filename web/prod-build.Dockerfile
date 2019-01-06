@@ -10,6 +10,8 @@ COPY \
 RUN \
     npm install
 
+### Copy the content to the docker image
+# Unlike the dockerfile used for development, we need the files in docker
 COPY . /app/
 
 RUN npm run build

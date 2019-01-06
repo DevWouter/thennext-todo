@@ -15,7 +15,9 @@ COPY \
 RUN \
     npm install
 
-COPY . /app/
+### Don't copy the content to the docker image.
+### It should be linked instead.
+# COPY . /app/
 
 EXPOSE 4200
 
