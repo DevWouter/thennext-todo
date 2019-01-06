@@ -14,7 +14,7 @@ export class SchedulePageComponent implements OnInit {
   }
 
   onClickMenuButton() {
-    this.showMenu = true;
+    this.showMenu = !this.showMenu;
   }
 
 }

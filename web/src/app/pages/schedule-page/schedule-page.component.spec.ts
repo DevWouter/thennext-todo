@@ -56,12 +56,22 @@ describe('SchedulePageComponent', () => {
   }))
   );
 
-  it('should open the menu when clicking the menu', async(inject([Router, Location], (router: Router, location: Location) => {
+  it('should open the menu when clicking the menu-button when closed', async(inject([Router, Location], (router: Router, location: Location) => {
     const viewListButton = fixture.debugElement.query(By.css("[data-cy='menu-button']"));
     viewListButton.triggerEventHandler("click", {});
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(component.showMenu).toBe(true);
+    });
+  }))
+  );
+  it('should close the menu when clicking the menu-button when opened', async(inject([Router, Location], (router: Router, location: Location) => {
+    component.showMenu = true;
+    const viewListButton = fixture.debugElement.query(By.css("[data-cy='menu-button']"));
+    viewListButton.triggerEventHandler("click", {});
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.showMenu).toBe(false);
     });
   }))
   );
