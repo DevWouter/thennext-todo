@@ -15,6 +15,10 @@ $two-column-width: 800px;
     flex-direction: column;
 }
 
+.button--large {
+    font-size: large;
+}
+
 .container {
     max-width: $container-width;
     margin-left: auto;
@@ -98,13 +102,6 @@ img {
 }
 
 .button {
-    background-color: $header-background-color;
-    color: white;
-    padding: 16px 32px;
-    text-decoration: none;
-    margin: 8px;
-    border-radius: 5px;
-    &:hover {
-        background-color: $header-background-color-hover;
-    }
+    padding: 8px 32px;
+    font-size: 16px;
 }
