@@ -8,7 +8,7 @@ import { ForgetPasswordPageComponent } from "./forget-password-page/forget-passw
 import { HomePageComponent } from "./home-page/home-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
 import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
-import { SchedulePageComponent } from './schedule-page/schedule-page.component';
+import { SchedulePageComponent } from './schedule-page';
 import { TaskPageComponent } from "./task-page/task-page.component";
 
 // Guard modules

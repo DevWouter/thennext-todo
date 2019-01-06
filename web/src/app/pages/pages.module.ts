@@ -17,6 +17,8 @@ import { SharedPagesModule } from "./shared/shared.module";
 // Routing module
 import { PagesRoutingModule } from "./pages.routing";
 
+import { SchedulePageComponent, SchedulePageModule } from "./schedule-page";
+
 // Pages
 import { AccountCreatedPageComponent } from "./account-created-page/account-created-page.component";
 import { ConfirmAccountPageComponent } from "./confirm-account-page/confirm-account-page.component";
@@ -25,7 +27,6 @@ import { ForgetPasswordPageComponent } from "./forget-password-page/forget-passw
 import { HomePageComponent } from "./home-page/home-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
 import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
-import { SchedulePageComponent } from './schedule-page/schedule-page.component';
 
 @NgModule({
   imports: [
@@ -41,6 +42,9 @@ import { SchedulePageComponent } from './schedule-page/schedule-page.component';
     SharedPagesModule,
     TaskPageModule,
     SettingsPageModule,
+
+    // Page modules
+    SchedulePageModule,
   ],
   declarations: [
     AccountCreatedPageComponent,
@@ -50,7 +54,6 @@ import { SchedulePageComponent } from './schedule-page/schedule-page.component';
     HomePageComponent,
     LoginPageComponent,
     RecoverAccountPageComponent,
-    SchedulePageComponent,
   ],
   exports: [
     HomePageComponent,
