@@ -9,6 +9,13 @@
   </button>
 </mat-toolbar>
 
-<p>
-  schedule-page works!
-</p>
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav
+    [(opened)]="showMenu"
+  >This is the sidenav</mat-sidenav>
+  <mat-sidenav-content>
+    <p>
+      schedule-page works!
+    </p>
+  </mat-sidenav-content>
+</mat-sidenav-container>
