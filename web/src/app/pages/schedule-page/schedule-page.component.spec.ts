@@ -55,4 +55,14 @@ describe('SchedulePageComponent', () => {
     });
   }))
   );
+
+  it('should open the menu when clicking the menu', async(inject([Router, Location], (router: Router, location: Location) => {
+    const viewListButton = fixture.debugElement.query(By.css("[data-cy='menu-button']"));
+    viewListButton.triggerEventHandler("click", {});
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.showMenu).toBe(true);
+    });
+  }))
+  );
 });

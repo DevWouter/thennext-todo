@@ -13,4 +13,8 @@ export class SchedulePageComponent implements OnInit {
   ngOnInit() {
   }
 
+  onClickMenuButton() {
+    this.showMenu = true;
+  }
+
 }
