@@ -49,7 +49,7 @@ describe('CommonPageHeaderComponent', () => {
 
   it('should navigate to home page', async(inject([Router, Location],
     (router: Router, location: Location) => {
-      const viewListButton = fixture.debugElement.query(By.css("[data-cy='header-home-button']"));
+      const viewListButton = fixture.debugElement.query(By.css("[data-cy='header-home']"));
       viewListButton.triggerEventHandler("click", {});
       fixture.whenStable().then(() => {
         expect(location.path()).toBe("/");
@@ -58,7 +58,7 @@ describe('CommonPageHeaderComponent', () => {
   );
   it('should navigate to home page', async(inject([Router, Location],
     (router: Router, location: Location) => {
-      const viewListButton = fixture.debugElement.query(By.css("[data-cy='header-login-button']"));
+      const viewListButton = fixture.debugElement.query(By.css("[data-cy='header-login']"));
       viewListButton.triggerEventHandler("click", {});
       fixture.whenStable().then(() => {
         expect(location.path()).toBe("/login");
