@@ -1,7 +1,9 @@
-<gui-header>
-  <gui-header-button-icon [iconClass]="'fas fa-fw fa-cog'" (click)="open()"></gui-header-button-icon>
-  <gui-header-text>Settings</gui-header-text>
-</gui-header>
+<mat-toolbar class="header" color="primary">
+  <button mat-icon-button data-cy="menu-button" (click)="open()">
+    <mat-icon>settings</mat-icon>
+  </button>
+  <div>Settings</div>
+</mat-toolbar>
 
 <gui-menu [menuTitle]='"Settings"'>
   <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
