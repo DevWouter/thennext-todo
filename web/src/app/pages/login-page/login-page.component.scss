@@ -27,52 +27,11 @@ $row-spacing: 16px;
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
-}
-
-.row {
-    display: flex;
-}
-
-.icon {
-    color: $header-background-color-hover;
-    padding: $row-spacing;
-    padding-right: 8px;
-    text-align: center;
-}
-
-.input {
-    flex-grow: 1;
-    padding-top: $row-spacing;
-    padding-bottom: $row-spacing;
-    padding-right: $row-spacing;
-    input {
-        width: 100%;
-        box-sizing: border-box;
-        border: none;
-        outline: none;
-    }
-}
-
-.input-splitter {
-    height: 1px;
-    border-bottom: 1px solid silver;
+    padding: 8px;
 }
 
 .login-button {
-    width: calc(100%);
-    display: block;
-    border: none;
-    cursor: pointer;
-    // background-color: #71af8c;
-    // border-radius: 3px;
-    // color: white;
-    margin: $row-spacing;
-    padding: 6px 8px;
-    box-sizing: border-box;
-    &.working {
-        // background-color: darken(#71af8c, 10);
-        color: silver;
-    }
+    width: 100%;
 }
 
 .row--error {
@@ -87,4 +46,9 @@ $row-spacing: 16px;
     a {
         color: hsla(146, 28%, 28%, 1);
     }
+}
+
+.full-width {
+    // margin: 8px;
+    width: 100%;
 }
