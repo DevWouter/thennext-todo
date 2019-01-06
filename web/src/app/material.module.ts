@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NoopAnimationsModule as BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import {
   MatButtonModule,
