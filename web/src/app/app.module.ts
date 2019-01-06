@@ -6,7 +6,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatCommonModule } from '@angular/material';
 
-import { HtmlDirectivesModule } from "./html-directives/html-directives.module";
 import { ServicesModule } from "./services/services.module";
 
 
@@ -28,7 +27,6 @@ import { PagesModule } from "./pages/pages.module";
     FormsModule,
     MatCommonModule,
 
-    HtmlDirectivesModule,
     ServicesModule,
     DialogsModule,
     TaskModule,

@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 
 // Our modules
 import { ServicesModule } from "../services/services.module";
-import { HtmlDirectivesModule } from "../html-directives/html-directives.module";
 
 // Our components
 import { ChecklistComponent } from "./checklist/checklist.component";
@@ -38,7 +37,6 @@ const privateComponents = [
     MaterialModule,
 
     ServicesModule,
-    HtmlDirectivesModule,
   ],
   declarations: [
     ...publicComponents,
