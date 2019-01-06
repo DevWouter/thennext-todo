@@ -1,7 +1,7 @@
 // tslint:disable:max-line-length
 
 import { BrowserModule } from "@angular/platform-browser";
-import { NoopAnimationsModule as BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatCommonModule } from '@angular/material';
