@@ -1,27 +1,3 @@
-@import '~scss/variables';
-.header {
-    height: 48px;
-    background-color: $header-background-color;
-    color: $header-color;
-    .__container {
-        max-width: $container-width;
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        .divider {
-            flex-grow: 1;
-        }
-        .item {
-            height: 100%;
-            line-height: 48px;
-            text-align: center;
-            padding-left: 16px;
-            padding-right: 16px;
-            color: $header-color; // To override <A>
-            text-decoration: none;
-            &:hover {
-                background-color: $header-background-color-hover;
-            }
-        }
-    }
+.spacer {
+    flex-grow: 1;
 }
