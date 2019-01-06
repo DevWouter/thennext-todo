@@ -21,7 +21,7 @@
     <div class="input-splitter"></div>
 
     <div class="row">
-      <button data-cy="submit" class="login-button" (click)="login()" [disabled]="working" [class.working]="working">
+      <button mat-flat-button color='primary' data-cy="submit" class="login-button" (click)="login()" [disabled]="working" [class.working]="working">
         <span *ngIf="working">
           <i class="fas fa-spin fa-cog fa-fw"></i>
           Trying to login
