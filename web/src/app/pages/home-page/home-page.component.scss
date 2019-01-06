@@ -8,8 +8,9 @@ Notes about the design:
 @import '~scss/variables';
 $two-column-width: 800px;
 :host {
+    $primary: map-get($web-theme, primary);
+    background-color: mat-color($primary, lighter);
     display: flex;
-    background-color: $page-background-color;
     width: 100%;
     min-height: 100%;
     flex-direction: column;
