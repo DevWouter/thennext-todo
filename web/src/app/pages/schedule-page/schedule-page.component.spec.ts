@@ -43,6 +43,10 @@ describe('SchedulePageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should have it\'s menu closed by default', async(inject([Router, Location], (router: Router, location: Location) => {
+    expect(component.showMenu).toBe(false);
+  })));
+
   it('should switch back to task', async(inject([Router, Location], (router: Router, location: Location) => {
     const viewListButton = fixture.debugElement.query(By.css("[data-cy='view-list']"));
     viewListButton.triggerEventHandler("click", {});
