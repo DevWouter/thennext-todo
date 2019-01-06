@@ -18,7 +18,6 @@ export class LoginPageComponent implements OnInit {
     private readonly router: Router,
     private readonly sessionService: SessionService,
     private readonly tokenService: TokenService,
-    private readonly storageService: StorageService,
     private readonly activedRoute: ActivatedRoute,
   ) { }
 
@@ -33,7 +32,6 @@ export class LoginPageComponent implements OnInit {
       this.password = (this.password || "").trim();
       this.working = true;
       const loginResult = await this.sessionService.createSession(this.username, this.password);
-      this.storageService.set(StorageKey.SESSION_TOKEN, loginResult.token);
       this.tokenService.set(loginResult.token);
       this.goToTaskPage();
     } catch (err) {
