@@ -7,21 +7,23 @@ import { CreateAccountPageComponent } from "./create-account-page/create-account
 import { ForgetPasswordPageComponent } from "./forget-password-page/forget-password-page.component";
 import { HomePageComponent } from "./home-page/home-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
-import { TaskPageComponent } from "./task-page/task-page.component";
 import { RecoverAccountPageComponent } from "./recover-account-page/recover-account-page.component";
+import { SchedulePageComponent } from './schedule-page';
+import { TaskPageComponent } from "./task-page/task-page.component";
 
 // Guard modules
 import { SessionTokenGuard } from "../guards/session-token.guard";
 
 const routes: Routes = [
   { path: "", component: HomePageComponent },
-  { path: "create-account", component: CreateAccountPageComponent },
   { path: "account-created", component: AccountCreatedPageComponent },
   { path: "confirm-account", component: ConfirmAccountPageComponent },
-  { path: "login", component: LoginPageComponent },
-  { path: "tasks", component: TaskPageComponent, canActivate: [SessionTokenGuard] },
+  { path: "create-account", component: CreateAccountPageComponent },
   { path: "forget-password", component: ForgetPasswordPageComponent },
+  { path: "login", component: LoginPageComponent },
   { path: "recover-account", component: RecoverAccountPageComponent },
+  { path: "schedule", component: SchedulePageComponent, canActivate: [SessionTokenGuard] },
+  { path: "tasks", component: TaskPageComponent, canActivate: [SessionTokenGuard] },
 ];
 
 @NgModule({

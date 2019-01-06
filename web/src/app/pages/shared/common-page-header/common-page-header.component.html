@@ -1,7 +1,5 @@
-<div class='header'>
-  <div class='__container'>
-    <a data-cy="header-home" class='item' [routerLink]="['/']">ThenNext</a>
-    <div class='divider'></div>
-    <a data-cy="header-login" class='item' [routerLink]="['/login']">Login</a>
-  </div>
-</div>
+<mat-toolbar color='primary'>
+  <button mat-button [routerLink]="['/']" data-cy="header-home">ThenNext</button>
+  <div class="spacer"></div>
+  <button mat-button [routerLink]="['/login']" data-cy="header-login">Login</button>
+</mat-toolbar>

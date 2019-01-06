@@ -1,0 +1,22 @@
+<mat-toolbar color="primary" class="header">
+  <button mat-icon-button data-cy="menu-button" (click)="onClickMenuButton()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Schedule</span>
+  <span class="spanner"></span>
+  <button data-cy='view-list' mat-icon-button matTooltip="Back to tasks" [routerLink]="['/tasks']">
+    <mat-icon>view_list</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav
+    [mode]="'over'"
+    [(opened)]="showMenu"
+  >This is the sidenav</mat-sidenav>
+  <mat-sidenav-content>
+    <p>
+      schedule-page works!
+    </p>
+  </mat-sidenav-content>
+</mat-sidenav-container>

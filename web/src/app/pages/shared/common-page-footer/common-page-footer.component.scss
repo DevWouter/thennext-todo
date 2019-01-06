@@ -1,9 +1,11 @@
+@import '~@angular/material/theming';
 @import "~scss/variables";
 $footer-height: 60px;
 .footer {
+    $primary: map-get($web-theme, primary);
     height: $footer-height;
-    background-color: $header-background-color-hover;
-    color: white;
+    background-color: mat-color($primary, darker);
+    color: mat-color($primary, darker-contrast);
     .__container {
         line-height: 48px;
         max-width: $container-width;

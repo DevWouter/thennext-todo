@@ -8,6 +8,7 @@ import { Migration_20181230211754_add_time_estimate_to_task } from "./2018123021
 import { Migration_20190104220641_remove_private_key } from "./20190104220641-remove-private-key";
 import { Migration_20190105165437_remove_table_tasklist_right } from "./20190105165437-remove-table-tasklist-right";
 import { Migration_20190105172700_remove_table_share_list_token } from "./20190105172700-remove-table-share-list-token";
+import { Migration_20190105210500_remove_unused_columns_from_account_settings } from "./20190105210500-remove-unused-columns-from-account-settings";
 
 // This const contains all the migrations in the order they need to be executed.
 // They should also contain a name, which will be used to check if the migration is executed in the correct order.
@@ -21,4 +22,5 @@ export const AllMigrations: MigrationInterface[] = [
     new Migration_20190104220641_remove_private_key(),
     new Migration_20190105165437_remove_table_tasklist_right(),
     new Migration_20190105172700_remove_table_share_list_token(),
+    new Migration_20190105210500_remove_unused_columns_from_account_settings(),
 ];

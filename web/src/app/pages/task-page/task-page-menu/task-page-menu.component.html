@@ -1,7 +1,7 @@
-<gui-header>
-  <gui-header-button-icon data-cy="menu-button" iconClass="fas fa-fw fa-bars" (click)="open()"></gui-header-button-icon>
-  <gui-header-text>{{$taskListName | async}}</gui-header-text>
-</gui-header>
+<mat-toolbar class="header" color="primary">
+  <button mat-icon-button data-cy="menu-button" (click)="open()"><mat-icon>menu</mat-icon></button>
+  <div>{{$taskListName | async}}</div>
+</mat-toolbar>
 
 <gui-menu [menuTitle]="displayName">
   <gui-menu-item iconClass="fas fa-fw fa-list">

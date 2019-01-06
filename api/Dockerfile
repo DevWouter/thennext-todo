@@ -16,9 +16,11 @@ COPY \
     ./tsconfig.json \
     /server/
 
-COPY \
-    ./src \
-    /server/src/
+### Don't copy the source files in the docker
+## Because if we do so and delete a file, then it stays in the develop container.  
+# COPY \
+#     ./src \
+#     /server/src/
 
 EXPOSE 3000
 CMD [ "npm", "start" ]

@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 
 // Our modules
 import { ServicesModule } from "../services/services.module";
-import { HtmlDirectivesModule } from "../html-directives/html-directives.module";
 
 // Our components
 import { ChecklistComponent } from "./checklist/checklist.component";
@@ -14,8 +13,8 @@ import { DurationInputComponent } from "./duration-input/duration-input.componen
 import { RelationsViewComponent } from "./relations-view/relations-view.component";
 import { StatsViewComponent } from "./stats-view/stats-view.component";
 import { TitleInputComponent } from "./title-input/title-input.component";
+import { MaterialModule } from '../material.module';
 
-import { MatFormFieldModule, MatInputModule } from "@angular/material";
 
 const publicComponents = [
   ChecklistComponent,
@@ -34,10 +33,10 @@ const privateComponents = [
   imports: [
     CommonModule,
     FormsModule,
-    MatFormFieldModule, MatInputModule,
+
+    MaterialModule,
 
     ServicesModule,
-    HtmlDirectivesModule,
   ],
   declarations: [
     ...publicComponents,

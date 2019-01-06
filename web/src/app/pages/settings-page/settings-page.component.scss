@@ -1,9 +1,11 @@
+@import '~scss/variables';
 :host {
+    $primary: map-get($web-theme, primary);
+    background-color: mat-color($primary, lighter);
     display: flex;
     flex-direction: column;
     height: 100%;
     min-height: 100vh;
-    background-color: lighten(#71af8c, 10);
 }
 
 .container {
