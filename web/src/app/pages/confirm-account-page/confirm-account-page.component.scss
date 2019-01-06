@@ -1,7 +1,8 @@
 @import '~scss/variables';
 :host {
+    $primary: map-get($web-theme, primary);
+    background-color: mat-color($primary, lighter);
     display: block;
-    background-color: $page-background-color;
     width: 100%;
     min-height: 100%;
 }
