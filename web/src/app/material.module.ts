@@ -3,7 +3,9 @@ import { NgModule } from '@angular/core';
 import {
   MatButtonModule,
   MatCommonModule,
+  MatFormFieldModule,
   MatIconModule,
+  MatInputModule,
   MatSidenavModule,
   MatToolbarModule,
   MatTooltipModule,
@@ -12,7 +14,9 @@ import {
 
 const publicModules = [
   MatButtonModule,
+  MatFormFieldModule,
   MatIconModule,
+  MatInputModule,
   MatSidenavModule,
   MatToolbarModule,
   MatTooltipModule,
