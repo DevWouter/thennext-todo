@@ -27,24 +27,19 @@ $row-spacing: 16px;
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
-    padding: 8px;
-}
-
-.login-button {
-    width: 100%;
+    padding: 24px;
 }
 
 .row--error {
     padding: $row-spacing;
 }
 
-.row--explain {
-    // text-align: center;
-    justify-content: center;
-    padding: $row-spacing;
+.forgot-password {
+    $primary: map-get($web-theme, primary);
     font-size: smaller;
     a {
-        color: hsla(146, 28%, 28%, 1);
+        text-decoration: none;
+        color: mat-color($primary);
     }
 }
 
