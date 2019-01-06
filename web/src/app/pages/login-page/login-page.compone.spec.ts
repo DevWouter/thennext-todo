@@ -14,8 +14,6 @@ import { MaterialModule } from '../../material.module';
 import { LoginPageComponent } from './login-page.component';
 import { SessionService, TokenService } from '../../services';
 
-
-
 @Component({ template: '' })
 class DummyComponent { }
 @Component({ selector: 'app-common-page-header', template: '' })
@@ -69,14 +67,11 @@ describe('LoginPageComponent', () => {
   it('should block the login button when trying to process the request');
   it('should trigger login when pressing enter in password-field');
   it('should trigger login when pressing enter in username-field');
-  it('should have a link to reset password in case you forgot');
-
-  // it('should have a link to reset password in case you forgot', async(inject([Router, Location], (router: Router, location: Location) => {
-  //   const viewListButton = fixture.debugElement.query(By.css("[data-cy='create-account-button']"));
-  //   viewListButton.triggerEventHandler("click", {});
-  //   fixture.whenStable().then(() => {
-  //     expect(location.path()).toBe("/create-account");
-  //   });
-  // }))
-  // );
+  fit('should have a link to reset password in case you forgot', async(inject([Router, Location], (router: Router, location: Location) => {
+    const element = fixture.debugElement.query(By.css("[data-cy='forgot-password-link']"));
+    (element.nativeElement as HTMLElement).click();
+    fixture.whenStable().then(() => {
+      expect(location.path()).toBe("/forget-password");
+    });
+  })));
 });
