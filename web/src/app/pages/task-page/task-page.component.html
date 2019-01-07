@@ -1,39 +1,49 @@
 <app-warning-modal-dialog></app-warning-modal-dialog>
 
 <mat-toolbar class="header" color="primary">
-  <button mat-icon-button data-cy="menu-button" (click)="open()"><mat-icon>menu</mat-icon></button>
+  <button mat-icon-button data-cy="menu-button" (click)="open()">
+    <mat-icon>menu</mat-icon>
+  </button>
   <div>{{$taskListName | async}}</div>
 </mat-toolbar>
 
-<gui-menu [menuTitle]="displayName">
-  <gui-menu-item iconClass="fas fa-fw fa-list">
-    <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
-      <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
-    </select>
-  </gui-menu-item>
-  <gui-menu-bar></gui-menu-bar>
+<mat-sidenav-container>
+  <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu">
+    <gui-menu-item iconClass="fas fa-fw fa-list">
+      <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
+        <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
+      </select>
+    </gui-menu-item>
+    <gui-menu-bar></gui-menu-bar>
 
-  <gui-menu-item-checkbox data-cy="show-blocked-tasks" [checked]="showBlocked" (click)="showBlocked = !showBlocked">Show blocked tasks</gui-menu-item-checkbox>
-  <gui-menu-item-checkbox data-cy="show-negative-tasks" [checked]="showNegative" (click)="showNegative = !showNegative">Show negative tasks</gui-menu-item-checkbox>
-  <gui-menu-item-checkbox data-cy="show-completed-tasks" [checked]="showCompleted" (click)="showCompleted = !showCompleted">Show completed</gui-menu-item-checkbox>
-  <gui-menu-bar></gui-menu-bar>
+    <gui-menu-item-checkbox data-cy="show-blocked-tasks" [checked]="showBlocked" (click)="showBlocked = !showBlocked">Show
+      blocked tasks</gui-menu-item-checkbox>
+    <gui-menu-item-checkbox data-cy="show-negative-tasks" [checked]="showNegative" (click)="showNegative = !showNegative">Show
+      negative tasks</gui-menu-item-checkbox>
+    <gui-menu-item-checkbox data-cy="show-completed-tasks" [checked]="showCompleted" (click)="showCompleted = !showCompleted">Show
+      completed</gui-menu-item-checkbox>
+    <gui-menu-bar></gui-menu-bar>
 
-  <!-- <gui-menu-tasklist></gui-menu-tasklist> -->
+    <!-- <gui-menu-tasklist></gui-menu-tasklist> -->
 
-  <gui-menu-spacer></gui-menu-spacer>
-  <gui-menu-bar></gui-menu-bar>
-  <gui-menu-item data-cy="menu-settings" iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
-  <gui-menu-item data-cy="menu-logout" iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
-</gui-menu>
+    <gui-menu-spacer></gui-menu-spacer>
+    <gui-menu-bar></gui-menu-bar>
+    <gui-menu-item data-cy="menu-settings" iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
+    <gui-menu-item data-cy="menu-logout" iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
+  </mat-sidenav>
 
 
-<div class="content content--split" *ngIf="!isMobile">
-  <task-page-left [width]="size"></task-page-left>
-  <task-page-divider *ngIf="showPane" (rightWidth)="setPaneWidth($event)"></task-page-divider>
-  <task-pane *ngIf="showPane" [width]="size"></task-pane>
-</div>
+  <mat-sidenav-content>
+    <div class="content content--split" *ngIf="!isMobile">
+      <task-page-left [width]="size"></task-page-left>
+      <task-page-divider *ngIf="showPane" (rightWidth)="setPaneWidth($event)"></task-page-divider>
+      <task-pane *ngIf="showPane" [width]="size"></task-pane>
+    </div>
 
-<div class="content content--single" *ngIf="isMobile">
-  <task-page-left *ngIf="!showPane"></task-page-left>
-  <task-pane *ngIf="showPane"></task-pane>
-</div>
+    <div class="content content--single" *ngIf="isMobile">
+      <task-page-left *ngIf="!showPane"></task-page-left>
+      <task-pane *ngIf="showPane"></task-pane>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

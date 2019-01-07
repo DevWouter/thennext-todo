@@ -8,8 +8,9 @@ describe("Tasks - Menu", () => {
 
     it("Should open the menu on click", () => {
         cy.get('[data-cy=menu-button]').click();
+        cy.wait(400);
         cy.get('[data-cy=menu]').should("be.visible");
-        cy.get('[data-cy=menu-background]').should("be.visible");
+        cy.get('.mat-drawer-backdrop').should("be.visible");
     });
 
     it("Should not close the menu when toggling the filters", () => {
@@ -20,16 +21,18 @@ describe("Tasks - Menu", () => {
     });
 
     it("Should close the menu when click on background of menu", () => {
-        cy.get('[data-cy=menu-background]').click();
+        cy.get('.mat-drawer-backdrop').click();
         cy.get('[data-cy=menu]').should("be.hidden");
-        cy.get('[data-cy=menu-background]').should("be.hidden");
+        cy.get('.mat-drawer-backdrop').should("be.hidden");
     });
 
     it("Should close the menu when navigating to another task", () => {
         cy.get('[data-cy=menu-button]').click();
+        cy.wait(500);
         cy.get('[data-cy=tasklist-selector]').select("list 2");
         cy.get('[data-cy=menu]').should("be.hidden");
-        cy.get('[data-cy=menu-background]').should("be.hidden");
+        cy.wait(500);
+        cy.get('.mat-drawer-backdrop').should("be.hidden");
     });
 
 })

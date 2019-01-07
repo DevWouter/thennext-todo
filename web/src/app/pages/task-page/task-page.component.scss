@@ -1,4 +1,4 @@
-:host {
+mat-sidenav-content {
     flex-direction: column;
     display: flex;
     overflow: hidden;
@@ -7,6 +7,14 @@
     right: 0;
     bottom: 0;
     left: 0;
+}
+
+mat-sidenav-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 }
 
 .content {

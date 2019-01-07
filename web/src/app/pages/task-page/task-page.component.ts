@@ -36,9 +36,7 @@ export class TaskPageComponent implements OnInit {
 
   public lists: TaskList[] = [];
 
-  @ViewChild(MenuComponent)
-  private menu: MenuComponent;
-
+  openSideNav = false;
   private _currentListUuid: string = undefined;
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); this.close(); }
@@ -116,11 +114,11 @@ export class TaskPageComponent implements OnInit {
 
 
   close() {
-    this.menu.close();
+    this.openSideNav = false;
   }
 
   open() {
-    this.menu.open();
+    this.openSideNav = true;
   }
 
   goToSettings() {
