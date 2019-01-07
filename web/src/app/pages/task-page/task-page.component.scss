@@ -57,19 +57,12 @@ mat-sidenav {
 }
 
 .header {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 4;
 }
 
 select {
     width: 100%;
-}
-
-.menu-top-spacer {
-    @media(min-width: 600px) {
-        height: 8px;
-    }
 }

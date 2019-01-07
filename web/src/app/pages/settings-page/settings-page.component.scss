@@ -14,20 +14,6 @@
     font-weight: bold;
 }
 
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 4;
-}
-
-.menu-top-spacer {
-    @media(min-width: 600px) {
-        height: 8px;
-    }
-}
-
 mat-sidenav-content {
     flex-direction: column;
     display: flex;

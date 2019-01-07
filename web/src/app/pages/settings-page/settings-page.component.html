@@ -1,14 +1,11 @@
 <app-warning-modal-dialog></app-warning-modal-dialog>
-<mat-toolbar class="header" color="primary">
-  <button mat-icon-button data-cy="menu-button" (click)="open()">
-    <mat-icon>settings</mat-icon>
-  </button>
-  <div>Settings</div>
-</mat-toolbar>
+
 
 <mat-sidenav-container>
-  <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu" [fixedTopGap]="56">
-    <div class="menu-top-spacer"></div>
+  <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu">
+    <mat-toolbar color="primary">
+      <mat-icon>settings</mat-icon>Settings
+    </mat-toolbar>
     <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
       iconClass='fas fa-fw fa-user'>Personal</gui-menu-item>
 
@@ -28,6 +25,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
+    <mat-toolbar class="header" color="primary">
+      <button mat-icon-button data-cy="menu-button" (click)="open()">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <div>Settings</div>
+    </mat-toolbar>
+
     <div class="container">
       <router-outlet name="tab"></router-outlet>
     </div>
