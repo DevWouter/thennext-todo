@@ -15,7 +15,6 @@
         <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
       </select>
     </gui-menu-item>
-    <gui-menu-bar></gui-menu-bar>
 
     <gui-menu-item-checkbox data-cy="show-blocked-tasks" [checked]="showBlocked" (click)="showBlocked = !showBlocked">Show
       blocked tasks</gui-menu-item-checkbox>
@@ -23,12 +22,9 @@
       negative tasks</gui-menu-item-checkbox>
     <gui-menu-item-checkbox data-cy="show-completed-tasks" [checked]="showCompleted" (click)="showCompleted = !showCompleted">Show
       completed</gui-menu-item-checkbox>
-    <gui-menu-bar></gui-menu-bar>
 
     <!-- <gui-menu-tasklist></gui-menu-tasklist> -->
 
-    <gui-menu-spacer></gui-menu-spacer>
-    <gui-menu-bar></gui-menu-bar>
     <gui-menu-item data-cy="menu-settings" iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
     <gui-menu-item data-cy="menu-logout" iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
   </mat-sidenav>
