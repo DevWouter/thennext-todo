@@ -8,8 +8,8 @@
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu">
-    <div class="menuTitle">{{displayName}}</div>
+  <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu" [fixedTopGap]="56">
+    <div class="menu-top-spacer"></div>
     <gui-menu-item iconClass="fas fa-fw fa-list">
       <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
         <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
