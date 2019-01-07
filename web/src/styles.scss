@@ -12,7 +12,7 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
-@import "colors.scss";
+@import '~scss/variables';
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
