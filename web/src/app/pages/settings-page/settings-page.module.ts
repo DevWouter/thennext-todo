@@ -9,7 +9,6 @@ import { TasklistModule } from "../../tasklist/tasklist.module";
 import { MaterialModule } from '../../material.module';
 
 import { SettingsPageComponent } from "./settings-page.component";
-import { SettingsPageMenuComponent } from "./settings-page-menu/settings-page-menu.component";
 import { SettingsPageRoutingModule } from "./settings-page.routing";
 import { SettingsTabPersonalComponent } from "./tab-personal/tab-personal.component";
 import { SettingsTabTagsComponent } from "./tab-tags/tab-tags.component";
@@ -33,7 +32,6 @@ import { SettingsTasklistsComponent } from "./tab-tasklists/tab-tasklists.compon
   declarations: [
     SettingsPageComponent,
 
-    SettingsPageMenuComponent,
     SettingsTabTitleComponent,
 
     SettingsTasklistsComponent,

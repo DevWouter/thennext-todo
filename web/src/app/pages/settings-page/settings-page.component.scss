@@ -1,13 +1,4 @@
 @import '~scss/variables';
-:host {
-    $primary: map-get($web-theme, primary);
-    background-color: mat-color($primary, lighter);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 100vh;
-}
-
 .container {
     width: 1024px;
     max-width: calc(100vw - (32px + 16px));
@@ -17,4 +8,31 @@
     margin: 16px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.active {
+    font-weight: bold;
+}
+
+mat-sidenav-content {
+    flex-direction: column;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+mat-sidenav-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+mat-sidenav {
+    width: 300px;
 }

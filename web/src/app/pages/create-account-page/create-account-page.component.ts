@@ -10,6 +10,7 @@ import { AccountService } from "../../services";
 export class CreateAccountPageComponent implements OnInit {
   username = "";
   password = "";
+  working = false;
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -19,14 +20,12 @@ export class CreateAccountPageComponent implements OnInit {
   }
 
   async submit() {
+    this.working = true;
     const account = await this.accountService.createAccount(this.username, this.password);
     if (account) {
-      console.log(`Account was created for ${account}`);
-      try {
-        this.router.navigate(["/account-created"]);
-      } catch (reason) {
-        console.error("Unable to create session", reason);
-      }
+      this.router.navigate(["/account-created"]);
+    }else {
+      this.working = false;
     }
   }
 

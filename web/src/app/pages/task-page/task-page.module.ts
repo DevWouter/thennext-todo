@@ -3,6 +3,9 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 
+// Material module
+import { MaterialModule } from '../../material.module';
+
 // External modules
 import { DialogsModule } from "../../dialogs/dialogs.module";
 import { TasklistModule } from "../../tasklist/tasklist.module";
@@ -16,9 +19,7 @@ import { TaskPageComponent } from "./task-page.component";
 import { CommandInputComponent } from "./command-input/command-input.component";
 import { TaskPageLeftComponent } from "./task-page-left/task-page-left.component";
 import { TaskPageDividerComponent } from "./task-page-divider/task-page-divider.component";
-import { TaskPageMenuComponent } from "./task-page-menu/task-page-menu.component";
 import { GuiModule } from "../../gui/gui.module";
-import { MaterialModule } from '../../material.module';
 
 
 @NgModule({
@@ -38,7 +39,6 @@ import { MaterialModule } from '../../material.module';
     TaskPageComponent,
     TaskPageDividerComponent,
     TaskPageLeftComponent,
-    TaskPageMenuComponent,
   ],
   exports: [TaskPageComponent]
 })

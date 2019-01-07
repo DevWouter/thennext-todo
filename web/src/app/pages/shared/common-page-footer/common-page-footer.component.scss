@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 @import "~scss/variables";
-$footer-height: 60px;
+$footer-height: 48px;
 .footer {
     $primary: map-get($web-theme, primary);
     height: $footer-height;
