@@ -9,6 +9,7 @@
 
 <mat-sidenav-container>
   <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu">
+    <div class="menuTitle">{{displayName}}</div>
     <gui-menu-item iconClass="fas fa-fw fa-list">
       <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
         <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
