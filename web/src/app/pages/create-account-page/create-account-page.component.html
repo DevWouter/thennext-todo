@@ -1,28 +1,32 @@
 <app-common-page-header></app-common-page-header>
 <div class="container">
   <div class="form-container">
-    <label class="row">
-      <div class="icon">
-        <i class="far fa-fw fa-envelope"></i>
-      </div>
-      <div class="input">
-        <input data-cy="username" type="text" [(ngModel)]="username" name="username" placeholder="email" (keydown.enter)="submit()">
-      </div>
-    </label>
-    <div class="input-splitter"></div>
-    <label class="row">
-      <div class="icon">
-        <i class="fas fa-fw fa-lock"></i>
-      </div>
-      <div class="input">
-        <input data-cy="password" type="password" [(ngModel)]="password" name="password" placeholder="password" (keydown.enter)="submit()">
-      </div>
-    </label>
-    <div class="input-splitter"></div>
+    <h2 class="mat-title">Create account</h2>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput data-cy="username" type="text" [(ngModel)]="username" name="username" placeholder="email"
+        (keydown.enter)="submit()">
+    </mat-form-field>
 
-    <div class="row">
-      <button data-cy="submit" class="login-button" (click)="submit()">
-        Create account
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput data-cy="password" type="password" [(ngModel)]="password" name="password" placeholder="password"
+        (keydown.enter)="submit()">
+    </mat-form-field>
+
+    <div style="display: flex; align-items: center">
+      <div class="forgot-password">
+        <a data-cy="to-login" [routerLink]="['/login']">Already have an account?</a>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <button mat-flat-button color='primary' data-cy="submit" (click)="submit()" [disabled]="working">
+        <span *ngIf="working">
+          <i class="fas fa-spin fa-cog fa-fw"></i>
+          Trying to login
+        </span>
+        <span *ngIf="!working">
+          Login
+        </span>
       </button>
     </div>
   </div>

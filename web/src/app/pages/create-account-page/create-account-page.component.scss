@@ -15,7 +15,6 @@
     background-color: white;
     min-height: calc(100vh - (64px + 48px));
     box-sizing: border-box;
-    flex-grow: 1;
     padding: 16px 32px;
 }
 
@@ -28,46 +27,22 @@ $row-spacing: 16px;
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
+    padding: 24px;
 }
 
-.row {
-    display: flex;
-}
-
-.icon {
-    color: $header-background-color-hover;
+.row--error {
     padding: $row-spacing;
-    padding-right: 8px;
-    text-align: center;
 }
 
-.input {
-    flex-grow: 1;
-    padding-top: $row-spacing;
-    padding-bottom: $row-spacing;
-    padding-right: $row-spacing;
-    input {
-        width: 100%;
-        box-sizing: border-box;
-        border: none;
-        outline: none;
+.forgot-password {
+    $primary: map-get($web-theme, primary);
+    font-size: smaller;
+    a {
+        text-decoration: none;
+        color: mat-color($primary);
     }
 }
 
-.input-splitter {
-    height: 1px;
-    border-bottom: 1px solid silver;
-}
-
-.login-button {
-    width: calc(100%);
-    display: block;
-    border: none;
-    cursor: pointer;
-    background-color: #71af8c;
-    border-radius: 3px;
-    color: white;
-    margin: $row-spacing;
-    padding: 12px 8px;
-    box-sizing: border-box;
+.full-width {
+    width: 100%;
 }
