@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 
 import { MenuComponent } from "./menu.component";
 
-import { MenuBarComponent } from "./menu-bar/menu-bar.component";
 import { MenuItemCheckboxComponent } from "./menu-item-checkbox/menu-item-checkbox.component";
 import { MenuItemComponent } from "./menu-item/menu-item.component";
 import { MenuSpacerComponent } from "./menu-spacer/menu-spacer.component";
@@ -14,7 +13,6 @@ import { MenuTasklistItemComponent } from "./menu-tasklist-item/menu-tasklist-it
 const publicComponents = [
   MenuComponent,
 
-  MenuBarComponent,
   MenuItemCheckboxComponent,
   MenuItemComponent,
   MenuSpacerComponent,
