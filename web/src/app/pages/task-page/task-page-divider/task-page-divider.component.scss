@@ -1,7 +1,9 @@
+@import '~scss/variables';
+$primary: map-get($web-theme, primary);
 :host {
-  width: 6px;
-  background-color: #71af8c;
-  cursor: ew-resize;
-  flex-grow: 0;
-  flex-shrink: 0;
+    width: 6px;
+    background-color: mat-color($primary);
+    cursor: ew-resize;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
