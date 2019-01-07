@@ -1,5 +1,9 @@
 <app-warning-modal-dialog></app-warning-modal-dialog>
-<app-task-page-menu></app-task-page-menu>
+
+<mat-toolbar class="header" color="primary">
+  <button mat-icon-button data-cy="menu-button" (click)="open()"><mat-icon>menu</mat-icon></button>
+  <div>{{$taskListName | async}}</div>
+</mat-toolbar>
 
 <div class="content content--split" *ngIf="!isMobile">
   <task-page-left [width]="size"></task-page-left>
