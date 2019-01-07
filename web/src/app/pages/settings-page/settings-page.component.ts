@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MessageBusStateService } from "../../services/message-bus";
 import { Router } from '@angular/router';
 import { SessionService, NavigationService } from '../../services';
-import { MenuComponent } from '../../gui/menu';
 
 @Component({
   selector: "app-settings-page",
@@ -14,8 +13,7 @@ export class SettingsPageComponent implements OnInit {
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); }
 
-  @ViewChild(MenuComponent)
-  private menu: MenuComponent;
+  openSideNav = false;
 
   constructor(
     private readonly router: Router,
@@ -29,11 +27,11 @@ export class SettingsPageComponent implements OnInit {
   }
 
   close() {
-    this.menu.close();
+    this.openSideNav = false;
   }
 
   open() {
-    this.menu.open();
+    this.openSideNav = true;
   }
 
   goToTasks() {

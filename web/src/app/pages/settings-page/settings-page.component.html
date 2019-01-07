@@ -6,25 +6,31 @@
   <div>Settings</div>
 </mat-toolbar>
 
-<gui-menu [menuTitle]='"Settings"'>
-  <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
-    iconClass='fas fa-fw fa-user'>Personal</gui-menu-item>
+<mat-sidenav-container>
+  <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu" [fixedTopGap]="56">
+    <div class="menu-top-spacer"></div>
+    <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
+      iconClass='fas fa-fw fa-user'>Personal</gui-menu-item>
 
-  <gui-menu-item [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-list'
-    (click)="close()">Tasklists</gui-menu-item>
+    <gui-menu-item [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-list'
+      (click)="close()">Tasklists</gui-menu-item>
 
-  <gui-menu-item [routerLink]="[{ outlets: { tab: ['tags'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-tag'
-    (click)="close()">Tags</gui-menu-item>
+    <gui-menu-item [routerLink]="[{ outlets: { tab: ['tags'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-tag'
+      (click)="close()">Tags</gui-menu-item>
 
-  <gui-menu-item [routerLink]="[{ outlets: { tab: ['urgency'] } }]" iconClass='fas fa-fw fa-weight-hanging'
-    routerLinkActive="active" (click)="close()">urgency</gui-menu-item>
+    <gui-menu-item [routerLink]="[{ outlets: { tab: ['urgency'] } }]" iconClass='fas fa-fw fa-weight-hanging'
+      routerLinkActive="active" (click)="close()">urgency</gui-menu-item>
 
-  <gui-menu-spacer></gui-menu-spacer>
+    <gui-menu-spacer></gui-menu-spacer>
 
-  <gui-menu-item iconClass="fas fa-list fa-fw" (click)="goToTasks()">Back to tasks</gui-menu-item>
-  <gui-menu-item iconClass="fas fa-sign-out-alt fa-fw" (click)="logout()">Logout</gui-menu-item>
-</gui-menu>
+    <gui-menu-item iconClass="fas fa-list fa-fw" (click)="goToTasks()">Back to tasks</gui-menu-item>
+    <gui-menu-item iconClass="fas fa-sign-out-alt fa-fw" (click)="logout()">Logout</gui-menu-item>
+  </mat-sidenav>
 
-<div class="container">
-  <router-outlet name="tab"></router-outlet>
-</div>
+  <mat-sidenav-content>
+    <div class="container">
+      <router-outlet name="tab"></router-outlet>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
