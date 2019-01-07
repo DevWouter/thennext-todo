@@ -10,11 +10,15 @@ mat-sidenav-content {
 }
 
 mat-sidenav-container {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+mat-sidenav {
+    width: 300px;
 }
 
 .content {
