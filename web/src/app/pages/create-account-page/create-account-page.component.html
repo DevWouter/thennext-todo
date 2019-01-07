@@ -20,13 +20,7 @@
       </div>
       <div style="flex-grow: 1"></div>
       <button mat-flat-button color='primary' data-cy="submit" (click)="submit()" [disabled]="working">
-        <span *ngIf="working">
-          <i class="fas fa-spin fa-cog fa-fw"></i>
-          Trying to login
-        </span>
-        <span *ngIf="!working">
-          Login
-        </span>
+        Create an account
       </button>
     </div>
   </div>
