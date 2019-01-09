@@ -121,17 +121,6 @@ export class TaskPageComponent implements OnInit {
     this.openSideNav = true;
   }
 
-  goToSettings() {
-    this.router.navigate(["/settings"]);
-  }
-
-  logout() {
-    if (confirm("Are you sure you want to logout?")) {
-      this.sessionService.logout();
-      this.router.navigate(["/"]);
-    }
-  }
-
   updated() {
     this.navigation.toTaskPage({ taskListUuid: this._currentListUuid, taskUuid: null });
   }

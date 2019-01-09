@@ -1,37 +1,31 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { MessageBusStateService } from "../../services/message-bus";
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { SessionService, NavigationService } from '../../services';
+import { NavigationService, SessionService } from '../../../services';
 
 @Component({
-  selector: "app-settings-page",
-  templateUrl: "./settings-page.component.html",
-  styleUrls: ["./settings-page.component.scss"]
+  selector: 'app-settings-page-menu',
+  templateUrl: './settings-page-menu.component.html',
+  styleUrls: ['./settings-page-menu.component.scss']
 })
-export class SettingsPageComponent implements OnInit {
+export class SettingsPageMenuComponent implements OnInit {
+
+  @Output() close = new EventEmitter<void>();
+
   private _currentListUuid: string = undefined;
   public get currentListUuid(): string { return this._currentListUuid; }
   public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); }
-
-  openSideNav = false;
 
   constructor(
     private readonly router: Router,
     private readonly navigation: NavigationService,
     private readonly sessionService: SessionService,
-    private readonly messageBusStateService: MessageBusStateService,
   ) { }
 
   ngOnInit(): void {
-    this.messageBusStateService.set("open");
   }
 
   onClose() {
-    this.openSideNav = false;
-  }
-
-  open() {
-    this.openSideNav = true;
+    this.close.emit();
   }
 
   goToTasks() {
