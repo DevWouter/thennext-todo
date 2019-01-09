@@ -21,6 +21,16 @@ import { TaskPageLeftComponent } from "./task-page-left/task-page-left.component
 import { TaskPageDividerComponent } from "./task-page-divider/task-page-divider.component";
 import { GuiModule } from "../../gui/gui.module";
 
+const publicComponents = [
+  TaskPageComponent,
+];
+
+const privateComponents = [
+  CommandInputComponent,
+  TaskPageComponent,
+  TaskPageDividerComponent,
+  TaskPageLeftComponent,
+];
 
 @NgModule({
   imports: [
@@ -35,11 +45,9 @@ import { GuiModule } from "../../gui/gui.module";
     MaterialModule,
   ],
   declarations: [
-    CommandInputComponent,
-    TaskPageComponent,
-    TaskPageDividerComponent,
-    TaskPageLeftComponent,
+    ...publicComponents,
+    ...privateComponents,
   ],
-  exports: [TaskPageComponent]
+  exports: [...publicComponents]
 })
 export class TaskPageModule { }
