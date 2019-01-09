@@ -16,6 +16,23 @@ import { SettingsTabTitleComponent } from "./settings-tab-title/settings-tab-tit
 import { SettingsTabUrgencyComponent } from "./tab-urgency/tab-urgency.component";
 import { SettingsTasklistDetailComponent } from "./tab-tasklists-detail/tab-tasklist-detail.component";
 import { SettingsTasklistsComponent } from "./tab-tasklists/tab-tasklists.component";
+import { SettingsPageMenuComponent } from './settings-page-menu/settings-page-menu.component';
+
+const publicComponents = [
+  SettingsPageComponent,
+];
+
+const privateComponents = [
+  SettingsTabTitleComponent,
+
+  SettingsTasklistsComponent,
+  SettingsTabTagsComponent,
+  SettingsTabUrgencyComponent,
+  SettingsTasklistDetailComponent,
+  SettingsTabPersonalComponent,
+
+  SettingsPageMenuComponent,
+]
 
 @NgModule({
   imports: [
@@ -30,15 +47,8 @@ import { SettingsTasklistsComponent } from "./tab-tasklists/tab-tasklists.compon
     TasklistModule,
   ],
   declarations: [
-    SettingsPageComponent,
-
-    SettingsTabTitleComponent,
-
-    SettingsTasklistsComponent,
-    SettingsTabTagsComponent,
-    SettingsTabUrgencyComponent,
-    SettingsTasklistDetailComponent,
-    SettingsTabPersonalComponent,
+    ...publicComponents,
+    ...privateComponents,
   ],
   exports: [
   ],

@@ -3,25 +3,7 @@
 
 <mat-sidenav-container>
   <mat-sidenav [(opened)]="openSideNav" [fixedInViewport]="true" [mode]="'over'" data-cy="menu">
-    <mat-toolbar color="primary">
-      <mat-icon>settings</mat-icon>Settings
-    </mat-toolbar>
-    <gui-menu-item [routerLink]="[{ outlets: { tab: ['personal'] } }]" routerLinkActive="active" (click)="close()"
-      iconClass='fas fa-fw fa-user'>Personal</gui-menu-item>
-
-    <gui-menu-item [routerLink]="[{ outlets: { tab: ['tasklists'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-list'
-      (click)="close()">Tasklists</gui-menu-item>
-
-    <gui-menu-item [routerLink]="[{ outlets: { tab: ['tags'] } }]" routerLinkActive="active" iconClass='fas fa-fw fa-tag'
-      (click)="close()">Tags</gui-menu-item>
-
-    <gui-menu-item [routerLink]="[{ outlets: { tab: ['urgency'] } }]" iconClass='fas fa-fw fa-weight-hanging'
-      routerLinkActive="active" (click)="close()">urgency</gui-menu-item>
-
-    <gui-menu-spacer></gui-menu-spacer>
-
-    <gui-menu-item iconClass="fas fa-list fa-fw" (click)="goToTasks()">Back to tasks</gui-menu-item>
-    <gui-menu-item iconClass="fas fa-sign-out-alt fa-fw" (click)="logout()">Logout</gui-menu-item>
+    <app-settings-page-menu (close)="onClose()"></app-settings-page-menu>
   </mat-sidenav>
 
   <mat-sidenav-content>
