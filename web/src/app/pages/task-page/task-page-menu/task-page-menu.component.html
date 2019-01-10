@@ -1,11 +1,6 @@
 <mat-toolbar class="header" color="primary">
-  <div>{{displayName }}</div>
+  <div>{{displayName}}</div>
 </mat-toolbar>
-<gui-menu-item iconClass="fas fa-fw fa-list">
-  <select data-cy="tasklist-selector" [(ngModel)]="currentListUuid">
-    <option *ngFor="let list of lists" [value]="list.uuid">{{list.name}}</option>
-  </select>
-</gui-menu-item>
 
 <gui-menu-item-checkbox data-cy="show-blocked-tasks" [checked]="showBlocked" (click)="showBlocked = !showBlocked">Show
   blocked tasks</gui-menu-item-checkbox>

@@ -54,6 +54,6 @@ mat-sidenav {
     flex-shrink: 0;
 }
 
-select {
-    width: 100%;
+.list-selector-panel.mat-select-panel {
+    font-size: 16pt !important;
 }

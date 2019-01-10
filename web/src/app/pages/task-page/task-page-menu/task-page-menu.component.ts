@@ -1,22 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService, NavigationService } from '../../../services';
-import { TaskList } from '../../../models';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-task-page-menu',
   templateUrl: './task-page-menu.component.html',
   styleUrls: ['./task-page-menu.component.scss']
 })
-export class TaskPageMenuComponent implements OnInit {
-  private _currentListUuid: string;
+export class TaskPageMenuComponent implements OnInit, OnDestroy {
+  private readonly subs = new Subscription();
 
   @Input() displayName: string;
-  @Input() lists: TaskList[] = [];
-
-  public get currentListUuid(): string { return this._currentListUuid; }
-  @Input() public set currentListUuid(v: string) { this._currentListUuid = v; this.updated(); this.onClose(); }
-
   @Output() close = new EventEmitter<void>();
 
   private _showCompleted: boolean;
@@ -37,10 +32,14 @@ export class TaskPageMenuComponent implements OnInit {
     private readonly navigation: NavigationService,
   ) { }
 
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
+
   ngOnInit() {
-    this.navigation.showCompleted.subscribe(x => { this._showCompleted = x; });
-    this.navigation.showNegative.subscribe(x => { this._showNegative = x; });
-    this.navigation.showBlocked.subscribe(x => { this._showBlocked = x; });
+    this.subs.add(this.navigation.showCompleted.subscribe(x => { this._showCompleted = x; }));
+    this.subs.add(this.navigation.showNegative.subscribe(x => { this._showNegative = x; }));
+    this.subs.add(this.navigation.showBlocked.subscribe(x => { this._showBlocked = x; }));
   }
 
   onClose() {
@@ -57,9 +56,4 @@ export class TaskPageMenuComponent implements OnInit {
       this.router.navigate(["/"]);
     }
   }
-
-  updated() {
-    this.navigation.toTaskPage({ taskListUuid: this._currentListUuid, taskUuid: null });
-  }
-
 }
