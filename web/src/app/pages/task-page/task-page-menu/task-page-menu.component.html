@@ -2,9 +2,17 @@
   <div>{{displayName}}</div>
 </mat-toolbar>
 
-<mat-checkbox data-cy="show-blocked-tasks" [(ngModel)]="showBlocked">Show blocked tasks</mat-checkbox>
-<mat-checkbox data-cy="show-negative-tasks" [(ngModel)]="showNegative">Show negative tasks</mat-checkbox>
-<mat-checkbox data-cy="show-completed-tasks" [(ngModel)]="showCompleted">Show completed tasks</mat-checkbox>
+<mat-list role="list">
+  <mat-list-item role="listitem">
+    <mat-checkbox data-cy="show-blocked-tasks" [(ngModel)]="showBlocked">Show blocked tasks</mat-checkbox>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <mat-checkbox data-cy="show-negative-tasks" [(ngModel)]="showNegative">Show negative tasks</mat-checkbox>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <mat-checkbox data-cy="show-completed-tasks" [(ngModel)]="showCompleted">Show completed tasks</mat-checkbox>
+  </mat-list-item>
+</mat-list>
 
 <gui-menu-item data-cy="menu-settings" iconClass="fas fa-fw fa-cog" (click)="goToSettings()">Settings</gui-menu-item>
 <gui-menu-item data-cy="menu-logout" iconClass="fas fa-fw fa-sign-out-alt" (click)="logout()">Logout</gui-menu-item>
