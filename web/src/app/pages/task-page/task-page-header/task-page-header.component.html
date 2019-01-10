@@ -1,0 +1,10 @@
+<mat-toolbar class="header" color="primary">
+  <button mat-icon-button data-cy="menu-button" (click)="onMenuClick()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <div style="width: 600px;">
+    <mat-select class="list-selector" [formControl]='$currentListControl' panelClass='list-selector-panel'>
+      <mat-option *ngFor="let list of ($lists|async)" [value]="list.uuid">{{list.name}}</mat-option>
+    </mat-select>
+  </div>
+</mat-toolbar>

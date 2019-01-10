@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 // Material module
 import { MaterialModule } from '../../material.module';
@@ -16,10 +16,11 @@ import { GuiModule } from "../../gui/gui.module";
 import { TaskPaneModule } from "./task-pane/task-pane.module";
 
 // Components
-import { TaskPageComponent } from "./task-page.component";
 import { CommandInputComponent } from "./command-input/command-input.component";
-import { TaskPageLeftComponent } from "./task-page-left/task-page-left.component";
+import { TaskPageComponent } from "./task-page.component";
 import { TaskPageDividerComponent } from "./task-page-divider/task-page-divider.component";
+import { TaskPageHeaderComponent } from './task-page-header/task-page-header.component';
+import { TaskPageLeftComponent } from "./task-page-left/task-page-left.component";
 import { TaskPageMenuComponent } from './task-page-menu/task-page-menu.component';
 
 const publicComponents = [
@@ -30,6 +31,7 @@ const privateComponents = [
   CommandInputComponent,
   TaskPageComponent,
   TaskPageDividerComponent,
+  TaskPageHeaderComponent,
   TaskPageLeftComponent,
   TaskPageMenuComponent,
 ];
@@ -39,6 +41,7 @@ const privateComponents = [
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     DialogsModule,
     ServicesModule,
     TasklistModule,

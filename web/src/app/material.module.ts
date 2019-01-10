@@ -4,9 +4,12 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MatButtonModule,
   MatCommonModule,
+  MatCheckboxModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
+  MatSelectModule,
   MatSidenavModule,
   MatToolbarModule,
   MatTooltipModule,
@@ -15,9 +18,12 @@ import {
 
 const publicModules = [
   MatButtonModule,
+  MatCheckboxModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
+  MatSelectModule,
   MatSidenavModule,
   MatToolbarModule,
   MatTooltipModule,
